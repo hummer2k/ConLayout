@@ -1,0 +1,36 @@
+@import 'compass';
+
+$color-red: #a94442;
+$color-red-bg: #f2dede;
+
+.block-debug {
+    border: 1px dotted $color-red;
+    position: relative;   
+    margin: 1px;
+    @include clearfix();
+    &:hover .block-debug-info {
+        @include opacity(.2);
+        
+    }
+    &.block-highlight {
+        background: $color-red-bg;
+    }
+    .block-debug-info {
+        color: $color-red;
+        position: absolute;
+        right: 0;
+        top: 0;
+        border: 1px dotted $color-red;
+        border-width: 0 0 1px 1px;
+        background: $color-red-bg;
+        line-height: 12px;
+        padding: 0 5px;
+        span {
+            font-size: 11px;
+            margin-left: 5px;
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+    }
+}

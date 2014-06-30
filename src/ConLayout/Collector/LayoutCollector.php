@@ -3,25 +3,39 @@ namespace ConLayout\Collector;
 
 use ZendDeveloperTools\Collector\AbstractCollector;
 /**
- * LayoutCollector
+ * Collector for ZendDeveloperToolbar
  *
- * @author hummer 
+ * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutCollector
     extends AbstractCollector
 {
     const NAME = 'con-layout';
     
+    /**
+     * 
+     * @return string
+     */
     public function getName()
     {
         return self::NAME;
     }
     
+    /**
+     * 
+     * @return int
+     */
     public function getPriority()
     {
         return 600;
     }
     
+    /**
+     * collect data for zdt
+     * 
+     * @param \Zend\Mvc\MvcEvent $mvcEvent
+     * @return \ConLayout\Collector\LayoutCollector
+     */
     public function collect(\Zend\Mvc\MvcEvent $mvcEvent)
     {
         $sm = $mvcEvent->getApplication()->getServiceManager();
@@ -36,18 +50,31 @@ class LayoutCollector
             $data['blocks'][$name] = get_class($instance);
         }
         $this->data = $data;
+        return $this;
     }
     
+    /**
+     * 
+     * @return array
+     */
     public function getHandles()
     {
         return $this->data['handles'];
     }
     
+    /**
+     * 
+     * @return array
+     */
     public function getLayoutConfig()
     {
         return $this->data['layoutConfig'];
     }
     
+    /**
+     * 
+     * @return array
+     */
     public function getBlocks()
     {
         return $this->data['blocks'];

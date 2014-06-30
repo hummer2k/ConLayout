@@ -50,9 +50,9 @@
 <script>
     jQuery(function($) {
         $('[data-block-name-label]').on('mouseenter', function() {
-            $('[data-block-name]').addClass('block-highlight')
+            $('[data-block-name="' + $(this).data('blockNameLabel') + '"]').addClass('block-highlight')
         }).on('mouseleave', function() {
-            $('[data-block-name]').removeClass('block-highlight');
+            $('[data-block-name="' + $(this).data('blockNameLabel') + '"]').removeClass('block-highlight');
         });
     });
 </script>

@@ -15,12 +15,23 @@ return array(
         ),
     ),
     'con-layout' => array(
-        // values: controller_action | routematch | combined 
-        'handle_behavior' => 'combined',
+        'handle_behavior' => 'combined', // controller_action | routematch | combined 
         'config_glob_path' => './{module/*/config,design/module/*}/layout.config.php',
         'enable_debug' => false,
         'enable_cache' => false,
         'cache_dir' => './data/cache/con-layout'
+    ),
+    'asset_manager' => array(
+        'resolver_configs' => array(
+            'collections' => array(
+                'css/styles.css' => array(
+                    'css/con-layout.css'
+                )
+            ),
+            'paths' => array(
+                __DIR__ . '/../public'
+            )
+        )
     ),
     'zenddevelopertools' => array(
         'profiler' => array(

@@ -3,9 +3,10 @@ namespace ConLayout\Block;
 
 use Zend\View\Model\ViewModel;
 /**
- * Dummy
- *
- * @author hummer 
+ * Dummy block demo
+ * 
+ * @package ConLayout
+ * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de> *
  */
 class Dummy
     extends ViewModel

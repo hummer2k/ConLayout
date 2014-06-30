@@ -7,7 +7,7 @@ use Zend\View\Model\ViewModel,
 /**
  * Modifier
  *
- * @author hummer 
+ * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutModifier
 {   
@@ -56,7 +56,7 @@ class LayoutModifier
      * @param type $parent
      * @return \ConLayout\Service\Layout\Modifier
      */
-    public function addBlocksToLayout(\ZendConfig $blocks = null, $parent = null)
+    public function addBlocksToLayout(ZendConfig $blocks = null, $parent = null)
     {
         if (null === $blocks) {
             $blocks = $this->blocks;
@@ -80,19 +80,20 @@ class LayoutModifier
     }
     
     /**
+     * wrap ViewModel around block and set a debugger template
      * 
-     * @param \Zend\View\Model\ViewModel $viewModel
+     * @param \Zend\View\Model\ViewModel $block
      * @return \Zend\View\Model\ViewModel
      */
-    protected function _addDebugBlock(ViewModel $viewModel)
+    protected function _addDebugBlock(ViewModel $block)
     {
         $debugBlock = new ViewModel(array(
-            'blockName' => $viewModel->getVariable('nameInLayout'),
-            'blockTemplate' => $viewModel->getTemplate(),
-            'blockClass' => get_class($viewModel)
+            'blockName' => $block->getVariable('nameInLayout'),
+            'blockTemplate' => $block->getTemplate(),
+            'blockClass' => get_class($block)
         ));
         $debugBlock->setTemplate('blocks/debug');
-        $debugBlock->addChild($viewModel);
+        $debugBlock->addChild($block);
         return $debugBlock;
     }
     

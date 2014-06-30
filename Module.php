@@ -1,15 +1,30 @@
 <?php
 namespace ConLayout;
 
-use Zend\EventManager\EventInterface as Event;
-
+use Zend\EventManager\EventInterface as Event,
+    Zend\Mvc\MvcEvent;
+/**
+ * ConLayout\Module
+ * 
+ * 
+ */
 class Module
 {
+    /**
+     * retrieve module config
+     * 
+     * @return array
+     */
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
     }
     
+    /**
+     * retrieve services
+     * 
+     * @return array
+     */
     public function getServiceConfig()
     {
         return include __DIR__ . '/config/service.config.php';
@@ -23,20 +38,17 @@ class Module
     {
         $application  = $e->getApplication();
         $serviceManager = $application->getServiceManager();        
-        $eventManager = $application->getEventManager();
-         
-        $eventManager->attach('render', function($e) use ($serviceManager) {
+        $eventManager = $application->getEventManager();        
+        $eventManager->attach(MvcEvent::EVENT_RENDER, function($e) use ($serviceManager) {
             $layoutModifier = $serviceManager->get('ConLayout\Service\LayoutModifier');
             $layoutModifier->addBlocksToLayout();
-        }, -10); 
-        
-        $sharedEvents = $eventManager->getSharedManager();
-        $sharedEvents->attach('Zend\View\View', \Zend\View\ViewEvent::EVENT_RENDERER, function(\Zend\View\ViewEvent $event) {
-            
-        });
-        
+        }); 
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function getAutoloaderConfig()
     {
         return array(
