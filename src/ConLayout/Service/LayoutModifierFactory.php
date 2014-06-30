@@ -12,6 +12,7 @@ use Zend\ServiceManager\FactoryInterface;
 class LayoutModifierFactory
     implements FactoryInterface
 {
+    use \ConLayout\OptionTrait;
     /**
      * 
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
@@ -19,6 +20,7 @@ class LayoutModifierFactory
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {        
+        $config          = $serviceLocator->get('Config');
         $renderer        = $serviceLocator->get('Zend\View\Renderer\PhpRenderer');        
         $pluginManager   = $renderer->getHelperPluginManager();
         $layout          = $pluginManager->get('viewModel')->getRoot();        
@@ -26,6 +28,8 @@ class LayoutModifierFactory
             ->getCreatedBlocks();  
         $layoutTemplate  = $serviceLocator->get('ConLayout\Service\Config')
             ->getLayoutTemplate();
-        return new LayoutModifier($layout, $blockCollection, $layoutTemplate); 
+        $layoutModifier = new LayoutModifier($layout, $blockCollection, $layoutTemplate); 
+        $layoutModifier->setIsDebug($this->getOption($config, 'con-layout/enable_debug', false));
+        return $layoutModifier;
     }
 }

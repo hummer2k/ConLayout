@@ -67,15 +67,33 @@ class Config
     
     /**
      * 
-     * @param string $handle
+     * @param array|string $handles
      * @return Config
      */
-    public function addHandle($handle)
+    public function addHandle($handles)
     {
-        if (false !== strpos($handle, '::')) {
-            $this->handles[] = strstr($handle, '::', true);
+        if (!is_array($handles)) {
+            $handles = array($handles);
         }
-        $this->handles[] = $handle;
+        foreach ($handles as $handle) {
+            if (!in_array($handle, $this->handles)) {
+                $this->handles[] = $handle;
+            }
+        }
+        return $this;
+    }
+    
+    /**
+     * 
+     * @param array|string $handles
+     * @return \ConLayout\Service\Config
+     */
+    public function removeHandle($handles)
+    {
+        if (!is_array($handles)) {
+            $handles = array($handles);
+        }
+        $this->handles = array_diff($this->handles, $handles);
         return $this;
     }
     
@@ -277,5 +295,23 @@ class Config
     {
         $this->configCollector = $configCollector;
         return $this;
+    }
+    
+    /**
+     * 
+     * @param bool $flag
+     */
+    public function setIsCacheEnabled($flag = true)
+    {
+        $this->isCacheEnabled = (bool) $flag;
+    }
+    
+    /**
+     * 
+     * @return bool
+     */
+    public function isCacheEnabled()
+    {
+        return $this->isCacheEnabled;
     }
 }

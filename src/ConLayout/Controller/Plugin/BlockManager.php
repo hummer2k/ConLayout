@@ -9,7 +9,7 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class Blocks
+class BlockManager
     extends AbstractPlugin
     implements ServiceLocatorAwareInterface
 {
@@ -87,6 +87,17 @@ class Blocks
     public function addHandle($handle)
     {
         $this->config->addHandle($handle);
+        return $this;
+    }
+    
+    /**
+     * 
+     * @param array|string $handles
+     * @return \ConLayout\Controller\Plugin\Blocks
+     */
+    public function removeHandle($handles)
+    {
+        $this->config->removeHandle($handles);
         return $this;
     }
 }

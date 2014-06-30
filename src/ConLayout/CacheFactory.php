@@ -13,11 +13,18 @@ class CacheFactory
 {
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
+        $config = $serviceLocator->get('Config');
+        $cacheDir = isset($config['con-layout']['cache_dir'])
+            ? $config['con-layout']['cache_dir']
+            : './data/cache/con-layout';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0777, true);
+        }
         $cache   = \Zend\Cache\StorageFactory::factory(array(
             'adapter' => array(
                 'name' => 'filesystem',
                 'options' => array(
-                    'cache_dir' => './data/cache/con-layout'
+                    'cache_dir' => $cacheDir
                 )
             ),
             'plugins' => array(

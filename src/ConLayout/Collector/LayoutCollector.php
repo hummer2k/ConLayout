@@ -24,20 +24,18 @@ class LayoutCollector
     
     public function collect(\Zend\Mvc\MvcEvent $mvcEvent)
     {
-        $config = $mvcEvent->getApplication()
-            ->getServiceManager()
-            ->get('ConLayout\Service\Config');
+        $sm = $mvcEvent->getApplication()->getServiceManager();
+        $config = $sm->get('ConLayout\Service\Config');
+        $blocksBuilder = $sm->get('ConLayout\Service\BlocksBuilder');
         $data = array(
-            'blockConfig' => $config->getBlockConfig(),
             'handles' => $config->getHandles(),
-            'layoutConfig' => $config->getLayoutConfig()
+            'layoutConfig' => $config->getLayoutConfig()->toArray(),
+            'blocks' => array()
         );
+        foreach ($blocksBuilder->getBlocks() as $name => $instance) {
+            $data['blocks'][$name] = get_class($instance);
+        }
         $this->data = $data;
-    }
-        
-    public function getBlockConfig()
-    {
-        return $this->data['blockConfig'];
     }
     
     public function getHandles()
@@ -50,4 +48,8 @@ class LayoutCollector
         return $this->data['layoutConfig'];
     }
     
+    public function getBlocks()
+    {
+        return $this->data['blocks'];
+    }
 }

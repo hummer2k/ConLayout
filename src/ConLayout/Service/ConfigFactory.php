@@ -13,6 +13,8 @@ use Zend\ServiceManager\FactoryInterface,
 class ConfigFactory
     implements FactoryInterface
 {
+    use \ConLayout\OptionTrait;
+    
     /**
      * 
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
@@ -25,44 +27,57 @@ class ConfigFactory
         $request    = $serviceLocator->get('request');
         $appConfig  = $serviceLocator->get('Config');
         
-        $handleBehavior = isset($appConfig['con-layout']['handle_behavior'])
-            ? $appConfig['con-layout']['handle_behavior']
-            : 'controller_action';
-        
+        $handleBehavior = $this->getOption($appConfig, 'con-layout/handle_behavior', 'controller_action');
+        $enableCache = $this->getOption($appConfig, 'con-layout/enable_cache', false);
+
         $routeMatch = $router->match($request);
-        $actionHandle = $this->getActionHandle($routeMatch, $handleBehavior);
+        $actionHandles = $this->getActionHandles($routeMatch, $handleBehavior);
         
         $config = new Config(
             $serviceLocator->get('ConLayout\Service\Config\CollectorInterface'),
             $serviceLocator->get('ConLayout\Cache')
         );
-        $config->addHandle($actionHandle);
+        $config->addHandle($actionHandles);
+        $config->setIsCacheEnabled($enableCache);
         return $config;
     }
     
     /**
-     * get handle for current action
+     * retrieve handle for current action
      * 
      * @param \Zend\Mvc\Router\RouteMatch $routeMatch
      * @param string $handleBehavior
-     * @return string
+     * @return array
      */
-    protected function getActionHandle(RouteMatch $routeMatch = null, $handleBehavior = null)
+    protected function getActionHandles(RouteMatch $routeMatch = null, $handleBehavior = null)
     {
         if (null === $routeMatch) {
-            return;
+            return array();
         }
+        $routeName = $routeMatch->getMatchedRouteName();
+        $namespace = $routeMatch->getParam('__NAMESPACE__');
+        $controller = $routeMatch->getParam('controller');
+        if (null !== $namespace) {
+            $controller = $namespace . '\\' . $controller;
+        }
+        $controller = strtolower($controller);
+        $action = strtolower($routeMatch->getParam('action'));
+        
         switch ($handleBehavior) {
         case 'routematch':
-            return $routeMatch->getMatchedRouteName();
+            return array($routeName);
+        case 'combined':
+            return array(
+                $routeName,
+                $controller,
+                $controller . '::' . $action,
+            );
         case 'controller_action':
         default:
-            $namespace = $routeMatch->getParam('__NAMESPACE__');
-            $controller = $routeMatch->getParam('controller');
-            if (null !== $namespace) {
-                $controller = str_replace('\\', '_', $namespace) . '_' . $controller;
-            }
-            return strtolower($controller . '::' . $routeMatch->getParam('action'));
-        }       
+            return array(
+                $controller,
+                $controller . '::' . $action
+            );
+        }
     }
 }

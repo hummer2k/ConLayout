@@ -15,7 +15,7 @@ class BlocksBuilderFactory
     {
         $layoutConfig = $serviceLocator->get('ConLayout\Service\Config');
         $blocksBuilder = new BlocksBuilder(
-            $layoutConfig->getBlockConfig()
+            $layoutConfig
         );
         return $blocksBuilder;
     }

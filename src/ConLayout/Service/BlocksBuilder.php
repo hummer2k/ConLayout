@@ -2,7 +2,9 @@
 
 namespace ConLayout\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface,
+    Zend\Config\Config as ZendConfig,
+    \Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * BlocksBuilder
@@ -12,29 +14,47 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 class BlocksBuilder
     implements ServiceLocatorAwareInterface
 {
-    protected $serviceLocator; 
+    use ServiceLocatorAwareTrait;
     
-    protected $blockConfig;
+    /**
+     *
+     * @var Config
+     */
+    protected $layoutConfig;
     
+    /**
+     * cache stores blocks as blockname => instance
+     * 
+     * @var array
+     */
     protected $blocks = array();
     
+    /**
+     *
+     * @var ZendConfig
+     */
     protected $createdBlocks;
+    
+    /**
+     *
+     * @var string
+     */
+    protected $defaultBlockClass = 'Zend\View\Model\ViewModel';
         
-    public function __construct($blockConfig)
+    /**
+     * 
+     * @param \ConLayout\Service\Config $layoutConfig
+     */
+    public function __construct(Config $layoutConfig)
     {
-        $this->blockConfig = $blockConfig;
+        $this->layoutConfig = $layoutConfig;
     }
-    
-    public function setServiceLocator(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-    
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-    
+        
+    /**
+     * 
+     * @param bool $force
+     * @return \ConLayout\Service\BlocksBuilder
+     */
     public function create($force = false)
     {
         if (null === $this->createdBlocks && !$force) {
@@ -43,19 +63,24 @@ class BlocksBuilder
         return $this;
     }
     
-    protected function createBlocks(array $blockConfig = null)
+    /**
+     * 
+     * @param \Zend\Config\Config $blockConfig
+     * @return \Zend\Config\Config
+     */
+    protected function createBlocks(ZendConfig $blockConfig = null)
     {
         if (null === $blockConfig) {
-            $blockConfig = $this->blockConfig;
+            $blockConfig = $this->layoutConfig->getBlockConfig();
         }
         foreach ($blockConfig as $blocks) {
             foreach($blocks as $blockName => $block) {
-                if (isset($block['children'])) {
-                    $block['children'] = $this->createBlocks($block['children']);
+                if ($block->children) {
+                    $block->children = $this->createBlocks($block->children);
                 }
-                $block['name'] = $blockName;
-                $block['instance'] = $this->createBlock($block);
-                $this->blocks[$blockName] = $block['instance'];
+                $block->name = $blockName;
+                $block->instance = $this->createBlock($block);
+                $this->blocks[$blockName] = $block->instance;
             }
         }
         return $blockConfig;
@@ -78,9 +103,11 @@ class BlocksBuilder
      * @param type $blockConfig
      * @return \ConLayout\Service\className
      */
-    protected function createBlock($blockConfig)
+    protected function createBlock(ZendConfig $blockConfig)
     {
-        $className = $blockConfig['class'];                
+        $className = $blockConfig->class 
+            ? $blockConfig->class
+            : $this->defaultBlockClass;
         /* @var $block \Zend\View\Model\ViewModel */
         if ($this->serviceLocator->has($className)) {
             $block = $this->serviceLocator->create($className);
@@ -107,7 +134,8 @@ class BlocksBuilder
                 (array) $block->getVariables(), 
                 $blockConfig->get('vars', array()),
                 array(
-                    'block' => $block
+                    'block' => $block,
+                    'nameInLayout' => $blockConfig->name
                 )
             )
         );

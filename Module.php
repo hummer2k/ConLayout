@@ -22,13 +22,19 @@ class Module
     public function onBootstrap(Event $e)
     {
         $application  = $e->getApplication();
-        $services     = $application->getServiceManager();        
+        $serviceManager = $application->getServiceManager();        
         $eventManager = $application->getEventManager();
-        
-        $eventManager->attach('render', function($e) use ($services) {
-            $layoutModifier = $services->get('ConLayout\Service\LayoutModifier');
+         
+        $eventManager->attach('render', function($e) use ($serviceManager) {
+            $layoutModifier = $serviceManager->get('ConLayout\Service\LayoutModifier');
             $layoutModifier->addBlocksToLayout();
-        }); 
+        }, -10); 
+        
+        $sharedEvents = $eventManager->getSharedManager();
+        $sharedEvents->attach('Zend\View\View', \Zend\View\ViewEvent::EVENT_RENDERER, function(\Zend\View\ViewEvent $event) {
+            
+        });
+        
     }
 
     public function getAutoloaderConfig()

@@ -11,26 +11,16 @@ return array(
     ),
     'controller_plugins' => array(
         'factories' => array(
-            'blocks' => 'ConLayout\Controller\Plugin\BlocksFactory'
+            'blockManager' => 'ConLayout\Controller\Plugin\BlockManagerFactory'
         ),
     ),
     'con-layout' => array(
-        // @TODO: implement combined handle behavior
-        // values: controller_action | routematch | combined (not implemented yet)
-        'handle_behavior' => 'controller_action',
-        /*'layout' => array(
-            'default' => array(
-                'blocks' => array(
-                    /*
-                    'footer' => array(
-                        'footer.block' => array(
-                            'class' => 'Zend\View\Model\ViewModel',
-                            'template' => 'layout/footer'
-                        )
-                    )
-                )
-            )
-        )*/
+        // values: controller_action | routematch | combined 
+        'handle_behavior' => 'combined',
+        'config_glob_path' => './{module/*/config,design/module/*}/layout.config.php',
+        'enable_debug' => false,
+        'enable_cache' => false,
+        'cache_dir' => './data/cache/con-layout'
     ),
     'zenddevelopertools' => array(
         'profiler' => array(

@@ -1,7 +1,8 @@
 <?php
 namespace ConLayout\Service;
 
-use Zend\View\Model\ViewModel;
+use Zend\View\Model\ViewModel,
+    Zend\Config\Config as ZendConfig;
 
 /**
  * Modifier
@@ -23,12 +24,24 @@ class LayoutModifier
     protected $blocks;
     
     /**
+     *
+     * @var default captureTo
+     */
+    protected $captureTo = 'childHtml';
+    
+    /**
+     *
+     * @var boolean
+     */
+    protected $isDebug = false;
+    
+    /**
      * 
      * @param \Zend\View\Model\ViewModel $layout
      * @param \Zend\Config\Config $blocks
      * @param string|null $layoutTemplate
      */
-    public function __construct(ViewModel $layout, \Zend\Config\Config $blocks, $layoutTemplate = null)
+    public function __construct(ViewModel $layout, $blocks, $layoutTemplate = null)
     {
         $this->layout   = $layout;
         if (null !== $layoutTemplate) {
@@ -43,7 +56,7 @@ class LayoutModifier
      * @param type $parent
      * @return \ConLayout\Service\Layout\Modifier
      */
-    public function addBlocksToLayout($blocks = null, $parent = null)
+    public function addBlocksToLayout(\ZendConfig $blocks = null, $parent = null)
     {
         if (null === $blocks) {
             $blocks = $this->blocks;
@@ -53,13 +66,44 @@ class LayoutModifier
         }
         foreach ($blocks as $placeholderName => $blocks) {
             foreach ($blocks as $block) {
-                $captureTo = !is_string($placeholderName) ? 'childHtml' : $placeholderName;
-                $parent->addChild($block['instance'], $captureTo, true);
-                if (isset($block['children'])) {
-                    $this->addBlocksToLayout($block['children'], $block['instance']);
+                if ($this->isDebug) {
+                    $block->instance = $this->_addDebugBlock($block->instance);
+                }
+                $captureTo = !is_string($placeholderName) ? $this->captureTo : $placeholderName;
+                $parent->addChild($block->instance, $captureTo, true);
+                if ($block->children) {
+                    $this->addBlocksToLayout($block->children, $block->instance);
                 }
             }
         }
         return $this;
     }
+    
+    /**
+     * 
+     * @param \Zend\View\Model\ViewModel $viewModel
+     * @return \Zend\View\Model\ViewModel
+     */
+    protected function _addDebugBlock(ViewModel $viewModel)
+    {
+        $debugBlock = new ViewModel(array(
+            'blockName' => $viewModel->getVariable('nameInLayout'),
+            'blockTemplate' => $viewModel->getTemplate(),
+            'blockClass' => get_class($viewModel)
+        ));
+        $debugBlock->setTemplate('blocks/debug');
+        $debugBlock->addChild($viewModel);
+        return $debugBlock;
+    }
+    
+    /**
+     * 
+     * @param bool $flag
+     * @return \ConLayout\Service\LayoutModifier
+     */
+    public function setIsDebug($flag = true)
+    {
+        $this->isDebug = (bool) $flag;
+        return $this;
+    }    
 }
