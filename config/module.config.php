@@ -19,7 +19,8 @@ return array(
         'config_glob_path' => './{module/*/config,design/module/*}/layout.config.php',
         'enable_debug' => false,
         'enable_cache' => false,
-        'cache_dir' => './data/cache/con-layout'
+        'cache_dir' => './data/cache/con-layout',
+        'child_capture_to' => 'childHtml'
     ),
     'asset_manager' => array(
         'resolver_configs' => array(

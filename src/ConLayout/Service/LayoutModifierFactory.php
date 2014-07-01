@@ -13,6 +13,7 @@ class LayoutModifierFactory
     implements FactoryInterface
 {
     use \ConLayout\OptionTrait;
+    
     /**
      * 
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
@@ -20,16 +21,22 @@ class LayoutModifierFactory
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {        
-        $config          = $serviceLocator->get('Config');
-        $renderer        = $serviceLocator->get('Zend\View\Renderer\PhpRenderer');        
-        $pluginManager   = $renderer->getHelperPluginManager();
-        $layout          = $pluginManager->get('viewModel')->getRoot();        
-        $blockCollection = $serviceLocator->get('ConLayout\Service\BlocksBuilder')
-            ->getCreatedBlocks();  
+        $config = $serviceLocator->get('Config');
+        $layout = $serviceLocator->get('Zend\View\Renderer\PhpRenderer')
+            ->viewModel()
+            ->getRoot();
+        
+        $createdBlocks   = $serviceLocator->get('ConLayout\Service\BlocksBuilder')
+            ->getCreatedBlocks();
+        
         $layoutTemplate  = $serviceLocator->get('ConLayout\Service\Config')
             ->getLayoutTemplate();
-        $layoutModifier = new LayoutModifier($layout, $blockCollection, $layoutTemplate); 
-        $layoutModifier->setIsDebug($this->getOption($config, 'con-layout/enable_debug', false));
+        
+        $layoutModifier = new LayoutModifier($layout, $createdBlocks, $layoutTemplate); 
+        $layoutModifier
+            ->setIsDebug($this->getOption($config, 'con-layout/enable_debug', false))
+            ->setCaptureTo($this->getOption($config, 'con-layout/child_capture_to', 'childHtml'));            
+        
         return $layoutModifier;
     }
 }

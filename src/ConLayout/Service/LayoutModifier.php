@@ -21,7 +21,7 @@ class LayoutModifier
      *
      * @var array
      */
-    protected $blocks;
+    protected $createdBlocks;
     
     /**
      *
@@ -38,16 +38,16 @@ class LayoutModifier
     /**
      * 
      * @param \Zend\View\Model\ViewModel $layout
-     * @param \Zend\Config\Config $blocks
+     * @param \Zend\Config\Config $createdBlocks
      * @param string|null $layoutTemplate
      */
-    public function __construct(ViewModel $layout, $blocks, $layoutTemplate = null)
+    public function __construct(ViewModel $layout, $createdBlocks, $layoutTemplate = null)
     {
         $this->layout   = $layout;
         if (null !== $layoutTemplate) {
             $this->layout->setTemplate($layoutTemplate);
         }
-        $this->blocks = $blocks;
+        $this->createdBlocks = $createdBlocks;
     }
     
     /**
@@ -59,7 +59,7 @@ class LayoutModifier
     public function addBlocksToLayout(ZendConfig $blocks = null, $parent = null)
     {
         if (null === $blocks) {
-            $blocks = $this->blocks;
+            $blocks = $this->createdBlocks;
         }
         if (null === $parent) {
             $parent = $this->layout;
@@ -106,5 +106,15 @@ class LayoutModifier
     {
         $this->isDebug = (bool) $flag;
         return $this;
-    }    
+    }
+    
+    /**
+     * 
+     * @param string $captureTo
+     */
+    public function setCaptureTo($captureTo)
+    {
+        $this->captureTo = (string) $captureTo;
+        return $this;
+    }
 }

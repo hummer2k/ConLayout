@@ -15,15 +15,29 @@ class BlockManager
 {
     use ServiceLocatorAwareTrait;
     
+    /**
+     *
+     * @var \ConLayout\Service\BlocksBuilder
+     */
     protected $blocksBuilder;
     
+    /**
+     *
+     * @var \Zend\View\Renderer\RendererInterface
+     */
     protected $renderer;
     
+    /**
+     *
+     * @var \ConLayout\Service\Config 
+     */
     protected $config;
     
     /**
      * 
      * @param \ConLayout\Service\BlocksBuilder $blocksBuilder
+     * @param \ConLayout\Service\Config $config
+     * @param \Zend\View\Renderer\RendererInterface $renderer
      */
     public function __construct(
         \ConLayout\Service\BlocksBuilder $blocksBuilder,
@@ -51,14 +65,24 @@ class BlockManager
     
     /**
      * 
-     * @param string $blockname
-     * @return string
+     * @param string $blockname 
+     * @return string rendered block
      */
     public function render($blockname)
     {
         return $this->renderer->render(
             $this->blocksBuilder->getBlock($blockname)
         );
+    }
+    
+    /**
+     * 
+     * @param string $blockname
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function getBlock($blockname)
+    {
+        return $this->blocksBuilder->getBlock($blockname);
     }
     
     /**
@@ -72,7 +96,7 @@ class BlockManager
     
     /**
      * 
-     * @return 
+     * @return \ConLayout\Service\Config 
      */
     public function getConfig()
     {

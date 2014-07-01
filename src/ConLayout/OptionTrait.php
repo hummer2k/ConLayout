@@ -2,12 +2,13 @@
 namespace ConLayout;
 
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 trait OptionTrait
 {
     /**
+     * retrieve array option by path
      * 
      * @param array $data
      * @param string $path
@@ -19,8 +20,8 @@ trait OptionTrait
     {
         $found = true;
         $path = explode($delimiter, $path);
-        for ($x = 0; ($x < count($path) and $found); $x++) {
-            $key = $path[$x];
+        for ($i = 0; ($i < count($path) && $found); $i++) {
+            $key = $path[$i];
             if (isset($data[$key])) {
                 $data = $data[$key];
             } else {

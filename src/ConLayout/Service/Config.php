@@ -51,17 +51,14 @@ class Config
      * 
      * @param \ConLayout\Service\Config\CollectorInterface $configCollector
      * @param \Zend\Cache\Storage\StorageInterface $cache
-     * @param array $moduleLayoutConfig
      */
     public function __construct(
         Config\CollectorInterface $configCollector, 
-        StorageInterface $cache,
-        array $moduleLayoutConfig = null
+        StorageInterface $cache
     )
     {
         $this->configCollector = $configCollector;
         $this->cache = $cache;
-        $this->moduleLayoutConfig = $moduleLayoutConfig;
         $this->layoutConfig = new ZendConfig(array(), true);
     }
     
@@ -104,9 +101,9 @@ class Config
     public function getLayoutConfig()
     {
         if (!$this->layoutConfig->count()) {
-            $result = $this->cache->getItem($this->getLayoutCacheKey(), $success);
-            if ($this->isCacheEnabled && $success) {
-                $this->layoutConfig = $result;
+            $result = $this->cache->getItem($this->getLayoutCacheKey(), $hit);
+            if ($this->isCacheEnabled && $hit) {
+                $this->layoutConfig = new ZendConfig($result, true);
                 return $this->layoutConfig;
             }
             foreach ($this->configCollector->collect() as $configFile) {
@@ -124,8 +121,8 @@ class Config
                     }
                 }
             }
-            $this->cache->setItem($this->getLayoutCacheKey(), $this->layoutConfig);
-        }        
+            $this->cache->setItem($this->getLayoutCacheKey(), $this->layoutConfig->toArray());
+        }
         return $this->layoutConfig;
     }
     
@@ -170,9 +167,9 @@ class Config
      */
     public function getBlockConfig()
     {
-        $blockConfig = $this->cache->getItem($this->getBlocksCacheKey(), $success);
-        if ($this->isCacheEnabled && $success) {
-            return $blockConfig;
+        $blockConfig = $this->cache->getItem($this->getBlocksCacheKey(), $hit);
+        if ($this->isCacheEnabled && $hit) {
+            return new ZendConfig($blockConfig, true);
         }
         $blockConfig = array();
         $layoutConfig = $this->getLayoutConfig();
@@ -184,9 +181,9 @@ class Config
         if (isset($blockConfig['_remove'])) {
             $blockConfig = $this->removeBlocks($blockConfig, $blockConfig['_remove']);
             unset($blockConfig['_remove']);
-        } 
+        }        
         $blockConfig = new ZendConfig($this->sortBlocks($blockConfig), true);
-        $this->cache->setItem($this->getBlocksCacheKey(), $blockConfig);
+        $this->cache->setItem($this->getBlocksCacheKey(), $blockConfig->toArray());
         return $blockConfig;
     }
     

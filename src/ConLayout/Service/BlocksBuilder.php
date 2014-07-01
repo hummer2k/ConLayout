@@ -57,7 +57,7 @@ class BlocksBuilder
      */
     public function create($force = false)
     {
-        if (null === $this->createdBlocks && !$force) {
+        if (null === $this->createdBlocks || $force) {
             $this->createdBlocks = $this->createBlocks();
         }
         return $this;

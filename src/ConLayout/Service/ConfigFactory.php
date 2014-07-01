@@ -3,7 +3,8 @@ namespace ConLayout\Service;
 
 use Zend\ServiceManager\FactoryInterface,
     Zend\Mvc\Router\RouteMatch,
-    Zend\Mvc\Router\RouteStackInterface as Router;
+    Zend\Mvc\Router\RouteStackInterface as Router,
+    \ConLayout\OptionTrait;
 
 /**
  * ConfigFactory
@@ -13,7 +14,7 @@ use Zend\ServiceManager\FactoryInterface,
 class ConfigFactory
     implements FactoryInterface
 {
-    use \ConLayout\OptionTrait;
+    use OptionTrait;
     
     /**
      * 
@@ -71,8 +72,8 @@ class ConfigFactory
                 $routeName,
                 $controller,
                 $controller . '::' . $action,
-            );
-        case 'controller_action':
+            ); 
+       case 'controller_action':
         default:
             return array(
                 $controller,
