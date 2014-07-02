@@ -156,9 +156,7 @@ class Config
             }
             return ($orderA < $orderB) ? -1 : 1;
         });
-        
-        var_dump($globalLayoutConfig);exit;
-        
+                
         return $globalLayoutConfig;
     }
     
