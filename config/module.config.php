@@ -15,7 +15,7 @@ return array(
         ),
     ),
     'con-layout' => array(
-        'handle_behavior' => 'combined', // controller_action | routematch | combined 
+        'handle_behavior' => \ConLayout\Listener\ActionHandles::BEHAVIOR_COMBINED,
         'config_glob_path' => './{module/*/config,design/module/*}/layout.config.php',
         'enable_debug' => false,
         'enable_cache' => false,

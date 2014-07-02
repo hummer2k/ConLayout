@@ -94,31 +94,97 @@ class Config
         return $this;
     }
     
+    public function getGlobalLayoutConfig()
+    {
+        $globalLayoutConfig = new ZendConfig(array(), true);
+        foreach ($this->configCollector->collect() as $configFile) {
+            $tmp = include($configFile);
+            $config = new ZendConfig($tmp, true);
+            $globalLayoutConfig->merge($config);
+        }
+        $globalLayoutConfig = $globalLayoutConfig->toArray();
+        uksort($globalLayoutConfig, function($a, $b) {
+            
+            $orderA = -10;
+            $orderB = -10;
+            
+            $priorities = array(
+                'default' => -20,
+                '\\' => 0,
+                '/' => function($haystack, $needle) {
+                    return substr_count($haystack, $needle);
+                },
+                '::' => 10
+            );
+            
+            foreach($priorities as $substr => $priority) {
+                foreach (array('a', 'b') as $arrayKey) {
+                    if (false !== strpos($$arrayKey, $substr)) {
+                        ${'order' . strtoupper($arrayKey)} = is_callable($priority)
+                            ? $priority($$arrayKey, $substr)
+                            : $priority;
+                    }
+                }
+            }
+                        
+            /*if (false !== strpos($a, '\\')) {
+                $orderA = 0;
+            }
+            
+            if (false !== strpos($b, '\\')) {
+                $orderB = 0;
+            }
+            
+            if (false !== strpos($a, '/')) {
+                $orderA = substr_count($a, '/');
+            }
+               
+            if (false !== strpos($b, '/')) {
+                $orderB = substr_count($b, '/');
+            }
+            
+            if (false !== strpos($a, '::')) {
+                $orderA = 10;
+            }
+            
+            if (false !== strpos($b, '::')) {
+                $orderB = 10;
+            }*/       
+            
+            if ($orderA == $orderB) {
+                return 0;
+            }
+            return ($orderA < $orderB) ? -1 : 1;
+        });
+        
+        var_dump($globalLayoutConfig);exit;
+        
+        return $globalLayoutConfig;
+    }
+    
     /**
      * 
      * @return array
      */
     public function getLayoutConfig()
     {
+        $globalLayoutConfig = $this->getGlobalLayoutConfig();
         if (!$this->layoutConfig->count()) {
             $result = $this->cache->getItem($this->getLayoutCacheKey(), $hit);
             if ($this->isCacheEnabled && $hit) {
                 $this->layoutConfig = new ZendConfig($result, true);
                 return $this->layoutConfig;
             }
-            foreach ($this->configCollector->collect() as $configFile) {
-                $tempConfigs = include $configFile;
-                foreach ($tempConfigs as $handle => $tempConfig) {
-                    $tempConfig = new ZendConfig($tempConfig, true);
-                    $handles = $tempConfig->handles;
-                    if (null === $handles) {
-                        $handles = $handle;
-                    } else if ($handles instanceof ZendConfig) {
-                        $handles[] = $handle;
-                    }
-                    if ($this->isHandleAllowed($handles)) {
-                        $this->layoutConfig->merge($tempConfig);
-                    }
+            foreach ($globalLayoutConfig as $handle => $config) {
+                $tempConfig = new ZendConfig($config, true);
+                $handles = $tempConfig->handles;
+                if (null === $handles) {
+                    $handles = $handle;
+                } else if ($handles instanceof ZendConfig) {
+                    $handles[] = $handle;
+                }
+                if ($this->isHandleAllowed($handles)) {
+                    $this->layoutConfig->merge($tempConfig);
                 }
             }
             $this->cache->setItem($this->getLayoutCacheKey(), $this->layoutConfig->toArray());

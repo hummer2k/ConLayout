@@ -10,13 +10,17 @@ use Zend\EventManager\ListenerAggregateInterface,
     Zend\Mvc\Router\Http\RouteMatch;
     
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class ActionHandles 
     implements  ListenerAggregateInterface
 {
     use ListenerAggregateTrait;    
+    
+    const BEHAVIOR_CONTROLLER = 'controller';    
+    const BEHAVIOR_ROUTENAME = 'routename';    
+    const BEHAVIOR_COMBINED = 'combined';
             
     /**
      *
@@ -29,6 +33,12 @@ class ActionHandles
      * @var \ConLayout\Service\Config
      */
     protected $layoutConfig;
+    
+    /**
+     *
+     * @var string
+     */
+    protected $routeSeparator = '/';
     
     /**
      * 
@@ -69,27 +79,54 @@ class ActionHandles
      */
     protected function getActionHandles(RouteMatch $routeMatch)
     {
-        $routeName = $routeMatch->getMatchedRouteName();
+        $routeHandles = $this->getRouteHandles($routeMatch->getMatchedRouteName());
+        $controllerHandles = $this->getControllerHandles($routeMatch);
+
+        switch ($this->getHandleBehavior()) {
+            case self::BEHAVIOR_ROUTENAME:
+                return $routeHandles;
+            case self::BEHAVIOR_COMBINED:
+                return array_merge($routeHandles, $controllerHandles);    
+            case self::BEHAVIOR_CONTROLLER:
+            default:
+                return $controllerHandles;
+        }
+    }
+    
+    /**
+     * 
+     * @param \Zend\Mvc\Router\Http\RouteMatch $routeMatch
+     * @return array
+     */
+    protected function getControllerHandles(RouteMatch $routeMatch)
+    {
         $controller = strtolower($routeMatch->getParam('controller'));
         $action = strtolower($routeMatch->getParam('action'));
         $module = substr($controller, 0, strpos($controller, '\\'));
-        
-        $controllerAction = array(
+        return array(
             $module,
             $controller,
             $controller . '::' . $action
         );
-        
-        switch ($this->getHandleBehavior()) {
-        case 'routematch':
-            return array($routeName);
-        case 'combined':
-            array_unshift($controllerAction, $routeName);
-            return $controllerAction;       
-        case 'controller_action':
-        default:
-            return $controllerAction;
+    }
+    
+    /**
+     * 
+     * @param string $routeName
+     * @return array
+     */
+    protected function getRouteHandles($routeName)
+    {
+        $routeSegments = explode($this->routeSeparator, $routeName);
+        $routeHandles = array();
+        $count = count($routeSegments);
+        for ($i = 0; $i < $count; $i++) {
+            for ($j = 0; $j <= $i; $j++) {
+                $routeHandles[$i][] = $routeSegments[$j];
+            }
+            $routeHandles[$i] = implode($this->routeSeparator, $routeHandles[$i]);
         }
+        return $routeHandles;
     }
     
     /**
@@ -129,6 +166,26 @@ class ActionHandles
     public function setLayoutConfig(Config $layoutConfig)
     {
         $this->layoutConfig = $layoutConfig;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getRouteSeparator()
+    {
+        return $this->routeSeparator;
+    }
+
+    /**
+     * 
+     * @param string $routeSeparator
+     * @return \ConLayout\Listener\ActionHandles
+     */
+    public function setRouteSeparator($routeSeparator)
+    {
+        $this->routeSeparator = $routeSeparator;
         return $this;
     }
     
