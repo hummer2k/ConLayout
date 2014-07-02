@@ -3,19 +3,20 @@
   border: 1px dotted #a94442;
   position: relative;
   margin: 1px;
+  min-height: 15px;
   overflow: hidden;
   *zoom: 1;
 }
-/* line 11, ../scss/con-layout.scss */
+/* line 12, ../scss/con-layout.scss */
 .block-debug:hover .block-debug-info {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
   opacity: 0.2;
 }
-/* line 15, ../scss/con-layout.scss */
+/* line 16, ../scss/con-layout.scss */
 .block-debug.block-highlight {
   background: #f2dede;
 }
-/* line 18, ../scss/con-layout.scss */
+/* line 19, ../scss/con-layout.scss */
 .block-debug .block-debug-info {
   color: #a94442;
   position: absolute;
@@ -27,12 +28,12 @@
   line-height: 12px;
   padding: 0 5px;
 }
-/* line 28, ../scss/con-layout.scss */
+/* line 29, ../scss/con-layout.scss */
 .block-debug .block-debug-info span {
   font-size: 11px;
   margin-left: 5px;
 }
-/* line 31, ../scss/con-layout.scss */
+/* line 32, ../scss/con-layout.scss */
 .block-debug .block-debug-info span:first-child {
   margin-left: 0;
 }

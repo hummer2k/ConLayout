@@ -1,5 +1,7 @@
 <?php
 namespace ConLayout\Service\Config;
+
+use Zend\Config\Config as ZendConfig;
 /**
  * Collector
  *
@@ -39,7 +41,9 @@ class Collector
             $configFiles = glob($this->globPath, GLOB_BRACE);
             foreach ($configFiles as $configFile) {
                 if (is_readable($configFile)) {
-                    $this->layoutConfigs[] = $configFile;
+                    $this->layoutConfigs[] = new ZendConfig(
+                        include $configFile, true
+                    );
                 }
             }
         }

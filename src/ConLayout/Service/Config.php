@@ -16,6 +16,8 @@ class Config
     
     const BLOCKS_CACHE_KEY = 'con-layout-blocks';
     
+    const GLOBAL_LAYOUT_CACHE_KEY = 'con-layout-global';
+    
     /**
      *
      * @var array
@@ -35,12 +37,24 @@ class Config
      * @var ZendConfig
      */
     protected $layoutConfig;
+    
+    /**
+     *
+     * @var array
+     */
+    protected $globalLayoutConfig;
         
     /**
      *
      * @var boolean
      */
     protected $isCacheEnabled = false;
+    
+    /**
+     *
+     * @var Config\SorterInterface
+     */
+    protected $sorter;
     
     /**
      * @var StorageInterface
@@ -51,14 +65,17 @@ class Config
      * 
      * @param \ConLayout\Service\Config\CollectorInterface $configCollector
      * @param \Zend\Cache\Storage\StorageInterface $cache
+     * @param \ConLayout\Service\Config\SorterInterface $sorter
      */
     public function __construct(
         Config\CollectorInterface $configCollector, 
-        StorageInterface $cache
+        StorageInterface $cache,
+        Config\SorterInterface $sorter
     )
     {
         $this->configCollector = $configCollector;
         $this->cache = $cache;
+        $this->sorter = $sorter;
         $this->layoutConfig = new ZendConfig(array(), true);
     }
     
@@ -94,70 +111,31 @@ class Config
         return $this;
     }
     
+    /**
+     * retrieve global merged layout config 
+     * config is sorted by handle priority
+     * 
+     * @return array
+     */
     public function getGlobalLayoutConfig()
     {
-        $globalLayoutConfig = new ZendConfig(array(), true);
-        foreach ($this->configCollector->collect() as $configFile) {
-            $tmp = include($configFile);
-            $config = new ZendConfig($tmp, true);
-            $globalLayoutConfig->merge($config);
-        }
-        $globalLayoutConfig = $globalLayoutConfig->toArray();
-        uksort($globalLayoutConfig, function($a, $b) {
-            
-            $orderA = -10;
-            $orderB = -10;
-            
-            $priorities = array(
-                'default' => -20,
-                '\\' => 0,
-                '/' => function($haystack, $needle) {
-                    return substr_count($haystack, $needle);
-                },
-                '::' => 10
+        if (null === $this->globalLayoutConfig) {
+            $result = $this->cache->getItem(self::GLOBAL_LAYOUT_CACHE_KEY, $success);
+            if ($this->isCacheEnabled && $success) {
+                $this->globalLayoutConfig = $result;
+                return $this->globalLayoutConfig;
+            }
+            $this->globalLayoutConfig = new ZendConfig(array(), true);
+            foreach ($this->configCollector->collect() as $config) {
+                $this->globalLayoutConfig->merge($config);
+            }
+            $this->globalLayoutConfig = $this->globalLayoutConfig->toArray();
+            $this->sorter->sort(
+                $this->globalLayoutConfig
             );
-            
-            foreach($priorities as $substr => $priority) {
-                foreach (array('a', 'b') as $arrayKey) {
-                    if (false !== strpos($$arrayKey, $substr)) {
-                        ${'order' . strtoupper($arrayKey)} = is_callable($priority)
-                            ? $priority($$arrayKey, $substr)
-                            : $priority;
-                    }
-                }
-            }
-                        
-            /*if (false !== strpos($a, '\\')) {
-                $orderA = 0;
-            }
-            
-            if (false !== strpos($b, '\\')) {
-                $orderB = 0;
-            }
-            
-            if (false !== strpos($a, '/')) {
-                $orderA = substr_count($a, '/');
-            }
-               
-            if (false !== strpos($b, '/')) {
-                $orderB = substr_count($b, '/');
-            }
-            
-            if (false !== strpos($a, '::')) {
-                $orderA = 10;
-            }
-            
-            if (false !== strpos($b, '::')) {
-                $orderB = 10;
-            }*/       
-            
-            if ($orderA == $orderB) {
-                return 0;
-            }
-            return ($orderA < $orderB) ? -1 : 1;
-        });
-                
-        return $globalLayoutConfig;
+            $this->cache->setItem(self::GLOBAL_LAYOUT_CACHE_KEY, $this->globalLayoutConfig);
+        }
+        return $this->globalLayoutConfig;
     }
     
     /**
@@ -165,14 +143,14 @@ class Config
      * @return array
      */
     public function getLayoutConfig()
-    {
-        $globalLayoutConfig = $this->getGlobalLayoutConfig();
-        if (!$this->layoutConfig->count()) {
-            $result = $this->cache->getItem($this->getLayoutCacheKey(), $hit);
-            if ($this->isCacheEnabled && $hit) {
+    {       
+        if (!$this->layoutConfig->count()) {            
+            $result = $this->cache->getItem($this->getLayoutCacheKey(), $success);
+            if ($this->isCacheEnabled && $success) {
                 $this->layoutConfig = new ZendConfig($result, true);
                 return $this->layoutConfig;
             }
+            $globalLayoutConfig = $this->getGlobalLayoutConfig();
             foreach ($globalLayoutConfig as $handle => $config) {
                 $tempConfig = new ZendConfig($config, true);
                 $handles = $tempConfig->handles;
@@ -189,7 +167,7 @@ class Config
         }
         return $this->layoutConfig;
     }
-    
+        
     /**
      * 
      * @return string
@@ -219,7 +197,7 @@ class Config
     public function getLayoutTemplate()
     {
         $layoutConfig = $this->getLayoutConfig();
-        if (isset($layoutConfig['layout'])) {
+        if (!empty($layoutConfig['layout'])) {
             return $layoutConfig['layout'];
         }
         return null;
@@ -231,8 +209,8 @@ class Config
      */
     public function getBlockConfig()
     {
-        $blockConfig = $this->cache->getItem($this->getBlocksCacheKey(), $hit);
-        if ($this->isCacheEnabled && $hit) {
+        $blockConfig = $this->cache->getItem($this->getBlocksCacheKey(), $success);
+        if ($this->isCacheEnabled && $success) {
             return new ZendConfig($blockConfig, true);
         }
         $blockConfig = array();
@@ -263,12 +241,15 @@ class Config
             $blocksToRemove = array($blocksToRemove);
         }
         foreach($blockConfig as $placeholderName => &$blocks) {
+            if ($placeholderName[0] === '_') continue;
             foreach ($blocks as $blockName => &$block) {
                 if (isset($block['children'])) {
                     $block['children'] = $this->removeBlocks($block['children'], $blocksToRemove);
                 }
-                if (in_array($blockName, $blocksToRemove)) {
-                    unset($blockConfig[$placeholderName][$blockName]);
+                foreach ($blocksToRemove as $removeBlock => $remove) {
+                    if (false !== $remove && $blockName === $removeBlock) {
+                        unset($blockConfig[$placeholderName][$blockName]);
+                    }
                 }
             }
         }

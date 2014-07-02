@@ -27,7 +27,8 @@ class ConfigFactory
         $enableCache = $this->getOption($config, 'con-layout/enable_cache', false);
         $layoutConfig = new Config(
             $serviceLocator->get('ConLayout\Service\Config\CollectorInterface'),
-            $serviceLocator->get('ConLayout\Cache')
+            $serviceLocator->get('ConLayout\Cache'),
+            $serviceLocator->get('ConLayout\Service\Config\SorterInterface')
         );
         $layoutConfig->setIsCacheEnabled($enableCache);
         return $layoutConfig;

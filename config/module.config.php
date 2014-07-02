@@ -16,11 +16,21 @@ return array(
     ),
     'con-layout' => array(
         'handle_behavior' => \ConLayout\Listener\ActionHandles::BEHAVIOR_COMBINED,
-        'config_glob_path' => './{module/*/config,design/module/*}/layout.config.php',
+        'config_glob_path' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php',
         'enable_debug' => false,
         'enable_cache' => false,
         'cache_dir' => './data/cache/con-layout',
-        'child_capture_to' => 'childHtml'
+        'child_capture_to' => 'childHtml',
+        'sorter' => array(
+            'priorities' => array(
+                'default'   => -20,
+                '\\'        => 0,
+                '/'         => function($handle, $substr) {
+                    return substr_count($handle, $substr);
+                },
+                '::'        => 10
+            )
+        )
     ),
     'asset_manager' => array(
         'resolver_configs' => array(
