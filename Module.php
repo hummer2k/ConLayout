@@ -38,11 +38,12 @@ class Module
     {
         $application  = $e->getApplication();
         $serviceManager = $application->getServiceManager();        
-        $eventManager = $application->getEventManager();        
+        $eventManager = $application->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_RENDER, function($e) use ($serviceManager) {
             $layoutModifier = $serviceManager->get('ConLayout\Service\LayoutModifier');
             $layoutModifier->addBlocksToLayout();
         }); 
+        $eventManager->attach($serviceManager->get('ConLayout\Listener\ActionHandles'));
     }
 
     /**
