@@ -77,7 +77,7 @@ class ActionHandles
      * @param \Zend\EventManager\EventInterface $event
      * @return array
      */
-    protected function getActionHandles(RouteMatch $routeMatch)
+    public function getActionHandles(RouteMatch $routeMatch)
     {
         $routeHandles = $this->getRouteHandles($routeMatch->getMatchedRouteName());
         $controllerHandles = $this->getControllerHandles($routeMatch);
@@ -86,7 +86,7 @@ class ActionHandles
             case self::BEHAVIOR_ROUTENAME:
                 return $routeHandles;
             case self::BEHAVIOR_COMBINED:
-                return array_merge($routeHandles, $controllerHandles);    
+                return array_unique(array_merge($routeHandles, $controllerHandles));    
             case self::BEHAVIOR_CONTROLLER:
             default:
                 return $controllerHandles;

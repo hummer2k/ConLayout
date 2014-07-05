@@ -15,7 +15,14 @@ return array(
         'blocks' => array(
             'sidebar.right' => array(
                 'block.sidebar.right' => array(
-                    'class' => 'ConLayout\Block\Dummy'
+                    'class' => 'ConLayout\Block\Dummy',
+                    'children' => array(
+                        'childCapture' => array(
+                            'block.sidebar.right.child1' => array(
+                                'class' => 'ConLayout\Block\Dummy'
+                            )
+                        )
+                    )
                 )
             )
         )

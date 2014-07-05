@@ -356,4 +356,23 @@ class Config
     {
         return $this->isCacheEnabled;
     }
+    
+    /**
+     * 
+     * @param \Zend\Config\Config $layoutConfig
+     * @return \ConLayout\Service\Config
+     */
+    public function setLayoutConfig(ZendConfig $layoutConfig)
+    {
+        $this->layoutConfig = $layoutConfig;
+        return $this;
+    }
+    
+    public function reset()
+    {
+        $this->layoutConfig = new ZendConfig(array(), true);
+        $this->globalLayoutConfig = null;
+        $this->handles = array('default');
+        return $this;
+    }
 }

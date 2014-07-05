@@ -6,6 +6,9 @@ namespace ConLayoutTest\Service;
  */
 class LayoutModifierTest extends \ConLayoutTest\AbstractTest
 {
+    /**
+     * @covers \ConLayout\Service\LayoutModifier::addBlocksToLayout
+     */
     public function testAddBlocksToLayout()
     {
         $this->layoutConfig->reset();
@@ -19,8 +22,7 @@ class LayoutModifierTest extends \ConLayoutTest\AbstractTest
         $this->assertEquals(
             $layout->getTemplate(), 
             $this->layoutConfig->getLayoutTemplate()
-        );
-        
+        );        
         
         $this->assertEquals(1, $layout->count());
         

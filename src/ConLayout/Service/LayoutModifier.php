@@ -66,18 +66,14 @@ class LayoutModifier
         }
         foreach ($blocks as $placeholderName => $blocks) {
             foreach ($blocks as $block) {
-                if ($this->isDebug) {
+                $blockParent = $block->instance;
+                if ($this->isDebug) {                    
                     $block->instance = $this->_addDebugBlock($block->instance);                    
                 }
                 $captureTo = !is_string($placeholderName) ? $this->captureTo : $placeholderName;
-                $parent->addChild($block->instance, $captureTo, true);
-                if ($block->children) {
-                    if ($this->isDebug) {
-                        $parent = $block->instance->getIterator()->current();
-                    } else {
-                        $parent = $block->instance;
-                    }
-                    $this->addBlocksToLayout($block->children, $parent);
+                $parent->addChild($blockParent, $captureTo, true);
+                if ($block->children) {                    
+                    $this->addBlocksToLayout($block->children, $blockParent);
                 }
             }
         }

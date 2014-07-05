@@ -16,6 +16,11 @@ class OptionTraitTest extends AbstractTest
             'blubb' => array(
                 'test' => 'my_option_value'
             )
+        ),
+        'test' => array(
+            'bla/blubb' => array(
+                'val' => 'Test1234'
+            )
         )
     );
     
@@ -25,17 +30,15 @@ class OptionTraitTest extends AbstractTest
     public function testGetOption()
     {        
         $ipsum = $this->getOption($this->options, 'lorem/ipsum');
-        $this->assertEquals($ipsum, 20);
+        $this->assertSame($ipsum, 20);
         
         $blubb = $this->getOption($this->options, 'dolor/blubb');
-        $this->assertEquals($blubb, array(
+        $this->assertSame($blubb, array(
             'test' => 'my_option_value'
         ));
         
         $test = $this->getOption($this->options, 'dolor/blubb/test');
-        $this->assertEquals($test, 'my_option_value');
-        
-        
+        $this->assertSame($test, 'my_option_value');        
     }
     
     /**
@@ -47,7 +50,7 @@ class OptionTraitTest extends AbstractTest
         $this->assertNull($nonExistingValue);     
         
         $nonExistingValue = $this->getOption($this->options, 'does/not/exist', 'default');
-        $this->assertEquals('default', $nonExistingValue);
+        $this->assertSame('default', $nonExistingValue);
     }
     
     /**
@@ -56,6 +59,18 @@ class OptionTraitTest extends AbstractTest
     public function testDelimiter()
     {
         $value = $this->getOption($this->options, 'dolor.blubb.test', null, '.');
-        $this->assertEquals('my_option_value', $value);
+        $this->assertSame('my_option_value', $value);
+    }
+    
+    /**
+     * @covers \ConLayout\OptionTrait::getOption
+     */
+    public function testEscape()
+    {
+        $value = $this->getOption($this->options, 'test/bla/blubb/val');
+        $this->assertNull($value);
+        
+        $value = $this->getOption($this->options, 'test/bla\/blubb/val');
+        $this->assertSame('Test1234', $value);
     }
 }
