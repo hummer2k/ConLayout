@@ -7,16 +7,19 @@ use Zend\EventManager\ListenerAggregateInterface,
     Zend\Mvc\MvcEvent,
     Zend\EventManager\ListenerAggregateTrait,
     ConLayout\Service\Config,
-    Zend\Mvc\Router\Http\RouteMatch;
+    Zend\Mvc\Router\Http\RouteMatch,
+    Zend\ServiceManager\ServiceLocatorAwareTrait;
     
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class ActionHandles 
-    implements  ListenerAggregateInterface
+    implements  ListenerAggregateInterface,
+                \Zend\ServiceManager\ServiceLocatorAwareInterface    
 {
     use ListenerAggregateTrait;    
+    use ServiceLocatorAwareTrait;
     
     const BEHAVIOR_CONTROLLER = 'controller';    
     const BEHAVIOR_ROUTENAME = 'routename';    
@@ -57,6 +60,38 @@ class ActionHandles
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'addActionHandles'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'prepareView'));
+    }
+    
+    /**
+     * prepares view: applies callbacks 
+     * 
+     * @param \Zend\EventManager\EventInterface $event
+     * @return \ConLayout\Listener\ActionHandles
+     */
+    public function prepareView(EventInterface $event)
+    {
+        $layoutConfig = $this->getLayoutConfig()->getLayoutConfig();
+        $prepareView = $layoutConfig->prepareView;
+        if (!is_array($prepareView)) {
+            $prepareView = array($prepareView);
+        }
+        foreach ($prepareView as $callback) {
+            if (is_callable($callback)) {
+                $callback($this->getViewRenderer());
+            }
+        }
+        return $this;
+    }
+    
+    /**
+     * retrieve ViewRenderer
+     * 
+     * @return \Zend\View\Renderer\PhpRenderer
+     */
+    public function getViewRenderer()
+    {
+        return $this->serviceLocator->get('ViewRenderer');
     }
      
     /**

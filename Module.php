@@ -36,14 +36,28 @@ class Module
      */
     public function onBootstrap(Event $e)
     {
-        $application  = $e->getApplication();
+        $application    = $e->getApplication();
         $serviceManager = $application->getServiceManager();        
-        $eventManager = $application->getEventManager();
+        $eventManager   = $application->getEventManager();
+        $sharedEvents   = $eventManager->getSharedManager();   
+        
         $eventManager->attach(MvcEvent::EVENT_RENDER, function($e) use ($serviceManager) {
             $layoutModifier = $serviceManager->get('ConLayout\Service\LayoutModifier');
             $layoutModifier->addBlocksToLayout();
         }); 
+        
         $eventManager->attach($serviceManager->get('ConLayout\Listener\ActionHandles'));
+        
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) use ($serviceManager) {
+            $serviceManager->get('ConLayout\Service\Config')
+                ->addHandle($e->getError());
+        });
+        
+        /*$sharedEvents->attach(__NAMESPACE__, MvcEvent::EVENT_DISPATCH, function($e) use ($serviceManager) {
+            $strategy = $serviceManager->get('BlockRendererStrategy');
+            $view     = $serviceManager->get('ViewManager')->getView();
+            $strategy->attach($view->getEventManager());
+        }, 100);   */     
     }
 
     /**

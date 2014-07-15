@@ -10,6 +10,7 @@ use Zend\View\Model\ViewModel;
  */
 class Dummy
     extends ViewModel
+    implements BlockInterface
 {
     protected $template = 'blocks/dummy';
     
@@ -20,5 +21,24 @@ class Dummy
             'title' => 'Dummy Block',
             'text' => 'This is a dummy block.'
         ));
-    }    
+    }
+    
+    public function getArticles($limit = 10)
+    {
+        $articles = array(
+            array(
+                'title' => 'LOL',
+                'text' => 'Lorem ipsum.'
+            ),
+            array(
+                'title' => 'HAHA',
+                'text' => 'lorem ipsum 2k3 blubb'
+            ),
+            array(
+                'title' => 'BLUBBB',
+                'text' => 'Lorem Ipsum dolor'
+            )
+        );
+        return array_slice($articles, 0, $limit);
+    }
 }

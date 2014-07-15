@@ -8,6 +8,8 @@ return array(
         'ConLayout\Service\Config\SorterInterface' => 'ConLayout\Service\Config\SorterFactory',
         'ConLayout\Cache' => 'ConLayout\CacheFactory',
         'ConLayout\Listener\ActionHandles' => 'ConLayout\Listener\ActionHandlesFactory',
+        'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
+        'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory'
     ),
     'invokables' => array(
         'ConLayout\Collector\LayoutCollector' => 'ConLayout\Collector\LayoutCollector'

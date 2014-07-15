@@ -19,7 +19,7 @@ class BlockManagerFactory implements FactoryInterface
         return new BlockManager(
             $sl->get('ConLayout\Service\BlocksBuilder'),
             $sl->get('ConLayout\Service\Config'),
-            $sl->get('Zend\View\Renderer\PhpRenderer')
+            $sl->get('ConLayout\View\Renderer\BlockRenderer')
         );
     }
 }

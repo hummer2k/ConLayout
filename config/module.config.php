@@ -7,6 +7,9 @@ return array(
         ),
         'template_map' => array(
             'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',
+        ),
+        'strategies' => array(
+            'BlockRendererStrategy'
         )
     ),
     'controller_plugins' => array(
