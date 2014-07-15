@@ -2,7 +2,7 @@
 namespace ConLayout\Service\Config;
 use Zend\ServiceManager\FactoryInterface;
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class SorterFactory implements FactoryInterface

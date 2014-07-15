@@ -3,7 +3,8 @@
 namespace ConLayout\Service;
 
 use Zend\Cache\Storage\StorageInterface,
-    Zend\Config\Config as ZendConfig;
+    Zend\Config\Config as ZendConfig,
+    Zend\Permissions\Acl\AclInterface;
 
 /**
  * Config
@@ -60,7 +61,7 @@ class Config
      * @var StorageInterface
      */
     protected $cache;
-    
+        
     /**
      * 
      * @param \ConLayout\Service\Config\CollectorInterface $configCollector
@@ -90,7 +91,7 @@ class Config
             $handles = array($handles);
         }
         foreach ($handles as $handle) {
-            if (!in_array($handle, $this->handles)) {
+            if (!empty($handle) && !in_array($handle, $this->handles)) {
                 $this->handles[] = $handle;
             }
         }
@@ -143,7 +144,7 @@ class Config
      * @return array
      */
     public function getLayoutConfig()
-    {       
+    {
         if (!$this->layoutConfig->count()) {            
             $result = $this->cache->getItem($this->getLayoutCacheKey(), $success);
             if ($this->isCacheEnabled && $success) {
@@ -223,7 +224,7 @@ class Config
         if (isset($blockConfig['_remove'])) {
             $blockConfig = $this->removeBlocks($blockConfig, $blockConfig['_remove']);
             unset($blockConfig['_remove']);
-        }        
+        }
         $blockConfig = new ZendConfig($this->sortBlocks($blockConfig), true);
         $this->cache->setItem($this->getBlocksCacheKey(), $blockConfig->toArray());
         return $blockConfig;
@@ -238,19 +239,19 @@ class Config
     public function removeBlocks(array $blockConfig, $blocksToRemove)
     {
         if (!is_array($blocksToRemove)) {
-            $blocksToRemove = array($blocksToRemove);
+            $blocksToRemove = array($blocksToRemove => true);
         }
-        foreach($blockConfig as $placeholderName => &$blocks) {
-            if ($placeholderName[0] === '_') continue;
+        foreach($blockConfig as $captureTo => &$blocks) {
+            if ($captureTo[0] === '_') continue;
             foreach ($blocks as $blockName => &$block) {
                 if (isset($block['children'])) {
                     $block['children'] = $this->removeBlocks($block['children'], $blocksToRemove);
                 }
                 foreach ($blocksToRemove as $removeBlock => $remove) {
                     if (false !== $remove && $blockName === $removeBlock) {
-                        unset($blockConfig[$placeholderName][$blockName]);
+                        unset($blockConfig[$captureTo][$blockName]);
                     }
-                }
+                }                
             }
         }
         return $blockConfig;

@@ -80,6 +80,8 @@ class BlocksBuilder
                 }
                 $block->name = $blockName;
                 $block->instance = $this->createBlock($block);
+                // add block to cache so we have fast access 
+                // to the block instance by $blockName
                 $this->blocks[$blockName] = $block->instance;
             }
         }

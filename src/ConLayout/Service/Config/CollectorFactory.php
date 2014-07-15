@@ -11,6 +11,11 @@ use Zend\ServiceManager\FactoryInterface;
 class CollectorFactory
     implements FactoryInterface
 {
+    /**
+     * 
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @return \ConLayout\Service\Config\Collector
+     */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');

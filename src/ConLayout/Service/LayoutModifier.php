@@ -2,7 +2,9 @@
 namespace ConLayout\Service;
 
 use Zend\View\Model\ViewModel,
-    Zend\Config\Config as ZendConfig;
+    Zend\Config\Config as ZendConfig,
+    \Zend\Permissions\Acl\AclInterface,
+    \Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Modifier
@@ -13,7 +15,7 @@ class LayoutModifier
 {   
     /**
      *
-     * @var \Zend\View\Model\ViewModel
+     * @var ViewModel
      */
     protected $layout;
     
@@ -36,18 +38,37 @@ class LayoutModifier
     protected $isDebug = false;
     
     /**
+     *
+     * @var AclInterface
+     */
+    protected $acl;
+    
+    /**
+     *
+     * @var string
+     */
+    protected $role;
+    
+    /**
      * 
      * @param \Zend\View\Model\ViewModel $layout
      * @param \Zend\Config\Config $createdBlocks
      * @param string|null $layoutTemplate
      */
-    public function __construct(ViewModel $layout, $createdBlocks, $layoutTemplate = null)
+    public function __construct(
+        ViewModel $layout, 
+        $createdBlocks,
+        AclInterface $acl = null,
+        $role = null,
+        $layoutTemplate = null)
     {
-        $this->layout   = $layout;
+        $this->layout = $layout;        
+        $this->createdBlocks = $createdBlocks;
+        $this->acl = $acl;
+        $this->role = $role;
         if (null !== $layoutTemplate) {
             $this->layout->setTemplate($layoutTemplate);
         }
-        $this->createdBlocks = $createdBlocks;
     }
     
     /**
@@ -64,24 +85,38 @@ class LayoutModifier
         if (null === $parent) {
             $parent = $this->layout;
         }
-        foreach ($blocks as $placeholderName => $blocks) {
+        foreach ($blocks as $captureTo => $blocks) {
             foreach ($blocks as $block) {
+                if (!$this->isAllowed($block->name)) continue;
+                $captureTo = !is_string($captureTo) ? $this->captureTo : $captureTo;
+                $blockInstance = $block->instance;
                 if ($this->isDebug) {
-                    $block->instance = $this->_addDebugBlock($block->instance);                    
+                    $block->instance = $this->addDebugBlock($block->instance, $captureTo);
                 }
-                $captureTo = !is_string($placeholderName) ? $this->captureTo : $placeholderName;
-                $parent->addChild($block->instance, $captureTo, true);
+                $append = false === $block->append ? false : true;
+                $parent->addChild($block->instance, $captureTo, $append);
                 if ($block->children) {
-                    if ($this->isDebug) {
-                        $parent = $block->instance->getIterator()->current();
-                    } else {
-                        $parent = $block->instance;
-                    }
-                    $this->addBlocksToLayout($block->children, $parent);
+                    $this->addBlocksToLayout($block->children, $blockInstance);
                 }
             }
         }
         return $this;
+    }
+    
+    /**
+     * check if block can added to layout
+     * 
+     * @param string $blockName
+     * @return boolean
+     */
+    protected function isAllowed($blockName)
+    {
+        if (null !== $this->acl) {
+            if ($this->acl->hasResource($blockName)) {
+                return $this->acl->isAllowed($this->role, $blockName);
+            }
+        }
+        return true;
     }
     
     /**
@@ -90,13 +125,14 @@ class LayoutModifier
      * @param \Zend\View\Model\ViewModel $block
      * @return \Zend\View\Model\ViewModel
      */
-    protected function _addDebugBlock(ViewModel $block)
+    protected function addDebugBlock(ViewModel $block, $captureTo)
     {
         $debugBlock = new ViewModel(array(
             'blockName' => $block->getVariable('nameInLayout'),
             'blockTemplate' => $block->getTemplate(),
             'blockClass' => get_class($block)
         ));
+        $debugBlock->setCaptureTo($captureTo);
         $debugBlock->setTemplate('blocks/debug');
         $debugBlock->addChild($block);
         return $debugBlock;
@@ -122,4 +158,86 @@ class LayoutModifier
         $this->captureTo = (string) $captureTo;
         return $this;
     }
+    
+    /**
+     * 
+     * @return ViewModel
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getCreatedBlocks()
+    {
+        return $this->createdBlocks;
+    }
+
+    /**
+     * 
+     * @return AclInterface
+     */
+    public function getAcl()
+    {
+        return $this->acl;
+    }
+
+    /**
+     * 
+     * @return string|RoleInterface
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * 
+     * @param \Zend\View\Model\ViewModel $layout
+     * @return \ConLayout\Service\LayoutModifier
+     */
+    public function setLayout(ViewModel $layout)
+    {
+        $this->layout = $layout;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param type $createdBlocks
+     * @return \ConLayout\Service\LayoutModifier
+     */
+    public function setCreatedBlocks($createdBlocks)
+    {
+        $this->createdBlocks = $createdBlocks;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param \Zend\Permissions\Acl\AclInterface $acl
+     * @return \ConLayout\Service\LayoutModifier
+     */
+    public function setAcl(AclInterface $acl)
+    {
+        $this->acl = $acl;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param string|RoleInterface $role
+     * @return \ConLayout\Service\LayoutModifier
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+        return $this;
+    }
+
+
 }

@@ -33,7 +33,7 @@ class Collector
     
     /**
      * 
-     * @return array
+     * @return array collection of ZendConfig instances
      */
     public function collect()
     {

@@ -56,9 +56,12 @@ class ActionHandles
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'addActionHandles'));
+        $this->listeners[] = $events->attach(
+            MvcEvent::EVENT_ROUTE, 
+            array($this, 'addActionHandles')
+        );
     }
-     
+    
     /**
      * 
      * @param \Zend\EventManager\EventInterface $event

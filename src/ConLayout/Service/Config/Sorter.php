@@ -1,7 +1,7 @@
 <?php
 namespace ConLayout\Service\Config;
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class Sorter implements SorterInterface
