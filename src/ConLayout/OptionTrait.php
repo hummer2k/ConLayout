@@ -19,9 +19,11 @@ trait OptionTrait
     protected function getOption(array $data, $path, $default = null, $delimiter = '/')
     {
         $found = true;
+        $tempEscaped = '::||::';
+        $path = str_replace('\\' . $delimiter, $tempEscaped, $path);
         $path = explode($delimiter, $path);
         for ($i = 0; ($i < count($path) && $found); $i++) {
-            $key = $path[$i];
+            $key = str_replace($tempEscaped, $delimiter, $path[$i]);
             if (isset($data[$key])) {
                 $data = $data[$key];
             } else {
