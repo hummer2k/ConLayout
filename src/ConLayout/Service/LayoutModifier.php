@@ -87,7 +87,7 @@ class LayoutModifier
         }
         foreach ($blocks as $captureTo => $blocks) {
             foreach ($blocks as $block) {
-                if (!$this->isAllowed($block->name)) continue;
+                if (!$this->isAllowed($block)) continue;
                 $captureTo = !is_string($captureTo) ? $this->captureTo : $captureTo;
                 $blockInstance = $block->instance;
                 if ($this->isDebug) {
@@ -104,16 +104,19 @@ class LayoutModifier
     }
     
     /**
-     * check if block can added to layout
+     * check if block is allowed to be added to layout
      * 
-     * @param string $blockName
+     * @param ZendConfig $block
      * @return boolean
      */
-    protected function isAllowed($blockName)
+    protected function isAllowed(ZendConfig $block)
     {
         if (null !== $this->acl) {
-            if ($this->acl->hasResource($blockName)) {
-                return $this->acl->isAllowed($this->role, $blockName);
+            $resourceName = $block->resource
+                ? $block->resource
+                : $block->name;
+            if ($this->acl->hasResource($resourceName)) {
+                return $this->acl->isAllowed($this->role, $resourceName);
             }
         }
         return true;
