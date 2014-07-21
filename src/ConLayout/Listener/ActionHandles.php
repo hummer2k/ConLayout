@@ -59,13 +59,15 @@ class ActionHandles
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'addActionHandles'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'addActionHandles'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'setLayoutTemplate'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'prepareView'));
     }
     
     /**
      * prepares view: applies callbacks 
      * 
+     * @deprecated since version 0.1
      * @param \Zend\EventManager\EventInterface $event
      * @return \ConLayout\Listener\ActionHandles
      */
@@ -92,6 +94,14 @@ class ActionHandles
     public function getViewRenderer()
     {
         return $this->serviceLocator->get('ViewRenderer');
+    }
+    
+    public function setLayoutTemplate(EventInterface $event)
+    {
+        /* @var $layout \Zend\View\Model\ViewModel */
+        $layout = $event->getViewModel();
+        $layout->setTemplate($this->getLayoutConfig()->getLayoutTemplate());
+        return $this;
     }
      
     /**

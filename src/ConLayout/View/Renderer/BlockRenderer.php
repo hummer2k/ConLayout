@@ -10,24 +10,20 @@ class BlockRenderer
     extends PhpRenderer
 {
     /**
-     * Overloading: proxy to helpers and current viewModel or block instance
+     * Overloading: proxy to Variables container 
+     * if method getName() of block exists it will pull the data 
+     * from the block  
      *
-     * Proxies to the attached plugin manager to retrieve, return, and potentially
-     * execute helpers.
-     *
-     * * If the helper does not define __invoke, it will be returned
-     * * If the helper does define __invoke, it will be called as a functor
-     *
-     * @param  string $method
-     * @param  array $argv
+     * @param  string $name
      * @return mixed
      */
-    public function __call($method, $argv)
+    public function __get($name)
     {
+        $method = 'get' . ucfirst($name);
         $block = $this->plugin('viewModel')->getCurrent();
         if (is_callable(array($block, $method))) {
-            return call_user_func_array(array($block, $method), $argv);
+            return $block->{$method}();
         }
-        return parent::__call($method, $argv);
+        return parent::__get($name);
     }
 }

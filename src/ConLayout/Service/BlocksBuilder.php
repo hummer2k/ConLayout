@@ -4,7 +4,8 @@ namespace ConLayout\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface,
     Zend\Config\Config as ZendConfig,
-    \Zend\ServiceManager\ServiceLocatorAwareTrait;
+    \Zend\ServiceManager\ServiceLocatorAwareTrait,
+    \ConLayout\Block\AbstractBlock;
 
 /**
  * BlocksBuilder
@@ -99,6 +100,7 @@ class BlocksBuilder
     }
     
     /**
+     * creates block instance from config
      * 
      * @param type $blockConfig
      * @return \ConLayout\Service\className
@@ -114,6 +116,11 @@ class BlocksBuilder
         } else {
             $block = new $className();
         }
+        
+        if ($block instanceof AbstractBlock) {
+            $block->setRequest($this->serviceLocator->get('Request'));
+        }
+        
         // set template if configured
         if ($blockConfig->template) {
             $block->setTemplate($blockConfig->template);

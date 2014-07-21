@@ -65,11 +65,14 @@ class BlockManager
     
     /**
      * 
-     * @param string $blockname 
+     * @param mixed $blockname 
      * @return string rendered block
      */
     public function render($blockname)
     {
+        if ($blockname instanceof \Zend\View\Model\ModelInterface) {
+            return $this->renderer->render($blockname);
+        }
         return $this->renderer->render(
             $this->blocksBuilder->getBlock($blockname)
         );

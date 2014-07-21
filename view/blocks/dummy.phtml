@@ -3,9 +3,9 @@
     <p><?php echo $this->text ?></p>
     <?php echo $this->childHtml ?>
     <h4>BlockStuff</h4>
-    <?php foreach ($this->getArticles(2) as $article): ?>
+    <?php foreach ($this->articles as $i => $article): ?>
     <article>
-        <h5><?php echo $this->escapeHtml($article['title']) ?></h5>
+        <h5><?php echo ($i+1) ?>) <?php echo $this->escapeHtml($article['title']) ?></h5>
         <p><?php echo $this->escapeHtml($article['text']) ?></p>
     </article>
     <?php endforeach; ?>

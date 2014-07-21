@@ -29,10 +29,7 @@ class LayoutModifierFactory
         $createdBlocks   = $serviceLocator->get('ConLayout\Service\BlocksBuilder')
             ->getCreatedBlocks();
         
-        $layoutTemplate  = $serviceLocator->get('ConLayout\Service\Config')
-            ->getLayoutTemplate();
-        
-        $layoutModifier = new LayoutModifier($layout, $createdBlocks, $layoutTemplate); 
+        $layoutModifier = new LayoutModifier($layout, $createdBlocks); 
         $layoutModifier
             ->setIsDebug($this->getOption($config, 'con-layout/enable_debug', false))
             ->setCaptureTo($this->getOption($config, 'con-layout/child_capture_to', 'childHtml'));            

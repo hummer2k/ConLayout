@@ -39,14 +39,10 @@ class LayoutModifier
      * 
      * @param \Zend\View\Model\ViewModel $layout
      * @param \Zend\Config\Config $createdBlocks
-     * @param string|null $layoutTemplate
      */
-    public function __construct(ViewModel $layout, $createdBlocks, $layoutTemplate = null)
+    public function __construct(ViewModel $layout, $createdBlocks)
     {
         $this->layout   = $layout;
-        if (null !== $layoutTemplate) {
-            $this->layout->setTemplate($layoutTemplate);
-        }
         $this->createdBlocks = $createdBlocks;
     }
     

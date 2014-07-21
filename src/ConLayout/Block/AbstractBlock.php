@@ -2,7 +2,8 @@
 namespace ConLayout\Block;
 
 use Zend\View\Model\ViewModel,
-    Zend\View\HelperPluginManager;
+    Zend\View\HelperPluginManager,
+    Zend\Http\Request;
 
 /**
  * @package ConLayout
@@ -12,6 +13,12 @@ abstract class AbstractBlock
     extends ViewModel
     implements BlockInterface
 {
+    /**
+     *
+     * @var Request
+     */
+    protected $request;
+    
     /**
      *
      * @var HelperPluginManager
@@ -44,7 +51,18 @@ abstract class AbstractBlock
     }
     
     /**
-     * prepare view on custruct
+     * 
+     * @param \Zend\Http\Request $request
+     * @return \ConLayout\Block\AbstractBlock
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+    
+    /**
+     * prepare view 
      */
     protected function prepareView()
     {
