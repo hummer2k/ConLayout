@@ -90,7 +90,7 @@ class Config
             $handles = array($handles);
         }
         foreach ($handles as $handle) {
-            if (!in_array($handle, $this->handles)) {
+            if (!in_array($handle, $this->handles) && trim($handle) !== '') {
                 $this->handles[] = $handle;
             }
         }

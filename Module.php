@@ -39,7 +39,6 @@ class Module
         $application    = $e->getApplication();
         $serviceManager = $application->getServiceManager();        
         $eventManager   = $application->getEventManager();
-        $sharedEvents   = $eventManager->getSharedManager();   
         
         $eventManager->attach(MvcEvent::EVENT_RENDER, function($e) use ($serviceManager) {
             $layoutModifier = $serviceManager->get('ConLayout\Service\LayoutModifier');
@@ -51,13 +50,7 @@ class Module
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) use ($serviceManager) {
             $serviceManager->get('ConLayout\Service\Config')
                 ->addHandle($e->getError());
-        });
-        
-        /*$sharedEvents->attach(__NAMESPACE__, MvcEvent::EVENT_DISPATCH, function($e) use ($serviceManager) {
-            $strategy = $serviceManager->get('BlockRendererStrategy');
-            $view     = $serviceManager->get('ViewManager')->getView();
-            $strategy->attach($view->getEventManager());
-        }, 100);   */     
+        }, 100);
     }
 
     /**

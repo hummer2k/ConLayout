@@ -67,7 +67,7 @@ class LayoutModifier
                     $block->instance = $this->_addDebugBlock($block->instance);                    
                 }
                 $captureTo = !is_string($placeholderName) ? $this->captureTo : $placeholderName;
-                $parent->addChild($blockParent, $captureTo, true);
+                $parent->addChild($block->instance, $captureTo, true);
                 if ($block->children) {                    
                     $this->addBlocksToLayout($block->children, $blockParent);
                 }

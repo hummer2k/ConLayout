@@ -60,7 +60,7 @@ class ActionHandles
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'addActionHandles'));
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'setLayoutTemplate'));
+        $this->listeners[] = $events->attach([MvcEvent::EVENT_ROUTE, MvcEvent::EVENT_DISPATCH_ERROR], array($this, 'setLayoutTemplate'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'prepareView'));
     }
     
@@ -145,8 +145,8 @@ class ActionHandles
      */
     protected function getControllerHandles(RouteMatch $routeMatch)
     {
-        $controller = strtolower($routeMatch->getParam('controller'));
-        $action = strtolower($routeMatch->getParam('action'));
+        $controller = $routeMatch->getParam('controller');
+        $action = $routeMatch->getParam('action');
         $module = substr($controller, 0, strpos($controller, '\\'));
         return array(
             $module,
