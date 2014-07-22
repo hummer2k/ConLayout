@@ -2,8 +2,6 @@
 namespace ConLayout\Service;
 
 use Zend\ServiceManager\FactoryInterface,
-    Zend\Mvc\Router\RouteMatch,
-    Zend\Mvc\Router\RouteStackInterface as Router,
     \ConLayout\OptionTrait;
 
 /**
@@ -11,7 +9,7 @@ use Zend\ServiceManager\FactoryInterface,
  *
  * @author hummer 
  */
-class ConfigFactory
+class LayoutServiceFactory
     implements FactoryInterface
 {
     use OptionTrait;
@@ -25,12 +23,12 @@ class ConfigFactory
     {
         $config  = $serviceLocator->get('Config');  
         $enableCache = $this->getOption($config, 'con-layout/enable_cache', false);
-        $layoutConfig = new Config(
+        $layoutService = new LayoutService(
             $serviceLocator->get('ConLayout\Service\Config\CollectorInterface'),
             $serviceLocator->get('ConLayout\Cache'),
             $serviceLocator->get('ConLayout\Service\Config\SorterInterface')
         );
-        $layoutConfig->setIsCacheEnabled($enableCache);
-        return $layoutConfig;
+        $layoutService->setIsCacheEnabled($enableCache);
+        return $layoutService;
     }
 }

@@ -43,12 +43,12 @@ class LayoutCollector
     public function collect(\Zend\Mvc\MvcEvent $mvcEvent)
     {
         $sm = $mvcEvent->getApplication()->getServiceManager();
-        $config = $sm->get('ConLayout\Service\Config');
+        $layoutService = $sm->get('ConLayout\Service\LayoutService');
         $blocksBuilder = $sm->get('ConLayout\Service\BlocksBuilder');
         $data = array(
-            'handles' => $config->getHandles(),
+            'handles' => $layoutService->getHandles(),
             'layoutConfig' => $this->makeArraySerializable(
-                $config->getLayoutConfig()->toArray()
+                $layoutService->getLayoutConfig()->toArray()
             ),
             'blocks' => array()
         );

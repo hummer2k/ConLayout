@@ -48,7 +48,7 @@ class Module
         $eventManager->attach($serviceManager->get('ConLayout\Listener\ActionHandles'));
         
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) use ($serviceManager) {
-            $serviceManager->get('ConLayout\Service\Config')
+            $serviceManager->get('ConLayout\Service\LayoutService')
                 ->addHandle($e->getError());
         }, 100);
     }

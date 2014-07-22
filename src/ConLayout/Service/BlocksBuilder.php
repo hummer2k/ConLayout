@@ -19,9 +19,9 @@ class BlocksBuilder
     
     /**
      *
-     * @var Config
+     * @var LayoutService
      */
-    protected $layoutConfig;
+    protected $layoutService;
     
     /**
      * cache stores blocks as blockname => instance
@@ -44,11 +44,11 @@ class BlocksBuilder
         
     /**
      * 
-     * @param \ConLayout\Service\Config $layoutConfig
+     * @param \ConLayout\Service\LayoutService $layoutService
      */
-    public function __construct(Config $layoutConfig)
+    public function __construct(LayoutService $layoutService)
     {
-        $this->layoutConfig = $layoutConfig;
+        $this->layoutService = $layoutService;
     }
         
     /**
@@ -72,7 +72,7 @@ class BlocksBuilder
     protected function createBlocks(ZendConfig $blockConfig = null)
     {
         if (null === $blockConfig) {
-            $blockConfig = $this->layoutConfig->getBlockConfig();
+            $blockConfig = $this->layoutService->getBlockConfig();
         }
         foreach ($blockConfig as $blocks) {
             foreach($blocks as $blockName => $block) {

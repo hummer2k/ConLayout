@@ -10,7 +10,7 @@ use Zend\Cache\Storage\StorageInterface,
  *
  * @author hummer 
  */
-class Config
+class LayoutService
 {
     const LAYOUT_CACHE_KEY = 'con-layout-layout';
     

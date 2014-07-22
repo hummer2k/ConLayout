@@ -1,7 +1,7 @@
 <?php
 return array(
     'factories' => array(
-        'ConLayout\Service\Config' => 'ConLayout\Service\ConfigFactory',
+        'ConLayout\Service\LayoutService' => 'ConLayout\Service\LayoutServiceFactory',
         'ConLayout\Service\Config\CollectorInterface' => 'ConLayout\Service\Config\CollectorFactory',
         'ConLayout\Service\BlocksBuilder' => 'ConLayout\Service\BlocksBuilderFactory',
         'ConLayout\Service\LayoutModifier' => 'ConLayout\Service\LayoutModifierFactory',

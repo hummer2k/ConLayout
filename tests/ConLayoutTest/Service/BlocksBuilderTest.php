@@ -27,7 +27,7 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
         $this->assertArrayHasKey('sidebar.right', $blocksBuilder->getCreatedBlocks());
         
         $this->layoutConfig->addHandle('route/childroute');
-        $this->layoutConfig->setLayoutConfig(new \Zend\Config\Config(array(), true));
+        $this->layoutConfig->setLayoutService(new \Zend\Config\Config(array(), true));
         $blocksBuilder->create(true);
         $this->assertArrayHasKey('sidebar', $blocksBuilder->getCreatedBlocks());
     }
