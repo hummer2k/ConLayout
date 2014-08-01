@@ -50,6 +50,18 @@ class LayoutModifier
     protected $role;
     
     /**
+     *
+     * @var AclInterface
+     */
+    protected static $defaultAcl;
+    
+    /**
+     *
+     * @var RoleInterface
+     */
+    protected static $defaultRole;
+    
+    /**
      * 
      * @param \Zend\View\Model\ViewModel $layout
      * @param \Zend\Config\Config $createdBlocks
@@ -104,19 +116,19 @@ class LayoutModifier
     }
     
     /**
-     * check if block is allowed to be added to layout
+     * check if block is allowed
      * 
      * @param ZendConfig $block
      * @return boolean
      */
     protected function isAllowed(ZendConfig $block)
     {
-        if (null !== $this->acl) {
+        if (null !== $this->getAcl()) {
             $resourceName = $block->resource
                 ? $block->resource
                 : $block->name;
-            if ($this->acl->hasResource($resourceName)) {
-                return $this->acl->isAllowed($this->role, $resourceName);
+            if ($this->getAcl()->hasResource($resourceName)) {
+                return $this->getAcl()->isAllowed($this->getRole(), $resourceName);
             }
         }
         return true;
@@ -186,7 +198,13 @@ class LayoutModifier
      */
     public function getAcl()
     {
-        return $this->acl;
+        if (null !== $this->acl) {
+            return $this->acl;
+        }
+        if (null !== static::$defaultAcl) {
+            return static::$defaultAcl;
+        }
+        return null;
     }
 
     /**
@@ -195,7 +213,13 @@ class LayoutModifier
      */
     public function getRole()
     {
-        return $this->role;
+        if (null !== $this->role) {
+            return $this->role;
+        }
+        if (null !== static::$defaultRole) {
+            return static::$defaultRole;
+        }
+        return null;
     }
 
     /**
@@ -230,6 +254,15 @@ class LayoutModifier
         $this->acl = $acl;
         return $this;
     }
+    
+    /**
+     * 
+     * @param \Zend\Permissions\Acl\AclInterface $acl
+     */
+    public static function setDefaultAcl(AclInterface $acl)
+    {
+        static::$defaultAcl = $acl;
+    }
 
     /**
      * 
@@ -242,5 +275,12 @@ class LayoutModifier
         return $this;
     }
 
-
+    /**
+     * 
+     * @param \Zend\Permissions\Acl\Role\RoleInterface|string $role
+     */
+    public static function setDefaultRole($role)
+    {
+        static::$defaultRole = $role;
+    }
 }
