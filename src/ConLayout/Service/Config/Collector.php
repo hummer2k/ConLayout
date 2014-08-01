@@ -12,9 +12,9 @@ class Collector
 {
     /**
      *
-     * @var string
+     * @var array
      */
-    protected $globPath;
+    protected $globPaths;
     
     /**
      *
@@ -26,9 +26,9 @@ class Collector
      * 
      * @param string $globPath
      */
-    public function __construct($globPath)
+    public function __construct(array $globPaths)
     {
-        $this->globPath = $globPath;
+        $this->globPaths = $globPaths;
     }
     
     /**
@@ -38,12 +38,14 @@ class Collector
     public function collect()
     {
         if (empty($this->layoutConfigs)) {
-            $configFiles = glob($this->globPath, GLOB_BRACE);
-            foreach ($configFiles as $configFile) {
-                if (is_readable($configFile)) {
-                    $this->layoutConfigs[] = new ZendConfig(
-                        include $configFile, true
-                    );
+            foreach ($this->globPaths as $globPath) {
+                $configFiles = glob($globPath, GLOB_BRACE);
+                foreach ($configFiles as $configFile) {
+                    if (is_readable($configFile)) {
+                        $this->layoutConfigs[] = new ZendConfig(
+                            include $configFile, true
+                        );
+                    }
                 }
             }
         }

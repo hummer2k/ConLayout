@@ -29,24 +29,24 @@ class BlockManager
     
     /**
      *
-     * @var \ConLayout\Service\Config 
+     * @var \ConLayout\Service\LayoutService
      */
-    protected $config;
+    protected $layoutService;
     
     /**
      * 
      * @param \ConLayout\Service\BlocksBuilder $blocksBuilder
-     * @param \ConLayout\Service\Config $config
+     * @param \ConLayout\Service\LayoutService $layoutService
      * @param \Zend\View\Renderer\RendererInterface $renderer
      */
     public function __construct(
         \ConLayout\Service\BlocksBuilder $blocksBuilder,
-        \ConLayout\Service\Config $config,
+        \ConLayout\Service\LayoutService $layoutService,
         \Zend\View\Renderer\RendererInterface $renderer
     )
     {
         $this->blocksBuilder = $blocksBuilder;
-        $this->config = $config;
+        $this->layoutService = $layoutService;
         $this->renderer = $renderer;
     }
     
@@ -65,11 +65,14 @@ class BlockManager
     
     /**
      * 
-     * @param string $blockname 
+     * @param mixed $blockname 
      * @return string rendered block
      */
     public function render($blockname)
     {
+        if ($blockname instanceof \Zend\View\Model\ModelInterface) {
+            return $this->renderer->render($blockname);
+        }
         return $this->renderer->render(
             $this->blocksBuilder->getBlock($blockname)
         );
@@ -96,11 +99,11 @@ class BlockManager
     
     /**
      * 
-     * @return \ConLayout\Service\Config 
+     * @return \ConLayout\Service\LayoutService
      */
-    public function getConfig()
+    public function getLayoutService()
     {
-        return $this->config;
+        return $this->layoutService;
     }
     
     /**
@@ -110,7 +113,7 @@ class BlockManager
      */
     public function addHandle($handle)
     {
-        $this->config->addHandle($handle);
+        $this->layoutService->addHandle($handle);
         return $this;
     }
     
@@ -121,7 +124,7 @@ class BlockManager
      */
     public function removeHandle($handles)
     {
-        $this->config->removeHandle($handles);
+        $this->layoutService->removeHandle($handles);
         return $this;
     }
 }

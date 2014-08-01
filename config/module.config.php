@@ -7,6 +7,9 @@ return array(
         ),
         'template_map' => array(
             'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',
+        ),
+        'strategies' => array(
+            'BlockRendererStrategy'
         )
     ),
     'controller_plugins' => array(
@@ -16,7 +19,9 @@ return array(
     ),
     'con-layout' => array(
         'handle_behavior' => \ConLayout\Listener\ActionHandles::BEHAVIOR_COMBINED,
-        'config_glob_path' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php',
+        'config_glob_paths' => array(
+            './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
+        ),
         'enable_debug' => false,
         'enable_cache' => false,
         'cache_dir' => './data/cache/con-layout',

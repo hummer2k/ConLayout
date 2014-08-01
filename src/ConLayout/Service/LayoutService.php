@@ -11,7 +11,7 @@ use Zend\Cache\Storage\StorageInterface,
  *
  * @author hummer 
  */
-class Config
+class LayoutService
 {
     const LAYOUT_CACHE_KEY = 'con-layout-layout';
     
@@ -91,7 +91,7 @@ class Config
             $handles = array($handles);
         }
         foreach ($handles as $handle) {
-            if (!empty($handle) && !in_array($handle, $this->handles)) {
+            if (!in_array($handle, $this->handles) && trim($handle) !== '') {
                 $this->handles[] = $handle;
             }
         }

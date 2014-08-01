@@ -18,9 +18,9 @@ class BlocksBuilderFactory
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $layoutConfig = $serviceLocator->get('ConLayout\Service\Config');
+        $layoutService = $serviceLocator->get('ConLayout\Service\LayoutService');
         $blocksBuilder = new BlocksBuilder(
-            $layoutConfig
+            $layoutService
         );
         return $blocksBuilder;
     }

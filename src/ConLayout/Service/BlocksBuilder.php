@@ -4,7 +4,8 @@ namespace ConLayout\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface,
     Zend\Config\Config as ZendConfig,
-    \Zend\ServiceManager\ServiceLocatorAwareTrait;
+    \Zend\ServiceManager\ServiceLocatorAwareTrait,
+    \ConLayout\Block\AbstractBlock;
 
 /**
  * BlocksBuilder
@@ -18,9 +19,9 @@ class BlocksBuilder
     
     /**
      *
-     * @var Config
+     * @var LayoutService
      */
-    protected $layoutConfig;
+    protected $layoutService;
     
     /**
      * cache stores blocks as blockname => instance
@@ -43,11 +44,11 @@ class BlocksBuilder
         
     /**
      * 
-     * @param \ConLayout\Service\Config $layoutConfig
+     * @param \ConLayout\Service\LayoutService $layoutService
      */
-    public function __construct(Config $layoutConfig)
+    public function __construct(LayoutService $layoutService)
     {
-        $this->layoutConfig = $layoutConfig;
+        $this->layoutService = $layoutService;
     }
         
     /**
@@ -71,7 +72,7 @@ class BlocksBuilder
     protected function createBlocks(ZendConfig $blockConfig = null)
     {
         if (null === $blockConfig) {
-            $blockConfig = $this->layoutConfig->getBlockConfig();
+            $blockConfig = $this->layoutService->getBlockConfig();
         }
         foreach ($blockConfig as $blocks) {
             foreach($blocks as $blockName => $block) {
@@ -101,6 +102,7 @@ class BlocksBuilder
     }
     
     /**
+     * creates block instance from config
      * 
      * @param type $blockConfig
      * @return \ConLayout\Service\className
@@ -116,6 +118,11 @@ class BlocksBuilder
         } else {
             $block = new $className();
         }
+        
+        if ($block instanceof AbstractBlock) {
+            $block->setRequest($this->serviceLocator->get('Request'));
+        }
+        
         // set template if configured
         if ($blockConfig->template) {
             $block->setTemplate($blockConfig->template);

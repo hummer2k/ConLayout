@@ -1,7 +1,6 @@
 <?php
 namespace ConLayout\Block;
 
-use Zend\View\Model\ViewModel;
 /**
  * Dummy block demo
  * 
@@ -9,9 +8,11 @@ use Zend\View\Model\ViewModel;
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de> *
  */
 class Dummy
-    extends ViewModel
+    extends AbstractBlock
 {
     protected $template = 'blocks/dummy';
+    
+    protected $limit;
     
     public function init()
     {
@@ -20,5 +21,35 @@ class Dummy
             'title' => 'Dummy Block',
             'text' => 'This is a dummy block.'
         ));
-    }    
+        $this->limit = $this->request->getQuery('limit', 10);
+    }
+    
+    public function getArticles()
+    {
+        $articles = array(
+            array(
+                'title' => 'LOL',
+                'text' => 'Lorem ipsum.'
+            ),
+            array(
+                'title' => 'HAHA',
+                'text' => 'lorem ipsum 2k3 blubb'
+            ),
+            array(
+                'title' => 'BLUBBB',
+                'text' => 'Lorem Ipsum dolor'
+            ),
+            array(
+                'title' => 'lorem ipsum',
+                'text' => 'das ist ein test. okay, es scheint alles zu funktionieren!'
+            )
+        );
+        return array_slice($articles, 0, $this->limit);
+    }
+    
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
 }

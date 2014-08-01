@@ -19,8 +19,8 @@ class ActionHandlesFactory implements FactoryInterface
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
-        $layoutConfig = $serviceLocator->get('ConLayout\Service\Config');
+        $layoutService = $serviceLocator->get('ConLayout\Service\LayoutService');
         $behavior = $this->getOption($config, 'con-layout/handle_behavior', 'combined');
-        return new ActionHandles($behavior, $layoutConfig);
+        return new ActionHandles($behavior, $layoutService);
     }
 }
