@@ -24,6 +24,7 @@ return array(
         ),
         'enable_debug' => false,
         'enable_cache' => false,
+        'cache' => 'ConLayout\Cache',
         'cache_dir' => './data/cache/con-layout',
         'child_capture_to' => 'childHtml',
         'sorter' => array(

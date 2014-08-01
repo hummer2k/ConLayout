@@ -23,9 +23,10 @@ class LayoutServiceFactory
     {
         $config  = $serviceLocator->get('Config');  
         $enableCache = $this->getOption($config, 'con-layout/enable_cache', false);
+        $cache = $this->getOption($config, 'con-layout/cache', 'ConLayout\Cache');
         $layoutService = new LayoutService(
             $serviceLocator->get('ConLayout\Service\Config\CollectorInterface'),
-            $serviceLocator->get('ConLayout\Cache'),
+            $serviceLocator->get($cache),
             $serviceLocator->get('ConLayout\Service\Config\SorterInterface')
         );
         $layoutService->setIsCacheEnabled($enableCache);
