@@ -11,29 +11,23 @@ class LayoutModifierTest extends \ConLayoutTest\AbstractTest
      */
     public function testAddBlocksToLayout()
     {
-        $this->layoutConfig->reset();
+        $this->layoutService->reset();
         $layout = new \Zend\View\Model\ViewModel();
         $layoutModifier = new \ConLayout\Service\LayoutModifier(
             $layout,
-            $this->getBlocksBuilder()->getCreatedBlocks(),
-            $this->layoutConfig->getLayoutTemplate()
-        );        
-        $layoutModifier->addBlocksToLayout();
-        $this->assertEquals(
-            $layout->getTemplate(), 
-            $this->layoutConfig->getLayoutTemplate()
-        );        
+            $this->getBlocksBuilder()->getCreatedBlocks()
+        );
+        $layoutModifier->addBlocksToLayout(); 
         
         $this->assertEquals(1, $layout->count());
         
-        $this->layoutConfig->reset();
-        $this->layoutConfig->addHandle(array('route', 'route/childroute'));        
+        $this->layoutService->reset();
+        $this->layoutService->addHandle(array('route', 'route/childroute'));        
         $layout = new \Zend\View\Model\ViewModel();
         
         $layoutModifier = new \ConLayout\Service\LayoutModifier(
             $layout,
-            $this->getBlocksBuilder()->getCreatedBlocks(),
-            $this->layoutConfig->getLayoutTemplate()
+            $this->getBlocksBuilder()->getCreatedBlocks()
         );
         $layoutModifier->addBlocksToLayout();
         $this->assertEquals(3, $layout->count());

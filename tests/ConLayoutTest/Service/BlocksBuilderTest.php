@@ -22,14 +22,15 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
      */
     public function testCreateBlocksWithRouteHandle()
     {
-        $this->layoutConfig->addHandle('route');
+        $this->layoutService->addHandle('route');
         $blocksBuilder = $this->getBlocksBuilder();
-        $this->assertArrayHasKey('sidebar.right', $blocksBuilder->getCreatedBlocks());
+        $createdBlocks = $blocksBuilder->getCreatedBlocks();
+        $this->assertNotEmpty($createdBlocks->get('sidebar.right'));
         
-        $this->layoutConfig->addHandle('route/childroute');
-        $this->layoutConfig->setLayoutService(new \Zend\Config\Config(array(), true));
+        $this->layoutService->addHandle('route/childroute');
+        $this->layoutService->setLayoutConfig(new \Zend\Config\Config(array(), true));
         $blocksBuilder->create(true);
-        $this->assertArrayHasKey('sidebar', $blocksBuilder->getCreatedBlocks());
+        $this->assertNotEmpty($blocksBuilder->getCreatedBlocks()->get('sidebar'));
     }
     
     /**

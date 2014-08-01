@@ -12,7 +12,7 @@ class BlockManagerTest
      */
     public function testGetBlock()
     {
-        $this->layoutConfig->reset();
+        $this->layoutService->reset();
         $blockManager = $this->getBlockManager();
         $this->assertInstanceOf('ConLayout\Block\Dummy', $blockManager->getBlock('block.header'));
     }
@@ -30,7 +30,7 @@ class BlockManagerTest
     {
         $blockManager = new \ConLayout\Controller\Plugin\BlockManager(
             $this->getBlocksBuilder(),
-            $this->layoutConfig,
+            $this->layoutService,
             $this->getMock('Zend\View\Renderer\PhpRenderer')
         );
         return $blockManager;

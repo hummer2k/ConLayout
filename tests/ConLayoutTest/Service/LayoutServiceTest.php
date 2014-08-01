@@ -11,20 +11,20 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
      */
     public function testAddHandle()
     {
-        $this->layoutConfig->addHandle('route');
+        $this->layoutService->addHandle('route');
         $this->assertEquals(array(
             'default',
             'route'
-        ), $this->layoutConfig->getHandles());
+        ), $this->layoutService->getHandles());
         
-        $this->layoutConfig->addHandle(array(
+        $this->layoutService->addHandle(array(
             'route/childroute',
             'controller::action'
         ));
         
         $this->assertEquals(array(
             'default', 'route', 'route/childroute', 'controller::action'
-        ), $this->layoutConfig->getHandles());
+        ), $this->layoutService->getHandles());
     }
     
     /**
@@ -32,7 +32,7 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
      */
     public function testSortBlocks()
     {
-        $sortedBlocks = $this->layoutConfig->sortBlocks(array(
+        $sortedBlocks = $this->layoutService->sortBlocks(array(
             'sidebar' => array(
                 'block.sidebar_1' => array(
                     'class' => 'ConLayout\Block\Dummy',
@@ -80,19 +80,19 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
      */
     public function testLayoutTemplate()
     {
-        $this->layoutConfig->reset();
-        $this->assertEquals('layout/2cols-left', $this->layoutConfig->getLayoutTemplate());
+        $this->layoutService->reset();
+        $this->assertEquals('layout/2cols-left', $this->layoutService->getLayoutTemplate());
         
-        $this->layoutConfig->reset();
-        $this->layoutConfig->addHandle('route/childroute');
-        $this->assertEquals('layout/2cols-right', $this->layoutConfig->getLayoutTemplate());
+        $this->layoutService->reset();
+        $this->layoutService->addHandle('route/childroute');
+        $this->assertEquals('layout/2cols-right', $this->layoutService->getLayoutTemplate());
     
-        $this->layoutConfig->reset();
-        $this->layoutConfig->addHandle(array(
+        $this->layoutService->reset();
+        $this->layoutService->addHandle(array(
             'route/childroute',
             'controller::action'
         ));
-        $this->assertEquals('layout/1col', $this->layoutConfig->getLayoutTemplate());
+        $this->assertEquals('layout/1col', $this->layoutService->getLayoutTemplate());
     }
     
     /**
@@ -100,14 +100,14 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
      */
     public function testRemoveBlocks()
     {
-        $this->layoutConfig->reset();
-        $blockConfig = $this->layoutConfig->getBlockConfig()->toArray();
+        $this->layoutService->reset();
+        $blockConfig = $this->layoutService->getBlockConfig()->toArray();
         
         $this->assertArrayHasKey('block.header', $blockConfig['header']);
         
-        $this->layoutConfig->reset();        
-        $this->layoutConfig->addHandle('remove-handle');
-        $blockConfig = $this->layoutConfig->getBlockConfig()->toArray();
+        $this->layoutService->reset();        
+        $this->layoutService->addHandle('remove-handle');
+        $blockConfig = $this->layoutService->getBlockConfig()->toArray();
         
         $this->assertFalse(isset($blockConfig['header']['block.header']));
         
@@ -118,7 +118,7 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
      */
     public function testGetBlockConfig()
     {
-        $blockConfig = $this->layoutConfig->getBlockConfig()->toArray();
+        $blockConfig = $this->layoutService->getBlockConfig()->toArray();
         $this->assertEquals($blockConfig, array(
             'header' => array(
                 'block.header' => array(
@@ -133,7 +133,7 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
      */
     public function testGetGlobalLayoutConfig()
     {
-        $globalLayoutConfig = $this->layoutConfig->reset()->getGlobalLayoutConfig();
+        $globalLayoutConfig = $this->layoutService->reset()->getGlobalLayoutConfig();
         $this->assertSame($globalLayoutConfig, array(
             'default' => array(
                 'layout' => 'layout/2cols-left',

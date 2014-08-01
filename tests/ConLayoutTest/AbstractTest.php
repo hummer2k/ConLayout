@@ -40,16 +40,18 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     
     /**
      *
-     * @var \ConLayout\Service\Config
+     * @var \ConLayout\Service\LayoutService
      */
-    protected $layoutConfig;
+    protected $layoutService;
 
     protected function setUp()
     {
         $this->sm = Bootstrap::getServiceManager();
         $this->config = $this->sm->get('Config'); 
         
-        $this->collector = new \ConLayout\Service\Config\Collector('./module/ConLayout/tests/config/layout.*.php');
+        $this->collector = new \ConLayout\Service\Config\Collector(array(
+            './module/ConLayout/tests/config/layout.*.php'
+        ));
         $this->sorter = new \ConLayout\Service\Config\Sorter(array(
             'default'   => -20,
             '\\'        => 0,
@@ -77,12 +79,12 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
                 ),
             )
         ));
-        $this->layoutConfig = new \ConLayout\Service\Config(
+        $this->layoutService = new \ConLayout\Service\LayoutService(
             $this->collector,
             $this->cache,
             $this->sorter
         );
-        $this->layoutConfig->setIsCacheEnabled(false);
+        $this->layoutService->setIsCacheEnabled(false);
     }
     
     /**
@@ -91,7 +93,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     protected function getBlocksBuilder()
     {
-        $blocksBuilder = new BlocksBuilder($this->layoutConfig);
+        $blocksBuilder = new BlocksBuilder($this->layoutService);
         $blocksBuilder->setServiceLocator($this->sm);
         return $blocksBuilder;
     }

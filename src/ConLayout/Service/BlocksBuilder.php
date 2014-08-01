@@ -120,7 +120,10 @@ class BlocksBuilder
         }
         
         if ($block instanceof AbstractBlock) {
-            $block->setRequest($this->serviceLocator->get('Request'));
+            $request = $this->serviceLocator->get('Request');
+            if ($request instanceof Zend\Http\Request) {
+                $block->setRequest($request);
+            }
         }
         
         // set template if configured

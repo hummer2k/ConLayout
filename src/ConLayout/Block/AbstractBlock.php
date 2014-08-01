@@ -62,6 +62,18 @@ abstract class AbstractBlock
     }
     
     /**
+     * 
+     * @return Request
+     */
+    public function getRequest()
+    {
+        if (null === $this->request) {
+            $this->request = new Request();
+        }
+        return $this->request;
+    }
+    
+    /**
      * prepare view 
      */
     protected function prepareView()

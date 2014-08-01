@@ -20,15 +20,15 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
         ));
         $handlesListener = new ActionHandles(
             ActionHandles::BEHAVIOR_CONTROLLER,
-            $this->layoutConfig->reset()
+            $this->layoutService->reset()
         );
         
         $this->assertSame(
             $handlesListener->getActionHandles($routeMatch),
             array(
-                'application',
-                'application\controller\index',
-                'application\controller\index::index'
+                'Application',
+                'Application\Controller\Index',
+                'Application\Controller\Index::index'
             )
         );
     }
@@ -46,7 +46,7 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
         $routeMatch->setMatchedRouteName('user/login');
         $handlesListener = new ActionHandles(
             ActionHandles::BEHAVIOR_ROUTENAME,
-            $this->layoutConfig->reset()
+            $this->layoutService->reset()
         );
         
         $this->assertSame(
@@ -72,7 +72,7 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
         $routeMatch->setMatchedRouteName('user/login');
         $handlesListener = new ActionHandles(
             ActionHandles::BEHAVIOR_COMBINED,
-            $this->layoutConfig->reset()
+            $this->layoutService->reset()
         );
         
         $this->assertSame(
@@ -80,8 +80,9 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
             array(
                 'user',
                 'user/login',
-                'user\controller\index',
-                'user\controller\index::login'
+                'User',
+                'User\Controller\Index',
+                'User\Controller\Index::login'
             )
         );
        

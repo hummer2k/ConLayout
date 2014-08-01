@@ -21,7 +21,7 @@ class Dummy
             'title' => 'Dummy Block',
             'text' => 'This is a dummy block.'
         ));
-        $this->limit = $this->request->getQuery('limit', 10);
+        $this->limit = $this->getRequest()->getQuery('limit', 10);
     }
     
     public function getArticles()
