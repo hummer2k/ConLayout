@@ -3,7 +3,6 @@
 namespace ConLayout\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface,
-    Zend\Config\Config as ZendConfig,
     \Zend\ServiceManager\ServiceLocatorAwareTrait,
     \ConLayout\Block\AbstractBlock;
 
@@ -32,7 +31,7 @@ class BlocksBuilder
     
     /**
      *
-     * @var ZendConfig
+     * @var array
      */
     protected $createdBlocks;
     
@@ -69,21 +68,21 @@ class BlocksBuilder
      * @param \Zend\Config\Config $blockConfig
      * @return \Zend\Config\Config
      */
-    protected function createBlocks(ZendConfig $blockConfig = null)
+    protected function createBlocks(array $blockConfig = null)
     {
         if (null === $blockConfig) {
             $blockConfig = $this->layoutService->getBlockConfig();
         }
-        foreach ($blockConfig as $blocks) {
-            foreach($blocks as $blockName => $block) {
-                if ($block->children) {
-                    $block->children = $this->createBlocks($block->children);
+        foreach ($blockConfig as &$blocks) {
+            foreach($blocks as $blockName => &$block) {
+                if (isset($block['children'])) {
+                    $block['children'] = $this->createBlocks($block['children']);
                 }
-                $block->name = $blockName;
-                $block->instance = $this->createBlock($block);
+                $block['name'] = $blockName;
+                $block['instance'] = $this->createBlock($block);
                 // add block to cache so we have fast access 
                 // to the block instance by $blockName
-                $this->blocks[$blockName] = $block->instance;
+                $this->blocks[$blockName] = $block['instance'];
             }
         }
         return $blockConfig;
@@ -107,10 +106,10 @@ class BlocksBuilder
      * @param type $blockConfig
      * @return \ConLayout\Service\className
      */
-    protected function createBlock(ZendConfig $blockConfig)
+    protected function createBlock(array $blockConfig)
     {
-        $className = $blockConfig->class 
-            ? $blockConfig->class
+        $className = isset($blockConfig['class']) 
+            ? $blockConfig['class']
             : $this->defaultBlockClass;
         /* @var $block \Zend\View\Model\ViewModel */
         if ($this->serviceLocator->has($className)) {
@@ -127,27 +126,30 @@ class BlocksBuilder
         }
         
         // set template if configured
-        if ($blockConfig->template) {
-            $block->setTemplate($blockConfig->template);
+        if (isset($blockConfig['template'])) {
+            $block->setTemplate($blockConfig['template']);
         }
         // set options
-        if ($blockConfig->options) {
-            $block->setOptions($blockConfig->options);
+        if (isset($blockConfig['options'])) {
+            $block->setOptions($blockConfig['options']);
         }
         // call block's configured methods if exists
-        foreach ($blockConfig->get('actions', array()) as $method => $params) {
-            if (method_exists($block, $method)) {
-                call_user_func_array(array($block, $method), $params->toArray());
+        if (isset($blockConfig['actions']) && is_array($blockConfig['actions'])) {
+            foreach ($blockConfig['actions'] as $method => $params) {
+                if (method_exists($block, $method)) {
+                    call_user_func_array(array($block, $method), $params);
+                }
             }
         }
-        // inject variables        
+        $blockVars = isset($blockConfig['vars']) ? $blockConfig['vars'] : array();
+        // inject variables   
         $block->setVariables(
             array_merge(
                 (array) $block->getVariables(), 
-                $blockConfig->get('vars', array()),
+                $blockVars,
                 array(
                     'block' => $block,
-                    'nameInLayout' => $blockConfig->name
+                    'nameInLayout' => $blockConfig['name']
                 )
             )
         );

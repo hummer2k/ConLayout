@@ -9,7 +9,8 @@ return array(
         'ConLayout\Cache' => 'ConLayout\CacheFactory',
         'ConLayout\Listener\ActionHandles' => 'ConLayout\Listener\ActionHandlesFactory',
         'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
-        'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory'
+        'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
+        'ConLayout\ValuePreparer\BasePath' => 'ConLayout\ValuePreparer\BasePathFactory',
     ),
     'invokables' => array(
         'ConLayout\Collector\LayoutCollector' => 'ConLayout\Collector\LayoutCollector'

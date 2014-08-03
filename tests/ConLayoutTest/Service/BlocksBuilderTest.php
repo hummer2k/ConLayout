@@ -25,12 +25,12 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
         $this->layoutService->addHandle('route');
         $blocksBuilder = $this->getBlocksBuilder();
         $createdBlocks = $blocksBuilder->getCreatedBlocks();
-        $this->assertNotEmpty($createdBlocks->get('sidebar.right'));
+        $this->assertArrayHasKey('sidebar.right', $createdBlocks);
         
         $this->layoutService->addHandle('route/childroute');
-        $this->layoutService->setLayoutConfig(new \Zend\Config\Config(array(), true));
+        $this->layoutService->setLayoutConfig(array());
         $blocksBuilder->create(true);
-        $this->assertNotEmpty($blocksBuilder->getCreatedBlocks()->get('sidebar'));
+        $this->assertArrayHasKey('sidebar', $blocksBuilder->getCreatedBlocks());
     }
     
     /**

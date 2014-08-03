@@ -21,7 +21,7 @@ return array(
         'handle_behavior' => \ConLayout\Listener\ActionHandles::BEHAVIOR_COMBINED,
         'config_glob_paths' => array(
             './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
-        ),
+        ),        
         'enable_debug' => false,
         'enable_cache' => false,
         'cache' => 'ConLayout\Cache',
@@ -36,6 +36,33 @@ return array(
                 },
                 '::'        => 10
             )
+        ),
+        'helpers' => array(
+            'headLink' => array(
+                'defaultMethod' => 'appendStylesheet',
+                'valuePreparers' => array(
+                    'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                )
+            ),
+            'headScript' => array(
+                'defaultMethod' => 'appendFile',
+                'valuePreparers' => array(
+                    'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                )
+            ),
+            'inlineScript' => array(
+                'defaultMethod' => 'appendFile',
+                'valuePreparers' => array(
+                    'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                )
+            ),
+            'headTitle' => array(
+                'defaultMethod' => 'append'
+            ),
+            'headMeta' => array(
+                'defaultMethod' => 'appendName'
+            ),
+            'doctype' => array()
         )
     ),
     'asset_manager' => array(

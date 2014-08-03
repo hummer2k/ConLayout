@@ -2,7 +2,6 @@
 namespace ConLayout\Service;
 
 use Zend\View\Model\ViewModel,
-    Zend\Config\Config as ZendConfig,
     \Zend\Permissions\Acl\AclInterface,
     \Zend\Permissions\Acl\Role\RoleInterface;
 
@@ -78,7 +77,7 @@ class LayoutModifier
      * @param type $parent
      * @return \ConLayout\Service\Layout\Modifier
      */
-    public function addBlocksToLayout(ZendConfig $blocks = null, $parent = null)
+    public function addBlocksToLayout(array $blocks = null, $parent = null)
     {
         if (null === $blocks) {
             $blocks = $this->createdBlocks;
@@ -90,14 +89,14 @@ class LayoutModifier
             foreach ($blocks as $block) {
                 if (!$this->isAllowed($block)) continue;
                 $captureTo = !is_string($captureTo) ? $this->captureTo : $captureTo;
-                $blockInstance = $block->instance;
+                $blockInstance = $block['instance'];
                 if ($this->isDebug) {
-                    $block->instance = $this->addDebugBlock($block->instance, $captureTo);
+                    $block['instance'] = $this->addDebugBlock($block['instance'], $captureTo);
                 }
-                $append = false === $block->append ? false : true;
-                $parent->addChild($block->instance, $captureTo, $append);
-                if ($block->children) {
-                    $this->addBlocksToLayout($block->children, $blockInstance);
+                $append = (isset($block['append']) && false === $block['append']) ? false : true;
+                $parent->addChild($block['instance'], $captureTo, $append);
+                if (isset($block['children'])) {
+                    $this->addBlocksToLayout($block['children'], $blockInstance);
                 }
             }
         }
@@ -107,15 +106,15 @@ class LayoutModifier
     /**
      * check if block is allowed
      * 
-     * @param ZendConfig $block
+     * @param array $block
      * @return boolean
      */
-    protected function isAllowed(ZendConfig $block)
+    protected function isAllowed(array $block)
     {
         if (null !== $this->getAcl()) {
-            $resourceName = $block->resource
-                ? $block->resource
-                : $block->name;
+            $resourceName = isset($block['resource'])
+                ? $block['resource']
+                : $block['name'];
             if ($this->getAcl()->hasResource($resourceName)) {
                 return $this->getAcl()->isAllowed($this->getRole(), $resourceName);
             }

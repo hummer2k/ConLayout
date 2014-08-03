@@ -48,7 +48,7 @@ class LayoutCollector
         $data = array(
             'handles' => $layoutService->getHandles(),
             'layoutConfig' => $this->makeArraySerializable(
-                $layoutService->getLayoutConfig()->toArray()
+                $layoutService->getLayoutConfig()
             ),
             'blocks' => array()
         );

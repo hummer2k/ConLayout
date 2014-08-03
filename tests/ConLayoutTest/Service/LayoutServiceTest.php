@@ -4,7 +4,7 @@ namespace ConLayoutTest\Service;
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ConfigTest extends \ConLayoutTest\AbstractTest
+class LayoutServiceTest extends \ConLayoutTest\AbstractTest
 {
     /**
      * @covers \ConLayout\Service\Config::addHandle
@@ -26,54 +26,7 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
             'default', 'route', 'route/childroute', 'controller::action'
         ), $this->layoutService->getHandles());
     }
-    
-    /**
-     * @covers \ConLayout\Service\Config::sortBlocks
-     */
-    public function testSortBlocks()
-    {
-        $sortedBlocks = $this->layoutService->sortBlocks(array(
-            'sidebar' => array(
-                'block.sidebar_1' => array(
-                    'class' => 'ConLayout\Block\Dummy',
-                    'order' => 10
-                ),
-                'block.sidebar_2' => array(
-                    'class' => 'ConLayout\Block\Dummy',
-                    'order' => 5
-                ),
-                'block.sidebar_3' => array(
-                    'class' => 'ConLayout\Block\Dummy',
-                    'order' => 20
-                ),
-                'block.sidebar_4' => array(
-                    'class' => 'ConLayout\Block\Dummy',
-                    'order' => -20
-                )
-            )
-        ));
-        $this->assertEquals($sortedBlocks, array(
-            'sidebar' => array(
-                'block.sidebar_4' => array(
-                    'class' => 'ConLayout\Block\Dummy',
-                    'order' => -20
-                ),
-                'block.sidebar_2' => array(
-                    'class' => 'ConLayout\Block\Dummy',
-                    'order' => 5
-                ),
-                'block.sidebar_1' => array(
-                    'class' => 'ConLayout\Block\Dummy',
-                    'order' => 10
-                ),
-                'block.sidebar_3' => array(
-                    'class' => 'ConLayout\Block\Dummy',
-                    'order' => 20
-                )
-            )
-        ));
-    }
-    
+        
     /**
      * @covers \ConLayout\Service\Config::getLayoutTemplate
      * @covers \ConLayout\Service\Config\Sorter::sort
@@ -101,13 +54,13 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
     public function testRemoveBlocks()
     {
         $this->layoutService->reset();
-        $blockConfig = $this->layoutService->getBlockConfig()->toArray();
+        $blockConfig = $this->layoutService->getBlockConfig();
         
         $this->assertArrayHasKey('block.header', $blockConfig['header']);
         
         $this->layoutService->reset();        
         $this->layoutService->addHandle('remove-handle');
-        $blockConfig = $this->layoutService->getBlockConfig()->toArray();
+        $blockConfig = $this->layoutService->getBlockConfig();
         
         $this->assertFalse(isset($blockConfig['header']['block.header']));
         
@@ -118,7 +71,7 @@ class ConfigTest extends \ConLayoutTest\AbstractTest
      */
     public function testGetBlockConfig()
     {
-        $blockConfig = $this->layoutService->getBlockConfig()->toArray();
+        $blockConfig = $this->layoutService->getBlockConfig();
         $this->assertEquals($blockConfig, array(
             'header' => array(
                 'block.header' => array(

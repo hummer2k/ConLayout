@@ -11,7 +11,8 @@ use Zend\View\Model\ViewModel,
  */
 abstract class AbstractBlock
     extends ViewModel
-    implements BlockInterface
+    implements BlockInterface,
+               CacheableInterface
 {
     /**
      *
@@ -78,5 +79,28 @@ abstract class AbstractBlock
      */
     protected function prepareView()
     {
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getCacheKey()
+    {
+        $data = array(
+            $this->getTemplate(),
+            get_called_class()
+        );
+        return md5(implode('|', $data));
+    }
+    
+    /**
+     * retrieve cache ttl
+     * 
+     * @return int
+     */
+    public function getCacheLifetime()
+    {
+        return 0;
     }
 }

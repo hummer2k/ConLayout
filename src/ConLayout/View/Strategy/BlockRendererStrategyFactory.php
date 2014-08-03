@@ -12,6 +12,7 @@ class BlockRendererStrategyFactory implements FactoryInterface
     /**
      * 
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @return \ConLayout\View\Strategy\BlockRendererStrategy
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {

@@ -1,7 +1,6 @@
 <?php
 namespace ConLayout\Service\Config;
 
-use Zend\Config\Config as ZendConfig;
 /**
  * Collector
  *
@@ -24,7 +23,7 @@ class Collector
     
     /**
      * 
-     * @param string $globPath
+     * @param array $globPaths
      */
     public function __construct(array $globPaths)
     {
@@ -33,7 +32,7 @@ class Collector
     
     /**
      * 
-     * @return array collection of ZendConfig instances
+     * @return array
      */
     public function collect()
     {
@@ -42,9 +41,7 @@ class Collector
                 $configFiles = glob($globPath, GLOB_BRACE);
                 foreach ($configFiles as $configFile) {
                     if (is_readable($configFile)) {
-                        $this->layoutConfigs[] = new ZendConfig(
-                            include $configFile, true
-                        );
+                        $this->layoutConfigs[] = include $configFile;
                     }
                 }
             }

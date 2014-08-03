@@ -20,7 +20,8 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
         ));
         $handlesListener = new ActionHandles(
             ActionHandles::BEHAVIOR_CONTROLLER,
-            $this->layoutService->reset()
+            $this->layoutService->reset(),
+            array()
         );
         
         $this->assertSame(

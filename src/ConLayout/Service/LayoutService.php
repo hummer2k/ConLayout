@@ -3,8 +3,7 @@
 namespace ConLayout\Service;
 
 use Zend\Cache\Storage\StorageInterface,
-    Zend\Config\Config as ZendConfig,
-    Zend\Permissions\Acl\AclInterface;
+    Zend\Stdlib\ArrayUtils;
 
 /**
  * Config
@@ -35,15 +34,15 @@ class LayoutService
     
     /**
      *
-     * @var ZendConfig
+     * @var array
      */
-    protected $layoutConfig;
+    protected $layoutConfig = array();
     
     /**
      *
      * @var array
      */
-    protected $globalLayoutConfig;
+    protected $globalLayoutConfig = array();
         
     /**
      *
@@ -77,7 +76,6 @@ class LayoutService
         $this->configCollector = $configCollector;
         $this->cache = $cache;
         $this->sorter = $sorter;
-        $this->layoutConfig = new ZendConfig(array(), true);
     }
     
     /**
@@ -120,17 +118,18 @@ class LayoutService
      */
     public function getGlobalLayoutConfig()
     {
-        if (null === $this->globalLayoutConfig) {
+        if (empty($this->globalLayoutConfig)) {
             $result = $this->cache->getItem(self::GLOBAL_LAYOUT_CACHE_KEY, $success);
             if ($this->isCacheEnabled && $success) {
                 $this->globalLayoutConfig = $result;
                 return $this->globalLayoutConfig;
             }
-            $this->globalLayoutConfig = new ZendConfig(array(), true);
-            foreach ($this->configCollector->collect() as $config) {
-                $this->globalLayoutConfig->merge($config);
+            foreach ($this->configCollector->collect() as $config) {                
+                $this->globalLayoutConfig = ArrayUtils::merge(
+                    $this->globalLayoutConfig,
+                    $config
+                );
             }
-            $this->globalLayoutConfig = $this->globalLayoutConfig->toArray();
             $this->sorter->sort(
                 $this->globalLayoutConfig
             );
@@ -145,26 +144,28 @@ class LayoutService
      */
     public function getLayoutConfig()
     {
-        if (!$this->layoutConfig->count()) {            
+        if (empty($this->layoutConfig)) {
             $result = $this->cache->getItem($this->getLayoutCacheKey(), $success);
             if ($this->isCacheEnabled && $success) {
-                $this->layoutConfig = new ZendConfig($result, true);
+                $this->layoutConfig = $result;
                 return $this->layoutConfig;
             }
             $globalLayoutConfig = $this->getGlobalLayoutConfig();
             foreach ($globalLayoutConfig as $handle => $config) {
-                $tempConfig = new ZendConfig($config, true);
-                $handles = $tempConfig->handles;
+                $handles = isset($config['handles']) ? $config['handles'] : null;
                 if (null === $handles) {
                     $handles = $handle;
-                } else if ($handles instanceof ZendConfig) {
+                } else if (is_array($handles)) {
                     $handles[] = $handle;
                 }
                 if ($this->isHandleAllowed($handles)) {
-                    $this->layoutConfig->merge($tempConfig);
+                    $this->layoutConfig = ArrayUtils::merge(
+                        $this->layoutConfig,
+                        $config
+                    );
                 }
             }
-            $this->cache->setItem($this->getLayoutCacheKey(), $this->layoutConfig->toArray());
+            $this->cache->setItem($this->getLayoutCacheKey(), $this->layoutConfig);
         }
         return $this->layoutConfig;
     }
@@ -173,7 +174,7 @@ class LayoutService
      * 
      * @return string
      */
-    public function getLayoutCacheKey()
+    protected function getLayoutCacheKey()
     {        
         return self::LAYOUT_CACHE_KEY 
             . '-' 
@@ -184,7 +185,7 @@ class LayoutService
      * 
      * @return string
      */
-    public function getBlocksCacheKey()
+    protected function getBlocksCacheKey()
     {
         return self::BLOCKS_CACHE_KEY
             . '-' 
@@ -212,21 +213,21 @@ class LayoutService
     {
         $blockConfig = $this->cache->getItem($this->getBlocksCacheKey(), $success);
         if ($this->isCacheEnabled && $success) {
-            return new ZendConfig($blockConfig, true);
+            return $blockConfig;
         }
         $blockConfig = array();
         $layoutConfig = $this->getLayoutConfig();
-        if (!$layoutConfig->blocks) {
+        if (!isset($layoutConfig['blocks'])) {
             return $blockConfig;
         }
-        $blockConfig = $layoutConfig->blocks->toArray();
+        $blockConfig = $layoutConfig['blocks'];
         
         if (isset($blockConfig['_remove'])) {
             $blockConfig = $this->removeBlocks($blockConfig, $blockConfig['_remove']);
             unset($blockConfig['_remove']);
         }
-        $blockConfig = new ZendConfig($this->sortBlocks($blockConfig), true);
-        $this->cache->setItem($this->getBlocksCacheKey(), $blockConfig->toArray());
+        $blockConfig = $this->sortBlocks($blockConfig);
+        $this->cache->setItem($this->getBlocksCacheKey(), $blockConfig);
         return $blockConfig;
     }
     
@@ -236,7 +237,7 @@ class LayoutService
      * @param array|string $blocksToRemove
      * @return array
      */
-    public function removeBlocks(array $blockConfig, $blocksToRemove)
+    protected function removeBlocks(array $blockConfig, $blocksToRemove)
     {
         if (!is_array($blocksToRemove)) {
             $blocksToRemove = array($blocksToRemove => true);
@@ -262,7 +263,7 @@ class LayoutService
      * @param array $blockConfig
      * @return array
      */
-    public function sortBlocks(array $blockConfig)
+    protected function sortBlocks(array $blockConfig)
     {
         foreach ($blockConfig as &$blocks) {
             foreach ($blocks as &$block) {
@@ -284,7 +285,7 @@ class LayoutService
     
     /**
      * 
-     * @param array|string|ZendConfig $handleNames
+     * @param array|string $handleNames
      * @return boolean
      */
     protected function isHandleAllowed($handleNames)
@@ -331,10 +332,10 @@ class LayoutService
 
     /**
      * 
-     * @param type $configCollector
+     * @param Config\CollectorInterface $configCollector
      * @return \ConLayout\Service\Config
      */
-    public function setConfigCollector($configCollector)
+    public function setConfigCollector(Config\CollectorInterface $configCollector)
     {
         $this->configCollector = $configCollector;
         return $this;
@@ -360,19 +361,24 @@ class LayoutService
     
     /**
      * 
-     * @param \Zend\Config\Config $layoutConfig
+     * @param array $layoutConfig
      * @return \ConLayout\Service\Config
      */
-    public function setLayoutConfig(ZendConfig $layoutConfig)
+    public function setLayoutConfig(array $layoutConfig)
     {
         $this->layoutConfig = $layoutConfig;
         return $this;
     }
     
+    /**
+     * reset service
+     * 
+     * @return \ConLayout\Service\LayoutService
+     */
     public function reset()
     {
-        $this->layoutConfig = new ZendConfig(array(), true);
-        $this->globalLayoutConfig = null;
+        $this->layoutConfig = array();
+        $this->globalLayoutConfig = array();
         $this->handles = array('default');
         return $this;
     }
