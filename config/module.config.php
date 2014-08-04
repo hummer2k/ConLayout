@@ -20,11 +20,13 @@ return array(
     'con-layout' => array(
         'handle_behavior' => \ConLayout\Listener\ActionHandles::BEHAVIOR_COMBINED,
         'config_glob_paths' => array(
-            './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
-        ),        
+            'default' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
+        ),
         'enable_debug' => false,
-        'enable_cache' => false,
-        'cache' => 'ConLayout\Cache',
+        'enable_layout_cache' => false,
+        'enable_block_cache' => false,
+        'layout_cache' => 'ConLayout\Cache',
+        'block_cache' => 'ConLayout\Cache',
         'cache_dir' => './data/cache/con-layout',
         'child_capture_to' => 'childHtml',
         'sorter' => array(

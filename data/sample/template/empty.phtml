@@ -1,0 +1,19 @@
+<?php echo $this->doctype(); ?>
+<html lang="en">
+    <?php echo $this->head ?>
+    <body class="layout-1col">
+        <?php echo $this->header; ?>
+        <div class="container">
+            <?php echo $this->placeholder('page.title') ?>
+            <div class="row">
+                <section class="content col-sm-12">
+                    <?php echo $this->breadcrumbs ?>
+                    <?php echo $this->flashMessenger() ?>  
+                    <?php echo $this->content; ?>
+                </section>
+            </div>
+            <?php echo $this->footer ?>
+        </div>
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>

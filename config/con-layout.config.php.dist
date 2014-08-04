@@ -1,0 +1,54 @@
+<?php
+$config = array(
+    'handle_behavior' => \ConLayout\Listener\ActionHandles::BEHAVIOR_COMBINED,
+    'config_glob_paths' => array(
+        'default' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
+    ),
+    'enable_debug' => false,
+    'enable_layout_cache' => false,
+    'enable_block_cache' => false,
+    'layout_cache' => 'ConLayout\Cache',
+    'block_cache' => 'ConLayout\Cache',
+    'cache_dir' => './data/cache/con-layout',
+    'child_capture_to' => 'childHtml',
+    'sorter' => array(
+        'priorities' => array(
+            'default'   => -20,
+            '\\'        => 0,
+            '/'         => function($handle, $substr) {
+                return substr_count($handle, $substr);
+            },
+            '::'        => 10
+        )
+    ),
+    'helpers' => array(
+        'headLink' => array(
+            'defaultMethod' => 'appendStylesheet',
+            'valuePreparers' => array(
+                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+            )
+        ),
+        'headScript' => array(
+            'defaultMethod' => 'appendFile',
+            'valuePreparers' => array(
+                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+            )
+        ),
+        'inlineScript' => array(
+            'defaultMethod' => 'appendFile',
+            'valuePreparers' => array(
+                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+            )
+        ),
+        'headTitle' => array(
+            'defaultMethod' => 'append'
+        ),
+        'headMeta' => array(
+            'defaultMethod' => 'appendName'
+        ),
+        'doctype' => array()
+    )
+);
+return array(
+    'con-layout' => $config
+);

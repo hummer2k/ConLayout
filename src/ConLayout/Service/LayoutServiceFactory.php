@@ -22,8 +22,8 @@ class LayoutServiceFactory
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $config  = $serviceLocator->get('Config');  
-        $enableCache = $this->getOption($config, 'con-layout/enable_cache', false);
-        $cache = $this->getOption($config, 'con-layout/cache', 'ConLayout\Cache');
+        $enableCache = $this->getOption($config, 'con-layout/enable_layout_cache', false);
+        $cache = $this->getOption($config, 'con-layout/layout_cache', 'ConLayout\Cache');
         $layoutService = new LayoutService(
             $serviceLocator->get('ConLayout\Service\Config\CollectorInterface'),
             $serviceLocator->get($cache),

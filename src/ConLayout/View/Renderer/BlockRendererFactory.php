@@ -1,7 +1,8 @@
 <?php
 namespace ConLayout\View\Renderer;
 
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\FactoryInterface,
+    ConLayout\OptionTrait;
 
 /**
  * @package ConLayout
@@ -9,7 +10,7 @@ use Zend\ServiceManager\FactoryInterface;
  */
 class BlockRendererFactory implements FactoryInterface
 {
-    use \ConLayout\OptionTrait;
+    use OptionTrait;
     
     /**
      * 
@@ -23,10 +24,12 @@ class BlockRendererFactory implements FactoryInterface
         $blockRenderer = new BlockRenderer();
         $blockRenderer->setHelperPluginManager($viewManager->getHelperManager());
         $blockRenderer->setResolver($viewManager->getResolver());
-        $cacheEnabled = $this->getOption($config, 'con-layout/enable_cache', true);
+        $cacheEnabled = $this->getOption($config, 'con-layout/enable_block_cache', true);
+        
         if ($cacheEnabled) {
+            $cache = $this->getOption($config, 'con-layout/block_cache', 'ConLayout\Cache');
             $blockRenderer
-                ->setCache($serviceLocator->get('ConLayout\Cache'))
+                ->setCache($serviceLocator->get($cache))
                 ->setCacheEnabled();
         }        
         return $blockRenderer;

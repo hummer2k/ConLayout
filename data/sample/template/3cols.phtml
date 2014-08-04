@@ -1,0 +1,25 @@
+<?php echo $this->doctype(); ?>
+<html lang="en">
+    <?php echo $this->head ?>
+    <body class="layout-3cols">
+        <?php echo $this->header; ?>
+        <div class="container">
+            <?php echo $this->placeholder('page.title') ?>
+            <div class="row">
+                <aside class="sidebar primary col-sm-3">
+                    <?php echo $this->sidebarLeft ?>
+                </aside>
+                <section class="content col-sm-6">
+                    <?php echo $this->breadcrumbs ?>
+                    <?php echo $this->flashMessenger() ?>
+                    <?php echo $this->content; ?>
+                </section>
+                <aside class="sidebar secondary col-sm-3">
+                    <?php echo $this->sidebarRight ?>
+                </aside>
+            </div>
+            <?php echo $this->footer ?>
+        </div>
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>

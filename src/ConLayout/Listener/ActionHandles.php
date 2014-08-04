@@ -101,14 +101,16 @@ class ActionHandles
             if (!is_array($layoutConfig[$helper])) {
                 $layoutConfig[$helper] = array($layoutConfig[$helper]);
             }
-            foreach ($layoutConfig[$helper] as $value) {
+            foreach ($layoutConfig[$helper] as $method => $value) {
+                if (!is_string($method)) {
+                    $method = (is_array($value) && isset($value['method'])) ? $value['method'] : $defaultMethod;
+                }                
                 if (is_array($value)) {
-                    $method = isset($value['method']) ? $value['method'] : $defaultMethod;
-                    $args   = isset($value['args']) ? $value['args'] : $value;
+                    $args   = isset($value['args']) ? array_values($value['args']) : $value;
                     $args[0] = $this->prepareHelperValue($args[0], $helper);
                     call_user_func_array(array($viewHelper, $method), $args);
                 } else if (is_string($value)) {
-                    $viewHelper->{$defaultMethod}($this->prepareHelperValue($value, $helper));
+                    $viewHelper->{$method}($this->prepareHelperValue($value, $helper));
                 }
             }
         }
