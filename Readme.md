@@ -1,16 +1,16 @@
 ConLayout - Easy handling ZF2-layouts
 =====================================
 
-Installation:
--------------
+Installation
+------------
 
-$ git submodule add git@bitbucket.org:conlabz/zf2-layout.git module/ConLayout
+    $ git submodule add git@bitbucket.org:conlabz/zf2-layout.git module/ConLayout
 
-Usage:
-------
+Usage
+-----
 
 Layouts are controlled by handles.
-Current handles are listed in zend developer toolbar
+
 Handles may be: (ordered by priority ASC)
 
 * global (= default)
@@ -19,8 +19,10 @@ Handles may be: (ordered by priority ASC)
 * a route (e.g. user/login) (the more child routes, the higher the priority)
 * an action (e.g. Application\Controller\Index::index)
 
-Layout config structure:
-------------------------
+(The current handles are listed in zend developer toolbar)
+
+Layout config structure
+-----------------------
 
     return [
         // e.g. default
@@ -64,11 +66,11 @@ Layout config structure:
             'blocks' => [
                 // your captureTo var in layout template, e.g. sidebarLeft, header, footer...
                 'CAPTURE_TO' => [
-                    // BLOCK_NAME = block identifier
+                    // BLOCK_NAME = unique block identifier, required
                     'BLOCK_NAME' => [
                         // Can extend from ConLayout\Block\AbstractBlock
                         // Should implement ConLayout\Block\BlockInterface
-                        // optional, default: Zend\View\ViewModel
+                        // optional, default: Zend\View\ViewModel                        
                         'class'     => 'ConLayout\Block\Dummy',
                         // only optional when declared in block class
                         'template'  => 'path/to/block-template',
@@ -76,6 +78,9 @@ Layout config structure:
                         'actions'   => [
                             'method' => ['param1', 'param2', 'param3']
                         ],
+                        // acl resource name
+                        // optional defaults to BLOCK_NAME
+                        'resource' => 'some_resource_id',
                         'children' => [
                             // if CAPTURE_TO index is integer, defaults to 'childHtml' or configured con-layout/capture_to node
                             'CAPTURE_TO' => [
@@ -95,9 +100,9 @@ Layout config structure:
             ]
         ],
     ];
-
-ACL:
-----
+    
+ACL
+---
 
 Example BjyAuthorize:
 
@@ -118,4 +123,14 @@ Example BjyAuthorize:
         \ConLayout\Service\LayoutModifier::setDefaultAcl($acl);
         \ConLayout\Service\LayoutModifier::setDefaultRole($role);
     }
+
+Blocks
+------
+
+coming soon...
+
+Caching
+-------
+
+coming soon...
 
