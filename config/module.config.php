@@ -10,7 +10,10 @@ return array(
         ),
         'strategies' => array(
             'BlockRendererStrategy'
-        )
+        ),
+        // important: set empty layout template, so that we 
+        // are able to set the template via layout()-helper in controller
+        'layout' => ''
     ),
     'controller_plugins' => array(
         'factories' => array(
@@ -35,8 +38,9 @@ return array(
                 '\\'        => 0,
                 '/'         => function($handle, $substr) {
                     return substr_count($handle, $substr);
-                },
-                '::'        => 10
+                },                
+                '::'        => 10,
+                'error-'    => 15
             )
         ),
         'helpers' => array(

@@ -79,8 +79,8 @@ class ActionHandles
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'addActionHandles'));
-        $this->listeners[] = $events->attach([MvcEvent::EVENT_ROUTE, MvcEvent::EVENT_DISPATCH_ERROR], array($this, 'setLayoutTemplate'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE,  array($this, 'addActionHandles'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTemplate'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyHelpers'));
     }
     
@@ -161,7 +161,10 @@ class ActionHandles
     {
         /* @var $layout \Zend\View\Model\ViewModel */
         $layout = $event->getViewModel();
-        $layout->setTemplate($this->getLayoutService()->getLayoutTemplate());
+        $template = $layout->getTemplate();
+        if ($template === '') {
+            $layout->setTemplate($this->getLayoutService()->getLayoutTemplate());
+        }
         return $this;
     }
     
