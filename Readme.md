@@ -81,6 +81,8 @@ Layout config structure
                         // acl resource name
                         // optional defaults to BLOCK_NAME
                         'resource' => 'some_resource_id',
+                        // sort order
+                        'order' => 5,
                         'children' => [
                             // if CAPTURE_TO index is integer, defaults to 'childHtml' or configured con-layout/capture_to node
                             'CAPTURE_TO' => [
