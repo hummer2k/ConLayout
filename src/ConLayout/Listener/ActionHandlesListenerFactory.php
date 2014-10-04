@@ -1,28 +1,29 @@
 <?php
 namespace ConLayout\Listener;
 
-use Zend\ServiceManager\FactoryInterface,
-    ConLayout\OptionTrait;
+use ConLayout\OptionTrait,
+    Zend\ServiceManager\FactoryInterface,
+    Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ActionHandlesFactory implements FactoryInterface
+class ActionHandlesListenerFactory implements FactoryInterface
 {
     use OptionTrait;
     
     /**
      * 
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \ConLayout\Listener\ActionHandles
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return ActionHandlesListener
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
         $layoutService = $serviceLocator->get('ConLayout\Service\LayoutService');
         $behavior = $this->getOption($config, 'con-layout/handle_behavior', 'combined');
         $helperConfig = $this->getOption($config, 'con-layout/helpers', array());
-        $actionHandles = new ActionHandles($behavior, $layoutService, $helperConfig);
+        $actionHandles = new ActionHandlesListener($behavior, $layoutService, $helperConfig);
         foreach ($helperConfig as $helper => $value) {
             if (is_array($value) && isset($value['valuePreparers'])) {
                 foreach ($value['valuePreparers'] as $valuePreparer) {

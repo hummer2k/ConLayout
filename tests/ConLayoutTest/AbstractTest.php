@@ -93,7 +93,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     protected function getBlocksBuilder()
     {
-        $blocksBuilder = new BlocksBuilder($this->layoutService);
+        $blocksBuilder = new BlocksBuilder($this->layoutService->getBlockConfig());
         $blocksBuilder->setServiceLocator($this->sm);
         return $blocksBuilder;
     }

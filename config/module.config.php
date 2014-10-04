@@ -21,7 +21,7 @@ return array(
         ),
     ),
     'con-layout' => array(
-        'handle_behavior' => \ConLayout\Listener\ActionHandles::BEHAVIOR_COMBINED,
+        'handle_behavior' => \ConLayout\Listener\ActionHandlesListener::BEHAVIOR_COMBINED,
         'config_glob_paths' => array(
             'default' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
         ),
@@ -32,6 +32,7 @@ return array(
         'block_cache' => 'ConLayout\Cache',
         'cache_dir' => './data/cache/con-layout',
         'child_capture_to' => 'childHtml',
+        'content_capture_to' => 'content',
         'sorter' => array(
             'priorities' => array(
                 'default'   => -20,

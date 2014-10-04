@@ -1,23 +1,26 @@
 <?php
 namespace ConLayout\Listener;
 
-use Zend\EventManager\ListenerAggregateInterface,
-    Zend\EventManager\EventManagerInterface,
+use ConLayout\Service\LayoutService,
+    ConLayout\ValuePreparer\ValuePreparerInterface,
     Zend\EventManager\EventInterface,
-    Zend\Mvc\MvcEvent,
+    Zend\EventManager\EventManagerInterface,
+    Zend\EventManager\ListenerAggregateInterface,
     Zend\EventManager\ListenerAggregateTrait,
-    ConLayout\Service\LayoutService,
+    Zend\Mvc\MvcEvent,
     Zend\Mvc\Router\Http\RouteMatch,
+    Zend\ServiceManager\ServiceLocatorAwareInterface,
     Zend\ServiceManager\ServiceLocatorAwareTrait,
-    ConLayout\ValuePreparer\ValuePreparerInterface;
+    Zend\View\Model\ViewModel,
+    Zend\View\Renderer\PhpRenderer;
     
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ActionHandles 
+class ActionHandlesListener
     implements  ListenerAggregateInterface,
-                \Zend\ServiceManager\ServiceLocatorAwareInterface    
+                ServiceLocatorAwareInterface    
 {
     use ListenerAggregateTrait;    
     use ServiceLocatorAwareTrait;
@@ -34,7 +37,7 @@ class ActionHandles
     
     /**
      *
-     * @var \ConLayout\Service\LayoutService
+     * @var LayoutService
      */
     protected $layoutService;
     
@@ -59,6 +62,12 @@ class ActionHandles
     protected $valuePreparers = array();
     
     /**
+     *
+     * @var ViewModel
+     */
+    protected $contentViewModel;
+    
+    /**
      * 
      * @param string $handleBehavior
      */
@@ -75,20 +84,20 @@ class ActionHandles
     
     /**
      * 
-     * @param \Zend\EventManager\EventManagerInterface $events
+     * @param EventManagerInterface $events
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE,  array($this, 'addActionHandles'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH,  array($this, 'addActionHandles'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTemplate'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyHelpers'));
     }
-    
+        
     /**
      * applies view helpers 
      *
-     * @param \Zend\EventManager\EventInterface $event
-     * @return \ConLayout\Listener\ActionHandles
+     * @param EventInterface $event
+     * @return ActionHandlesListener
      */
     public function applyHelpers(EventInterface $event)
     {        
@@ -138,8 +147,8 @@ class ActionHandles
     /**
      * 
      * @param string $helper view helper
-     * @param \ConLayout\ValuePreparer\ValuePreparerInterface $valuePreparer
-     * @return \ConLayout\Listener\ActionHandles
+     * @param ValuePreparerInterface $valuePreparer
+     * @return ActionHandlesListener
      */
     public function addValuePreparer($helper, ValuePreparerInterface $valuePreparer)
     {
@@ -150,7 +159,7 @@ class ActionHandles
     /**
      * retrieve ViewRenderer
      * 
-     * @return \Zend\View\Renderer\PhpRenderer
+     * @return PhpRenderer
      */
     public function getViewRenderer()
     {
@@ -159,7 +168,7 @@ class ActionHandles
     
     public function setLayoutTemplate(EventInterface $event)
     {
-        /* @var $layout \Zend\View\Model\ViewModel */
+        /* @var $layout ViewModel */
         $layout = $event->getViewModel();
         $template = $layout->getTemplate();
         if ($template === '') {
@@ -170,8 +179,8 @@ class ActionHandles
     
     /**
      * 
-     * @param \Zend\EventManager\EventInterface $event
-     * @return \ConLayout\Listener\ActionHandles
+     * @param EventInterface $event
+     * @return ActionHandlesListener
      */
     public function addActionHandles(EventInterface $event)
     {
@@ -183,7 +192,7 @@ class ActionHandles
     
     /**
      * 
-     * @param \Zend\EventManager\EventInterface $event
+     * @param EventInterface $event
      * @return array
      */
     public function getActionHandles(RouteMatch $routeMatch)
@@ -204,7 +213,7 @@ class ActionHandles
     
     /**
      * 
-     * @param \Zend\Mvc\Router\Http\RouteMatch $routeMatch
+     * @param RouteMatch $routeMatch
      * @return array
      */
     protected function getControllerHandles(RouteMatch $routeMatch)
@@ -250,7 +259,7 @@ class ActionHandles
     /**
      * 
      * @param string $handleBehavior
-     * @return \ConLayout\Listener\ActionHandles
+     * @return ActionHandlesListener
      */
     public function setHandleBehavior($handleBehavior)
     {
@@ -269,8 +278,8 @@ class ActionHandles
 
     /**
      * 
-     * @param \ConLayout\Service\LayoutService $layoutService
-     * @return \ConLayout\Listener\ActionHandles
+     * @param LayoutService $layoutService
+     * @return ActionHandlesListener
      */
     public function setLayoutService(LayoutService $layoutService)
     {
@@ -290,7 +299,7 @@ class ActionHandles
     /**
      * 
      * @param string $routeSeparator
-     * @return \ConLayout\Listener\ActionHandles
+     * @return ActionHandlesListener
      */
     public function setRouteSeparator($routeSeparator)
     {
@@ -311,7 +320,7 @@ class ActionHandles
     /**
      * 
      * @param array $helperConfig
-     * @return \ConLayout\Listener\ActionHandles
+     * @return \ConLayout\Listener\ActionHandlesListener
      */
     public function setHelperConfig(array $helperConfig)
     {

@@ -20,7 +20,7 @@ class BlocksBuilderFactory
     {
         $layoutService = $serviceLocator->get('ConLayout\Service\LayoutService');
         $blocksBuilder = new BlocksBuilder(
-            $layoutService
+            $layoutService->getBlockConfig()
         );
         return $blocksBuilder;
     }

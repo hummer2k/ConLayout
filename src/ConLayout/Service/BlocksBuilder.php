@@ -18,9 +18,9 @@ class BlocksBuilder
     
     /**
      *
-     * @var LayoutService
+     * @var array
      */
-    protected $layoutService;
+    protected $blockConfig;
     
     /**
      * cache stores blocks as blockname => instance
@@ -43,11 +43,11 @@ class BlocksBuilder
         
     /**
      * 
-     * @param \ConLayout\Service\LayoutService $layoutService
+     * @param array $blockConfig
      */
-    public function __construct(LayoutService $layoutService)
+    public function __construct(array $blockConfig)
     {
-        $this->layoutService = $layoutService;
+        $this->blockConfig = $blockConfig;
     }
         
     /**
@@ -65,13 +65,13 @@ class BlocksBuilder
     
     /**
      * 
-     * @param \Zend\Config\Config $blockConfig
-     * @return \Zend\Config\Config
+     * @param array $blockConfig
+     * @return array
      */
     protected function createBlocks(array $blockConfig = null)
     {
         if (null === $blockConfig) {
-            $blockConfig = $this->layoutService->getBlockConfig();
+            $blockConfig = $this->blockConfig;
         }
         foreach ($blockConfig as &$blocks) {
             foreach($blocks as $blockName => &$block) {
@@ -103,6 +103,7 @@ class BlocksBuilder
     /**
      * creates block instance from config
      * 
+     * @todo refactor
      * @param type $blockConfig
      * @return \ConLayout\Service\className
      */
@@ -112,19 +113,28 @@ class BlocksBuilder
             ? $blockConfig['class']
             : $this->defaultBlockClass;
         /* @var $block \Zend\View\Model\ViewModel */
-        if ($this->serviceLocator->has($className)) {
+        if ($this->serviceLocator->has($className) && $className !== $this->defaultBlockClass) {
             $block = $this->serviceLocator->create($className);
         } else {
             $block = new $className();
-        }
-        
+        }        
         if ($block instanceof AbstractBlock) {
             $request = $this->serviceLocator->get('Request');
-            if ($request instanceof Zend\Http\Request) {
+            if ($request instanceof \Zend\Http\Request) {
                 $block->setRequest($request);
             }
         }
-        
+        $optionKeys = array(
+            'template', 'options', 'order'
+        );
+        foreach ($optionKeys as $optionKey) {
+            if (isset($blockConfig[$optionKey])) {
+                $method = 'set' . ucfirst($optionKey);
+                if (method_exists($block, $method)) {
+                    $block->{$method}($blockConfig[$optionKey]);
+                }
+            }
+        }
         // set template if configured
         if (isset($blockConfig['template'])) {
             $block->setTemplate($blockConfig['template']);
@@ -133,6 +143,10 @@ class BlocksBuilder
         if (isset($blockConfig['options'])) {
             $block->setOptions($blockConfig['options']);
         }
+        // set sort order
+        if (isset($blockConfig['order'])) {
+            $block->setOption('order', $blockConfig['order']);
+        }        
         // call block's configured methods if exists
         if (isset($blockConfig['actions']) && is_array($blockConfig['actions'])) {
             foreach ($blockConfig['actions'] as $method => $params) {
@@ -173,6 +187,17 @@ class BlocksBuilder
         return $this->blocks;
     }
     
+    public function getBlockConfig()
+    {
+        return $this->blockConfig;
+    }
+
+    public function setBlockConfig($blockConfig)
+    {
+        $this->blockConfig = $blockConfig;
+        return $this;
+    }
+        
     /**
      * retrieve specified block
      * 

@@ -1,7 +1,10 @@
 <?php
 namespace ConLayout\View\Renderer;
 
-use Zend\View\Renderer\PhpRenderer;
+use ConLayout\Block\CacheableInterface,
+    Traversable,
+    Zend\Cache\Storage\StorageInterface,
+    Zend\View\Renderer\PhpRenderer;
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -11,7 +14,7 @@ class BlockRenderer
 {
     /**
      *
-     * @var \Zend\Cache\Storage\StorageInterface
+     * @var StorageInterface
      */
     protected $cache;
     
@@ -60,15 +63,24 @@ class BlockRenderer
      */
     public function render($nameOrModel, $values = null)
     {
-        if ($this->isCacheEnabled() && $nameOrModel instanceof \ConLayout\Block\CacheableInterface) {
+        if ($this->isCacheEnabled() && $nameOrModel instanceof CacheableInterface) {
             $result = $this->cache->getItem($nameOrModel->getCacheKey(), $success);
             if ($success) {
                 return $result;
             }
         }
         $result = parent::render($nameOrModel, $values);
-        if ($this->isCacheEnabled() && $nameOrModel instanceof \ConLayout\Block\CacheableInterface) {
-            $this->cache->setItem($nameOrModel->getCacheKey(), $result);
+        if ($this->isCacheEnabled() && $nameOrModel instanceof CacheableInterface) {
+            // set cache ttl per item workaround
+            // @see https://github.com/zendframework/zf2/pull/5386
+            $options    = $this->cache->getOptions();
+            $defaultTtl = $options->getTtl();
+            $blockTtl   = $nameOrModel->getCacheTtl();
+            if (false !== $blockTtl) {
+                $options->setTtl($blockTtl);
+                $this->cache->setItem($nameOrModel->getCacheKey(), $result);
+                $options->setTtl($defaultTtl);
+            }
         }
         return $result;
     }
@@ -87,7 +99,7 @@ class BlockRenderer
      * enable/disable cache
      * 
      * @param bool $flag
-     * @return \ConLayout\View\Renderer\BlockRenderer
+     * @return BlockRenderer
      */
     public function setCacheEnabled($flag = true)
     {
@@ -98,7 +110,7 @@ class BlockRenderer
     /**
      * retrieve cache instance
      * 
-     * @return \Zend\Cache\Storage\StorageInterface
+     * @return StorageInterface
      */
     public function getCache()
     {
@@ -108,10 +120,10 @@ class BlockRenderer
     /**
      * set cache instance
      * 
-     * @param \Zend\Cache\Storage\StorageInterface $cache
-     * @return \ConLayout\View\Renderer\BlockRenderer
+     * @param StorageInterface $cache
+     * @return BlockRenderer
      */
-    public function setCache(\Zend\Cache\Storage\StorageInterface $cache)
+    public function setCache(StorageInterface $cache)
     {
         $this->cache = $cache;
         return $this;

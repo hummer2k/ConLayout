@@ -2,7 +2,6 @@
 namespace ConLayout\Block;
 
 use Zend\View\Model\ViewModel,
-    Zend\View\HelperPluginManager,
     Zend\Http\Request;
 
 /**
@@ -14,6 +13,8 @@ abstract class AbstractBlock
     implements BlockInterface,
                CacheableInterface
 {
+    const CACHE_KEY_PREFIX = 'block-';
+    
     /**
      *
      * @var Request
@@ -22,35 +23,24 @@ abstract class AbstractBlock
     
     /**
      *
-     * @var HelperPluginManager
+     * @var array
      */
-    protected $viewPluginManager;
+    protected $cacheKeyInfo = array();
     
     /**
      * 
      * @param type $variables
      * @param type $options
-     * @param \Zend\View\HelperPluginManager $viewPluginManager
      */
-    public function __construct($variables = null, $options = null, HelperPluginManager $viewPluginManager = null)
+    public function __construct($variables = null, $options = null)
     {
         parent::__construct($variables, $options);
-        $this->viewPluginManager = $viewPluginManager;
-        $this->prepareView();
+        $this->setCacheKeyInfo(array(
+            $this->getTemplate(),
+            get_called_class()
+        ));
     }
-    
-    /**
-     * 
-     * @param string $name
-     * @return mixed
-     */
-    protected function viewHelper($name)
-    {
-        if (null !== $this->viewPluginManager) {
-            return $this->viewPluginManager->get($name);            
-        }
-    }
-    
+            
     /**
      * 
      * @param \Zend\Http\Request $request
@@ -75,32 +65,58 @@ abstract class AbstractBlock
     }
     
     /**
-     * prepare view 
+     * set the cache key information
+     * 
+     * @param array $info
+     * @return \ConLayout\Block\AbstractBlock
      */
-    protected function prepareView()
+    public function setCacheKeyInfo(array $info)
     {
+        $this->cacheKeyInfo = $info;
+        return $this;
     }
     
     /**
+     * retrieve cache key information
+     * 
+     * @return array
+     */
+    public function getCacheKeyInfo()
+    {
+        return $this->cacheKeyInfo;
+    }
+    
+    /**
+     * add cache key info
+     * 
+     * @param string $info
+     * @return \ConLayout\Block\AbstractBlock
+     */
+    public function addCacheKeyInfo($info)
+    {
+        $this->cacheKeyInfo[] = (string) $info;
+        return $this;
+    }
+    
+    /**
+     * retrieve hashed cache key
      * 
      * @return string
      */
     public function getCacheKey()
     {
-        $data = array(
-            $this->getTemplate(),
-            get_called_class()
-        );
-        return md5(implode('|', $data));
+        return static::CACHE_KEY_PREFIX 
+            . md5(implode('|', $this->getCacheKeyInfo()));
     }
     
     /**
-     * retrieve cache ttl
+     * retrieve cache ttl in seconds
+     * if false, block will not be cached
      * 
-     * @return int
+     * @return int|false
      */
-    public function getCacheLifetime()
+    public function getCacheTtl()
     {
-        return 0;
+        return false;
     }
 }

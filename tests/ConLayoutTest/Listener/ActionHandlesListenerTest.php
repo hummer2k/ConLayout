@@ -1,16 +1,16 @@
 <?php
 namespace ConLayoutTest\Listener;
 
-use ConLayout\Listener\ActionHandles;
+use ConLayout\Listener\ActionHandlesListener;
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ActionHandlesTest extends \ConLayoutTest\AbstractTest
+class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
 {
     /**
-     * @covers ActionHandles::getActionHandles
-     * @covers ActionHandles::getControllerHandles
+     * @covers ActionHandlesListener::getActionHandles
+     * @covers ActionHandlesListener::getControllerHandles
      */
     public function testControllerHandles()
     {
@@ -18,8 +18,8 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
             'controller' => 'Application\Controller\Index',
             'action' => 'index'
         ));
-        $handlesListener = new ActionHandles(
-            ActionHandles::BEHAVIOR_CONTROLLER,
+        $handlesListener = new ActionHandlesListener(
+            ActionHandlesListener::BEHAVIOR_CONTROLLER,
             $this->layoutService->reset(),
             array()
         );
@@ -35,8 +35,8 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
     }
     
     /**
-     * @covers ActionHandles::getActionHandles
-     * @covers ActionHandles::getRouteHandles
+     * @covers ActionHandlesListener::getActionHandles
+     * @covers ActionHandlesListener::getRouteHandles
      */
     public function testRouteHandles()
     {
@@ -45,8 +45,8 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
             'action' => 'index'
         ));
         $routeMatch->setMatchedRouteName('user/login');
-        $handlesListener = new ActionHandles(
-            ActionHandles::BEHAVIOR_ROUTENAME,
+        $handlesListener = new ActionHandlesListener(
+            ActionHandlesListener::BEHAVIOR_ROUTENAME,
             $this->layoutService->reset()
         );
         
@@ -60,9 +60,9 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
     }
     
     /**
-     * @covers ActionHandles::getActionHandles
-     * @covers ActionHandles::getRouteHandles
-     * @covers ActionHandles::getControllerHandles
+     * @covers ActionHandlesListener::getActionHandles
+     * @covers ActionHandlesListener::getRouteHandles
+     * @covers ActionHandlesListener::getControllerHandles
      */
     public function testCombinedHandles()
     {
@@ -71,8 +71,8 @@ class ActionHandlesTest extends \ConLayoutTest\AbstractTest
             'action' => 'login'
         ));
         $routeMatch->setMatchedRouteName('user/login');
-        $handlesListener = new ActionHandles(
-            ActionHandles::BEHAVIOR_COMBINED,
+        $handlesListener = new ActionHandlesListener(
+            ActionHandlesListener::BEHAVIOR_COMBINED,
             $this->layoutService->reset()
         );
         

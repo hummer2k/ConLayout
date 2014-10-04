@@ -9,5 +9,5 @@ interface CacheableInterface
 {
     public function getCacheKey();
     
-    public function getCacheLifetime();
+    public function getCacheTtl();
 }
