@@ -1,9 +1,14 @@
 <?php
 namespace ConLayout\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin,
+use ConLayout\Service\BlocksBuilder,
+    ConLayout\Service\LayoutService,
+    Zend\Mvc\Controller\Plugin\AbstractPlugin,
+    Zend\ServiceManager\ServiceLocatorAwareInterface,
     Zend\ServiceManager\ServiceLocatorAwareTrait,
-    Zend\ServiceManager\ServiceLocatorAwareInterface;
+    Zend\View\Model\ModelInterface,
+    Zend\View\Model\ViewModel,
+    Zend\View\Renderer\RendererInterface;
     
 /**
  * @package 
@@ -17,32 +22,32 @@ class BlockManager
     
     /**
      *
-     * @var \ConLayout\Service\BlocksBuilder
+     * @var BlocksBuilder
      */
     protected $blocksBuilder;
     
     /**
      *
-     * @var \Zend\View\Renderer\RendererInterface
+     * @var RendererInterface
      */
     protected $renderer;
     
     /**
      *
-     * @var \ConLayout\Service\LayoutService
+     * @var LayoutService
      */
     protected $layoutService;
     
     /**
      * 
-     * @param \ConLayout\Service\BlocksBuilder $blocksBuilder
-     * @param \ConLayout\Service\LayoutService $layoutService
-     * @param \Zend\View\Renderer\RendererInterface $renderer
+     * @param BlocksBuilder $blocksBuilder
+     * @param LayoutService $layoutService
+     * @param RendererInterface $renderer
      */
     public function __construct(
-        \ConLayout\Service\BlocksBuilder $blocksBuilder,
-        \ConLayout\Service\LayoutService $layoutService,
-        \Zend\View\Renderer\RendererInterface $renderer
+        BlocksBuilder $blocksBuilder,
+        LayoutService $layoutService,
+        RendererInterface $renderer
     )
     {
         $this->blocksBuilder = $blocksBuilder;
@@ -70,7 +75,7 @@ class BlockManager
      */
     public function render($blockname)
     {
-        if ($blockname instanceof \Zend\View\Model\ModelInterface) {
+        if ($blockname instanceof ModelInterface) {
             return $this->renderer->render($blockname);
         }
         return $this->renderer->render(
@@ -81,7 +86,7 @@ class BlockManager
     /**
      * 
      * @param string $blockname
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
     public function getBlock($blockname)
     {
@@ -99,7 +104,7 @@ class BlockManager
     
     /**
      * 
-     * @return \ConLayout\Service\LayoutService
+     * @return LayoutService
      */
     public function getLayoutService()
     {
@@ -109,11 +114,22 @@ class BlockManager
     /**
      * 
      * @param string $handle
-     * @return \ConLayout\Controller\Plugin\Blocks
+     * @return \ConLayout\Controller\Plugin\BlockManager
      */
     public function addHandle($handle)
     {
         $this->layoutService->addHandle($handle);
+        return $this;
+    }
+    
+    /**
+     * 
+     * @param array|string $handles
+     * @return \ConLayout\Controller\Plugin\BlockManager
+     */
+    public function setHandles($handles)
+    {
+        $this->layoutService->setHandles($handles);
         return $this;
     }
     

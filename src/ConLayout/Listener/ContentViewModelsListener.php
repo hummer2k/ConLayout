@@ -74,14 +74,14 @@ class ContentViewModelsListener
     }
     
     /**
-     * sort content view models and them to layout
+     * sort content view models and add them to layout
      * 
      * @param EventInterface $event
      * @return ContentViewModelsListener
      */
     public function addContentViewModels(EventInterface $event)
     {
-        if (false === $this->contentViewModel) {
+        if (!$this->contentViewModel instanceof ViewModel) {
             return $this;
         }
         /* @var $layout ViewModel */

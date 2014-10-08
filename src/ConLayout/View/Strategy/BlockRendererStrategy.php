@@ -35,6 +35,7 @@ class BlockRendererStrategy
     public function attach(EventManagerInterface $events, $priority = 5)
     {
         $this->listeners[] = $events->attach(ViewEvent::EVENT_RENDERER, array($this, 'selectRenderer'), $priority);
+        $this->listeners[] = $events->attach(ViewEvent::EVENT_RESPONSE, array($this, 'injectResponse'), $priority);
     }
     
     /**
@@ -49,5 +50,21 @@ class BlockRendererStrategy
             return;
         }
         return $this->renderer;
+    }
+    
+    /**
+     * 
+     * @param ViewEvent $e
+     * @return null
+     */
+    public function injectResponse(ViewEvent $e)
+    {
+        $renderer = $e->getRenderer();
+        if ($renderer !== $this->renderer) {
+            return;
+        }
+        $result   = $e->getResult();
+        $response = $e->getResponse();
+        $response->setContent($result);
     }
 }

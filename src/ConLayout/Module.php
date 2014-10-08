@@ -41,6 +41,11 @@ class Module
         $eventManager   = $application->getEventManager();
         
         $eventManager->attach(MvcEvent::EVENT_RENDER, function($e) use ($serviceManager) {
+            /* @var $layout \Zend\View\Model\ViewModel */
+            $layout = $e->getViewModel();
+            if ($layout->terminate()) {
+                return;
+            }
             $layoutModifier = $serviceManager->get('ConLayout\Service\LayoutModifier');
             $layoutModifier->addBlocksToLayout();
         }); 
