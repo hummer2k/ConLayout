@@ -3,8 +3,8 @@
 namespace ConLayout\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface,
-    \Zend\ServiceManager\ServiceLocatorAwareTrait,
-    \ConLayout\Block\AbstractBlock;
+    Zend\ServiceManager\ServiceLocatorAwareTrait,
+    ConLayout\Block\AbstractBlock;
 
 /**
  * BlocksBuilder
@@ -15,12 +15,12 @@ class BlocksBuilder
     implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
-    
+        
     /**
      *
      * @var array
      */
-    protected $blockConfig;
+    protected $blockConfig = array();
     
     /**
      * cache stores blocks as blockname => instance
@@ -40,16 +40,7 @@ class BlocksBuilder
      * @var string
      */
     protected $defaultBlockClass = 'Zend\View\Model\ViewModel';
-        
-    /**
-     * 
-     * @param array $blockConfig
-     */
-    public function __construct(array $blockConfig)
-    {
-        $this->blockConfig = $blockConfig;
-    }
-        
+    
     /**
      * 
      * @param bool $force
@@ -57,7 +48,7 @@ class BlocksBuilder
      */
     public function create($force = false)
     {
-        if (null === $this->createdBlocks || $force) {
+        if (!$this->createdBlocks || $force) {
             $this->createdBlocks = $this->createBlocks();
         }
         return $this;
@@ -94,7 +85,7 @@ class BlocksBuilder
      */
     public function getCreatedBlocks()
     {
-        if (null === $this->createdBlocks) {
+        if (!$this->createdBlocks) {
             $this->create();
         }
         return $this->createdBlocks;
@@ -107,7 +98,7 @@ class BlocksBuilder
      * @param type $blockConfig
      * @return \ConLayout\Service\className
      */
-    protected function createBlock(array $blockConfig)
+    public function createBlock(array $blockConfig)
     {
         $className = isset($blockConfig['class']) 
             ? $blockConfig['class']
@@ -187,12 +178,21 @@ class BlocksBuilder
         return $this->blocks;
     }
     
+    /**
+     * 
+     * @return array
+     */
     public function getBlockConfig()
     {
         return $this->blockConfig;
     }
 
-    public function setBlockConfig($blockConfig)
+    /**
+     * 
+     * @param array $blockConfig
+     * @return \ConLayout\Service\BlocksBuilder
+     */
+    public function setBlockConfig(array $blockConfig)
     {
         $this->blockConfig = $blockConfig;
         return $this;

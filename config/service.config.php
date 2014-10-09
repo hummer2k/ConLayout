@@ -9,6 +9,7 @@ return array(
         'ConLayout\Cache' => 'ConLayout\CacheFactory',
         'ConLayout\Listener\ActionHandlesListener' => 'ConLayout\Listener\ActionHandlesListenerFactory',
         'ConLayout\Listener\ContentViewModelsListener' => 'ConLayout\Listener\ContentViewModelsListenerFactory',
+        'ConLayout\Listener\LayoutModifierListener' => 'ConLayout\Listener\LayoutModifierListenerFactory',
         'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
         'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
         'ConLayout\ValuePreparer\BasePath' => 'ConLayout\ValuePreparer\BasePathFactory',

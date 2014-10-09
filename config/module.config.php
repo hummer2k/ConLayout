@@ -26,8 +26,8 @@ return array(
             'default' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
         ),
         'enable_debug' => false,
-        'enable_layout_cache' => true,
-        'enable_block_cache' => true,
+        'enable_layout_cache' => false,
+        'enable_block_cache' => false,
         'layout_cache' => 'ConLayout\Cache',
         'block_cache' => 'ConLayout\Cache',
         'cache_dir' => './data/cache/con-layout',

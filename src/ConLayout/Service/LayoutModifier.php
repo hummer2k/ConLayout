@@ -1,9 +1,10 @@
 <?php
 namespace ConLayout\Service;
 
-use Zend\View\Model\ViewModel,
-    \Zend\Permissions\Acl\AclInterface,
-    \Zend\Permissions\Acl\Role\RoleInterface;
+use Zend\Config\Config,
+    Zend\Permissions\Acl\AclInterface,
+    Zend\Permissions\Acl\Role\RoleInterface,
+    Zend\View\Model\ViewModel;
 
 /**
  * Modifier
@@ -17,13 +18,7 @@ class LayoutModifier
      * @var ViewModel
      */
     protected $layout;
-    
-    /**
-     *
-     * @var array
-     */
-    protected $createdBlocks;
-    
+        
     /**
      *
      * @var default captureTo
@@ -59,32 +54,15 @@ class LayoutModifier
      * @var RoleInterface
      */
     protected static $defaultRole;
-    
-    /**
-     * 
-     * @param \Zend\View\Model\ViewModel $layout
-     * @param \Zend\Config\Config $createdBlocks
-     */
-    public function __construct(ViewModel $layout, $createdBlocks)
-    {
-        $this->layout   = $layout;
-        $this->createdBlocks = $createdBlocks;
-    }
-    
+        
     /**
      * 
      * @param type $blocks
      * @param type $parent
      * @return \ConLayout\Service\Layout\Modifier
      */
-    public function addBlocksToLayout(array $blocks = null, $parent = null)
+    public function addBlocksToLayout(array $blocks, $parent = null)
     {
-        if (null === $blocks) {
-            $blocks = $this->createdBlocks;
-        }
-        if (null === $parent) {
-            $parent = $this->layout;
-        }
         foreach ($blocks as $captureTo => $blocks) {
             foreach ($blocks as $block) {
                 if (!$this->isAllowed($block)) continue;
@@ -125,8 +103,8 @@ class LayoutModifier
     /**
      * wrap ViewModel around block and set a debugger template
      * 
-     * @param \Zend\View\Model\ViewModel $block
-     * @return \Zend\View\Model\ViewModel
+     * @param ViewModel $block
+     * @return ViewModel
      */
     protected function addDebugBlock(ViewModel $block, $captureTo)
     {
@@ -144,7 +122,7 @@ class LayoutModifier
     /**
      * 
      * @param bool $flag
-     * @return \ConLayout\Service\LayoutModifier
+     * @return LayoutModifier
      */
     public function setIsDebug($flag = true)
     {
@@ -162,24 +140,6 @@ class LayoutModifier
         return $this;
     }
     
-    /**
-     * 
-     * @return ViewModel
-     */
-    public function getLayout()
-    {
-        return $this->layout;
-    }
-
-    /**
-     * 
-     * @return array
-     */
-    public function getCreatedBlocks()
-    {
-        return $this->createdBlocks;
-    }
-
     /**
      * 
      * @return AclInterface
@@ -212,30 +172,8 @@ class LayoutModifier
 
     /**
      * 
-     * @param \Zend\View\Model\ViewModel $layout
-     * @return \ConLayout\Service\LayoutModifier
-     */
-    public function setLayout(ViewModel $layout)
-    {
-        $this->layout = $layout;
-        return $this;
-    }
-
-    /**
-     * 
-     * @param type $createdBlocks
-     * @return \ConLayout\Service\LayoutModifier
-     */
-    public function setCreatedBlocks($createdBlocks)
-    {
-        $this->createdBlocks = $createdBlocks;
-        return $this;
-    }
-
-    /**
-     * 
-     * @param \Zend\Permissions\Acl\AclInterface $acl
-     * @return \ConLayout\Service\LayoutModifier
+     * @param AclInterface $acl
+     * @return LayoutModifier
      */
     public function setAcl(AclInterface $acl)
     {
@@ -245,7 +183,7 @@ class LayoutModifier
     
     /**
      * 
-     * @param \Zend\Permissions\Acl\AclInterface $acl
+     * @param AclInterface $acl
      */
     public static function setDefaultAcl(AclInterface $acl)
     {
@@ -255,7 +193,7 @@ class LayoutModifier
     /**
      * 
      * @param string|RoleInterface $role
-     * @return \ConLayout\Service\LayoutModifier
+     * @return LayoutModifier
      */
     public function setRole($role)
     {
@@ -265,7 +203,7 @@ class LayoutModifier
 
     /**
      * 
-     * @param \Zend\Permissions\Acl\Role\RoleInterface|string $role
+     * @param RoleInterface|string $role
      */
     public static function setDefaultRole($role)
     {

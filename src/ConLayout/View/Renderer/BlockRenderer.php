@@ -4,14 +4,19 @@ namespace ConLayout\View\Renderer;
 use ConLayout\Block\CacheableInterface,
     Traversable,
     Zend\Cache\Storage\StorageInterface,
-    Zend\View\Renderer\PhpRenderer;
+    Zend\View\Renderer\PhpRenderer,
+    Zend\EventManager\EventManagerAwareInterface,
+    Zend\EventManager\EventManagerAwareTrait;
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BlockRenderer
     extends PhpRenderer
+    implements EventManagerAwareInterface
 {
+    use EventManagerAwareTrait;
+    
     /**
      *
      * @var StorageInterface
@@ -62,15 +67,18 @@ class BlockRenderer
      * @throws Exception\RuntimeException if the template cannot be rendered
      */
     public function render($nameOrModel, $values = null)
-    {
+    {   
+        $this->getEventManager()->trigger(__FUNCTION__ . '.pre', $this, compact($nameOrModel));
+        $success = false;
         if ($this->isCacheEnabled() && $nameOrModel instanceof CacheableInterface) {
-            $result = $this->cache->getItem($nameOrModel->getCacheKey(), $success);
-            if ($success) {
-                return $result;
-            }
-        }
-        $result = parent::render($nameOrModel, $values);
-        if ($this->isCacheEnabled() && $nameOrModel instanceof CacheableInterface) {
+            $cachedResult = $this->cache->getItem($nameOrModel->getCacheKey(), $success);
+        } 
+        if ($success) {
+            $result = $cachedResult;
+        } else {
+            $result = parent::render($nameOrModel, $values);
+        } 
+        if ($this->isCacheEnabled() && !$success && $nameOrModel instanceof CacheableInterface) {
             // set cache ttl per item workaround
             // @see https://github.com/zendframework/zf2/pull/5386
             $options    = $this->cache->getOptions();
@@ -82,6 +90,7 @@ class BlockRenderer
                 $options->setTtl($defaultTtl);
             }
         }
+        $this->getEventManager()->trigger(__FUNCTION__ . '.post', $this, compact($result));
         return $result;
     }
     

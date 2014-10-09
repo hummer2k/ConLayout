@@ -40,21 +40,12 @@ class Module
         $serviceManager = $application->getServiceManager();        
         $eventManager   = $application->getEventManager();
         
-        $eventManager->attach(MvcEvent::EVENT_RENDER, function($e) use ($serviceManager) {
-            /* @var $layout \Zend\View\Model\ViewModel */
-            $layout = $e->getViewModel();
-            if ($layout->terminate()) {
-                return;
-            }
-            $layoutModifier = $serviceManager->get('ConLayout\Service\LayoutModifier');
-            $layoutModifier->addBlocksToLayout();
-        }); 
-        
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) use ($serviceManager) {
             $serviceManager->get('ConLayout\Service\LayoutService')
                 ->addHandle($e->getError());
         }, 100);
         
+        $eventManager->attach($serviceManager->get('ConLayout\Listener\LayoutModifierListener'));
         $eventManager->attach($serviceManager->get('ConLayout\Listener\ActionHandlesListener'));
         $eventManager->attach($serviceManager->get('ConLayout\Listener\ContentViewModelsListener'));
     }

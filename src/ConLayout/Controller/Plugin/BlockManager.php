@@ -90,16 +90,9 @@ class BlockManager
      */
     public function getBlock($blockname)
     {
+        $blockConfig = $this->layoutService->getBlockConfig();
+        $this->blocksBuilder->setBlockConfig($blockConfig);
         return $this->blocksBuilder->getBlock($blockname);
-    }
-    
-    /**
-     * 
-     * @return array
-     */
-    public function getBlocks()
-    {
-        return $this->blocksBuilder->getBlocks();
     }
     
     /**

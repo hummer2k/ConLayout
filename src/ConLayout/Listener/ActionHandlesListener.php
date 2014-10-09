@@ -2,7 +2,6 @@
 namespace ConLayout\Listener;
 
 use ConLayout\Service\LayoutService,
-    ConLayout\ValuePreparer\ValuePreparerInterface,
     Zend\EventManager\EventInterface,
     Zend\EventManager\EventManagerInterface,
     Zend\EventManager\ListenerAggregateInterface,
@@ -11,8 +10,7 @@ use ConLayout\Service\LayoutService,
     Zend\Mvc\Router\Http\RouteMatch,
     Zend\ServiceManager\ServiceLocatorAwareInterface,
     Zend\ServiceManager\ServiceLocatorAwareTrait,
-    Zend\View\Model\ViewModel,
-    Zend\View\Renderer\PhpRenderer;
+    Zend\View\Model\ViewModel;
     
 /**
  * @package ConLayout
@@ -25,7 +23,7 @@ class ActionHandlesListener
     use ListenerAggregateTrait;    
     use ServiceLocatorAwareTrait;
     
-    const BEHAVIOR_CONTROLLER = 'controller';    
+    const BEHAVIOR_CONTROLLER = 'controller'; 
     const BEHAVIOR_ROUTENAME = 'routename';    
     const BEHAVIOR_COMBINED = 'combined';
             
@@ -49,20 +47,6 @@ class ActionHandlesListener
     
     /**
      *
-     * @var array
-     */
-    protected $helperConfig = array();
-    
-    /**
-     * value preparers for view helpers in format:
-     *   'helperName' => array(ConLayout\ValuePreparer\ValuePreparerInterface)
-     *  
-     * @var array
-     */
-    protected $valuePreparers = array();
-    
-    /**
-     *
      * @var ViewModel
      */
     protected $contentViewModel;
@@ -73,13 +57,11 @@ class ActionHandlesListener
      */
     public function __construct(
         $handleBehavior, 
-        LayoutService $layoutService, 
-        array $helperConfig = array()
+        LayoutService $layoutService
     )
     {
         $this->setHandleBehavior($handleBehavior);
         $this->setLayoutService($layoutService);
-        $this->setHelperConfig($helperConfig);
     }
     
     /**
@@ -89,92 +71,6 @@ class ActionHandlesListener
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH,  array($this, 'addActionHandles'));
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTemplate'));
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyHelpers'));
-    }
-        
-    /**
-     * applies view helpers 
-     *
-     * @param EventInterface $event
-     * @return ActionHandlesListener
-     */
-    public function applyHelpers(EventInterface $event)
-    {        
-        $layoutConfig = $this->getLayoutService()
-            ->getLayoutConfig();
-        foreach ($this->getHelperConfig() as $helper => $config) {
-            if (!isset($layoutConfig[$helper])) continue;
-            $defaultMethod = isset($config['defaultMethod']) ? $config['defaultMethod'] : '__invoke';
-            $viewHelper = $this->getViewRenderer()->plugin($helper);
-            if (!is_array($layoutConfig[$helper])) {
-                $layoutConfig[$helper] = array($layoutConfig[$helper]);
-            }
-            foreach ($layoutConfig[$helper] as $method => $value) {
-                if (!is_string($method)) {
-                    $method = (is_array($value) && isset($value['method'])) ? $value['method'] : $defaultMethod;
-                }                
-                if (is_array($value)) {
-                    $args   = isset($value['args']) ? array_values($value['args']) : $value;
-                    $args[0] = $this->prepareHelperValue($args[0], $helper);
-                    call_user_func_array(array($viewHelper, $method), $args);
-                } else if (is_string($value)) {
-                    $viewHelper->{$method}($this->prepareHelperValue($value, $helper));
-                }
-            }
-        }
-        return $this;
-    }
-    
-    /**
-     * 
-     * @param mixed $value value to prepare
-     * @param string $helper view helper name
-     * @return mixed
-     */
-    private function prepareHelperValue($value, $helper)
-    {
-        if (!isset($this->valuePreparers[$helper])) {
-            return $value;
-        }
-        /* @var $valuePreparer ValuePreparerInterface */
-        foreach ($this->valuePreparers[$helper] as $valuePreparer) {
-            $value = $valuePreparer->prepare($value);
-        }
-        return $value;
-    }
-    
-    /**
-     * 
-     * @param string $helper view helper
-     * @param ValuePreparerInterface $valuePreparer
-     * @return ActionHandlesListener
-     */
-    public function addValuePreparer($helper, ValuePreparerInterface $valuePreparer)
-    {
-        $this->valuePreparers[$helper][] = $valuePreparer;
-        return $this;
-    }
-        
-    /**
-     * retrieve ViewRenderer
-     * 
-     * @return PhpRenderer
-     */
-    public function getViewRenderer()
-    {
-        return $this->serviceLocator->get('ViewRenderer');
-    }
-    
-    public function setLayoutTemplate(EventInterface $event)
-    {
-        /* @var $layout ViewModel */
-        $layout = $event->getViewModel();
-        $template = $layout->getTemplate();
-        if ($template === '') {
-            $layout->setTemplate($this->getLayoutService()->getLayoutTemplate());
-        }
-        return $this;
     }
     
     /**
@@ -192,7 +88,7 @@ class ActionHandlesListener
     
     /**
      * 
-     * @param EventInterface $event
+     * @param RouteMatch $routeMatch
      * @return array
      */
     public function getActionHandles(RouteMatch $routeMatch)
@@ -306,27 +202,4 @@ class ActionHandlesListener
         $this->routeSeparator = $routeSeparator;
         return $this;
     }
-    
-    /**
-     * retrieve helper config
-     * 
-     * @return array
-     */
-    public function getHelperConfig()
-    {
-        return $this->helperConfig;
-    }
-
-    /**
-     * 
-     * @param array $helperConfig
-     * @return \ConLayout\Listener\ActionHandlesListener
-     */
-    public function setHelperConfig(array $helperConfig)
-    {
-        $this->helperConfig = $helperConfig;
-        return $this;
-    }
-
-
 }
