@@ -1,10 +1,14 @@
 <?php
 namespace ConLayoutTest\Service;
+
+use ConLayout\Service\LayoutModifier,
+    ConLayoutTest\AbstractTest,
+    Zend\View\Model\ViewModel;
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutModifierTest extends \ConLayoutTest\AbstractTest
+class LayoutModifierTest extends AbstractTest
 {
     /**
      * @covers \ConLayout\Service\LayoutModifier::addBlocksToLayout
@@ -12,24 +16,34 @@ class LayoutModifierTest extends \ConLayoutTest\AbstractTest
     public function testAddBlocksToLayout()
     {
         $this->layoutService->reset();
-        $layout = new \Zend\View\Model\ViewModel();
-        $layoutModifier = new \ConLayout\Service\LayoutModifier(
-            $layout,
-            $this->getBlocksBuilder()->getCreatedBlocks()
-        );
-        $layoutModifier->addBlocksToLayout(); 
+        $layout = new ViewModel();
+        $layoutModifier = new LayoutModifier();
+        $blocksBuilder = $this->getBlocksBuilder();
+        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());       
+        $createdBlocks = $blocksBuilder->getCreatedBlocks();
+        
+        $layoutModifier->addBlocksToLayout(
+            $createdBlocks,
+            $layout
+        ); 
         
         $this->assertEquals(1, $layout->count());
-        
+    }
+    
+    public function testAddBlocksToLayoutRouteHandle()
+    {
         $this->layoutService->reset();
         $this->layoutService->addHandle(array('route', 'route/childroute'));        
-        $layout = new \Zend\View\Model\ViewModel();
+        $layout = new ViewModel();
+        $blocksBuilder = $this->getBlocksBuilder();
+        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());       
+        $createdBlocks = $blocksBuilder->getCreatedBlocks();
         
-        $layoutModifier = new \ConLayout\Service\LayoutModifier(
-            $layout,
-            $this->getBlocksBuilder()->getCreatedBlocks()
+        $layoutModifier = new LayoutModifier();
+        $layoutModifier->addBlocksToLayout(
+            $createdBlocks,
+            $layout
         );
-        $layoutModifier->addBlocksToLayout();
         $this->assertEquals(3, $layout->count());
     }
 }

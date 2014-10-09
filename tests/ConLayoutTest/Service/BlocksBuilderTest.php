@@ -13,6 +13,7 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
     public function testCreateBlocksWithDefaultHandle()
     {        
         $blocksBuilder = $this->getBlocksBuilder();
+        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());
         $blocksBuilder->create();
         $this->assertEquals(1, count($blocksBuilder->getCreatedBlocks()));
         
@@ -24,6 +25,7 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
     {
         $this->layoutService->reset()->addHandle('route');
         $blocksBuilder = $this->getBlocksBuilder();
+        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());
         $createdBlocks = $blocksBuilder->create(true)->getCreatedBlocks();
         $this->assertArrayHasKey('sidebar.right', $createdBlocks);
         
@@ -39,6 +41,7 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
     public function testGetBlock()
     {
         $blocksBuilder = $this->getBlocksBuilder();
+        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());
         $this->assertInstanceOf('ConLayout\Block\Dummy', $blocksBuilder->getBlock('block.header'));
     }
 }
