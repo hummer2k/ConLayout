@@ -22,13 +22,10 @@ class CacheFactory
         }
         $cache   = \Zend\Cache\StorageFactory::factory(array(
             'adapter' => array(
-                'name' => 'redis',
+                'name' => 'filesystem',
                 'options' => array(
-                    'server' => array(
-                        'host' => '127.0.0.1',
-                        'port' => 6379
+                    'cache_dir' => $cacheDir
                     )
-                )
             ),
             'plugins' => array(
                 'serializer',
