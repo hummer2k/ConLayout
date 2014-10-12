@@ -68,7 +68,7 @@ class BlockRenderer
      */
     public function render($nameOrModel, $values = null)
     {   
-        $this->getEventManager()->trigger(__FUNCTION__ . '.pre', $this, compact($nameOrModel));
+        $this->getEventManager()->trigger(__FUNCTION__ . '.pre', $this, array('viewModel' => $nameOrModel));
         $success = false;
         if ($this->isCacheEnabled() && $nameOrModel instanceof CacheableInterface) {
             $cachedResult = $this->cache->getItem($nameOrModel->getCacheKey(), $success);
@@ -90,8 +90,15 @@ class BlockRenderer
                 $options->setTtl($defaultTtl);
             }
         }
-        $this->getEventManager()->trigger(__FUNCTION__ . '.post', $this, compact($result));
+        $this->getEventManager()->trigger(__FUNCTION__ . '.post', $this, array('result' => $result));
         return $result;
+    }
+    
+    public function setEventManager(\Zend\EventManager\EventManagerInterface $events)
+    {
+        $events->addIdentifiers(__CLASS__);
+        $this->events = $events;
+        return $this;
     }
     
     /**
