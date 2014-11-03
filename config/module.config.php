@@ -15,6 +15,14 @@ return array(
         // are able to set the template via layout()-helper in controller
         'layout' => ''
     ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'ConLayout\View\Helper\BodyClass' => 'ConLayout\View\Helper\BodyClass',            
+        ),
+        'aliases' => array(
+            'bodyClass' => 'ConLayout\View\Helper\BodyClass',
+        )
+    ),
     'controller_plugins' => array(
         'factories' => array(
             'blockManager' => 'ConLayout\Controller\Plugin\BlockManagerFactory'
@@ -68,6 +76,9 @@ return array(
             ),
             'headMeta' => array(
                 'defaultMethod' => 'appendName'
+            ),
+            'bodyClass' => array(
+                'defaultMethod' => 'append'
             ),
             'doctype' => array()
         )
