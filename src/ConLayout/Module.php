@@ -48,6 +48,7 @@ class Module
         $eventManager->attach($serviceManager->get('ConLayout\Listener\LayoutModifierListener'));
         $eventManager->attach($serviceManager->get('ConLayout\Listener\ActionHandlesListener'));
         $eventManager->attach($serviceManager->get('ConLayout\Listener\ContentViewModelsListener'));
+        $eventManager->attach($serviceManager->get('ConLayout\Listener\BodyClassListener'));
     }
 
     /**

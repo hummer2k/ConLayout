@@ -19,7 +19,7 @@ class BodyClass extends AbstractHelper
     public function __invoke($classname = null)
     {
         if (null !== $classname) {
-            $this->append($class);
+            $this->append($classname);
         }
         return $this;
     }

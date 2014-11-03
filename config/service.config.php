@@ -13,6 +13,7 @@ return array(
         'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
         'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
         'ConLayout\ValuePreparer\BasePath' => 'ConLayout\ValuePreparer\BasePathFactory',
+        'ConLayout\Listener\BodyClassListener' => 'ConLayout\Listener\BodyClassListenerFactory',
     ),
     'invokables' => array(
         'ConLayout\Collector\LayoutCollector' => 'ConLayout\Collector\LayoutCollector'
