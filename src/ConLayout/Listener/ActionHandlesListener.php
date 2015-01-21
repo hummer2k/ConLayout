@@ -116,12 +116,17 @@ class ActionHandlesListener
     {
         $controller = $routeMatch->getParam('controller');
         $action = $routeMatch->getParam('action');
-        $module = substr($controller, 0, strpos($controller, '\\'));
-        return array(
-            $module,
-            $controller,
-            $controller . '::' . $action
-        );
+        $controllerHandles = array();
+        $namespaceSegments = explode('\\', $controller);
+        $count = count($namespaceSegments);
+        for ($i = 0; $i < $count; $i++) {
+            for ($j = 0; $j <= $i; $j++) {
+                $controllerHandles[$i][] = $namespaceSegments[$j];
+            }
+            $controllerHandles[$i] = implode('\\', $controllerHandles[$i]);
+        }
+        $controllerHandles[] = $controller . '::' . $action;
+        return $controllerHandles;
     }
     
     /**

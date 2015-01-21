@@ -20,16 +20,43 @@ class Collector
      * @var array
      */
     protected $layoutConfigs = array();
+
+    /**
+     *
+     * @var string
+     */
+    protected $area;
     
     /**
      * 
      * @param array $globPaths
      */
-    public function __construct(array $globPaths)
+    public function __construct(array $globPaths, $area = null)
     {
         $this->globPaths = $globPaths;
+        $this->setArea($area);
     }
-    
+
+    /**
+     *
+     * @return string
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
+
+    /**
+     *
+     * @param string $area
+     * @return \ConLayout\Service\Config\Collector
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+        return $this;
+    }
+
     /**
      * 
      * @return array
@@ -38,6 +65,9 @@ class Collector
     {
         if (empty($this->layoutConfigs)) {
             foreach ($this->globPaths as $globPath) {
+                if (null !== $this->area) {
+                    $globPath = str_replace('{{area}}', $this->area, $globPath);
+                }
                 $configFiles = glob($globPath, GLOB_BRACE);
                 foreach ($configFiles as $configFile) {
                     if (is_readable($configFile)) {
