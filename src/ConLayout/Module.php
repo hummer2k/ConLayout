@@ -1,8 +1,11 @@
 <?php
 namespace ConLayout;
 
-use Zend\EventManager\EventInterface as Event,
-    Zend\Mvc\MvcEvent;
+use Zend\Console\Console;
+use Zend\EventManager\EventInterface;
+use Zend\EventManager\EventInterface as Event;
+use Zend\Mvc\MvcEvent;
+
 /**
  * ConLayout\Module
  * 
@@ -32,10 +35,13 @@ class Module
     
     /**
      * 
-     * @param \Zend\EventManager\EventInterface $e
+     * @param EventInterface $e
      */
     public function onBootstrap(Event $e)
     {
+        if (Console::isConsole()) {
+            return;
+        }
         $application    = $e->getApplication();
         $serviceManager = $application->getServiceManager();        
         $eventManager   = $application->getEventManager();

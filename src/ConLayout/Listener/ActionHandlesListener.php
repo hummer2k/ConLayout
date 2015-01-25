@@ -7,7 +7,7 @@ use ConLayout\Service\LayoutService,
     Zend\EventManager\ListenerAggregateInterface,
     Zend\EventManager\ListenerAggregateTrait,
     Zend\Mvc\MvcEvent,
-    Zend\Mvc\Router\Http\RouteMatch,
+    Zend\Mvc\Router\RouteMatch,
     Zend\ServiceManager\ServiceLocatorAwareInterface,
     Zend\ServiceManager\ServiceLocatorAwareTrait,
     Zend\View\Model\ViewModel;
