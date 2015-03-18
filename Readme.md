@@ -24,6 +24,7 @@ Handles may be: (ordered by priority ASC)
 Layout config structure
 -----------------------
 
+    <?php
     return [
         // e.g. default
         'HANDLE' => [
