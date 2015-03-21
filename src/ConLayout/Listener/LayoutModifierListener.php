@@ -1,16 +1,17 @@
 <?php
 namespace ConLayout\Listener;
 
-use ConLayout\Service\BlocksBuilder,
-    ConLayout\Service\LayoutModifier,
-    ConLayout\Service\LayoutService,
-    ConLayout\ValuePreparer\ValuePreparerInterface,
-    Zend\EventManager\EventManagerInterface,
-    Zend\EventManager\ListenerAggregateInterface,
-    Zend\EventManager\ListenerAggregateTrait,
-    Zend\Mvc\MvcEvent,
-    Zend\View\Model\ViewModel,
-    Zend\View\Renderer\PhpRenderer;
+use ConLayout\Debugger;
+use ConLayout\Service\BlocksBuilder;
+use ConLayout\Service\LayoutModifier;
+use ConLayout\Service\LayoutService;
+use ConLayout\ValuePreparer\ValuePreparerInterface;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\ListenerAggregateTrait;
+use Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout
@@ -64,6 +65,12 @@ class LayoutModifierListener
      * @var array
      */
     protected $valuePreparers = array();
+
+    /**
+     *
+     * @var Debugger
+     */
+    protected $debugger;
     
     /**
      * 
@@ -77,6 +84,7 @@ class LayoutModifierListener
         LayoutModifier $layoutModifier,
         ViewModel $layout,
         PhpRenderer $viewRenderer,
+        Debugger $debugger,
         $helperConfig = array()
     )
     {
@@ -85,6 +93,7 @@ class LayoutModifierListener
         $this->layoutModifier   = $layoutModifier;
         $this->layout           = $layout;  
         $this->viewRenderer     = $viewRenderer;
+        $this->debugger         = $debugger;
         $this->helperConfig     = $helperConfig;
     }
     
@@ -186,7 +195,11 @@ class LayoutModifierListener
         $createdBlocks  = $this->blocksBuilder->create()
             ->getCreatedBlocks();
         // add blocks to layout
-        $this->layoutModifier->addBlocksToLayout($createdBlocks, $this->layout);        
+        if ($this->debugger->isEnabled()) {
+            $this->viewRenderer->plugin('headlink')
+                ->appendStylesheet('css/con-layout.css');
+        }
+        $this->layoutModifier->addBlocksToLayout($createdBlocks, $this->layout);
         return $this;
     }
     

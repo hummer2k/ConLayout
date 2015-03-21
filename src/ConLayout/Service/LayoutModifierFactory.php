@@ -22,12 +22,10 @@ class LayoutModifierFactory
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {        
-        $config = $serviceLocator->get('Config');        
-        $layoutModifier = new LayoutModifier(); 
-        $layoutModifier
-            ->setIsDebug($this->getOption($config, 'con-layout/enable_debug', false))
-            ->setCaptureTo($this->getOption($config, 'con-layout/child_capture_to', 'childHtml'));            
-        
+        $config = $serviceLocator->get('Config');
+        $debugger = $serviceLocator->get('ConLayout\Debugger');
+        $layoutModifier = new LayoutModifier($debugger);
+        $layoutModifier->setCaptureTo($this->getOption($config, 'con-layout/child_capture_to', 'childHtml'));            
         return $layoutModifier;
     }
 }

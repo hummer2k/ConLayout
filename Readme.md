@@ -1,31 +1,40 @@
-ConLayout - Easy handling ZF2-layouts
-=====================================
+# ConLayout - Easy handling ZF2-layouts
 
-Installation
-------------
+## Installation
+
+### 1. Clone repo:
 
     $ git submodule add git@bitbucket.org:conlabz/conlayout.git corporate/ConLayout
 
-Usage
------
+### 2. Enable Module in your application.config.php
+
+    <?php
+    $config = [
+        'modules' => [
+            'ConLayout', // <--
+            'Application',
+            'SomeModule'
+        ]
+    ];
+
+## Usage
 
 Layouts are controlled by handles.
 
 Handles may be: (ordered by priority ASC)
 
 * global (= default)
-* a module (e.g Application)
-* a controller (e.g. Application\Controller\Index)
+* a controller namespace (e.g. Application, Application\Controller, Application\Controller\Index) (the more specific, the higher the priority)
 * a route (e.g. user/login) (the more child routes, the higher the priority)
 * an action (e.g. Application\Controller\Index::index)
 
 (The current handles are listed in zend developer toolbar)
 
-Layout config structure
------------------------
+## Layout config structure
 
+    <?php
     return [
-        // e.g. default
+        // e.g. default = global
         'HANDLE' => [
             // set layout template for HANDLE
             'layout' => 'path/to/layout-template',
@@ -58,7 +67,7 @@ Layout config structure
                 ['viewport', 'width=device-width, initial-scale=1.0, user-scalable=no']          
             ]
             'doctype' => 'HTML5',
-            // apply config for other handles?
+            // apply config for other handles
             'handles' => [
                 'user/login',
                 'Application\Controller\Index'
@@ -102,36 +111,84 @@ Layout config structure
             ]
         ],
     ];
-    
-ACL
----
 
-Example BjyAuthorize:
+## ACL
 
+An Event is fired before the block instance is injected into the layout where you can determine wheter the block is allowed to be shown. (return true or false in your event listener)
+
+    <?php
     // Module.php
     /**
-     * 
      * @param \Zend\EventManager\EventInterface $e
      */
     public function onBootstrap(EventInterface $e)
     {
         $application    = $e->getApplication();
-        $serviceManager = $application->getServiceManager();
+        $eventManager   = $application->getEventManager();
+
+        // get the authorization service 
+        $authService = $application->getServiceLocator('My\AuthService');
         
-        $auth = $serviceManager->get('BjyAuthorize\Service\Authorize');
-        $acl  = $auth->getAcl();
-        $role = $auth->getIdentity();
-        
-        \ConLayout\Service\LayoutModifier::setDefaultAcl($acl);
-        \ConLayout\Service\LayoutModifier::setDefaultRole($role);
+        $eventManager->getSharedManager()
+            ->attach('ConLayout\Service\LayoutModifier', 'isAllowed', function($e) use ($authService) {
+            $block = $e->getParam('block');
+            $resource = $block['name'];
+            return $authService->isGranted($resource);
+        });
     }
 
-Blocks
-------
+## Blocks/ViewModels
 
-coming soon...
+Blocks aka ViewModels are classes with a template to provide view specific data. 
+For example, to display a widget in a sidebar, a page fragment like header, footer 
+or navigation. 
 
-Caching
--------
+Let's create a widget to display the current time:
 
-coming soon...
+
+    <?php
+    namespace ConLayout\Block;
+    
+    class CurrentTime extends AbstractBlock
+    {
+        protected $template = 'path/to/current-time';
+        
+        public function getCurrentTime()
+        {
+            return (new \DateTime())->format('d.m.Y H:i:s');
+        }
+    }
+
+
+    <?php
+    // path/to/current-time.phtml 
+    <article class="current-time widget">
+        <?php 
+            // non-existing variables will be mapped to viewmodel's 'get' . $VarName() method.
+            // In this case CurrentTime::getCurrentTime()
+        ?>
+        <?= $this->currentTime ?>
+    </article>
+
+
+tell the layout to place our widget in the sidebar
+
+
+    <?php
+    // layout.config.php
+    return [
+        'default' => [
+            'blocks' => [
+                'sidebarLeft' => [
+                    'current.time.widget' => [
+                        'class' => 'ConLayout\Block\CurrentTime'
+                    ]
+                ]
+            ]
+        ]        
+    ];
+
+
+## Caching
+
+Implement ``ConLayout\Block\CacheableInterface`` or extend from ``ConLayout\Block\AbstractBlock`` and define a unique cache key and ttl.

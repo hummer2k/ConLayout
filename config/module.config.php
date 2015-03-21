@@ -85,13 +85,8 @@ return array(
     ),
     'asset_manager' => array(
         'resolver_configs' => array(
-            'collections' => array(
-                'css/styles.css' => array(
-                    'css/con-layout.css'
-                )
-            ),
             'paths' => array(
-                __DIR__ . '/../public'
+                __DIR__ . '/../public/assets'
             )
         )
     ),

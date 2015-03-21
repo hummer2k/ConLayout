@@ -1,10 +1,11 @@
 <?php
 namespace ConLayout\Collector;
 
-use ZendDeveloperTools\Collector\AbstractCollector,
-    Zend\Stdlib\ArrayUtils,
-    Closure,
-    ZendDeveloperTools\Stub\ClosureStub;
+use Closure;
+use Traversable;
+use Zend\Stdlib\ArrayUtils;
+use ZendDeveloperTools\Collector\AbstractCollector;
+use ZendDeveloperTools\Stub\ClosureStub;
 
 /**
  * Collector for ZendDeveloperToolbar
@@ -15,7 +16,7 @@ class LayoutCollector
     extends AbstractCollector
 {
     const NAME = 'con-layout';
-    
+
     /**
      * 
      * @return string
@@ -33,16 +34,19 @@ class LayoutCollector
     {
         return 600;
     }
-    
+        
     /**
      * collect data for zdt
      * 
      * @param \Zend\Mvc\MvcEvent $mvcEvent
-     * @return \ConLayout\Collector\LayoutCollector
+     * @return LayoutCollector
      */
     public function collect(\Zend\Mvc\MvcEvent $mvcEvent)
     {
         $sm = $mvcEvent->getApplication()->getServiceManager();
+
+        $layout = $mvcEvent->getViewModel();
+        $actionResult = $mvcEvent->getResult();
         $layoutService = $sm->get('ConLayout\Service\LayoutService');
         $blocksBuilder = $sm->get('ConLayout\Service\BlocksBuilder');
         $data = array(
@@ -50,13 +54,33 @@ class LayoutCollector
             'layoutConfig' => $this->makeArraySerializable(
                 $layoutService->getLayoutConfig()
             ),
-            'blocks' => array()
+            'blocks' => array(),
+            'layout_template' => $layout->getTemplate()
         );
+        $data['blocks']['ACTION_RESULT'] = get_class($actionResult);
         foreach ($blocksBuilder->getBlocks() as $name => $instance) {
             $data['blocks'][$name] = get_class($instance);
         }
+
+        $debugger = $sm->get('ConLayout\Debugger');
+        $data['debug'] = $debugger->isEnabled();
+
         $this->data = $data;
         return $this;
+    }
+
+    public function isDebug()
+    {
+        return $this->data['debug'];
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getLayoutTemplate()
+    {
+        return $this->data['layout_template'];
     }
     
     /**
@@ -89,7 +113,7 @@ class LayoutCollector
     /**
      * Replaces the un-serializable items in an array with stubs
      *
-     * @param array|\Traversable $data
+     * @param array|Traversable $data
      *
      * @return array
      */

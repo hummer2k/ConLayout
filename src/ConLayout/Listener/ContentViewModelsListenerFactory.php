@@ -23,6 +23,7 @@ class ContentViewModelsListenerFactory
     {
         $config = $serviceLocator->get('Config');
         $contentViewModelsListener = new ContentViewModelsListener(
+            $serviceLocator->get('ConLayout\Debugger'),
             $this->getOption($config, 'con-layout/content_capture_to', null)
         );
         return $contentViewModelsListener;

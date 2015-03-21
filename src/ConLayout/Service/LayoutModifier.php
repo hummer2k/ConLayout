@@ -1,18 +1,18 @@
 <?php
 namespace ConLayout\Service;
 
-use Zend\Config\Config,
-    Zend\Permissions\Acl\AclInterface,
-    Zend\Permissions\Acl\Role\RoleInterface,
-    Zend\View\Model\ViewModel;
+use ConLayout\Debugger;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerInterface;
+use Zend\View\Model\ViewModel;
 
 /**
  * Modifier
  *
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutModifier
-{   
+class LayoutModifier implements EventManagerAwareInterface
+{
     /**
      *
      * @var ViewModel
@@ -30,35 +30,32 @@ class LayoutModifier
      * @var boolean
      */
     protected $isDebug = false;
-    
+
     /**
      *
-     * @var AclInterface
+     * @var EventManagerInterface
      */
-    protected $acl;
-    
+    protected $eventManager;
+
     /**
      *
-     * @var string
+     * @var Debugger
      */
-    protected $role;
-    
+    protected $debugger;
+
     /**
      *
-     * @var AclInterface
+     * @param Debugger $debugger
      */
-    protected static $defaultAcl;
-    
-    /**
-     *
-     * @var RoleInterface
-     */
-    protected static $defaultRole;
-        
+    public function __construct(Debugger $debugger)
+    {
+        $this->debugger = $debugger;
+    }
+
     /**
      * 
-     * @param type $blocks
-     * @param type $parent
+     * @param array $blocks
+     * @param mixed $parent
      * @return \ConLayout\Service\Layout\Modifier
      */
     public function addBlocksToLayout(array $blocks, $parent = null)
@@ -68,8 +65,8 @@ class LayoutModifier
                 if (!$this->isAllowed($block)) continue;
                 $captureTo = !is_string($captureTo) ? $this->captureTo : $captureTo;
                 $blockInstance = $block['instance'];
-                if ($this->isDebug) {
-                    $block['instance'] = $this->addDebugBlock($block['instance'], $captureTo);
+                if ($this->debugger->isEnabled()) {
+                    $block['instance'] = $this->debugger->addDebugBlock($block['instance'], $captureTo);
                 }
                 $append = (isset($block['append']) && false === $block['append']) ? false : true;
                 $parent->addChild($block['instance'], $captureTo, $append);
@@ -82,54 +79,18 @@ class LayoutModifier
     }
     
     /**
-     * check if block is allowed
-     * 
-     * @param array $block
-     * @return boolean
+     * Determines whether a block should be allowed given certain parameters
+     *
+     * @param   array   $block
+     * @return  bool
      */
     protected function isAllowed(array $block)
     {
-        if (null !== $this->getAcl()) {
-            $resourceName = isset($block['resource'])
-                ? $block['resource']
-                : $block['name'];
-            if ($this->getAcl()->hasResource($resourceName)) {
-                return $this->getAcl()->isAllowed($this->getRole(), $resourceName);
-            }
-        }
-        return true;
+        $results = $this->getEventManager()->trigger(__FUNCTION__, $this, ['block' => $block]);
+        $isAllowed = $results->last();
+        return $isAllowed;
     }
-    
-    /**
-     * wrap ViewModel around block and set a debugger template
-     * 
-     * @param ViewModel $block
-     * @return ViewModel
-     */
-    protected function addDebugBlock(ViewModel $block, $captureTo)
-    {
-        $debugBlock = new ViewModel(array(
-            'blockName' => $block->getVariable('nameInLayout'),
-            'blockTemplate' => $block->getTemplate(),
-            'blockClass' => get_class($block)
-        ));
-        $debugBlock->setCaptureTo($captureTo);
-        $debugBlock->setTemplate('blocks/debug');
-        $debugBlock->addChild($block);
-        return $debugBlock;
-    }
-    
-    /**
-     * 
-     * @param bool $flag
-     * @return LayoutModifier
-     */
-    public function setIsDebug($flag = true)
-    {
-        $this->isDebug = (bool) $flag;
-        return $this;
-    }
-    
+        
     /**
      * 
      * @param string $captureTo
@@ -139,74 +100,31 @@ class LayoutModifier
         $this->captureTo = (string) $captureTo;
         return $this;
     }
-    
-    /**
-     * 
-     * @return AclInterface
-     */
-    public function getAcl()
-    {
-        if (null !== $this->acl) {
-            return $this->acl;
-        }
-        if (null !== static::$defaultAcl) {
-            return static::$defaultAcl;
-        }
-        return null;
-    }
 
     /**
-     * 
-     * @return string|RoleInterface
-     */
-    public function getRole()
-    {
-        if (null !== $this->role) {
-            return $this->role;
-        }
-        if (null !== static::$defaultRole) {
-            return static::$defaultRole;
-        }
-        return null;
-    }
-
-    /**
-     * 
-     * @param AclInterface $acl
+     *
+     * @param EventManagerInterface $eventManager
      * @return LayoutModifier
      */
-    public function setAcl(AclInterface $acl)
+    public function setEventManager(EventManagerInterface $eventManager)
     {
-        $this->acl = $acl;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @param AclInterface $acl
-     */
-    public static function setDefaultAcl(AclInterface $acl)
-    {
-        static::$defaultAcl = $acl;
-    }
+        $eventManager->setIdentifiers([__CLASS__]);
+        $this->eventManager = $eventManager;
 
-    /**
-     * 
-     * @param string|RoleInterface $role
-     * @return LayoutModifier
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
+        $this->eventManager->getSharedManager()->attach(__CLASS__, 'isAllowed', function() {
+            return true;
+        }, 10000);
+
         return $this;
     }
 
     /**
-     * 
-     * @param RoleInterface|string $role
+     * retrieve event manager
+     *
+     * @return EventManagerInterface
      */
-    public static function setDefaultRole($role)
+    public function getEventManager()
     {
-        static::$defaultRole = $role;
+        return $this->eventManager;
     }
 }

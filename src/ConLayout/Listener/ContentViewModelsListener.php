@@ -1,12 +1,13 @@
 <?php
 namespace ConLayout\Listener;
 
-use Zend\EventManager\EventInterface,
-    Zend\EventManager\EventManagerInterface,
-    Zend\EventManager\ListenerAggregateInterface,
-    Zend\EventManager\ListenerAggregateTrait,
-    Zend\Mvc\MvcEvent,
-    Zend\View\Model\ViewModel;
+use ConLayout\Debugger;
+use Zend\EventManager\EventInterface;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\ListenerAggregateTrait;
+use Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
 
 /**
  * Listener to sort content view models
@@ -31,14 +32,21 @@ class ContentViewModelsListener
      * @var string
      */
     protected $captureTo = 'content';
+
+    /**
+     *
+     * @var Debugger
+     */
+    protected $debugger;
     
     /**
      * the content captureTo in layout
      * 
      * @param string $captureTo
      */
-    public function __construct($captureTo = null)
+    public function __construct(Debugger $debugger, $captureTo = null)
     {
+        $this->debugger = $debugger;
         if (null !== $captureTo) {
             $this->captureTo = $captureTo;
         }       
@@ -66,6 +74,10 @@ class ContentViewModelsListener
         /* @var $layout ViewModel */
         $layout = $event->getViewModel();
         $this->contentViewModel = current($layout->getChildrenByCaptureTo($this->captureTo, false));
+        if ($this->debugger->isEnabled()) {
+            $this->contentViewModel->setVariable('nameInLayout', 'ACTION_RESULT');
+            $this->contentViewModel = $this->debugger->addDebugBlock($this->contentViewModel, $this->captureTo);
+        }
         if (false === $this->contentViewModel) {
             return $this;
         }

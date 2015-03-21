@@ -2,7 +2,13 @@
 
 $color-red: #a94442;
 $color-red-bg: #f2dede;
-
+[data-block-name-label] {
+    &:hover,
+    &.toggled {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+}
 .block-debug {
     border: 1px dotted $color-red;
     position: relative;   
@@ -15,6 +21,8 @@ $color-red-bg: #f2dede;
     }
     &.block-highlight {
         background: $color-red-bg;
+        border-width: 2px;
+        border-style: dashed;
     }
     .block-debug-info {
         color: $color-red;

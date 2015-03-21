@@ -2,7 +2,7 @@
 
 return [
     'default' => [        
-        'layout' => '2cols-left',
+        'layout' => 'layout/2cols-left',
         'headLink' => [
             'assets/css/bootstrap.css',
             '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css'
@@ -22,16 +22,16 @@ return [
         'blocks' => [
             'head' => [
                 'head' => [
-                    'template' => 'layout/head'
+                    'template' => 'layout/partials/head'
                 ]
             ],
             'header' => [
                 'header' => [
-                    'template' => 'layout/header',
+                    'template' => 'layout/partials/header',
                     'children' => [
                         'navigation' => [
                             'top.navbar' => [
-                                'template' => 'layout/navigation'
+                                'template' => 'layout/partials/navigation'
                             ]
                         ]
                     ]
@@ -39,7 +39,7 @@ return [
             ],
             'footer' => [
                 'footer' => [
-                    'template' => 'layout/footer'
+                    'template' => 'layout/partials/footer'
                 ]
             ]
         ]
@@ -48,10 +48,10 @@ return [
         'headTitle' => [
             'Login'
         ],
-        'layout' => 'empty'
+        'layout' => 'layout/empty'
     ],
     'Application\Controller\Index' => [
-        'layout' => '2cols-right',        
+        'layout' => 'layout/2cols-right',
         'blocks' => [
             'sidebarRight' => [
                 'right.dummy' => [

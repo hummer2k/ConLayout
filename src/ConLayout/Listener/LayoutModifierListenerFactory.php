@@ -31,6 +31,7 @@ class LayoutModifierListenerFactory
             $serviceLocator->get('ConLayout\Service\LayoutModifier'),
             $layout,
             $viewRenderer,
+            $serviceLocator->get('ConLayout\Debugger'),
             $helperConfig
         );
         foreach ($helperConfig as $helper => $value) {

@@ -321,10 +321,10 @@ class LayoutService
 
     /**
      * 
-     * @param type $handles
+     * @param array $handles
      * @return \ConLayout\Service\Config
      */
-    public function setHandles($handles)
+    public function setHandles(array $handles)
     {
         $this->handles = $handles;
         return $this;
@@ -348,6 +348,7 @@ class LayoutService
     public function setIsCacheEnabled($flag = true)
     {
         $this->isCacheEnabled = (bool) $flag;
+        return $this;
     }
     
     /**
