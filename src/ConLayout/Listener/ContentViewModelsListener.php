@@ -21,10 +21,12 @@ class ContentViewModelsListener
     use ListenerAggregateTrait;
     
     /**
+     * view model returned from controller action
+     * or created by zf via view model injection listener
      *
      * @var ViewModel
      */
-    protected $contentViewModel;
+    protected $actionResultViewModel;
     
     /**
      * content captureTo
@@ -58,28 +60,28 @@ class ContentViewModelsListener
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'prepareContentViewModel'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'prepareActionResultViewModel'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'addContentViewModels'), -4000);
     }  
     
     /**
-     * remove injected content view model, so we later can inject 
+     * remove/prepare view model from action/mvc event, so we later can inject
      * configured content view models in correct order
      * 
      * @param EventInterface $event
      * @return ContentViewModelsListener
      */
-    public function prepareContentViewModel(EventInterface $event)
+    public function prepareActionResultViewModel(EventInterface $event)
     {
         /* @var $layout ViewModel */
         $layout = $event->getViewModel();
-        $this->contentViewModel = current($layout->getChildrenByCaptureTo($this->captureTo, false));
-        if ($this->debugger->isEnabled()) {
-            $this->contentViewModel->setVariable('nameInLayout', 'ACTION_RESULT');
-            $this->contentViewModel = $this->debugger->addDebugBlock($this->contentViewModel, $this->captureTo);
-        }
-        if (false === $this->contentViewModel) {
+        $this->actionResultViewModel = current($layout->getChildrenByCaptureTo($this->captureTo, false));
+        if (false === $this->actionResultViewModel) {
             return $this;
+        }
+        if ($this->debugger->isEnabled()) {
+            $this->actionResultViewModel->setVariable('nameInLayout', 'ACTION_RESULT');
+            $this->actionResultViewModel = $this->debugger->addDebugBlock($this->actionResultViewModel, $this->captureTo);
         }
         $layout->clearChildren();
         return $this;
@@ -93,13 +95,13 @@ class ContentViewModelsListener
      */
     public function addContentViewModels(EventInterface $event)
     {
-        if (!$this->contentViewModel instanceof ViewModel) {
+        if (!$this->actionResultViewModel instanceof ViewModel) {
             return $this;
         }
         /* @var $layout ViewModel */
         $layout = $event->getViewModel();
         $contentViewModels = $layout->getChildrenByCaptureTo($this->captureTo, false);
-        $contentViewModels[] = $this->contentViewModel;
+        $contentViewModels[] = $this->actionResultViewModel;
         
         // sort the view models
         usort($contentViewModels, function($a, $b) {

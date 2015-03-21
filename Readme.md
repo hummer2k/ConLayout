@@ -105,7 +105,7 @@ Handles may be: (ordered by priority ASC)
                 '_remove' => [
                     // remove block
                     'BLOCK_NAME' => true,
-                    // you may overwrite by another handle to not remove a specified block:
+                    // you may overwrite by another handle to not remove a specific block:
                     'BLOCK_NAME' => false
                 ]
             ]
