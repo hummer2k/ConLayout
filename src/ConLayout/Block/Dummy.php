@@ -28,21 +28,21 @@ class Dummy
     {
         $articles = array(
             array(
-                'title' => 'LOL',
-                'text' => 'Lorem ipsum.'
+                'title' => 'Lorem ipsum',
+                'text' => 'dolor sit amet.'
             ),
             array(
-                'title' => 'HAHA',
-                'text' => 'lorem ipsum 2k3 blubb'
+                'title' => 'Lorem ipsum',
+                'text' => 'dolor sit amet.'
             ),
             array(
-                'title' => 'BLUBBB',
-                'text' => 'Lorem Ipsum dolor'
+                'title' => 'Lorem ipsum',
+                'text' => 'dolor sit amet.'
             ),
             array(
-                'title' => 'lorem ipsum',
-                'text' => 'das ist ein test. okay, es scheint alles zu funktionieren!'
-            )
+                'title' => 'Lorem ipsum',
+                'text' => 'dolor sit amet.'
+            ),
         );
         return array_slice($articles, 0, $this->limit);
     }

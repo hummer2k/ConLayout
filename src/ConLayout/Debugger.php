@@ -45,11 +45,12 @@ class Debugger
     public function addDebugBlock(ViewModel $block, $captureTo)
     {
         $debugBlock = clone $block;
-
         $debugBlock->setVariables(array(
             'blockName' => $block->getVariable('nameInLayout'),
             'blockTemplate' => $block->getTemplate(),
-            'blockClass' => get_class($block)
+            'blockClass' => get_class($block),
+            'originalBlock' => $block,
+            'captureTo' => $captureTo
         ));
         $debugBlock->setCaptureTo($captureTo);
         $debugBlock->setTemplate('blocks/debug');

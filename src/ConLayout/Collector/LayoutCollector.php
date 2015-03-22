@@ -4,6 +4,7 @@ namespace ConLayout\Collector;
 use Closure;
 use Traversable;
 use Zend\Stdlib\ArrayUtils;
+use Zend\View\Model\ViewModel;
 use ZendDeveloperTools\Collector\AbstractCollector;
 use ZendDeveloperTools\Stub\ClosureStub;
 
@@ -49,6 +50,7 @@ class LayoutCollector
         $actionResult = $mvcEvent->getResult();
         $layoutService = $sm->get('ConLayout\Service\LayoutService');
         $blocksBuilder = $sm->get('ConLayout\Service\BlocksBuilder');
+
         $data = array(
             'handles' => $layoutService->getHandles(),
             'layoutConfig' => $this->makeArraySerializable(
@@ -57,14 +59,20 @@ class LayoutCollector
             'blocks' => array(),
             'layout_template' => $layout->getTemplate()
         );
-        $data['blocks']['ACTION_RESULT'] = get_class($actionResult);
-        foreach ($blocksBuilder->getBlocks() as $name => $instance) {
-            $data['blocks'][$name] = get_class($instance);
-        }
 
         $debugger = $sm->get('ConLayout\Debugger');
-        $data['debug'] = $debugger->isEnabled();
+        $this->data['debug'] = $debugger->isEnabled();
 
+        $data['blocks']['ACTION_RESULT'] = $actionResult;
+        /* @var $instance ViewModel */
+        foreach ($blocksBuilder->getBlocks() as $name => $instance) {
+            if ($this->isDebug() && ($captureTo = $instance->getVariable('captureTo'))) {
+                $instance = $instance->getVariable('originalBlock');
+                $instance->setCaptureTo($captureTo);
+            }
+            $data['blocks'][$name] = $instance;
+        }
+        
         $this->data = $data;
         return $this;
     }

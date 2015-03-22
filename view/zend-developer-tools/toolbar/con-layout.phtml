@@ -1,13 +1,10 @@
 <?php /* @var $collector ConLayout\Collector\LayoutCollector */ ?>
 <div class="zdt-toolbar-entry">
-    <div class="zdt-toolbar-preview">            
-        <img style="width:22px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABXUlEQVRIS2NkoDFgpLH5DGALdh04HMjEyDyDkYlRjBoW/vv//zXDn/+prk7WG8EW7Dl47CXz1FYxRkYmhr85VQydH9YxMP1nZCgVDGTQfpgPVMHEcFW+nyS7///7/8rF3kocbMHew8f/M09pYwCayfAvu4qh+/16BgZGoAUCAUALCoHiTAzX5HpJsgCk2NnWEmgK1AKSdROhAW7Bmw8f/xOhnmQlIgL8EB/QzYJbd+4xfP/+A+xSLi5OBlVlRTAbWZyQN5D1Yfjg4uVrKPr1dbXA/Nt37zN8+/adkNlgeW5uLgYVJQUwm2gLiDIZi6LBYwHN4wA9bggFGSzuiA6iUQvgORlXPhg6QYScY5FzJMU5+eWbt/+ZWVgIpT6S5P/8+cMgISIMKU1PXbj8UU5Gio+FSpaADH/0+NkHM0NdQbAFu/cd9WdkZpxFrTr5/99/L/8y/Et1d7DdTPNWBQAu59kZuoTsCwAAAABJRU5ErkJggg==">
+    <div class="zdt-toolbar-preview">           
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABXUlEQVRIS2NkoDFgpLH5DGALdh04HMjEyDyDkYlRjBoW/vv//zXDn/+prk7WG8EW7Dl47CXz1FYxRkYmhr85VQydH9YxMP1nZCgVDGTQfpgPVMHEcFW+nyS7///7/8rF3kocbMHew8f/M09pYwCayfAvu4qh+/16BgZGoAUCAUALCoHiTAzX5HpJsgCk2NnWEmgK1AKSdROhAW7Bmw8f/xOhnmQlIgL8EB/QzYJbd+4xfP/+A+xSLi5OBlVlRTAbWZyQN5D1Yfjg4uVrKPr1dbXA/Nt37zN8+/adkNlgeW5uLgYVJQUwm2gLiDIZi6LBYwHN4wA9bggFGSzuiA6iUQvgORlXPhg6QYScY5FzJMU5+eWbt/+ZWVgIpT6S5P/8+cMgISIMKU1PXbj8UU5Gio+FSpaADH/0+NkHM0NdQbAFu/cd9WdkZpxFrTr5/99/L/8y/Et1d7DdTPNWBQAu59kZuoTsCwAAAABJRU5ErkJggg==">
         <span class="zdt-toolbar-info">Layout</span>
     </div>
-    <div class="zdt-toolbar-detail" style="right: 0">
-        <span class="zdt-toolbar-info zdt-toolbar-info-heading">
-            Layout config
-        </span>
+    <div class="zdt-toolbar-detail" style="right: 0; max-width: 38%">
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-pre">
                 <?php \Zend\Debug\Debug::dump($collector->getLayoutConfig()); ?>
@@ -25,14 +22,41 @@
             </span>
             <span class="clear"></span>
             <?php else: ?>
-            <?php foreach ($loadedBlocks as $blockName => $instanceName): ?>
-            <span data-block-name-label="<?php echo $blockName ?>" class="zdt-detail-label" style="text-transform: none !important;cursor: pointer">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Capture to</th>
+                        <th>Template</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($loadedBlocks as $blockName => $blockInstance): ?>
+                    <tr>
+                        <td style="text-transform: none !important;cursor: pointer" data-block-name-label="<?php echo $blockName ?>">
+                            <?php echo $blockName ?>
+                        </td>
+                        <td>
+                            <?php echo get_class($blockInstance) ?>
+                        </td>
+                        <td>
+                            <?php echo $blockInstance->captureTo() ?>
+                        </td>
+                        <td>
+                            <?php echo $blockInstance->getTemplate() ?>
+                        </td>
+                    </tr>
+                <?php /*<span data-block-name-label="<?php echo $blockName ?>" class="zdt-detail-label" style="text-transform: none !important;cursor: pointer">
                 <?php echo $blockName ?>
-            </span>
-            <span class="zdt-detail-value">
-                <?php echo $instanceName ?>
-            </span><br>
-            <?php endforeach; ?>
+                </span>
+                <span class="zdt-detail-value">
+                    <?php echo get_class($blockInstance) ?> -&gt;
+                    <?php echo $blockInstance->captureTo() ?>
+                </span><br>**/ ?>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
             <?php endif; ?>
         </span>
         <hr>
