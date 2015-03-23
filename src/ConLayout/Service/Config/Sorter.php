@@ -36,7 +36,7 @@ class Sorter implements SorterInterface
                     $handle = $$var;
                     if (false !== strpos($handle, $substr)) {
                         ${'order' . strtoupper($var)} = is_callable($priority)
-                            ? $priority($handle, $substr)
+                            ? call_user_func($priority, $handle, $substr)
                             : $priority;
                     }
                 }

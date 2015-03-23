@@ -37,6 +37,7 @@ class LayoutModifierListenerFactory
         foreach ($helperConfig as $helper => $value) {
             if (is_array($value) && isset($value['valuePreparers'])) {
                 foreach ($value['valuePreparers'] as $valuePreparer) {
+                    if (false === $valuePreparer) continue;
                     $layoutModifierListener->addValuePreparer($helper, $serviceLocator->get($valuePreparer));
                 }
                 unset($helperConfig[$helper]['valuePreparers']);

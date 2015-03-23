@@ -2,7 +2,6 @@
 return array(
     'view_manager' => array(
         'template_path_stack' => array(
-            './design/coad/twbs3/template',
             __DIR__ . '/../view',
         ),
         'template_map' => array(
@@ -41,14 +40,15 @@ return array(
         'cache_dir' => './data/cache/con-layout',
         'child_capture_to' => 'childHtml',
         'content_capture_to' => 'content',
+        'cache_buster' => [
+            'internal_base_dir' => './public'
+        ],
         'sorter' => array(
             'priorities' => array(
                 'default'   => -20,
-                '\\'        => 0,
-                '/'         => function($handle, $substr) {
-                    return substr_count($handle, $substr);
-                },                
-                '::'        => 10,
+                 '\\'        => 'ConLayout\Priority\Segments::getPriority',
+                '/'         => 'ConLayout\Priority\Segments::getPriority',
+                '::'        => 'ConLayout\Priority\ControllerAction::getPriority',
                 'error-'    => 15
             )
         ),

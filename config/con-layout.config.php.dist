@@ -2,7 +2,7 @@
 $config = array(
     'handle_behavior' => \ConLayout\Listener\ActionHandlesListener::BEHAVIOR_COMBINED,
     'config_glob_paths' => array(
-        'default' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
+        'default' => './{app/modules/*/*/view,app/modules/*/*/view/{{area}}}/layout.config.php'
     ),
     'enable_debug' => false,
     'enable_layout_cache' => false,
@@ -12,26 +12,30 @@ $config = array(
     'cache_dir' => './data/cache/con-layout',
     'child_capture_to' => 'childHtml',
     'content_capture_to' => 'content',
+    'cache_buster' => [
+        'internal_base_dir' => './public'
+    ],
     'sorter' => array(
         'priorities' => array(
-            'default'   => -20,
-            '\\'        => 0,
-            '/'         => function($handle, $substr) {
-                return substr_count($handle, $substr);
-            },
-            '::'        => 10
+            'default'   => -1,
+            '\\'        => 'ConLayout\Priority\Segments::getPriority',
+            '/'         => 'ConLayout\Priority\Segments::getPriority',
+            '::'        => 'ConLayout\Priority\ControllerAction::getPriority',
+            'error-'    => 15
         )
     ),
     'helpers' => array(
         'headLink' => array(
             'defaultMethod' => 'appendStylesheet',
             'valuePreparers' => array(
+                'cacheBuster' => 'ConLayout\ValuePreparer\CacheBuster',
                 'basePath' => 'ConLayout\ValuePreparer\BasePath'
             )
         ),
         'headScript' => array(
             'defaultMethod' => 'appendFile',
             'valuePreparers' => array(
+                'cacheBuster' => 'ConLayout\ValuePreparer\CacheBuster',
                 'basePath' => 'ConLayout\ValuePreparer\BasePath'
             )
         ),

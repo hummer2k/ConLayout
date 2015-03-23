@@ -51,8 +51,13 @@ class LayoutCollector
         $layoutService = $sm->get('ConLayout\Service\LayoutService');
         $blocksBuilder = $sm->get('ConLayout\Service\BlocksBuilder');
 
+        $config = $sm->get('Config');
+        $priorities = isset($config['con-layout']['sorter']['priorities'])
+            ? $config['con-layout']['sorter']['priorities']
+            : array();
+
         $data = array(
-            'handles' => $layoutService->getHandles(),
+            'handles' => $this->prepareHandles($layoutService->getHandles(), $priorities),
             'layoutConfig' => $this->makeArraySerializable(
                 $layoutService->getLayoutConfig()
             ),
@@ -63,18 +68,52 @@ class LayoutCollector
         $debugger = $sm->get('ConLayout\Debugger');
         $this->data['debug'] = $debugger->isEnabled();
 
-        $data['blocks']['ACTION_RESULT'] = $actionResult;
+        $data['blocks']['ACTION_RESULT'] = [
+            'class' => get_class($actionResult),
+            'template' => $actionResult->getTemplate(),
+            'capture_to' => $actionResult->captureTo()
+        ];
         /* @var $instance ViewModel */
         foreach ($blocksBuilder->getBlocks() as $name => $instance) {
             if ($this->isDebug() && ($captureTo = $instance->getVariable('captureTo'))) {
                 $instance = $instance->getVariable('originalBlock');
                 $instance->setCaptureTo($captureTo);
             }
-            $data['blocks'][$name] = $instance;
+            $data['blocks'][$name] = [
+                'class' => get_class($instance),
+                'template' => $instance->getTemplate(),
+                'capture_to' => $instance->captureTo()
+            ];
         }
         
         $this->data = $data;
         return $this;
+    }
+
+    /**
+     *
+     * @param array $handles
+     * @param array $priorities
+     */
+    protected function prepareHandles(array $handles, array $priorities)
+    {
+        $preparedHandles = [];
+        foreach ($handles as $handle) {
+            $found = false;
+            foreach ($priorities as $substr => $priority) {
+                if (false !== strpos($handle, $substr)) {
+                    $preparedHandles[$handle] = is_callable($priority)
+                        ? call_user_func($priority, $handle, $substr)
+                        : (int) $priority;
+                    $found = true;
+                }
+            }
+            if (!$found) {
+                $preparedHandles[$handle] = 0;
+            }
+        }
+        arsort($preparedHandles);
+        return $preparedHandles;
     }
 
     public function isDebug()

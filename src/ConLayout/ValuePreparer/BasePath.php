@@ -1,5 +1,9 @@
 <?php
 namespace ConLayout\ValuePreparer;
+
+use ConLayout\ValuePreparer\ValuePreparerInterface;
+use Zend\View\Helper\BasePath as BasePathHelper;
+
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -10,9 +14,9 @@ class BasePath implements ValuePreparerInterface
     
     /**
      * 
-     * @param \Zend\View\Helper\BasePath $basePathHelper
+     * @param BasePathHelper $basePathHelper
      */
-    public function __construct(\Zend\View\Helper\BasePath $basePathHelper)
+    public function __construct(BasePathHelper $basePathHelper)
     {
         $this->basePathHelper = $basePathHelper;
     }
@@ -26,7 +30,7 @@ class BasePath implements ValuePreparerInterface
     {
         $value = trim($value);
         if (!preg_match('#^(https?://|//)#', $value)) {
-            return $this->basePathHelper->__invoke($value);
+            return call_user_func($this->basePathHelper, $value);
         }
         return $value;
     }

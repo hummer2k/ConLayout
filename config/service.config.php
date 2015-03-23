@@ -15,6 +15,7 @@ return array(
         'ConLayout\ValuePreparer\BasePath' => 'ConLayout\ValuePreparer\BasePathFactory',
         'ConLayout\Listener\BodyClassListener' => 'ConLayout\Listener\BodyClassListenerFactory',
         'ConLayout\Debugger' => 'ConLayout\DebuggerFactory',
+        'ConLayout\ValuePreparer\CacheBuster' => 'ConLayout\ValuePreparer\CacheBusterFactory',
     ),
     'invokables' => array(
         'ConLayout\Collector\LayoutCollector' => 'ConLayout\Collector\LayoutCollector'
