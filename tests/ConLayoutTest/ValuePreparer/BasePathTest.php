@@ -15,10 +15,7 @@ class BasePathTest extends \ConLayoutTest\AbstractTest
         $basePathHelper->setBasePath('/');
         return new BasePath($basePathHelper);
     }
-    
-    /**
-     * @covers BasePathTest::prepare()
-     */
+
     public function testPrepareRelativeUrl()
     {
         $basePath = $this->getBasePath();
@@ -28,9 +25,6 @@ class BasePathTest extends \ConLayoutTest\AbstractTest
         $this->assertSame('/css/styles.css', $result);
     }
     
-    /**
-     * @covers BasePathTest::prepare()
-     */
     public function testPrepareAbsoluteUrls()
     {
         $basePath = $this->getBasePath();

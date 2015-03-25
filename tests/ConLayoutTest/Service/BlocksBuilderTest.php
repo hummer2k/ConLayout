@@ -18,9 +18,7 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
         $this->assertEquals(1, count($blocksBuilder->getCreatedBlocks()));
         
     }
-    /**
-     * @covers \ConLayout\Service\BlocksBuilder::getCreatedBlocks
-     */
+
     public function testCreateBlocksWithRouteHandle()
     {
         $this->layoutService->reset()->addHandle('route');
@@ -35,9 +33,6 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
         $this->assertArrayHasKey('sidebar', $blocksBuilder->getCreatedBlocks());
     }
     
-    /**
-     * @covers \ConLayout\Service\BlocksBuilder::getBlock
-     */
     public function testGetBlock()
     {
         $blocksBuilder = $this->getBlocksBuilder();

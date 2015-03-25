@@ -24,9 +24,6 @@ class OptionTraitTest extends AbstractTest
         )
     );
     
-    /**
-     * @covers \ConLayout\OptionTrait::getOption
-     */
     public function testGetOption()
     {        
         $ipsum = $this->getOption($this->options, 'lorem/ipsum');
@@ -41,9 +38,7 @@ class OptionTraitTest extends AbstractTest
         $this->assertSame($test, 'my_option_value');        
     }
     
-    /**
-     * @covers \ConLayout\OptionTrait::getOption
-     */
+
     public function testGetOptionDefault()
     {
         $nonExistingValue = $this->getOption($this->options, 'does/not/exist');
@@ -53,18 +48,12 @@ class OptionTraitTest extends AbstractTest
         $this->assertSame('default', $nonExistingValue);
     }
     
-    /**
-     * @covers \ConLayout\OptionTrait::getOption
-     */
     public function testDelimiter()
     {
         $value = $this->getOption($this->options, 'dolor.blubb.test', null, '.');
         $this->assertSame('my_option_value', $value);
     }
     
-    /**
-     * @covers \ConLayout\OptionTrait::getOption
-     */
     public function testEscape()
     {
         $value = $this->getOption($this->options, 'test/bla/blubb/val');

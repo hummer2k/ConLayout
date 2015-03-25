@@ -19,12 +19,11 @@ class BlockRendererFactory implements FactoryInterface
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $viewManager = $serviceLocator->get('ViewManager');
         $config = $serviceLocator->get('Config');
         $blockRenderer = new BlockRenderer();
-        $blockRenderer->setHelperPluginManager($viewManager->getHelperManager());
-        $blockRenderer->setResolver($viewManager->getResolver());
-        $cacheEnabled = $this->getOption($config, 'con-layout/enable_block_cache', true);
+        $blockRenderer->setHelperPluginManager($serviceLocator->get('ViewHelperManager'));
+        $blockRenderer->setResolver($serviceLocator->get('Zend\View\Resolver\AggregateResolver'));
+        $cacheEnabled = $this->getOption($config, 'con-layout/enable_block_cache', false);
         
         if ($cacheEnabled) {
             $cache = $this->getOption($config, 'con-layout/block_cache', 'ConLayout\Cache');

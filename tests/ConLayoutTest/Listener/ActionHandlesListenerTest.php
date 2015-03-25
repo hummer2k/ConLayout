@@ -8,10 +8,6 @@ use ConLayout\Listener\ActionHandlesListener;
  */
 class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
 {
-    /**
-     * @covers ActionHandlesListener::getActionHandles
-     * @covers ActionHandlesListener::getControllerHandles
-     */
     public function testControllerHandles()
     {
         $routeMatch = new \Zend\Mvc\Router\Http\RouteMatch(array(
@@ -28,16 +24,13 @@ class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
             $handlesListener->getActionHandles($routeMatch),
             array(
                 'Application',
+                'Application\Controller',
                 'Application\Controller\Index',
                 'Application\Controller\Index::index'
             )
         );
     }
     
-    /**
-     * @covers ActionHandlesListener::getActionHandles
-     * @covers ActionHandlesListener::getRouteHandles
-     */
     public function testRouteHandles()
     {
         $routeMatch = new \Zend\Mvc\Router\Http\RouteMatch(array(
@@ -59,11 +52,6 @@ class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
         );
     }
     
-    /**
-     * @covers ActionHandlesListener::getActionHandles
-     * @covers ActionHandlesListener::getRouteHandles
-     * @covers ActionHandlesListener::getControllerHandles
-     */
     public function testCombinedHandles()
     {
         $routeMatch = new \Zend\Mvc\Router\Http\RouteMatch(array(
@@ -82,6 +70,7 @@ class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
                 'user',
                 'user/login',
                 'User',
+                'User\Controller',
                 'User\Controller\Index',
                 'User\Controller\Index::login'
             )

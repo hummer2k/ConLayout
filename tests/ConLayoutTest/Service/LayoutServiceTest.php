@@ -6,9 +6,6 @@ namespace ConLayoutTest\Service;
  */
 class LayoutServiceTest extends \ConLayoutTest\AbstractTest
 {
-    /**
-     * @covers \ConLayout\Service\Config::addHandle
-     */
     public function testAddHandle()
     {
         $this->layoutService->addHandle('route');
@@ -27,10 +24,6 @@ class LayoutServiceTest extends \ConLayoutTest\AbstractTest
         ), $this->layoutService->getHandles());
     }
         
-    /**
-     * @covers \ConLayout\Service\Config::getLayoutTemplate
-     * @covers \ConLayout\Service\Config\Sorter::sort
-     */
     public function testLayoutTemplate()
     {
         $this->layoutService->reset();
@@ -48,9 +41,6 @@ class LayoutServiceTest extends \ConLayoutTest\AbstractTest
         $this->assertEquals('layout/1col', $this->layoutService->getLayoutTemplate());
     }
     
-    /**
-     * @covers \ConLayout\Service\Config::removeBlocks
-     */
     public function testRemoveBlocks()
     {
         $this->layoutService->reset();
@@ -66,9 +56,6 @@ class LayoutServiceTest extends \ConLayoutTest\AbstractTest
         
     }
     
-    /**
-     * @covers \ConLayout\Service\Config::getBlockConfig
-     */
     public function testGetBlockConfig()
     {
         $blockConfig = $this->layoutService->getBlockConfig();
@@ -81,9 +68,6 @@ class LayoutServiceTest extends \ConLayoutTest\AbstractTest
         ));
     }
     
-    /**
-     * @covers \ConLayout\Service\Config::getGlobalLayoutConfig
-     */
     public function testGetGlobalLayoutConfig()
     {
         $globalLayoutConfig = $this->layoutService->reset()->getGlobalLayoutConfig();

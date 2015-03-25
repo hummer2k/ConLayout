@@ -6,9 +6,6 @@ namespace ConLayoutTest\Service\Config;
  */
 class CollectorTest extends \ConLayoutTest\AbstractTest
 {
-    /**
-     * @covers \ConLayout\Service\Config\Collector::collect
-     */
     public function testCollect()
     {
         $configs = $this->collector->collect();        

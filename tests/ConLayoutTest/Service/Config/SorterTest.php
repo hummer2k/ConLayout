@@ -6,9 +6,6 @@ namespace ConLayoutTest\Service\Config;
  */
 class SorterTest extends \ConLayoutTest\AbstractTest
 {
-    /**
-     * @covers \ConLayout\Service\Config\Sorter::sort
-     */
     public function testPriorities()
     {
         $sorter = new \ConLayout\Service\Config\Sorter(array(

@@ -1,11 +1,12 @@
 <?php
 namespace ConLayout\View\Strategy;
 
-use Zend\EventManager\AbstractListenerAggregate,
-    ConLayout\View\Renderer\BlockRenderer,
-    Zend\View\ViewEvent,
-    ConLayout\Block\BlockInterface,
-    Zend\EventManager\EventManagerInterface;
+use ConLayout\Block\BlockInterface;
+use ConLayout\View\Renderer\BlockRenderer;
+use Zend\EventManager\AbstractListenerAggregate;
+use Zend\EventManager\EventManagerInterface;
+use Zend\View\Renderer\RendererInterface;
+use Zend\View\ViewEvent;
 
 /**
  * @package ConLayout

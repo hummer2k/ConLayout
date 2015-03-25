@@ -1,12 +1,14 @@
 <?php
 namespace ConLayout\View\Renderer;
 
-use ConLayout\Block\CacheableInterface,
-    Traversable,
-    Zend\Cache\Storage\StorageInterface,
-    Zend\View\Renderer\PhpRenderer,
-    Zend\EventManager\EventManagerAwareInterface,
-    Zend\EventManager\EventManagerAwareTrait;
+use ConLayout\Block\CacheableInterface;
+use Traversable;
+use Zend\Cache\Storage\StorageInterface;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
+use Zend\EventManager\EventManagerInterface;
+use Zend\View\Renderer\PhpRenderer;
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -94,7 +96,7 @@ class BlockRenderer
         return $result;
     }
     
-    public function setEventManager(\Zend\EventManager\EventManagerInterface $events)
+    public function setEventManager(EventManagerInterface $events)
     {
         $events->addIdentifiers(__CLASS__);
         $this->events = $events;
