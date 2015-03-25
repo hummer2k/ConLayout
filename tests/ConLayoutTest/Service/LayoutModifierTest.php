@@ -15,6 +15,15 @@ class LayoutModifierTest extends AbstractTest
 {
     protected $em;
 
+    public function testFactory()
+    {
+        $factory = new \ConLayout\Service\LayoutModifierFactory();
+        $this->assertInstanceOf(
+            'ConLayout\Service\LayoutModifier',
+            $factory->createService($this->sm)
+        );
+    }
+
     public function testAddBlocksToLayout()
     {
         $this->layoutService->reset();

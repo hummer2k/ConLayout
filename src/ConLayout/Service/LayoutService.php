@@ -106,7 +106,7 @@ class LayoutService
         if (!is_array($handles)) {
             $handles = array($handles);
         }
-        $this->handles = array_diff($this->handles, $handles);
+        $this->handles = array_values(array_diff($this->handles, $handles));
         return $this;
     }
     

@@ -6,6 +6,15 @@ namespace ConLayoutTest\Service;
  */
 class LayoutServiceTest extends \ConLayoutTest\AbstractTest
 {
+    public function testFactory()
+    {
+        $factory = new \ConLayout\Service\LayoutServiceFactory();
+        $this->assertInstanceOf(
+            'ConLayout\Service\LayoutService',
+            $factory->createService($this->sm)
+        );
+    }
+
     public function testAddHandle()
     {
         $this->layoutService->addHandle('route');
@@ -22,6 +31,14 @@ class LayoutServiceTest extends \ConLayoutTest\AbstractTest
         $this->assertEquals(array(
             'default', 'route', 'route/childroute', 'controller::action'
         ), $this->layoutService->getHandles());
+
+        $this->layoutService->removeHandle('route/childroute');
+        $this->assertEquals(array(
+            'default', 'route', 'controller::action'
+        ), $this->layoutService->getHandles());
+
+        $this->layoutService->removeHandle(['route', 'controller::action']);
+        $this->assertEquals(['default'], $this->layoutService->getHandles());
     }
         
     public function testLayoutTemplate()

@@ -7,7 +7,15 @@ use ConLayout\ValuePreparer\BasePath;
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BasePathTest extends \ConLayoutTest\AbstractTest
-{   
+{
+    public function testFactory()
+    {
+        $factory = new \ConLayout\ValuePreparer\BasePathFactory();
+        $this->assertInstanceOf(
+            'ConLayout\ValuePreparer\BasePath',
+            $factory->createService($this->sm)
+        );
+    }
     public function getBasePath()
     {
         $basePathHelper = $this->sm->get('viewHelperManager')

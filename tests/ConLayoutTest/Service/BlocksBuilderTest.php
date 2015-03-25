@@ -7,9 +7,16 @@ namespace ConLayoutTest\Service;
  */
 class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
 {    
-    /**
-     * @covers \ConLayout\Service\BlocksBuilder::getCreatedBlocks
-     */
+    
+    public function testFactory()
+    {
+        $factory = new \ConLayout\Service\BlocksBuilderFactory();
+        $this->assertInstanceof(
+            'ConLayout\Service\BlocksBuilder', 
+            $factory->createService($this->sm)
+        );
+    }
+
     public function testCreateBlocksWithDefaultHandle()
     {        
         $blocksBuilder = $this->getBlocksBuilder();
