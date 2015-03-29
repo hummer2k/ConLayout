@@ -128,6 +128,12 @@ class LayoutServiceTest extends \ConLayoutTest\AbstractTest
                     'sidebar' => array(
                         'block.sidebar' => array(
                             'class' => 'ConLayout\Block\Dummy'
+                        ),
+                        'block.sidebar.before' => array(
+                            'template' => 'lorem/ipsum',
+                            'options' => array(
+                                'order' => -10
+                            )
                         )
                     )
                 )

@@ -41,7 +41,7 @@ class LayoutService
      * @var array
      */
     protected $layoutConfig = array();
-    
+
     /**
      *
      * @var array
@@ -341,7 +341,7 @@ class LayoutService
         $this->layoutConfig = $layoutConfig;
         return $this;
     }
-    
+
     /**
      * reset service
      * 

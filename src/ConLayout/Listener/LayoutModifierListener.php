@@ -10,8 +10,8 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Mvc\MvcEvent;
+use Zend\View\HelperPluginManager;
 use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout
@@ -21,6 +21,8 @@ class LayoutModifierListener
     implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
+
+    const DEBUG_CSS = '/css/con-layout.css';
     
     /**
      *
@@ -42,9 +44,9 @@ class LayoutModifierListener
     
     /**
      *
-     * @var PhpRenderer
+     * @var HelperPluginManager
      */
-    protected $viewRenderer;
+    protected $viewHelperManager;
     
     /**
      *
@@ -76,17 +78,17 @@ class LayoutModifierListener
         LayoutService $layoutService, 
         BlocksBuilder $blocksBuilder, 
         LayoutModifier $layoutModifier,
-        PhpRenderer $viewRenderer,
+        HelperPluginManager $viewHelperManager,
         Debugger $debugger,
         $helperConfig = array()
     )
     {
-        $this->layoutService    = $layoutService;
-        $this->blocksBuilder    = $blocksBuilder;
-        $this->layoutModifier   = $layoutModifier;
-        $this->viewRenderer     = $viewRenderer;
-        $this->debugger         = $debugger;
-        $this->helperConfig     = $helperConfig;
+        $this->layoutService     = $layoutService;
+        $this->blocksBuilder     = $blocksBuilder;
+        $this->layoutModifier    = $layoutModifier;
+        $this->viewHelperManager = $viewHelperManager;
+        $this->debugger          = $debugger;
+        $this->helperConfig      = $helperConfig;
     }
     
     /**
@@ -112,7 +114,7 @@ class LayoutModifierListener
         foreach ($this->getHelperConfig() as $helper => $config) {
             if (!isset($layoutConfig[$helper])) continue;
             $defaultMethod = isset($config['defaultMethod']) ? $config['defaultMethod'] : '__invoke';
-            $viewHelper = $this->viewRenderer->plugin($helper);
+            $viewHelper = $this->viewHelperManager->get($helper);
             if (!is_array($layoutConfig[$helper])) {
                 $layoutConfig[$helper] = array($layoutConfig[$helper]);
             }
@@ -183,16 +185,13 @@ class LayoutModifierListener
 
         $blockConfig = $this->layoutService->getBlockConfig();
         $this->addActionViewModelsToBlockConfig($blockConfig, $layout);
-        
-        $this->blocksBuilder->setBlockConfig($blockConfig);
 
-        $createdBlocks  = $this->blocksBuilder->create()
-            ->getCreatedBlocks();
+        $createdBlocks = $this->blocksBuilder->createBlocks($blockConfig);
 
         // add blocks to layout
         if ($this->debugger->isEnabled()) {
-            $this->viewRenderer->plugin('headlink')
-                ->appendStylesheet('css/con-layout.css');
+            $this->viewHelperManager->get('headlink')
+                ->appendStylesheet(self::DEBUG_CSS);
         }
         $this->layoutModifier->addBlocksToLayout($createdBlocks, $layout);
         return $this;

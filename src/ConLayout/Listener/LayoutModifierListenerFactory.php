@@ -22,14 +22,13 @@ class LayoutModifierListenerFactory
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
-        $viewRenderer = $serviceLocator->has('viewrenderer') ? $serviceLocator->get('viewrenderer') : new PhpRenderer();
 
         $valuePreparers = $this->getOption($config, 'con-layout/value_preparers', array());
         $layoutModifierListener = new LayoutModifierListener(
             $serviceLocator->get('ConLayout\Service\LayoutService'),
             $serviceLocator->get('ConLayout\Service\BlocksBuilder'),
             $serviceLocator->get('ConLayout\Service\LayoutModifier'),
-            $viewRenderer,
+            $serviceLocator->get('ViewHelperManager'),
             $serviceLocator->get('ConLayout\Debugger'),
             $this->getOption($config, 'con-layout/helpers', array())
         );

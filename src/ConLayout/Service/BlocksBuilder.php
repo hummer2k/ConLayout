@@ -55,17 +55,12 @@ class BlocksBuilder
         return $this;
     }
 
-    public function addBlockInstance($name, ViewModel $block, array $params = [])
-    {
-
-    }
-    
     /**
      * 
      * @param array $blockConfig
      * @return array
      */
-    protected function createBlocks(array $blockConfig = null)
+    public function createBlocks(array $blockConfig = null)
     {
         if (null === $blockConfig) {
             $blockConfig = $this->blockConfig;
@@ -127,7 +122,7 @@ class BlocksBuilder
      * @param type $blockConfig
      * @return \ConLayout\Service\className
      */
-    public function createBlock(array $blockConfig)
+    protected function createBlock(array $blockConfig)
     {
         $block = $this->createBlockInstance($blockConfig);
 

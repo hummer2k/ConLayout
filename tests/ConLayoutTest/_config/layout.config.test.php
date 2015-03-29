@@ -36,8 +36,14 @@ return array(
             'sidebar' => array(
                 'block.sidebar' => array(
                     'class' => 'ConLayout\Block\Dummy'
+                ),
+                'block.sidebar.before' => array(
+                    'template' => 'lorem/ipsum',
+                    'options' => array(
+                        'order' => -10
+                    )
                 )
-            )
+            ),
         )
     ),
     'remove-handle' => array(

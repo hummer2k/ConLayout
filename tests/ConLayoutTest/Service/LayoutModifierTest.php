@@ -30,8 +30,9 @@ class LayoutModifierTest extends AbstractTest
         $layout = new ViewModel();
         $layoutModifier = $this->getLayoutModifier();
         $blocksBuilder = $this->getBlocksBuilder();
-        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());       
-        $createdBlocks = $blocksBuilder->getCreatedBlocks();
+        $createdBlocks = $blocksBuilder->createBlocks(
+            $this->layoutService->getBlockConfig()
+        );
         
         $layoutModifier->addBlocksToLayout(
             $createdBlocks,
@@ -47,15 +48,16 @@ class LayoutModifierTest extends AbstractTest
         $this->layoutService->addHandle(array('route', 'route/childroute'));        
         $layout = new ViewModel();
         $blocksBuilder = $this->getBlocksBuilder();
-        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());       
-        $createdBlocks = $blocksBuilder->getCreatedBlocks();
+        $createdBlocks = $blocksBuilder->createBlocks(
+            $this->layoutService->getBlockConfig()
+        );
         
         $layoutModifier = $this->getLayoutModifier();
         $layoutModifier->addBlocksToLayout(
             $createdBlocks,
             $layout
         );
-        $this->assertEquals(3, $layout->count());
+        $this->assertEquals(4, $layout->count());
     }
 
     public function testAcl()
@@ -69,8 +71,9 @@ class LayoutModifierTest extends AbstractTest
         $this->layoutService->addHandle(array('route', 'route/childroute'));
         $layout = new ViewModel();
         $blocksBuilder = $this->getBlocksBuilder();
-        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());
-        $createdBlocks = $blocksBuilder->getCreatedBlocks();
+        $createdBlocks = $blocksBuilder->createBlocks(
+            $this->layoutService->getBlockConfig()
+        );
 
         $layoutModifier = $this->getLayoutModifier();
         $layoutModifier->addBlocksToLayout(
@@ -79,6 +82,61 @@ class LayoutModifierTest extends AbstractTest
         );
 
         $this->assertEquals(0, $layout->count());
+
+        $this->getEventManager()->getSharedManager()->attach(
+            'ConLayout\Service\LayoutModifier', 'isAllowed', function($e) {
+            return true;
+        });
+    }
+
+    public function testSortBlocks()
+    {
+        $layoutModifier = $this->getLayoutModifier();
+        $blockConfig = [
+            'sidebar' => [
+                'widget1' => [
+                    'options' => [
+                        'order' => 10
+                    ]
+                ],
+                'widget2' => [
+                    'options' => [
+                        'order' => 4
+                    ]
+                ],
+                'widget3' => [
+                    'template' => 'asdf'
+                ],
+                'widget4' => [
+                    'options' => [
+                        'order' => -10
+                    ]
+                ],
+                'widget5' => [
+                    'template' => 'tmpl'
+                ]
+            ]
+        ];
+        $blocksBuilder = $this->sm->get('ConLayout\Service\BlocksBuilder');
+        $createdBlocks = $blocksBuilder->createBlocks($blockConfig);
+
+        $layout = new ViewModel();
+
+        $layoutModifier->addBlocksToLayout($createdBlocks, $layout);
+
+        $expectedOrder = [
+            1 => 'widget4',
+            2 => 'widget5',
+            3 => 'widget3',
+            4 => 'widget2',
+            5 => 'widget1'
+        ];
+
+        $i = 1;
+        foreach ($layout->getChildrenByCaptureTo('sidebar') as $child) {
+            $this->assertEquals($expectedOrder[$i], $child->getVariable('nameInLayout'));
+            $i++;
+        }
     }
 
     protected function getLayoutModifier()
