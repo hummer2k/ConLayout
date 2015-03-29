@@ -2,15 +2,19 @@
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\ActionHandlesListener;
+use ConLayout\Listener\ActionHandlesListenerFactory;
+use ConLayoutTest\AbstractTest;
+use Zend\EventManager\EventManager;
+use Zend\Mvc\Router\Http\RouteMatch;
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
+class ActionHandlesListenerTest extends AbstractTest
 {
     public function testControllerHandles()
     {
-        $routeMatch = new \Zend\Mvc\Router\Http\RouteMatch(array(
+        $routeMatch = new RouteMatch(array(
             'controller' => 'Application\Controller\Index',
             'action' => 'index'
         ));
@@ -33,7 +37,7 @@ class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
     
     public function testRouteHandles()
     {
-        $routeMatch = new \Zend\Mvc\Router\Http\RouteMatch(array(
+        $routeMatch = new RouteMatch(array(
             'controller' => 'Application\Controller\Index',
             'action' => 'index'
         ));
@@ -51,10 +55,48 @@ class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
             )
         );
     }
-    
+
+    public function testAddActionHandles()
+    {
+        $routeMatch = new RouteMatch(array(
+            'controller' => 'User\Controller\Index',
+            'action' => 'login'
+        ));
+        $event = new \Zend\Mvc\MvcEvent();
+        $event->setRouteMatch($routeMatch);
+
+        $handlesListener = new ActionHandlesListener(
+            ActionHandlesListener::BEHAVIOR_COMBINED,
+            $this->layoutService->reset()
+        );
+
+        $handlesListener->addActionHandles($event);
+
+        $this->assertEquals(array(
+            'default',
+            'User',
+            'User\Controller',
+            'User\Controller\Index',
+            'User\Controller\Index::login'
+        ), $this->layoutService->getHandles());
+    }
+
+    public function testSettersAndGetters()
+    {
+        $handlesListener = new ActionHandlesListener(
+            ActionHandlesListener::BEHAVIOR_COMBINED,
+            $this->layoutService->reset()
+        );
+        $this->assertInstanceOf('ConLayout\Service\LayoutService', $handlesListener->getLayoutService());
+
+        $handlesListener->setRouteSeparator('_');
+        $this->assertSame('_', $handlesListener->getRouteSeparator());
+
+    }
+
     public function testCombinedHandles()
     {
-        $routeMatch = new \Zend\Mvc\Router\Http\RouteMatch(array(
+        $routeMatch = new RouteMatch(array(
             'controller' => 'User\Controller\Index',
             'action' => 'login'
         ));
@@ -76,5 +118,30 @@ class ActionHandlesListenerTest extends \ConLayoutTest\AbstractTest
             )
         );
        
+    }
+
+    public function testAttach()
+    {
+        $handlesListener = new ActionHandlesListener(
+            ActionHandlesListener::BEHAVIOR_COMBINED,
+            $this->layoutService->reset()
+        );
+
+        $eventManager = new EventManager();
+        $listeners = $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH);
+        $this->assertEquals(0, count($listeners));
+
+        $handlesListener->attach($eventManager);
+
+        $listeners = $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH);
+        $this->assertEquals(1, count($listeners));
+
+    }
+
+    public function testFactory()
+    {
+        $factory = new ActionHandlesListenerFactory();
+        $actionHandlesListener = $factory->createService($this->sm);
+        $this->assertInstanceOf('ConLayout\Listener\ActionHandlesListener', $actionHandlesListener);
     }
 }

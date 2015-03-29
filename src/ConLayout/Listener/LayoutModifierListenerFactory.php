@@ -1,8 +1,9 @@
 <?php
 namespace ConLayout\Listener;
 
-use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout
@@ -21,28 +22,25 @@ class LayoutModifierListenerFactory
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
-        $viewRenderer = $serviceLocator->get('Zend\View\Renderer\PhpRenderer');
-        $layout = $viewRenderer->viewModel()->getRoot(); 
-        
-        $helperConfig = $this->getOption($config, 'con-layout/helpers', array());
+        $viewRenderer = $serviceLocator->has('viewrenderer') ? $serviceLocator->get('viewrenderer') : new PhpRenderer();
+
+        $valuePreparers = $this->getOption($config, 'con-layout/value_preparers', array());
         $layoutModifierListener = new LayoutModifierListener(
             $serviceLocator->get('ConLayout\Service\LayoutService'),
             $serviceLocator->get('ConLayout\Service\BlocksBuilder'),
             $serviceLocator->get('ConLayout\Service\LayoutModifier'),
-            $layout,
             $viewRenderer,
             $serviceLocator->get('ConLayout\Debugger'),
-            $helperConfig
+            $this->getOption($config, 'con-layout/helpers', array())
         );
-        foreach ($helperConfig as $helper => $value) {
-            if (is_array($value) && isset($value['valuePreparers'])) {
-                foreach ($value['valuePreparers'] as $valuePreparer) {
-                    if (false === $valuePreparer) continue;
-                    $layoutModifierListener->addValuePreparer($helper, $serviceLocator->get($valuePreparer));
-                }
-                unset($helperConfig[$helper]['valuePreparers']);
+
+        foreach ($valuePreparers as $helper => $valuePreparers) {
+            foreach ($valuePreparers as $valuePreparer) {
+                if (false === $valuePreparer) continue;
+                $layoutModifierListener->addValuePreparer($helper, $serviceLocator->get($valuePreparer));
             }
         }
+
         return $layoutModifierListener;
     }
 }

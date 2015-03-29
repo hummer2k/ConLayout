@@ -2,9 +2,10 @@
 
 namespace ConLayout\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface,
-    Zend\ServiceManager\ServiceLocatorAwareTrait,
-    ConLayout\Block\AbstractBlock;
+use ConLayout\Block\AbstractBlock;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\View\Model\ViewModel;
 
 /**
  * BlocksBuilder
@@ -44,7 +45,7 @@ class BlocksBuilder
     /**
      * 
      * @param bool $force
-     * @return \ConLayout\Service\BlocksBuilder
+     * @return BlocksBuilder
      */
     public function create($force = false)
     {
@@ -52,6 +53,11 @@ class BlocksBuilder
             $this->createdBlocks = $this->createBlocks();
         }
         return $this;
+    }
+
+    public function addBlockInstance($name, ViewModel $block, array $params = [])
+    {
+
     }
     
     /**
@@ -70,7 +76,9 @@ class BlocksBuilder
                     $block['children'] = $this->createBlocks($block['children']);
                 }
                 $block['name'] = $blockName;
-                $block['instance'] = $this->createBlock($block);
+                if (!isset($block['instance']) || !$block['instance'] instanceof ViewModel) {
+                    $block['instance'] = $this->createBlock($block);
+                }
                 // add block to cache so we have fast access 
                 // to the block instance by $blockName
                 $this->blocks[$blockName] = $block['instance'];
@@ -90,6 +98,27 @@ class BlocksBuilder
         }
         return $this->createdBlocks;
     }
+
+    protected function createBlockInstance(array $blockConfig)
+    {
+        $className = isset($blockConfig['class'])
+            ? $blockConfig['class']
+            : $this->defaultBlockClass;
+
+        /* @var $block ViewModel */
+        if ($this->serviceLocator->has($className) && $className !== $this->defaultBlockClass) {
+            $block = $this->serviceLocator->create($className);
+        } else {
+            $block = new $className();
+        }
+        if ($block instanceof AbstractBlock) {
+            $request = $this->serviceLocator->get('Request');
+            if ($request instanceof \Zend\Http\Request) {
+                $block->setRequest($request);
+            }
+        }
+        return $block;
+    }
     
     /**
      * creates block instance from config
@@ -100,44 +129,56 @@ class BlocksBuilder
      */
     public function createBlock(array $blockConfig)
     {
-        $className = isset($blockConfig['class']) 
-            ? $blockConfig['class']
-            : $this->defaultBlockClass;
-        /* @var $block \Zend\View\Model\ViewModel */
-        if ($this->serviceLocator->has($className) && $className !== $this->defaultBlockClass) {
-            $block = $this->serviceLocator->create($className);
-        } else {
-            $block = new $className();
-        }        
-        if ($block instanceof AbstractBlock) {
-            $request = $this->serviceLocator->get('Request');
-            if ($request instanceof \Zend\Http\Request) {
-                $block->setRequest($request);
-            }
+        $block = $this->createBlockInstance($blockConfig);
+
+        $this->setTemplate($block, $blockConfig);
+        $this->addOptions($block, $blockConfig);
+        $this->applyActions($block, $blockConfig);
+        $this->setVariables($block, $blockConfig);
+
+        if (method_exists($block, 'init')) {
+            $block->init();
         }
-        $optionKeys = array(
-            'template', 'options', 'order'
-        );
-        foreach ($optionKeys as $optionKey) {
-            if (isset($blockConfig[$optionKey])) {
-                $method = 'set' . ucfirst($optionKey);
-                if (method_exists($block, $method)) {
-                    $block->{$method}($blockConfig[$optionKey]);
-                }
-            }
-        }
-        // set template if configured
+        
+        return $block;
+    }
+
+    /**
+     * 
+     * @param ViewModel $block
+     * @param array $blockConfig
+     * @return \ConLayout\Service\BlocksBuilder
+     */
+    protected function setTemplate(ViewModel $block, array $blockConfig)
+    {
         if (isset($blockConfig['template'])) {
             $block->setTemplate($blockConfig['template']);
         }
-        // set options
+        return $this;
+    }
+
+    /**
+     *
+     * @param ViewModel $block
+     * @param array $blockConfig
+     * @return \ConLayout\Service\BlocksBuilder
+     */
+    protected function addOptions(ViewModel $block, array $blockConfig)
+    {
         if (isset($blockConfig['options'])) {
             $block->setOptions($blockConfig['options']);
         }
-        // set sort order
-        if (isset($blockConfig['order'])) {
-            $block->setOption('order', $blockConfig['order']);
-        }        
+        return $this;
+    }
+
+    /**
+     *
+     * @param ViewModel $block
+     * @param array $blockConfig
+     * @return \ConLayout\Service\BlocksBuilder
+     */
+    protected function applyActions(ViewModel $block, array $blockConfig)
+    {
         // call block's configured methods if exists
         if (isset($blockConfig['actions']) && is_array($blockConfig['actions'])) {
             foreach ($blockConfig['actions'] as $method => $params) {
@@ -146,11 +187,22 @@ class BlocksBuilder
                 }
             }
         }
+        return $this;
+    }
+
+    /**
+     *
+     * @param ViewModel $block
+     * @param array $blockConfig
+     * @return \ConLayout\Service\BlocksBuilder
+     */
+    protected function setVariables(ViewModel $block, array $blockConfig)
+    {
         $blockVars = isset($blockConfig['vars']) ? $blockConfig['vars'] : array();
-        // inject variables   
+        // inject variables
         $block->setVariables(
             array_merge(
-                (array) $block->getVariables(), 
+                (array) $block->getVariables(),
                 $blockVars,
                 array(
                     'block' => $block,
@@ -158,13 +210,7 @@ class BlocksBuilder
                 )
             )
         );
-        
-        // call block's init method
-        if (method_exists($block, 'init')) {
-            $block->init();
-        }
-        
-        return $block;
+        return $this;
     }
     
     /**
@@ -190,7 +236,7 @@ class BlocksBuilder
     /**
      * 
      * @param array $blockConfig
-     * @return \ConLayout\Service\BlocksBuilder
+     * @return BlocksBuilder
      */
     public function setBlockConfig(array $blockConfig)
     {

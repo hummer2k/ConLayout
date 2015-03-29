@@ -1,12 +1,14 @@
 <?php
 namespace ConLayout\Listener;
 
-use ConLayout\View\Helper\BodyClass,
-    Zend\EventManager\AbstractListenerAggregate,
-    Zend\EventManager\EventManagerInterface,
-    Zend\Mvc\MvcEvent;
+use ConLayout\Listener\BodyClassListener;
+use ConLayout\View\Helper\BodyClass;
+use Zend\EventManager\AbstractListenerAggregate;
+use Zend\EventManager\EventManagerInterface;
+use Zend\Mvc\MvcEvent;
+
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BodyClassListener

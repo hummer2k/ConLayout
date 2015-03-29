@@ -1,8 +1,9 @@
 <?php
 namespace ConLayout\Service;
 
-use Zend\ServiceManager\FactoryInterface,
-    \ConLayout\OptionTrait;
+use ConLayout\OptionTrait;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * ConfigFactory
@@ -16,20 +17,25 @@ class LayoutServiceFactory
     
     /**
      * 
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \ConLayout\Service\Config
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return \ConLayout\Service\LayoutService
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config  = $serviceLocator->get('Config');  
         $enableCache = $this->getOption($config, 'con-layout/enable_layout_cache', false);
         $cache = $this->getOption($config, 'con-layout/layout_cache', 'ConLayout\Cache');
         $layoutService = new LayoutService(
-            $serviceLocator->get('ConLayout\Service\Config\CollectorInterface'),
+            $serviceLocator->get('ConLayout\Config\CollectorInterface'),
             $serviceLocator->get($cache),
-            $serviceLocator->get('ConLayout\Service\Config\SorterInterface')
+            $serviceLocator->get('ConLayout\Config\SorterInterface')
         );
         $layoutService->setIsCacheEnabled($enableCache);
+
+        foreach ($this->getOption($config, 'con-layout/block_config_modifiers', array()) as $blockConfigModifier) {
+            $layoutService->addBlockConfigModifier($serviceLocator->get($blockConfigModifier));
+        }
+
         return $layoutService;
     }
 }

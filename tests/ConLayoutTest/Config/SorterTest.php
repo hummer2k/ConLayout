@@ -1,14 +1,17 @@
 <?php
-namespace ConLayoutTest\Service\Config;
+namespace ConLayoutTest\Config;
+
+use ConLayout\Config\Sorter;
+use ConLayoutTest\AbstractTest;
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class SorterTest extends \ConLayoutTest\AbstractTest
+class SorterTest extends AbstractTest
 {
     public function testPriorities()
     {
-        $sorter = new \ConLayout\Service\Config\Sorter(array(
+        $sorter = new Sorter(array(
             'default' => -20,
             '\\'        => 0,
             '/'         => function($handle, $substr) {

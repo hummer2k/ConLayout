@@ -98,13 +98,16 @@ class ActionHandlesListener
 
         switch ($this->getHandleBehavior()) {
             case self::BEHAVIOR_ROUTENAME:
-                return $routeHandles;
-            case self::BEHAVIOR_COMBINED:
-                return array_unique(array_merge($routeHandles, $controllerHandles));    
+                $result = $routeHandles;
+                break;           
             case self::BEHAVIOR_CONTROLLER:
-            default:
-                return $controllerHandles;
+                $result = $controllerHandles;
+                break;
+            case self::BEHAVIOR_COMBINED:
+                $result = array_unique(array_merge($routeHandles, $controllerHandles));
+                break;
         }
+        return $result;
     }
     
     /**

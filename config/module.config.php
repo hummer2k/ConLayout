@@ -43,6 +43,9 @@ return array(
         'cache_buster' => [
             'internal_base_dir' => './public'
         ],
+        'block_config_modifiers' => [
+            'ConLayout\Config\Modifier\RemoveBlocks'
+        ],
         'sorter' => array(
             'priorities' => array(
                 'default'   => -20,
@@ -55,21 +58,12 @@ return array(
         'helpers' => array(
             'headLink' => array(
                 'defaultMethod' => 'appendStylesheet',
-                'valuePreparers' => array(
-                    'basePath' => 'ConLayout\ValuePreparer\BasePath'
-                )
             ),
             'headScript' => array(
                 'defaultMethod' => 'appendFile',
-                'valuePreparers' => array(
-                    'basePath' => 'ConLayout\ValuePreparer\BasePath'
-                )
             ),
             'inlineScript' => array(
                 'defaultMethod' => 'appendFile',
-                'valuePreparers' => array(
-                    'basePath' => 'ConLayout\ValuePreparer\BasePath'
-                )
             ),
             'headTitle' => array(
                 'defaultMethod' => 'append'
@@ -81,6 +75,17 @@ return array(
                 'defaultMethod' => 'append'
             ),
             'doctype' => array()
+        ),
+        'value_preparers' => array(
+            'headLink' => array(
+                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+            ),
+            'headScript' => array(
+                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+            ),
+            'inlineScript' => array(
+                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+            )
         )
     ),
     'asset_manager' => array(

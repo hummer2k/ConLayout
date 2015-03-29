@@ -17,11 +17,11 @@ $config = array(
     ],
     'sorter' => array(
         'priorities' => array(
-            'default'   => -1,
-            '\\'        => 'ConLayout\Priority\Segments::getPriority',
-            '/'         => 'ConLayout\Priority\Segments::getPriority',
-            '::'        => 'ConLayout\Priority\ControllerAction::getPriority',
-            'error-'    => 15
+            '/^default$/'   => -1,
+            '/\\/'        => 'ConLayout\Priority\Segments::getPriority',
+            '/\//'         => 'ConLayout\Priority\Segments::getPriority',
+            '/::/'        => 'ConLayout\Priority\ControllerAction::getPriority',
+            '/^error-/'    => 15
         )
     ),
     'helpers' => array(

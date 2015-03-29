@@ -1,5 +1,5 @@
 <?php
-namespace ConLayout\Service\Config;
+namespace ConLayout\Config;
 
 /**
  * Collector
@@ -49,7 +49,7 @@ class Collector
     /**
      *
      * @param string $area
-     * @return \ConLayout\Service\Config\Collector
+     * @return \ConLayout\Config\Collector
      */
     public function setArea($area)
     {

@@ -1,8 +1,9 @@
 <?php
-namespace ConLayout\Service\Config;
+namespace ConLayout\Config;
 
-use Zend\ServiceManager\FactoryInterface,
-    ConLayout\OptionTrait;
+use ConLayout\OptionTrait;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * CollectorFactory
@@ -16,10 +17,10 @@ class CollectorFactory
     
     /**
      * 
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \ConLayout\Service\Config\Collector
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return Collector
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
         $globPath = $this->getOption($config, 'con-layout/config_glob_paths', array());

@@ -2,10 +2,10 @@
 namespace ConLayoutTest;
 
 use ConLayout\Service\BlocksBuilder;
-use ConLayout\Service\Config\Collector;
-use ConLayout\Service\Config\CollectorInterface;
-use ConLayout\Service\Config\Sorter;
-use ConLayout\Service\Config\SorterInterface;
+use ConLayout\Config\Collector;
+use ConLayout\Config\CollectorInterface;
+use ConLayout\Config\Sorter;
+use ConLayout\Config\SorterInterface;
 use ConLayout\Service\LayoutService;
 use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\ServiceManager;
@@ -16,6 +16,7 @@ use Zend\XmlRpc\Server\Cache;
  */
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
+    use \ConLayout\OptionTrait;
     /**
      *
      * @var array
@@ -88,6 +89,9 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             $this->cache,
             $this->sorter
         );
+        foreach ($this->getOption($this->config, 'con-layout/block_config_modifiers', array()) as $blockConfigModifier) {
+            $this->layoutService->addBlockConfigModifier($this->sm->get($blockConfigModifier));
+        }
         $this->layoutService->getGlobalLayoutConfig();
         $this->layoutService->getBlockConfig();
         $this->layoutService->setIsCacheEnabled(false);

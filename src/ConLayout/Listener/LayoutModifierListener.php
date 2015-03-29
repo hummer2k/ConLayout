@@ -33,13 +33,7 @@ class LayoutModifierListener
      * @var BlocksBuilder
      */
     protected $blocksBuilder;
-    
-    /**
-     *
-     * @var ViewModel
-     */
-    protected $layout;
-    
+        
     /**
      *
      * @var LayoutModifier
@@ -82,7 +76,6 @@ class LayoutModifierListener
         LayoutService $layoutService, 
         BlocksBuilder $blocksBuilder, 
         LayoutModifier $layoutModifier,
-        ViewModel $layout,
         PhpRenderer $viewRenderer,
         Debugger $debugger,
         $helperConfig = array()
@@ -91,7 +84,6 @@ class LayoutModifierListener
         $this->layoutService    = $layoutService;
         $this->blocksBuilder    = $blocksBuilder;
         $this->layoutModifier   = $layoutModifier;
-        $this->layout           = $layout;  
         $this->viewRenderer     = $viewRenderer;
         $this->debugger         = $debugger;
         $this->helperConfig     = $helperConfig;
@@ -188,21 +180,40 @@ class LayoutModifierListener
         if ($layout->terminate()) {
             return;
         }
-        // retrieve block config
-        $blockConfig    = $this->layoutService->getBlockConfig();
+
+        $blockConfig = $this->layoutService->getBlockConfig();
+        $this->addActionViewModelsToBlockConfig($blockConfig, $layout);
+        
         $this->blocksBuilder->setBlockConfig($blockConfig);
-        // create and retrieve block instances
+
         $createdBlocks  = $this->blocksBuilder->create()
             ->getCreatedBlocks();
+
         // add blocks to layout
         if ($this->debugger->isEnabled()) {
             $this->viewRenderer->plugin('headlink')
                 ->appendStylesheet('css/con-layout.css');
         }
-        $this->layoutModifier->addBlocksToLayout($createdBlocks, $this->layout);
+        $this->layoutModifier->addBlocksToLayout($createdBlocks, $layout);
         return $this;
     }
-    
+
+    /**
+     *
+     * @param array $blockConfig
+     * @param ViewModel $layout
+     */
+    protected function addActionViewModelsToBlockConfig(array &$blockConfig, ViewModel $layout)
+    {
+        /* @var $layoutChild ViewModel */
+        foreach ($layout->getChildren() as $i => $layoutChild) {
+            $blockName = '__ACTION_RESULT__' . $i;
+            $layoutChild->setVariable('nameInLayout', $blockName);
+            $blockConfig[$layoutChild->captureTo()][$blockName]['instance']
+                = $layoutChild;
+        }
+        $layout->clearChildren();
+    }
     
     /**
      * retrieve helper config
@@ -235,5 +246,14 @@ class LayoutModifierListener
     {
         $this->valuePreparers[$helper][] = $valuePreparer;
         return $this;
+    }
+
+    /**
+     *
+     * @return LayoutService
+     */
+    public function getLayoutService()
+    {
+        return $this->layoutService;
     }
 }

@@ -44,6 +44,7 @@ class Debugger
      */
     public function addDebugBlock(ViewModel $block, $captureTo)
     {
+        $block->setCaptureTo('content');
         $debugBlock = clone $block;
         $debugBlock->setVariables(array(
             'blockName' => $block->getVariable('nameInLayout'),

@@ -1,12 +1,12 @@
 <?php
 namespace ConLayout\Listener;
 
-use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BodyClassListenerFactory

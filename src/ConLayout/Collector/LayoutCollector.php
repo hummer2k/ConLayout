@@ -47,7 +47,6 @@ class LayoutCollector
         $sm = $mvcEvent->getApplication()->getServiceManager();
 
         $layout = $mvcEvent->getViewModel();
-        $actionResult = $mvcEvent->getResult();
         $layoutService = $sm->get('ConLayout\Service\LayoutService');
         $blocksBuilder = $sm->get('ConLayout\Service\BlocksBuilder');
 
@@ -68,11 +67,6 @@ class LayoutCollector
         $debugger = $sm->get('ConLayout\Debugger');
         $this->data['debug'] = $debugger->isEnabled();
 
-        $data['blocks']['ACTION_RESULT'] = [
-            'class' => get_class($actionResult),
-            'template' => $actionResult->getTemplate(),
-            'capture_to' => $actionResult->captureTo()
-        ];
         /* @var $instance ViewModel */
         foreach ($blocksBuilder->getBlocks() as $name => $instance) {
             if ($this->isDebug() && ($captureTo = $instance->getVariable('captureTo'))) {

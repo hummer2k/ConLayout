@@ -1,5 +1,5 @@
 <?php
-namespace ConLayoutTest\Service\Config;
+namespace ConLayoutTest\Config;
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>

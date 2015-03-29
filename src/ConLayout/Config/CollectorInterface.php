@@ -1,5 +1,5 @@
 <?php
-namespace ConLayout\Service\Config;
+namespace ConLayout\Config;
 
 /**
  * CollectorInterface

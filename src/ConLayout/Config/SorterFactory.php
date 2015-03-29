@@ -1,5 +1,5 @@
 <?php
-namespace ConLayout\Service\Config;
+namespace ConLayout\Config;
 use Zend\ServiceManager\FactoryInterface;
 /**
  * @package ConLayout
@@ -11,7 +11,7 @@ class SorterFactory implements FactoryInterface
     /**
      * 
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \ConLayout\Service\Config\Sorter
+     * @return \ConLayout\Config\Sorter
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
