@@ -3,7 +3,7 @@ namespace ConLayout\Block;
 
 /**
  * Dummy block demo
- * 
+ * @codeCoverageIgnore
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de> *
  */

@@ -26,21 +26,7 @@ abstract class AbstractBlock
      * @var array
      */
     protected $cacheKeyInfo = array();
-    
-    /**
-     * 
-     * @param type $variables
-     * @param type $options
-     */
-    public function __construct($variables = null, $options = null)
-    {
-        parent::__construct($variables, $options);
-        $this->setCacheKeyInfo(array(
-            $this->getTemplate(),
-            get_called_class()
-        ));
-    }
-            
+               
     /**
      * 
      * @param \Zend\Http\Request $request
@@ -83,7 +69,11 @@ abstract class AbstractBlock
      */
     public function getCacheKeyInfo()
     {
-        return $this->cacheKeyInfo;
+        $cacheKeyInfo = array_merge([
+            $this->getTemplate(),
+            get_called_class()
+        ], $this->cacheKeyInfo);
+        return $cacheKeyInfo;
     }
     
     /**

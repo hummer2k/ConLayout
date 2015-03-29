@@ -3,6 +3,7 @@
 namespace ConLayout\Service;
 
 use ConLayout\Block\AbstractBlock;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\View\Model\ViewModel;
@@ -41,9 +42,9 @@ class BlocksBuilder
      * @var string
      */
     protected $defaultBlockClass = 'Zend\View\Model\ViewModel';
-    
+
     /**
-     * 
+     *
      * @param bool $force
      * @return BlocksBuilder
      */
@@ -65,7 +66,7 @@ class BlocksBuilder
         if (null === $blockConfig) {
             $blockConfig = $this->blockConfig;
         }
-        foreach ($blockConfig as &$blocks) {
+        foreach ($blockConfig as $captureTo => &$blocks) {
             foreach($blocks as $blockName => &$block) {
                 if (isset($block['children'])) {
                     $block['children'] = $this->createBlocks($block['children']);
@@ -74,6 +75,7 @@ class BlocksBuilder
                 if (!isset($block['instance']) || !$block['instance'] instanceof ViewModel) {
                     $block['instance'] = $this->createBlock($block);
                 }
+                $block['instance']->setCaptureTo($captureTo);
                 // add block to cache so we have fast access 
                 // to the block instance by $blockName
                 $this->blocks[$blockName] = $block['instance'];
@@ -81,7 +83,7 @@ class BlocksBuilder
         }
         return $blockConfig;
     }
-    
+
     /**
      * 
      * @return array
@@ -102,19 +104,19 @@ class BlocksBuilder
 
         /* @var $block ViewModel */
         if ($this->serviceLocator->has($className) && $className !== $this->defaultBlockClass) {
-            $block = $this->serviceLocator->create($className);
+            $block = $this->serviceLocator->get($className);
         } else {
             $block = new $className();
         }
         if ($block instanceof AbstractBlock) {
             $request = $this->serviceLocator->get('Request');
-            if ($request instanceof \Zend\Http\Request) {
+            if ($request instanceof Request) {
                 $block->setRequest($request);
             }
         }
         return $block;
     }
-    
+   
     /**
      * creates block instance from config
      * 
@@ -142,7 +144,7 @@ class BlocksBuilder
      * 
      * @param ViewModel $block
      * @param array $blockConfig
-     * @return \ConLayout\Service\BlocksBuilder
+     * @return BlocksBuilder
      */
     protected function setTemplate(ViewModel $block, array $blockConfig)
     {
@@ -156,7 +158,7 @@ class BlocksBuilder
      *
      * @param ViewModel $block
      * @param array $blockConfig
-     * @return \ConLayout\Service\BlocksBuilder
+     * @return BlocksBuilder
      */
     protected function addOptions(ViewModel $block, array $blockConfig)
     {
@@ -170,7 +172,7 @@ class BlocksBuilder
      *
      * @param ViewModel $block
      * @param array $blockConfig
-     * @return \ConLayout\Service\BlocksBuilder
+     * @return BlocksBuilder
      */
     protected function applyActions(ViewModel $block, array $blockConfig)
     {
@@ -189,7 +191,7 @@ class BlocksBuilder
      *
      * @param ViewModel $block
      * @param array $blockConfig
-     * @return \ConLayout\Service\BlocksBuilder
+     * @return BlocksBuilder
      */
     protected function setVariables(ViewModel $block, array $blockConfig)
     {
@@ -219,15 +221,6 @@ class BlocksBuilder
         return $this->blocks;
     }
     
-    /**
-     * 
-     * @return array
-     */
-    public function getBlockConfig()
-    {
-        return $this->blockConfig;
-    }
-
     /**
      * 
      * @param array $blockConfig

@@ -1,9 +1,9 @@
 <?php
 namespace ConLayout;
 
-use Zend\Console\Console;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventInterface as Event;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\Mvc\MvcEvent;
 
 /**
@@ -39,12 +39,14 @@ class Module
      */
     public function onBootstrap(Event $e)
     {
-        if (Console::isConsole()) {
-            return;
-        }
         $application    = $e->getApplication();
         $serviceManager = $application->getServiceManager();        
         $eventManager   = $application->getEventManager();
+        $request        = $serviceManager->get('Request');
+
+        if (!$request instanceof Request) {
+            return;
+        }
         
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) use ($serviceManager) {
             $serviceManager->get('ConLayout\Service\LayoutService')

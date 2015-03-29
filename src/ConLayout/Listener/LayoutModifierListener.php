@@ -67,7 +67,14 @@ class LayoutModifierListener
      * @var Debugger
      */
     protected $debugger;
-    
+
+    /**
+     *
+     * @var int
+     */
+    protected static $anonymousSuffix = 1;
+
+
     /**
      * 
      * @param LayoutService $layoutService
@@ -205,13 +212,34 @@ class LayoutModifierListener
     protected function addActionViewModelsToBlockConfig(array &$blockConfig, ViewModel $layout)
     {
         /* @var $layoutChild ViewModel */
-        foreach ($layout->getChildren() as $i => $layoutChild) {
-            $blockName = '__ACTION_RESULT__' . $i;
-            $layoutChild->setVariable('nameInLayout', $blockName);
+        foreach ($layout->getChildren() as $layoutChild) {
+            $blockName = $this->determineAnonymousBlockname($layoutChild);
+            $layoutChild->setVariable(
+                'nameInLayout',
+                $blockName
+            );
             $blockConfig[$layoutChild->captureTo()][$blockName]['instance']
                 = $layoutChild;
         }
         $layout->clearChildren();
+    }
+
+    /**
+     *
+     * @param ViewModel $viewModel
+     * @return string
+     */
+    protected function determineAnonymousBlockname(ViewModel $viewModel)
+    {
+        $blockName = $viewModel->getVariable(
+            'nameInLayout',
+            sprintf(
+                'anonymous.%s.%s',
+                $viewModel->captureTo(),
+                self::$anonymousSuffix++
+            )
+        );
+        return $blockName;
     }
     
     /**

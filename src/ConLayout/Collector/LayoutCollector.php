@@ -65,11 +65,11 @@ class LayoutCollector
         );
 
         $debugger = $sm->get('ConLayout\Debugger');
-        $this->data['debug'] = $debugger->isEnabled();
+        $data['debug'] = $debugger->isEnabled();
 
         /* @var $instance ViewModel */
         foreach ($blocksBuilder->getBlocks() as $name => $instance) {
-            if ($this->isDebug() && ($captureTo = $instance->getVariable('captureTo'))) {
+            if ($data['debug'] && ($captureTo = $instance->getVariable('captureTo'))) {
                 $instance = $instance->getVariable('originalBlock');
                 $instance->setCaptureTo($captureTo);
             }
@@ -96,9 +96,11 @@ class LayoutCollector
             $found = false;
             foreach ($priorities as $substr => $priority) {
                 if (false !== strpos($handle, $substr)) {
-                    $preparedHandles[$handle] = is_callable($priority)
-                        ? call_user_func($priority, $handle, $substr)
-                        : (int) $priority;
+                    if (is_callable($priority)) {
+                        $preparedHandles[$handle] = call_user_func($priority, $handle, $substr);
+                    } else {
+                        $preparedHandles[$handle] = (int) $priority;
+                    }
                     $found = true;
                 }
             }
@@ -112,7 +114,7 @@ class LayoutCollector
 
     public function isDebug()
     {
-        return $this->data['debug'];
+        return !empty($this->data['debug']);
     }
 
     /**
@@ -155,7 +157,7 @@ class LayoutCollector
      * Replaces the un-serializable items in an array with stubs
      *
      * @param array|Traversable $data
-     *
+     * @codeCoverageIgnore
      * @return array
      */
     private function makeArraySerializable($data)
@@ -185,7 +187,7 @@ class LayoutCollector
      * Opposite of {@see makeArraySerializable} - replaces stubs in an array with actual un-serializable objects
      *
      * @param array $data
-     *
+     * @codeCoverageIgnore
      * @return array
      */
     private function unserializeArray(array $data)

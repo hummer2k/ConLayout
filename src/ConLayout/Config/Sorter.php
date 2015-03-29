@@ -29,8 +29,8 @@ class Sorter implements SorterInterface
     public function sort(array &$data)
     {
         uksort($data, function($a, $b) {            
-            $orderA = -10;
-            $orderB = -10;
+            $orderA = 0;
+            $orderB = 0;
             foreach($this->priorities as $substr => $priority) {
                 foreach (array('a', 'b') as $var) {
                     $handle = $$var;

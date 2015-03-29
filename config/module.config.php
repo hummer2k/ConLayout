@@ -1,37 +1,37 @@
 <?php
-return array(
-    'view_manager' => array(
-        'template_path_stack' => array(
+return [
+    'view_manager' => [
+        'template_path_stack' => [
             __DIR__ . '/../view',
-        ),
-        'template_map' => array(
+        ],
+        'template_map' => [
             'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',
-        ),
-        'strategies' => array(
+        ],
+        'strategies' => [
             'BlockRendererStrategy'
-        ),
-        // important: set empty layout template, so that we 
+        ],
+        // important: set empty layout template, so we 
         // are able to set the template via layout()-helper in controller
         'layout' => ''
-    ),
-    'view_helpers' => array(
-        'invokables' => array(
+    ],
+    'view_helpers' => [
+        'invokables' => [
             'ConLayout\View\Helper\BodyClass' => 'ConLayout\View\Helper\BodyClass',            
-        ),
-        'aliases' => array(
+        ],
+        'aliases' => [
             'bodyClass' => 'ConLayout\View\Helper\BodyClass',
-        )
-    ),
-    'controller_plugins' => array(
-        'factories' => array(
+        ]
+    ],
+    'controller_plugins' => [
+        'factories' => [
             'blockManager' => 'ConLayout\Controller\Plugin\BlockManagerFactory'
-        ),
-    ),
-    'con-layout' => array(
+        ],
+    ],
+    'con-layout' => [
         'handle_behavior' => \ConLayout\Listener\ActionHandlesListener::BEHAVIOR_COMBINED,
-        'config_glob_paths' => array(
+        'config_glob_paths' => [
             'default' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
-        ),
+        ],
         'enable_debug' => false,
         'enable_layout_cache' => false,
         'enable_block_cache' => false,
@@ -46,65 +46,65 @@ return array(
         'block_config_modifiers' => [
             'ConLayout\Config\Modifier\RemoveBlocks'
         ],
-        'sorter' => array(
-            'priorities' => array(
-                'default'   => -20,
-                 '\\'        => 'ConLayout\Priority\Segments::getPriority',
+        'sorter' => [
+            'priorities' => [
+                'default'   => -1,
+                 '\\'       => 'ConLayout\Priority\Segments::getPriority',
                 '/'         => 'ConLayout\Priority\Segments::getPriority',
                 '::'        => 'ConLayout\Priority\ControllerAction::getPriority',
                 'error-'    => 15
-            )
-        ),
-        'helpers' => array(
-            'headLink' => array(
+            ]
+        ],
+        'helpers' => [
+            'headLink' => [
                 'defaultMethod' => 'appendStylesheet',
-            ),
-            'headScript' => array(
+            ],
+            'headScript' => [
                 'defaultMethod' => 'appendFile',
-            ),
-            'inlineScript' => array(
+            ],
+            'inlineScript' => [
                 'defaultMethod' => 'appendFile',
-            ),
-            'headTitle' => array(
+            ],
+            'headTitle' => [
                 'defaultMethod' => 'append'
-            ),
-            'headMeta' => array(
+            ],
+            'headMeta' => [
                 'defaultMethod' => 'appendName'
-            ),
-            'bodyClass' => array(
+            ],
+            'bodyClass' => [
                 'defaultMethod' => 'append'
-            ),
-            'doctype' => array()
-        ),
-        'value_preparers' => array(
-            'headLink' => array(
+            ],
+            'doctype' => []
+        ],
+        'value_preparers' => [
+            'headLink' => [
                 'basePath' => 'ConLayout\ValuePreparer\BasePath'
-            ),
-            'headScript' => array(
+            ],
+            'headScript' => [
                 'basePath' => 'ConLayout\ValuePreparer\BasePath'
-            ),
-            'inlineScript' => array(
+            ],
+            'inlineScript' => [
                 'basePath' => 'ConLayout\ValuePreparer\BasePath'
-            )
-        )
-    ),
-    'asset_manager' => array(
-        'resolver_configs' => array(
-            'paths' => array(
+            ]
+        ]
+    ],
+    'asset_manager' => [
+        'resolver_configs' => [
+            'paths' => [
                 __DIR__ . '/../public/assets'
-            )
-        )
-    ),
-    'zenddevelopertools' => array(
-        'profiler' => array(
-            'collectors' => array(
+            ]
+        ]
+    ],
+    'zenddevelopertools' => [
+        'profiler' => [
+            'collectors' => [
                 'con-layout' => 'ConLayout\Collector\LayoutCollector',
-            ),
-        ),
-        'toolbar' => array(
-            'entries' => array(
+            ],
+        ],
+        'toolbar' => [
+            'entries' => [
                 'con-layout' => 'zend-developer-tools/toolbar/con-layout',
-            ),
-        ),
-    ),
-);
+            ],
+        ],
+    ],
+];

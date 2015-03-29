@@ -3,9 +3,12 @@
 namespace ConLayoutTest\View\Renderer;
 
 use ConLayout\Block\AbstractBlock;
+use ConLayout\Service\BlocksBuilder;
 use ConLayout\View\Renderer\BlockRendererFactory;
 use ConLayoutTest\AbstractTest;
+use ConLayoutTest\Block\BlockDummy;
 use Zend\Cache\Storage\Adapter\AdapterOptions;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\View\Helper\ViewModel as ViewModelHelper;
 
 /**
@@ -14,12 +17,55 @@ use Zend\View\Helper\ViewModel as ViewModelHelper;
  */
 class BlockRendererTest extends AbstractTest
 {
-
     protected function createBlockRenderer()
     {
         $factory = new BlockRendererFactory();
-        return $factory->createService($this->sm);
+        $serviceManager = clone $this->sm;
+        $serviceManager->setAllowOverride(true);
+        $config = $serviceManager->get('Config');
+        $config['con-layout']['enable_block_cache'] = true;
+
+        $serviceManager->setService('Config', $config);
+
+        $instance = $factory->createService($serviceManager);
+        $instance->setCacheEnabled(false);
+        return $instance;
     }
+
+     public function testBlockFromSm()
+    {
+        $block = new BlockDummy();
+        $block->setTemplate('path');
+
+        $serviceManager = clone $this->sm;
+        $serviceManager->setService('myblock', $block);
+        $request = new Request();
+        $serviceManager->setService('Request', $request);
+
+        $blocksBuilder = new BlocksBuilder();
+        $blocksBuilder->setServiceLocator($serviceManager);
+
+        $blockConfig = [
+            'sidebar' => [
+                'test.block' => [
+                    'class' => 'myblock'
+                ]
+            ]
+        ];
+        $blocksBuilder->createBlocks($blockConfig);
+
+        $this->assertSame(
+            $block,
+            $blocksBuilder->getBlock('test.block')
+        );
+
+        $this->assertSame(
+            $request,
+            $blocksBuilder->getBlock('test.block')->getRequest()
+        );
+
+    }
+    
 
     public function testMagicGetDelegationToCurrentViewModel()
     {
@@ -44,6 +90,13 @@ class BlockRendererTest extends AbstractTest
             $this->getRenderedHtml(),
             $html
         );
+
+        $html = $renderer->render($this->getViewModel());
+        $this->assertEquals(
+            $this->getRenderedHtml(),
+            $html
+        );
+
     }
 
     protected function getViewModel()

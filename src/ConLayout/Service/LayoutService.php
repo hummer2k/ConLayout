@@ -10,7 +10,6 @@ use Zend\Config\Config;
 use Zend\Stdlib\ArrayUtils;
 
 /**
- * Config
  *
  * @author hummer 
  */
@@ -26,9 +25,9 @@ class LayoutService
      *
      * @var array
      */
-    protected $handles = array(
+    protected $handles = [
         'default'
-    );
+    ];
     
     /**
      *
@@ -40,13 +39,13 @@ class LayoutService
      *
      * @var array
      */
-    protected $layoutConfig = array();
+    protected $layoutConfig = [];
 
     /**
      *
      * @var array
      */
-    protected $globalLayoutConfig = array();
+    protected $globalLayoutConfig = [];
         
     /**
      *
@@ -70,7 +69,13 @@ class LayoutService
      * @var ModifierInterface[]
      */
     protected $blockConfigModifiers = [];
-        
+
+    /**
+     *
+     * @var ModifierInterface[]
+     */
+    protected $layoutConfigmodifiers = [];
+    
     /**
      * 
      * @param CollectorInterface $configCollector
@@ -96,7 +101,7 @@ class LayoutService
     public function addHandle($handles)
     {
         if (!is_array($handles)) {
-            $handles = array($handles);
+            $handles = [$handles];
         }
         foreach ($handles as $handle) {
             if (!in_array($handle, $this->handles) && trim($handle) !== '') {
@@ -114,7 +119,7 @@ class LayoutService
     public function removeHandle($handles)
     {
         if (!is_array($handles)) {
-            $handles = array($handles);
+            $handles = [$handles];
         }
         $this->handles = array_values(array_diff($this->handles, $handles));
         return $this;
@@ -239,7 +244,7 @@ class LayoutService
         if ($this->isCacheEnabled && $success) {
             return $blockConfig;
         }
-        $blockConfig = array();
+        $blockConfig = [];
         $layoutConfig = $this->getLayoutConfig();
         if (!isset($layoutConfig['blocks'])) {
             return $blockConfig;
@@ -262,7 +267,7 @@ class LayoutService
     protected function isHandleAllowed($handleNames)
     {
         if (is_string($handleNames)) {
-            $handleNames = array($handleNames);
+            $handleNames = [$handleNames];
         }
         foreach ($handleNames as $handleName) {
             if (in_array($handleName, $this->handles)) {
@@ -283,32 +288,12 @@ class LayoutService
 
     /**
      * 
-     * @return type
-     */
-    public function getConfigCollector()
-    {
-        return $this->configCollector;
-    }
-
-    /**
-     * 
      * @param array $handles
      * @return LayoutService
      */
     public function setHandles(array $handles)
     {
         $this->handles = $handles;
-        return $this;
-    }
-
-    /**
-     * 
-     * @param CollectorInterface $configCollector
-     * @return LayoutService
-     */
-    public function setConfigCollector(CollectorInterface $configCollector)
-    {
-        $this->configCollector = $configCollector;
         return $this;
     }
     
@@ -349,9 +334,9 @@ class LayoutService
      */
     public function reset()
     {
-        $this->layoutConfig = array();
-        $this->globalLayoutConfig = array();
-        $this->handles = array('default');
+        $this->layoutConfig = [];
+        $this->globalLayoutConfig = [];
+        $this->handles = ['default'];
         return $this;
     }
 }

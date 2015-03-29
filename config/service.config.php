@@ -1,6 +1,6 @@
 <?php
-return array(
-    'factories' => array(
+return [
+    'factories' => [
         'ConLayout\Service\LayoutService' => 'ConLayout\Service\LayoutServiceFactory',
         'ConLayout\Config\CollectorInterface' => 'ConLayout\Config\CollectorFactory',
         'ConLayout\Service\BlocksBuilder' => 'ConLayout\Service\BlocksBuilderFactory',
@@ -15,9 +15,9 @@ return array(
         'ConLayout\Listener\BodyClassListener' => 'ConLayout\Listener\BodyClassListenerFactory',
         'ConLayout\Debugger' => 'ConLayout\DebuggerFactory',
         'ConLayout\ValuePreparer\CacheBuster' => 'ConLayout\ValuePreparer\CacheBusterFactory',
-    ),
-    'invokables' => array(
+    ],
+    'invokables' => [
         'ConLayout\Collector\LayoutCollector' => 'ConLayout\Collector\LayoutCollector',
         'ConLayout\Config\Modifier\RemoveBlocks' => 'ConLayout\Config\Modifier\RemoveBlocks'
-    )
-);
+    ]
+];

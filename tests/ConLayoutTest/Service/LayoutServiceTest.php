@@ -1,14 +1,21 @@
 <?php
 namespace ConLayoutTest\Service;
+
+use ConLayout\Config\Collector;
+use ConLayout\Config\Sorter;
+use ConLayout\Service\LayoutService;
+use ConLayout\Service\LayoutServiceFactory;
+use ConLayoutTest\AbstractTest;
+use Zend\Cache\StorageFactory;
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutServiceTest extends \ConLayoutTest\AbstractTest
+class LayoutServiceTest extends AbstractTest
 {
     public function testFactory()
     {
-        $factory = new \ConLayout\Service\LayoutServiceFactory();
+        $factory = new LayoutServiceFactory();
         $this->assertInstanceOf(
             'ConLayout\Service\LayoutService',
             $factory->createService($this->sm)
@@ -142,5 +149,102 @@ class LayoutServiceTest extends \ConLayoutTest\AbstractTest
                 'layout' => 'layout/1col'
             ),
         ));
+    }
+
+    public function testCache()
+    {
+        $layoutService = $this->getLayoutService();
+
+        $layoutService->setIsCacheEnabled(true);
+
+        $layoutService->setLayoutConfig([
+            'blocks' => [
+                'header' => [
+                    'my.header' => []
+                ]
+            ]
+        ]);
+
+        $expectedBlockConfig = [
+            'header' => [
+                'my.header' => []
+            ]
+        ];
+
+        $this->assertEquals($expectedBlockConfig, $layoutService->getBlockConfig());
+
+        $newLayoutConfig = [
+            'blocks' => [
+                'header' => [
+                    'my.header' => [],
+                    'my.second.header' => []
+                ],
+                'sidebar' => [
+                    'my.sidebar.widget' => []
+                ]
+            ]
+        ];
+        $layoutService->setLayoutConfig($newLayoutConfig);
+
+        $this->assertEquals($expectedBlockConfig, $layoutService->getBlockConfig());
+
+        $this->assertTrue($layoutService->isCacheEnabled());
+        $layoutService->setIsCacheEnabled(false);
+        $this->assertFalse($layoutService->isCacheEnabled());
+
+        $expectedBlockConfig = [
+            'header' => [
+                'my.header' => [],
+                'my.second.header' => []
+            ],
+            'sidebar' => [
+                'my.sidebar.widget' => []
+            ]
+        ];
+
+        $this->assertEquals($expectedBlockConfig, $layoutService->getBlockConfig());
+    }
+    
+    public function testGetLayoutTemplate()
+    {
+        $layoutService = $this->getLayoutService();
+        $layoutService->setLayoutConfig([]);
+        
+        $this->assertNull($layoutService->getLayoutTemplate());
+
+        $layoutService->setLayoutConfig([
+            'layout' => '1col'
+        ]);
+
+        $this->assertEquals('1col', $layoutService->getLayoutTemplate());
+    }
+
+    public function testEmptyBlockConfig()
+    {
+        $layoutService = $this->getLayoutService();
+        $layoutService->setLayoutConfig([]);
+
+        $this->assertEquals([], $layoutService->getBlockConfig());
+    }
+
+    protected function getLayoutService()
+    {
+        $cache = StorageFactory::factory(array(
+            'adapter' => array(
+                'name' => 'memory',
+            ),
+            'plugins' => array(
+                'serializer',
+                'exception_handler' => array(
+                    'throw_exceptions' => false
+                ),
+            )
+        ));
+        $layoutService = new LayoutService(
+            new Collector(array()),
+            $cache,
+            new Sorter(array())
+        );
+        return $layoutService;
     }
 }

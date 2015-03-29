@@ -39,11 +39,45 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
         $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig())->create(true);
         $this->assertArrayHasKey('sidebar', $blocksBuilder->getCreatedBlocks());
     }
+
+    public function testGetCreatedBlocks()
+    {
+        $blocksBuilder = $this->getBlocksBuilder();
+        $blocksBuilder->setBlockConfig([
+            'sidebar' => [
+                'widget' => [
+                    'template' => 'my/template'
+                ]
+            ]
+        ]);
+        $blocksBuilder->getCreatedBlocks();
+        $this->assertInstanceOf(
+            'Zend\View\Model\ViewModel',
+            $blocksBuilder->getBlock('widget')
+        );
+    }
     
     public function testGetBlock()
     {
         $blocksBuilder = $this->getBlocksBuilder();
         $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());
         $this->assertInstanceOf('ConLayout\Block\Dummy', $blocksBuilder->getBlock('block.header'));
+    }
+
+    public function testApplyActions()
+    {
+        $blocksBuilder = $this->getBlocksBuilder();
+        $blocksBuilder->createBlocks([
+            'header' => [
+                'header' => [
+                    'template' => 'path/to/template',
+                    'actions' => [
+                        'setVariable' => ['myVar', 'myVarValue']
+                    ]
+                ]
+            ]
+        ]);
+        $block = $blocksBuilder->getBlock('header');
+        $this->assertEquals('myVarValue', $block->getVariable('myVar'));
     }
 }

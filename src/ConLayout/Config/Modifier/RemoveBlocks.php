@@ -6,8 +6,10 @@ namespace ConLayout\Config\Modifier;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class RemoveBlocks implements ModifierInterface
+class RemoveBlocks extends AbstractModifier
 {
+    const DIRECTIVE = '_remove';
+
     /**
      *
      * @param array $blockConfig
@@ -15,9 +17,9 @@ class RemoveBlocks implements ModifierInterface
      */
     public function modify(array $blockConfig)
     {
-        if (isset($blockConfig['_remove'])) {
-            $blockConfig = $this->removeBlocks($blockConfig, $blockConfig['_remove']);
-            unset($blockConfig['_remove']);
+        if (isset($blockConfig[self::DIRECTIVE])) {
+            $blockConfig = $this->removeBlocks($blockConfig, $blockConfig[self::DIRECTIVE]);
+            unset($blockConfig[self::DIRECTIVE]);
         }
         return $blockConfig;
     }
@@ -33,15 +35,15 @@ class RemoveBlocks implements ModifierInterface
         if (!is_array($blocksToRemove)) {
             $blocksToRemove = array($blocksToRemove => true);
         }
-        foreach($blockConfig as $captureTo => &$blocks) {
-            if ($captureTo[0] === '_') continue;
+        foreach($blockConfig as $directiveOrCaptureTo => &$blocks) {
+            if ($this->isDirective($directiveOrCaptureTo)) continue;
             foreach ($blocks as $blockName => &$block) {
                 if (isset($block['children'])) {
                     $block['children'] = $this->removeBlocks($block['children'], $blocksToRemove);
                 }
                 foreach ($blocksToRemove as $removeBlock => $remove) {
                     if (false !== $remove && $blockName === $removeBlock) {
-                        unset($blockConfig[$captureTo][$blockName]);
+                        unset($blockConfig[$directiveOrCaptureTo][$blockName]);
                     }
                 }
             }
