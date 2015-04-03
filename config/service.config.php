@@ -18,6 +18,7 @@ return [
     ],
     'invokables' => [
         'ConLayout\Zdt\Collector\LayoutCollector' => 'ConLayout\Zdt\Collector\LayoutCollector',
-        'ConLayout\Config\Mutator\RemoveBlocks' => 'ConLayout\Config\Mutator\RemoveBlocks'
+        'ConLayout\Config\Mutator\RemoveBlocks' => 'ConLayout\Config\Mutator\RemoveBlocks',
+        'ConLayout\Config\Mutator\MoveBlocks' => 'ConLayout\Config\Mutator\MoveBlocks',
     ]
 ];

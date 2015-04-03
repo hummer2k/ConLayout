@@ -68,7 +68,7 @@ class LayoutService
      *
      * @var MutatorInterface[]
      */
-    protected $blockConfigModifiers = [];
+    protected $blockConfigMutators = [];
 
     /**
      * 
@@ -221,9 +221,9 @@ class LayoutService
      * @param MutatorInterface $blockConfigModifier
      * @return LayoutService
      */
-    public function addBlockConfigModifier(MutatorInterface $blockConfigModifier)
+    public function addBlockConfigMutator(MutatorInterface $blockConfigModifier)
     {
-        $this->blockConfigModifiers[] = $blockConfigModifier;
+        $this->blockConfigMutators[] = $blockConfigModifier;
         return $this;
     }
 
@@ -245,7 +245,7 @@ class LayoutService
         }
         $blockConfig = $layoutConfig['blocks'];
 
-        foreach ($this->blockConfigModifiers as $blockConfigModifier) {
+        foreach ($this->blockConfigMutators as $blockConfigModifier) {
             $blockConfig = $blockConfigModifier->mutate($blockConfig);
         }
 

@@ -15,7 +15,7 @@ $config = [
         'cache_buster' => [
             'internal_base_dir' => './public'
         ],
-        'block_config_modifiers' => [
+        'block_config_mutators' => [
             'ConLayout\Config\Mutator\RemoveBlocks'
         ],
         'sorter' => [

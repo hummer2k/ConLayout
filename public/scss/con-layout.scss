@@ -2,6 +2,11 @@
 
 $color-red: #a94442;
 $color-red-bg: #f2dede;
+$color-red-border: #ebccd1;
+
+$color-custom: #31708f;
+$color-custom-bg: #d9edf7;
+$color-custom-border: #bce8f1;
 [data-block-name-label] {
     &:hover,
     &.toggled {
@@ -10,11 +15,14 @@ $color-red-bg: #f2dede;
     }
 }
 .block-debug {
-    border: 1px dotted $color-red;
+    border: 1px solid $color-red-border;
     position: relative;   
     margin: 1px;
     min-height: 15px;
     @include clearfix();
+    &.block-type-custom {
+        border-color: $color-custom-border;
+    }
     &:hover .block-debug-info {
         @include opacity(.2);
         
@@ -23,13 +31,16 @@ $color-red-bg: #f2dede;
         background: $color-red-bg;
         border-width: 2px;
         border-style: dashed;
+        &.block-type-custom {
+            background-color: $color-custom-bg;
+        }
     }
     .block-debug-info {
         color: $color-red;
         position: absolute;
         right: 0;
         top: 0;
-        border: 1px dotted $color-red;
+        border: 1px dotted $color-red-border;
         border-width: 0 0 1px 1px;
         background: $color-red-bg;
         line-height: 12px;
@@ -40,6 +51,13 @@ $color-red-bg: #f2dede;
             &:first-child {
                 margin-left: 0;
             }
+        }
+    }
+    &.block-type-custom {
+        .block-debug-info {
+            color: $color-custom;
+            background: $color-custom-bg;
+            border-color: $color-custom-border;
         }
     }
 }

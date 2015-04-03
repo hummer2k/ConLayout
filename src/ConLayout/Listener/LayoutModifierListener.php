@@ -218,6 +218,7 @@ class LayoutModifierListener
                 'nameInLayout',
                 $blockName
             );
+            $layoutChild->setVariable('blockType', 'custom');
             $blockConfig[$layoutChild->captureTo()][$blockName]['instance']
                 = $layoutChild;
         }

@@ -1,13 +1,13 @@
 <div 
-    class="block-debug" 
-    data-block-name="<?php echo $this->blockName ?>"
-    data-block-template="<?php echo $this->blockTemplate ?>"
-    data-block-class="<?php echo $this->blockClass ?>"
+    class="block-debug block-type-<?= $this->blockType ?>"
+    data-block-name="<?= $this->blockName ?>"
+    data-block-template="<?= $this->blockTemplate ?>"
+    data-block-class="<?= $this->blockClass ?>"
 >
     <span class="block-debug-info">
-        <span><?php echo $this->blockName ?></span>
-        <span><?php echo $this->blockTemplate ?></span>
-        <span><?php echo $this->blockClass ?></span>
+        <span><?= $this->blockName ?></span>
+        <span><?= $this->blockTemplate ?></span>
+        <span><?= $this->blockClass ?></span>
     </span>
-    <?php echo $this->content ?>
+    <?= $this->content ?>
 </div>

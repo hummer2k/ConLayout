@@ -46,8 +46,9 @@ return [
         'cache_buster' => [
             'internal_base_dir' => './public'
         ],
-        'block_config_modifiers' => [
-            'ConLayout\Config\Mutator\RemoveBlocks'
+        'block_config_mutators' => [
+            'ConLayout\Config\Mutator\RemoveBlocks',
+            'ConLayout\Config\Mutator\MoveBlocks'
         ],
         'sorter' => [
             'priorities' => [

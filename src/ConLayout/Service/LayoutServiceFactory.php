@@ -32,8 +32,8 @@ class LayoutServiceFactory
         );
         $layoutService->setIsCacheEnabled($enableCache);
 
-        foreach ($this->getOption($config, 'con-layout/block_config_modifiers', array()) as $blockConfigModifier) {
-            $layoutService->addBlockConfigModifier($serviceLocator->get($blockConfigModifier));
+        foreach ($this->getOption($config, 'con-layout/block_config_mutators', array()) as $blockConfigModifier) {
+            $layoutService->addBlockConfigMutator($serviceLocator->get($blockConfigModifier));
         }
 
         return $layoutService;

@@ -89,8 +89,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             $this->cache,
             $this->sorter
         );
-        foreach ($this->getOption($this->config, 'con-layout/block_config_modifiers', array()) as $blockConfigModifier) {
-            $this->layoutService->addBlockConfigModifier($this->sm->get($blockConfigModifier));
+        foreach ($this->getOption($this->config, 'con-layout/block_config_mutators', array()) as $blockConfigModifier) {
+            $this->layoutService->addBlockConfigMutator($this->sm->get($blockConfigModifier));
         }
         $this->layoutService->getGlobalLayoutConfig();
         $this->layoutService->getBlockConfig();
