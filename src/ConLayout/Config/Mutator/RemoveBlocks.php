@@ -1,12 +1,12 @@
 <?php
 
-namespace ConLayout\Config\Modifier;
+namespace ConLayout\Config\Mutator;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class RemoveBlocks extends AbstractModifier
+class RemoveBlocks extends AbstractMutator
 {
     const DIRECTIVE = '_remove';
 
@@ -15,7 +15,7 @@ class RemoveBlocks extends AbstractModifier
      * @param array $blockConfig
      * @return array
      */
-    public function modify(array $blockConfig)
+    public function mutate(array $blockConfig)
     {
         if (isset($blockConfig[self::DIRECTIVE])) {
             $blockConfig = $this->removeBlocks($blockConfig, $blockConfig[self::DIRECTIVE]);

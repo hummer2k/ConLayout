@@ -11,13 +11,13 @@ return [
         'ConLayout\Listener\LayoutModifierListener' => 'ConLayout\Listener\LayoutModifierListenerFactory',
         'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
         'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
-        'ConLayout\ValuePreparer\BasePath' => 'ConLayout\ValuePreparer\BasePathFactory',
+        'ConLayout\AssetPreparer\BasePath' => 'ConLayout\AssetPreparer\BasePathFactory',
         'ConLayout\Listener\BodyClassListener' => 'ConLayout\Listener\BodyClassListenerFactory',
         'ConLayout\Debugger' => 'ConLayout\DebuggerFactory',
-        'ConLayout\ValuePreparer\CacheBuster' => 'ConLayout\ValuePreparer\CacheBusterFactory',
+        'ConLayout\AssetPreparer\CacheBuster' => 'ConLayout\AssetPreparer\CacheBusterFactory',
     ],
     'invokables' => [
-        'ConLayout\Collector\LayoutCollector' => 'ConLayout\Collector\LayoutCollector',
-        'ConLayout\Config\Modifier\RemoveBlocks' => 'ConLayout\Config\Modifier\RemoveBlocks'
+        'ConLayout\Zdt\Collector\LayoutCollector' => 'ConLayout\Zdt\Collector\LayoutCollector',
+        'ConLayout\Config\Mutator\RemoveBlocks' => 'ConLayout\Config\Mutator\RemoveBlocks'
     ]
 ];

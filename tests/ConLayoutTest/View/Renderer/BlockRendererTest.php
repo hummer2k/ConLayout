@@ -67,7 +67,7 @@ class BlockRendererTest extends AbstractTest
     }
     
 
-    public function testMagicGetDelegationToCurrentViewModel()
+    public function testMagicDelegationToCurrentViewModel()
     {
         $currentViewModel = new TestBlock();
         $renderer = $this->createBlockRenderer();
@@ -79,6 +79,8 @@ class BlockRendererTest extends AbstractTest
 
         $this->assertEquals('some_stuff', $renderer->someStuff);
         $this->assertEquals('My Var 1!', $renderer->var1);
+
+        $this->assertEquals('some_stuff', $renderer->getSomeStuff());
     }
 
     public function testRender()

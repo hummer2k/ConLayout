@@ -1,16 +1,21 @@
 <?php
 namespace ConLayoutTest\Service;
 
+use ConLayout\Service\BlocksBuilder;
+use ConLayout\Service\BlocksBuilderFactory;
+use ConLayoutTest\AbstractTest;
+use Zend\ServiceManager\ServiceManager;
+
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
+class BlocksBuilderTest extends AbstractTest
 {    
     
     public function testFactory()
     {
-        $factory = new \ConLayout\Service\BlocksBuilderFactory();
+        $factory = new BlocksBuilderFactory();
         $this->assertInstanceof(
             'ConLayout\Service\BlocksBuilder', 
             $factory->createService($this->sm)
@@ -20,37 +25,39 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
     public function testCreateBlocksWithDefaultHandle()
     {        
         $blocksBuilder = $this->getBlocksBuilder();
-        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());
-        $blocksBuilder->create();
-        $this->assertEquals(1, count($blocksBuilder->getCreatedBlocks()));
-        
+        $this->assertCount(
+            1,
+            $blocksBuilder->createBlocks(
+                $this->layoutService->getBlockConfig()
+            )
+        );        
     }
 
     public function testCreateBlocksWithRouteHandle()
     {
         $this->layoutService->reset()->addHandle('route');
         $blocksBuilder = $this->getBlocksBuilder();
-        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());
-        $createdBlocks = $blocksBuilder->create(true)->getCreatedBlocks();
+        $createdBlocks = $blocksBuilder->createBlocks(
+            $this->layoutService->getBlockConfig()
+        );
         $this->assertArrayHasKey('sidebar.right', $createdBlocks);
         
         $this->layoutService->addHandle('route/childroute');
         $this->layoutService->setLayoutConfig(array());
-        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig())->create(true);
-        $this->assertArrayHasKey('sidebar', $blocksBuilder->getCreatedBlocks());
+        $this->assertArrayHasKey('sidebar', $blocksBuilder->createBlocks($this->layoutService->getBlockConfig()));
     }
 
     public function testGetCreatedBlocks()
     {
         $blocksBuilder = $this->getBlocksBuilder();
-        $blocksBuilder->setBlockConfig([
+        $blockConfig = [
             'sidebar' => [
                 'widget' => [
                     'template' => 'my/template'
                 ]
             ]
-        ]);
-        $blocksBuilder->getCreatedBlocks();
+        ];
+        $blocksBuilder->createBlocks($blockConfig);
         $this->assertInstanceOf(
             'Zend\View\Model\ViewModel',
             $blocksBuilder->getBlock('widget')
@@ -60,7 +67,7 @@ class BlocksBuilderTest extends \ConLayoutTest\AbstractTest
     public function testGetBlock()
     {
         $blocksBuilder = $this->getBlocksBuilder();
-        $blocksBuilder->setBlockConfig($this->layoutService->getBlockConfig());
+        $blocksBuilder->createBlocks($this->layoutService->getBlockConfig());
         $this->assertInstanceOf('ConLayout\Block\Dummy', $blocksBuilder->getBlock('block.header'));
     }
 

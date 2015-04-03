@@ -1,5 +1,5 @@
 <?php
-namespace ConLayout\Collector;
+namespace ConLayout\Zdt\Collector;
 
 use Closure;
 use Traversable;

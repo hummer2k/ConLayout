@@ -1,8 +1,8 @@
 <?php
 
-namespace ConLayoutTest\Config\Modifier;
+namespace ConLayoutTest\Config\Mutator;
 
-use ConLayout\Config\Modifier\RemoveBlocks;
+use ConLayout\Config\Mutator\RemoveBlocks;
 use ConLayoutTest\AbstractTest;
 
 /**
@@ -23,7 +23,7 @@ class RemoveBlocksTest extends AbstractTest
             ]
         ];
 
-        $result = $removeBlocks->modify($config);
+        $result = $removeBlocks->mutate($config);
 
         $this->assertEquals(['sidebar' => []], $result);
     }
@@ -38,7 +38,7 @@ class RemoveBlocksTest extends AbstractTest
             '_remove' =>  'some.block'
         ];
 
-        $result = $removeBlocks->modify($config);
+        $result = $removeBlocks->mutate($config);
 
         $this->assertEquals(['sidebar' => []], $result);
     }
@@ -55,7 +55,7 @@ class RemoveBlocksTest extends AbstractTest
             ]
         ];
 
-        $result = $removeBlocks->modify($config);
+        $result = $removeBlocks->mutate($config);
 
         $this->assertEquals(['sidebar' => [
             'some.block' => []
@@ -80,7 +80,7 @@ class RemoveBlocksTest extends AbstractTest
             ]
         ];
 
-        $result = $removeBlocks->modify($config);
+        $result = $removeBlocks->mutate($config);
 
         $this->assertEquals(['sidebar' => [
             'some.block' => [

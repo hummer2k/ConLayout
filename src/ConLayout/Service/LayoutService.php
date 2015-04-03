@@ -3,7 +3,7 @@
 namespace ConLayout\Service;
 
 use ConLayout\Config\CollectorInterface;
-use ConLayout\Config\Modifier\ModifierInterface;
+use ConLayout\Config\Mutator\MutatorInterface;
 use ConLayout\Config\SorterInterface;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Config\Config;
@@ -66,16 +66,10 @@ class LayoutService
 
     /**
      *
-     * @var ModifierInterface[]
+     * @var MutatorInterface[]
      */
     protected $blockConfigModifiers = [];
 
-    /**
-     *
-     * @var ModifierInterface[]
-     */
-    protected $layoutConfigmodifiers = [];
-    
     /**
      * 
      * @param CollectorInterface $configCollector
@@ -224,10 +218,10 @@ class LayoutService
     
     /**
      * 
-     * @param ModifierInterface $blockConfigModifier
+     * @param MutatorInterface $blockConfigModifier
      * @return LayoutService
      */
-    public function addBlockConfigModifier(ModifierInterface $blockConfigModifier)
+    public function addBlockConfigModifier(MutatorInterface $blockConfigModifier)
     {
         $this->blockConfigModifiers[] = $blockConfigModifier;
         return $this;
@@ -252,7 +246,7 @@ class LayoutService
         $blockConfig = $layoutConfig['blocks'];
 
         foreach ($this->blockConfigModifiers as $blockConfigModifier) {
-            $blockConfig = $blockConfigModifier->modify($blockConfig);
+            $blockConfig = $blockConfigModifier->mutate($blockConfig);
         }
 
         $this->cache->setItem($this->getBlocksCacheKey(), $blockConfig);

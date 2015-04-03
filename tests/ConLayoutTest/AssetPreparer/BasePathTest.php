@@ -1,7 +1,7 @@
 <?php
-namespace ConLayoutTest\ValuePreparer;
+namespace ConLayoutTest\AssetPreparer;
 
-use ConLayout\ValuePreparer\BasePath;
+use ConLayout\AssetPreparer\BasePath;
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -10,9 +10,9 @@ class BasePathTest extends \ConLayoutTest\AbstractTest
 {
     public function testFactory()
     {
-        $factory = new \ConLayout\ValuePreparer\BasePathFactory();
+        $factory = new \ConLayout\AssetPreparer\BasePathFactory();
         $this->assertInstanceOf(
-            'ConLayout\ValuePreparer\BasePath',
+            'ConLayout\AssetPreparer\BasePath',
             $factory->createService($this->sm)
         );
     }

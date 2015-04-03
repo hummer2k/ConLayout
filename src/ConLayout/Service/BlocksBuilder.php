@@ -6,6 +6,7 @@ use ConLayout\Block\AbstractBlock;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -13,30 +14,23 @@ use Zend\View\Model\ViewModel;
  *
  * @author hummer 
  */
-class BlocksBuilder
-    implements ServiceLocatorAwareInterface
+class BlocksBuilder implements ServiceLocatorAwareInterface
 {
+
     use ServiceLocatorAwareTrait;
-        
     /**
      *
      * @var array
      */
     protected $blockConfig = array();
-    
+
     /**
      * cache stores blocks as blockname => instance
      * 
      * @var array
      */
-    protected $blocks = array();
-    
-    /**
-     *
-     * @var array
-     */
-    protected $createdBlocks;
-    
+    protected $blocksCache = [];
+
     /**
      *
      * @var string
@@ -45,21 +39,9 @@ class BlocksBuilder
 
     /**
      *
-     * @param bool $force
-     * @return BlocksBuilder
-     */
-    public function create($force = false)
-    {
-        if (!$this->createdBlocks || $force) {
-            $this->createdBlocks = $this->createBlocks();
-        }
-        return $this;
-    }
-
-    /**
-     * 
      * @param array $blockConfig
-     * @return array
+     * @param ModelInterface $parent
+     * @return type
      */
     public function createBlocks(array $blockConfig = null)
     {
@@ -67,39 +49,43 @@ class BlocksBuilder
             $blockConfig = $this->blockConfig;
         }
         foreach ($blockConfig as $captureTo => &$blocks) {
-            foreach($blocks as $blockName => &$block) {
+            foreach ($blocks as $blockName => &$block) {
                 if (isset($block['children'])) {
                     $block['children'] = $this->createBlocks($block['children']);
                 }
-                $block['name'] = $blockName;
                 if (!isset($block['instance']) || !$block['instance'] instanceof ViewModel) {
-                    $block['instance'] = $this->createBlock($block);
+                    $block['instance'] = $this->createBlock($blockName, $block);
                 }
                 $block['instance']->setCaptureTo($captureTo);
-                // add block to cache so we have fast access 
+                // add block to cache so we have fast access
                 // to the block instance by $blockName
-                $this->blocks[$blockName] = $block['instance'];
+                $this->addBlock($blockName, $block['instance']);
             }
         }
         return $blockConfig;
     }
 
     /**
-     * 
-     * @return array
+     *
+     * @param string $name
+     * @param ModelInterface $block
+     * @return \ConLayout\Service\BlocksBuilder
      */
-    public function getCreatedBlocks()
+    protected function addBlock($name, ModelInterface $block)
     {
-        if (!$this->createdBlocks) {
-            $this->create();
-        }
-        return $this->createdBlocks;
+        $this->blocksCache[$name] = $block;
+        return $this;
     }
 
-    protected function createBlockInstance(array $blockConfig)
+    /**
+     *
+     * @param array $specs
+     * @return AbstractBlock
+     */
+    protected function createBlockInstance(array $specs)
     {
-        $className = isset($blockConfig['class'])
-            ? $blockConfig['class']
+        $className = isset($specs['class'])
+            ? $specs['class']
             : $this->defaultBlockClass;
 
         /* @var $block ViewModel */
@@ -116,27 +102,30 @@ class BlocksBuilder
         }
         return $block;
     }
-   
+
     /**
      * creates block instance from config
-     * 
-     * @todo refactor
-     * @param type $blockConfig
-     * @return \ConLayout\Service\className
+     *
+     * @param string $name
+     * @param array|ModelInterface $specs
+     * @return ModelInterface 
      */
-    protected function createBlock(array $blockConfig)
+    protected function createBlock($name, $specs)
     {
-        $block = $this->createBlockInstance($blockConfig);
+        if (!$specs instanceof ModelInterface) {
+            $block = $this->createBlockInstance($specs);
+        }
+        $block->setVariable('nameInLayout', $name);
 
-        $this->setTemplate($block, $blockConfig);
-        $this->addOptions($block, $blockConfig);
-        $this->applyActions($block, $blockConfig);
-        $this->setVariables($block, $blockConfig);
+        $this->setTemplate($block, $specs);
+        $this->addOptions($block, $specs);
+        $this->applyActions($block, $specs);
+        $this->setVariables($block, $specs);
 
         if (method_exists($block, 'init')) {
             $block->init();
         }
-        
+
         return $block;
     }
 
@@ -195,21 +184,16 @@ class BlocksBuilder
      */
     protected function setVariables(ViewModel $block, array $blockConfig)
     {
-        $blockVars = isset($blockConfig['vars']) ? $blockConfig['vars'] : array();
-        // inject variables
-        $block->setVariables(
-            array_merge(
-                (array) $block->getVariables(),
-                $blockVars,
-                array(
-                    'block' => $block,
-                    'nameInLayout' => $blockConfig['name']
-                )
-            )
-        );
+        $blockVars = isset($blockConfig['vars'])
+            ? $blockConfig['vars']
+            : array();
+        foreach ($blockVars as $key => $value) {
+            $block->setVariable($key, $value);
+        }
+        $block->setVariable('block', $block);
         return $this;
     }
-    
+
     /**
      * retrieve all blocks
      * 
@@ -217,10 +201,9 @@ class BlocksBuilder
      */
     public function getBlocks()
     {
-        $this->create();
-        return $this->blocks;
+        return $this->blocksCache;
     }
-    
+
     /**
      * 
      * @param array $blockConfig
@@ -231,7 +214,7 @@ class BlocksBuilder
         $this->blockConfig = $blockConfig;
         return $this;
     }
-        
+
     /**
      * retrieve specified block
      * 
@@ -241,9 +224,8 @@ class BlocksBuilder
      */
     public function getBlock($name, $default = null)
     {
-        $this->create();
-        return isset($this->blocks[$name])
-            ? $this->blocks[$name]
+        return isset($this->blocksCache[$name])
+            ? $this->blocksCache[$name]
             : $default;
     }
 }

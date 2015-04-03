@@ -1,7 +1,9 @@
 <?php
 
-namespace ConLayoutTest\ValuePreparer;
+namespace ConLayoutTest\AssetPreparer;
 
+use ConLayout\AssetPreparer\CacheBuster;
+use ConLayout\AssetPreparer\CacheBusterFactory;
 use ConLayoutTest\AbstractTest;
 
 /**
@@ -12,16 +14,16 @@ class CacheBusterTest extends AbstractTest
 {
     public function testFactory()
     {
-        $factory = new \ConLayout\ValuePreparer\CacheBusterFactory();
+        $factory = new CacheBusterFactory();
         $this->assertInstanceOf(
-            'ConLayout\ValuePreparer\CacheBuster',
+            'ConLayout\AssetPreparer\CacheBuster',
             $factory->createService($this->sm)
         );
     }
 
     public function testMd5File()
     {
-        $cacheBuster = new \ConLayout\ValuePreparer\CacheBuster(
+        $cacheBuster = new CacheBuster(
             __DIR__ . '/../_files'
         );
 
@@ -31,7 +33,7 @@ class CacheBusterTest extends AbstractTest
 
     public function testFileDoesNotExist()
     {
-        $cacheBuster = new \ConLayout\ValuePreparer\CacheBuster(
+        $cacheBuster = new CacheBuster(
                 'DOES_NOT_EXIST_____'
         );
         $value = $cacheBuster->prepare('styles.css');

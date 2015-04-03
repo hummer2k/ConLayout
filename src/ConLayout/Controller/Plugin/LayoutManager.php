@@ -14,7 +14,7 @@ use ConLayout\Service\BlocksBuilder,
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockManager
+class LayoutManager
     extends AbstractPlugin
     implements ServiceLocatorAwareInterface
 {
@@ -107,7 +107,7 @@ class BlockManager
     /**
      * 
      * @param string $handle
-     * @return \ConLayout\Controller\Plugin\BlockManager
+     * @return \ConLayout\Controller\Plugin\LayoutManager
      */
     public function addHandle($handle)
     {
@@ -118,7 +118,7 @@ class BlockManager
     /**
      * 
      * @param array|string $handles
-     * @return \ConLayout\Controller\Plugin\BlockManager
+     * @return \ConLayout\Controller\Plugin\LayoutManager
      */
     public function setHandles($handles)
     {

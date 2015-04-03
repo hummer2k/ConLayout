@@ -146,4 +146,19 @@ class BlockRenderer
         $this->cache = $cache;
         return $this;
     }
+
+    /**
+     *
+     * @param string $method
+     * @param array $argv
+     * @return mixed
+     */
+    public function __call($method, $argv)
+    {
+        $block = $this->plugin('viewModel')->getCurrent();
+        if (method_exists($block, $method)) {
+            return call_user_func_array([$block, $method], $argv);
+        }
+        return parent::__call($method, $argv);
+    }
 }

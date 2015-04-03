@@ -1,16 +1,16 @@
 <?php
 
-namespace ConLayout\Config\Modifier;
+namespace ConLayout\Config\Mutator;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-interface ModifierInterface
+interface MutatorInterface
 {
     /**
      * @param array $config
      * @return array
      */
-    public function modify(array $config);
+    public function mutate(array $config);
 }

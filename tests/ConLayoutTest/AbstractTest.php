@@ -65,7 +65,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $this->sorter = new Sorter(
             $this->config['con-layout']['sorter']['priorities']
         );
-        $cacheDir = './data/cache/con-layout-test';
+        $cacheDir = __DIR__ . '/_files/cache';
         if (!is_dir($cacheDir)) {
             mkdir($cacheDir, 0777, true);
         }

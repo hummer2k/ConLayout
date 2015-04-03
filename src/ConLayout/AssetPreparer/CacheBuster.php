@@ -1,12 +1,12 @@
 <?php
 
-namespace ConLayout\ValuePreparer;
+namespace ConLayout\AssetPreparer;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class CacheBuster implements ValuePreparerInterface
+class CacheBuster implements AssetPreparerInterface
 {
     protected $internalBasePath = './public';
 

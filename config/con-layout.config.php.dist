@@ -16,7 +16,7 @@ $config = [
             'internal_base_dir' => './public'
         ],
         'block_config_modifiers' => [
-            'ConLayout\Config\Modifier\RemoveBlocks'
+            'ConLayout\Config\Mutator\RemoveBlocks'
         ],
         'sorter' => [
             'priorities' => [
@@ -50,13 +50,13 @@ $config = [
         ],
         'value_preparers' => [
             'headLink' => [
-                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath'
             ],
             'headScript' => [
-                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath'
             ],
             'inlineScript' => [
-                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath'
             ]
         ]
     ],

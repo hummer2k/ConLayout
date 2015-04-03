@@ -23,7 +23,7 @@ class LayoutModifierListenerFactory
     {
         $config = $serviceLocator->get('Config');
 
-        $valuePreparers = $this->getOption($config, 'con-layout/value_preparers', array());
+        $assetPreparers = $this->getOption($config, 'con-layout/value_preparers', array());
         $layoutModifierListener = new LayoutModifierListener(
             $serviceLocator->get('ConLayout\Service\LayoutService'),
             $serviceLocator->get('ConLayout\Service\BlocksBuilder'),
@@ -33,10 +33,10 @@ class LayoutModifierListenerFactory
             $this->getOption($config, 'con-layout/helpers', array())
         );
 
-        foreach ($valuePreparers as $helper => $valuePreparers) {
-            foreach ($valuePreparers as $valuePreparer) {
-                if (false === $valuePreparer) continue;
-                $layoutModifierListener->addValuePreparer($helper, $serviceLocator->get($valuePreparer));
+        foreach ($assetPreparers as $helper => $assetPreparers) {
+            foreach ($assetPreparers as $assetPreparer) {
+                if (false === $assetPreparer) continue;
+                $layoutModifierListener->addAssetPreparer($helper, $serviceLocator->get($assetPreparer));
             }
         }
 

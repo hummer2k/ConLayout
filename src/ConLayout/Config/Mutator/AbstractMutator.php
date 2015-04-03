@@ -1,12 +1,12 @@
 <?php
 
-namespace ConLayout\Config\Modifier;
+namespace ConLayout\Config\Mutator;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-abstract class AbstractModifier implements ModifierInterface
+abstract class AbstractMutator implements MutatorInterface
 {
     /**
      * determine if key is directive or block name

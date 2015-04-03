@@ -24,8 +24,11 @@ return [
     ],
     'controller_plugins' => [
         'factories' => [
-            'blockManager' => 'ConLayout\Controller\Plugin\BlockManagerFactory'
+            'layoutManager' => 'ConLayout\Controller\Plugin\LayoutManagerFactory'
         ],
+        'aliases' => [
+            'blockManager' => 'layoutManager'
+        ]
     ],
     'con-layout' => [
         'handle_behavior' => \ConLayout\Listener\ActionHandlesListener::BEHAVIOR_COMBINED,
@@ -44,7 +47,7 @@ return [
             'internal_base_dir' => './public'
         ],
         'block_config_modifiers' => [
-            'ConLayout\Config\Modifier\RemoveBlocks'
+            'ConLayout\Config\Mutator\RemoveBlocks'
         ],
         'sorter' => [
             'priorities' => [
@@ -78,13 +81,13 @@ return [
         ],
         'value_preparers' => [
             'headLink' => [
-                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath'
             ],
             'headScript' => [
-                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath'
             ],
             'inlineScript' => [
-                'basePath' => 'ConLayout\ValuePreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath'
             ]
         ]
     ],
@@ -98,7 +101,7 @@ return [
     'zenddevelopertools' => [
         'profiler' => [
             'collectors' => [
-                'con-layout' => 'ConLayout\Collector\LayoutCollector',
+                'con-layout' => 'ConLayout\Zdt\Collector\LayoutCollector',
             ],
         ],
         'toolbar' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayout\ValuePreparer;
+namespace ConLayout\AssetPreparer;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

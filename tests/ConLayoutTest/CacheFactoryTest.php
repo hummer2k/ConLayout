@@ -2,6 +2,9 @@
 
 namespace ConLayoutTest;
 
+use ConLayout\CacheFactory;
+use Zend\Stdlib\ArrayUtils;
+
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -10,13 +13,13 @@ class CacheFactoryTest extends AbstractTest
 {
     public function testFactory()
     {
-        $factory = new \ConLayout\CacheFactory();
+        $factory = new CacheFactory();
         $this->sm->setAllowOverride(true);
         $config = $this->sm->get('Config');
         
-        $config = \Zend\Stdlib\ArrayUtils::merge($config, [
+        $config = ArrayUtils::merge($config, [
             'con-layout' => [
-                'cache_dir' => 'does-not-exist'
+                'cache_dir' => __DIR__ . '/_files/cache'
             ]
         ]);
 

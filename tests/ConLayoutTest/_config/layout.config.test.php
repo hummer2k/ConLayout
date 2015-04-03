@@ -3,6 +3,9 @@
 return array(
     'default' => array(
         'layout' => 'layout/2cols-left',
+        'handles' => [
+            'my-custom-handle'
+        ],
         'blocks' => array(
             'header' => array(
                 'block.header' => array(

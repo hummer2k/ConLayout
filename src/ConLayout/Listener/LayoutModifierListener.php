@@ -5,7 +5,7 @@ use ConLayout\Debugger;
 use ConLayout\Service\BlocksBuilder;
 use ConLayout\Service\LayoutModifier;
 use ConLayout\Service\LayoutService;
-use ConLayout\ValuePreparer\ValuePreparerInterface;
+use ConLayout\AssetPreparer\AssetPreparerInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -56,11 +56,11 @@ class LayoutModifierListener
     
     /**
      * value preparers for view helpers in format:
-     *   'helperName' => array(ConLayout\ValuePreparer\ValuePreparerInterface)
+     *   'helperName' => array(ConLayout\AssetPreparer\AssetPreparerInterface)
      *  
      * @var array
      */
-    protected $valuePreparers = array();
+    protected $assetPreparers = array();
 
     /**
      *
@@ -149,12 +149,12 @@ class LayoutModifierListener
      */
     private function prepareHelperValue($value, $helper)
     {
-        if (!isset($this->valuePreparers[$helper])) {
+        if (!isset($this->assetPreparers[$helper])) {
             return $value;
         }
-        /* @var $valuePreparer ValuePreparerInterface */
-        foreach ($this->valuePreparers[$helper] as $valuePreparer) {
-            $value = $valuePreparer->prepare($value);
+        /* @var $assetPreparer AssetPreparerInterface */
+        foreach ($this->assetPreparers[$helper] as $assetPreparer) {
+            $value = $assetPreparer->prepare($value);
         }
         return $value;
     }
@@ -266,12 +266,12 @@ class LayoutModifierListener
     /**
      * 
      * @param string $helper view helper
-     * @param ValuePreparerInterface $valuePreparer
+     * @param AssetPreparerInterface $assetPreparer
      * @return ActionHandlesListener
      */
-    public function addValuePreparer($helper, ValuePreparerInterface $valuePreparer)
+    public function addAssetPreparer($helper, AssetPreparerInterface $assetPreparer)
     {
-        $this->valuePreparers[$helper][] = $valuePreparer;
+        $this->assetPreparers[$helper][] = $assetPreparer;
         return $this;
     }
 

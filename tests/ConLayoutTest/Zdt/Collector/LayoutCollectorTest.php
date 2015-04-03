@@ -1,9 +1,17 @@
 <?php
 
-namespace ConLayoutTest\Collector;
+namespace ConLayoutTest\Zdt\Collector;
 
-use ConLayout\Collector\LayoutCollector;
+use ConLayout\Debugger;
+use ConLayout\Module;
+use ConLayout\Service\BlocksBuilder;
+use ConLayout\Zdt\Collector\LayoutCollector;
 use ConLayoutTest\AbstractTest;
+use Zend\EventManager\EventManager;
+use Zend\Http\PhpEnvironment\Request;
+use Zend\Http\PhpEnvironment\Response;
+use Zend\Mvc\Application;
+use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -16,7 +24,11 @@ class LayoutCollectorTest extends AbstractTest
     {
         $layoutCollector = new LayoutCollector();
 
-        $layoutService = $this->sm->get('ConLayout\Service\LayoutService');
+        $event = $this->getMvcEvent();
+
+        $sm = $event->getApplication()
+            ->getServiceManager();
+        $layoutService = $sm->get('ConLayout\Service\LayoutService');
         $layoutService->setLayoutConfig([
             'blocks' => [
                 'sidebarLeft' => [
@@ -27,12 +39,12 @@ class LayoutCollectorTest extends AbstractTest
             ]
         ]);
 
-        $event = $this->getMvcEvent();
         $blockConfig = $layoutService->getBlockConfig();
 
-        $blocksBuilder = $this->sm->get('ConLayout\Service\BlocksBuilder');
-        $blocksBuilder->setBlockConfig($blockConfig);
-
+        $blocksBuilder = $sm->get('ConLayout\Service\BlocksBuilder');
+        $blocksBuilder->setServiceLocator($this->sm);
+        $blocksBuilder->createBlocks($blockConfig);
+        
         $layoutCollector->collect($event);
 
         $this->assertInternalType('array', $layoutCollector->getBlocks());
@@ -54,7 +66,11 @@ class LayoutCollectorTest extends AbstractTest
     {
         $layoutCollector = new LayoutCollector();
 
-        $layoutService = $this->sm->get('ConLayout\Service\LayoutService');
+        $event = $this->getMvcEvent();
+
+        $sm = $event->getApplication()->getServiceManager();
+
+        $layoutService = $sm->get('ConLayout\Service\LayoutService');
         $layoutService->setLayoutConfig([
             'blocks' => [
                 'sidebarLeft' => [
@@ -65,13 +81,14 @@ class LayoutCollectorTest extends AbstractTest
             ]
         ]);
 
-        $event = $this->getMvcEvent();
+        
         $blockConfig = $layoutService->getBlockConfig();
         $layoutService->addHandle('some-handle');
         $layoutService->addHandle('some/handle');
 
-        $this->sm->get('ConLayout\Debugger')->setEnabled(true);
-        $blocksBuilder = $this->sm->get('ConLayout\Service\BlocksBuilder');
+        $sm->get('ConLayout\Debugger')->setEnabled(true);
+        $blocksBuilder = $sm->get('ConLayout\Service\BlocksBuilder');
+        $blocksBuilder->setServiceLocator($sm);
         $blocksBuilder->setBlockConfig($blockConfig);
 
         $createdBlocks = $blocksBuilder->createBlocks();
@@ -105,7 +122,19 @@ class LayoutCollectorTest extends AbstractTest
     {
         $mvcEvent = new \Zend\Mvc\MvcEvent();
 
-        $application = $this->sm->get('Application');
+        $module = new Module();
+
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService('Config', $module->getConfig());
+
+        $serviceManager->setService('ConLayout\Service\LayoutService', $this->layoutService->reset());
+        $serviceManager->setService('ConLayout\Service\BlocksBuilder', new BlocksBuilder());
+        $serviceManager->setService('ConLayout\Debugger', new Debugger());
+        $serviceManager->setService('EventManager', new EventManager());
+        $serviceManager->setService('Request', new Request());
+        $serviceManager->setService('Response', new Response());
+
+        $application = new Application([], $serviceManager);
         $mvcEvent->setApplication($application);
 
         $layout = new ViewModel();
@@ -131,11 +160,13 @@ class LayoutCollectorTest extends AbstractTest
     public function testGetIsDebug()
     {
         $layoutCollector = new LayoutCollector();
-        $this->sm->get('ConLayout\Debugger')->setEnabled(true);
-        $layoutCollector->collect($this->getMvcEvent());
+        $event = $this->getMvcEvent();
+        $sm = $event->getApplication()->getServiceManager();
+        $sm->get('ConLayout\Debugger')->setEnabled(true);
+        $layoutCollector->collect($event);
         $this->assertTrue($layoutCollector->isDebug());
 
-        $this->sm->get('ConLayout\Debugger')->setEnabled(false);
+        $sm->get('ConLayout\Debugger')->setEnabled(false);
         $layoutCollector->collect($this->getMvcEvent());
         $this->assertFalse($layoutCollector->isDebug());
     }

@@ -1,14 +1,14 @@
 <?php
-namespace ConLayout\ValuePreparer;
+namespace ConLayout\AssetPreparer;
 
-use ConLayout\ValuePreparer\ValuePreparerInterface;
+use ConLayout\AssetPreparer\AssetPreparerInterface;
 use Zend\View\Helper\BasePath as BasePathHelper;
 
 /**
  * @package 
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BasePath implements ValuePreparerInterface
+class BasePath implements AssetPreparerInterface
 {
     protected $basePathHelper;
     

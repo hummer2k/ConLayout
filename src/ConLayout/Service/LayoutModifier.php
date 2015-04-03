@@ -12,13 +12,7 @@ use Zend\View\Model\ViewModel;
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutModifier implements EventManagerAwareInterface
-{
-    /**
-     *
-     * @var ViewModel
-     */
-    protected $layout;
-        
+{        
     /**
      *
      * @var default captureTo

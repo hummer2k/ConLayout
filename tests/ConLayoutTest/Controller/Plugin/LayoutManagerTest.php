@@ -2,14 +2,14 @@
 
 namespace ConLayoutTest\Controller\Plugin;
 
-use ConLayout\Controller\Plugin\BlockManagerFactory;
+use ConLayout\Controller\Plugin\LayoutManagerFactory;
 use ConLayoutTest\AbstractTest;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockManagerTest extends AbstractTest
+class LayoutManagerTest extends AbstractTest
 {
     public function setUp()
     {
@@ -35,45 +35,45 @@ class BlockManagerTest extends AbstractTest
 
     public function testFactory()
     {
-        $instance = $this->getBlockManager();
-        $this->assertInstanceOf('ConLayout\Controller\Plugin\BlockManager', $instance);
+        $instance = $this->getLayoutManager();
+        $this->assertInstanceOf('ConLayout\Controller\Plugin\LayoutManager', $instance);
     }
     
-    protected function getBlockManager()
+    protected function getLayoutManager()
     {
-        $factory = new BlockManagerFactory();
+        $factory = new LayoutManagerFactory();
         $instance = $factory->createService($this->sm->get('ControllerPluginManager'));
         return $instance;
     }
 
     public function testInvoke()
     {
-        $blockManager = $this->getBlockManager();
-        $result = $blockManager();
-        $this->assertSame($blockManager, $result);
+        $layoutManager = $this->getLayoutManager();
+        $result = $layoutManager();
+        $this->assertSame($layoutManager, $result);
         
         $this->assertInstanceOf(
             'Zend\View\Model\ViewModel',
-            $blockManager('my-widget')
+            $layoutManager('my-widget')
         );
 
         $this->assertInstanceOf(
             'Zend\View\Model\ViewModel', 
-            $blockManager->getBlock('my-widget')
+            $layoutManager->getBlock('my-widget')
         );
 
         $this->assertInstanceOf(
             'ConLayout\Block\Dummy',
-            $blockManager->getBlock('header')
+            $layoutManager->getBlock('header')
         );
         
     }
 
     public function testRender()
     {
-        $blockManager = $this->getBlockManager();
+        $layoutManager = $this->getLayoutManager();
 
-        $result = $blockManager->render('my-widget');
+        $result = $layoutManager->render('my-widget');
 
         $this->assertEquals(
             file_get_contents(__DIR__ . '/../../_files/render-test.html'),
@@ -88,7 +88,7 @@ class BlockManagerTest extends AbstractTest
             'content' => 'Dolor sit amet.'
         ]);
 
-        $result = $blockManager->render($viewModel);
+        $result = $layoutManager->render($viewModel);
 
         $this->assertEquals(
             file_get_contents(__DIR__ . '/../../_files/render-test.html'),
@@ -99,20 +99,20 @@ class BlockManagerTest extends AbstractTest
 
     public function testGetter()
     {
-        $blockManager = $this->getBlockManager();
+        $layoutManager = $this->getLayoutManager();
 
         $this->assertInstanceOf(
             'ConLayout\Service\LayoutService',
-            $blockManager->getLayoutService()
+            $layoutManager->getLayoutService()
         );
     }
 
     public function testAddHandle()
     {
-        $blockManager = $this->getBlockManager();
-        $layoutService = $blockManager->getLayoutService();
+        $layoutManager = $this->getLayoutManager();
+        $layoutService = $layoutManager->getLayoutService();
         $layoutService->reset();
-        $blockManager->addHandle('my-handle');
+        $layoutManager->addHandle('my-handle');
 
         $this->assertEquals([
             'default',
@@ -123,9 +123,9 @@ class BlockManagerTest extends AbstractTest
 
     public function testSetHandles()
     {
-        $blockManager = $this->getBlockManager();
-        $layoutService = $blockManager->getLayoutService();
-        $blockManager->setHandles(['my-handle']);
+        $layoutManager = $this->getLayoutManager();
+        $layoutService = $layoutManager->getLayoutService();
+        $layoutManager->setHandles(['my-handle']);
 
         $this->assertEquals([
             'my-handle'
@@ -135,12 +135,12 @@ class BlockManagerTest extends AbstractTest
 
     public function testRemoveHandle()
     {
-        $blockManager = $this->getBlockManager();
-        $layoutService = $blockManager->getLayoutService();
+        $layoutManager = $this->getLayoutManager();
+        $layoutService = $layoutManager->getLayoutService();
         $layoutService->reset();
         $layoutService->addHandle('my-handle');
         
-        $blockManager->removeHandle('my-handle');
+        $layoutManager->removeHandle('my-handle');
 
         $this->assertEquals([
             'default'

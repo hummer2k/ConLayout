@@ -1,5 +1,5 @@
 <?php
-namespace ConLayout\ValuePreparer;
+namespace ConLayout\AssetPreparer;
 
 use Zend\ServiceManager\FactoryInterface;
 

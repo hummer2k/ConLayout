@@ -9,6 +9,8 @@ namespace ConLayout\Config;
 class Collector
     implements CollectorInterface
 {
+    const PLACEHOLDER_AREA = '{{area}}';
+
     /**
      *
      * @var array
@@ -66,7 +68,7 @@ class Collector
         if (empty($this->layoutConfigs)) {
             foreach ($this->globPaths as $globPath) {
                 if (null !== $this->area) {
-                    $globPath = str_replace('{{area}}', $this->area, $globPath);
+                    $globPath = str_replace(self::PLACEHOLDER_AREA, $this->area, $globPath);
                 }
                 $configFiles = glob($globPath, GLOB_BRACE);
                 foreach ($configFiles as $configFile) {

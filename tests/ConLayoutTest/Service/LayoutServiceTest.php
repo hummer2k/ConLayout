@@ -47,7 +47,7 @@ class LayoutServiceTest extends AbstractTest
         $this->layoutService->removeHandle(['route', 'controller::action']);
         $this->assertEquals(['default'], $this->layoutService->getHandles());
     }
-        
+
     public function testLayoutTemplate()
     {
         $this->layoutService->reset();
@@ -98,6 +98,9 @@ class LayoutServiceTest extends AbstractTest
         $this->assertSame($globalLayoutConfig, array(
             'default' => array(
                 'layout' => 'layout/2cols-left',
+                'handles' => [
+                    'my-custom-handle'
+                ],
                 'blocks' => array(
                     'header' => array(
                         'block.header' => array(
