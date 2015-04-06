@@ -1,5 +1,7 @@
 <?php
 namespace ConLayout\Config;
+
+use ConLayout\Handle\HandleInterface;
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -8,19 +10,19 @@ class Sorter implements SorterInterface
 {
     /**
      *
-     * @var array
+     * @var HandleInterface[]
      */
-    protected $priorities = array();
-    
+    protected $handles = [];
+
     /**
-     * 
-     * @param array $priorities
+     *
+     * @param array $handles
      */
-    public function __construct(array $priorities)
+    public function __construct(array $handles)
     {
-        $this->priorities = $priorities;
+        $this->handles = $handles;
     }
-    
+        
     /**
      * 
      * @param array $data
@@ -31,16 +33,16 @@ class Sorter implements SorterInterface
         uksort($data, function($a, $b) {            
             $orderA = 0;
             $orderB = 0;
-            foreach($this->priorities as $substr => $priority) {
-                foreach (array('a', 'b') as $var) {
-                    $handle = $$var;
-                    if (false !== strpos($handle, $substr)) {
-                        ${'order' . strtoupper($var)} = is_callable($priority)
-                            ? call_user_func($priority, $handle, $substr)
-                            : $priority;
-                    }
+            
+            foreach ($this->handles as $handle) {
+                if ($handle->getName() === $a) {
+                    $orderA = $handle->getPriority();
+                }
+                if ($handle->getName() === $b) {
+                    $orderB = $handle->getPriority();
                 }
             }
+
             if ($orderA === $orderB) {
                 return 0;
             }

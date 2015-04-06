@@ -1,16 +1,19 @@
 <?php
 namespace ConLayout\Listener;
 
-use ConLayout\Service\LayoutService,
-    Zend\EventManager\EventInterface,
-    Zend\EventManager\EventManagerInterface,
-    Zend\EventManager\ListenerAggregateInterface,
-    Zend\EventManager\ListenerAggregateTrait,
-    Zend\Mvc\MvcEvent,
-    Zend\Mvc\Router\RouteMatch,
-    Zend\ServiceManager\ServiceLocatorAwareInterface,
-    Zend\ServiceManager\ServiceLocatorAwareTrait,
-    Zend\View\Model\ViewModel;
+use ConLayout\Handle\Controller;
+use ConLayout\Handle\ControllerAction;
+use ConLayout\Handle\Route;
+use ConLayout\Service\LayoutService;
+use Zend\EventManager\EventInterface;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\ListenerAggregateTrait;
+use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\RouteMatch;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\View\Model\ViewModel;
     
 /**
  * @package ConLayout
@@ -126,9 +129,9 @@ class ActionHandlesListener
             for ($j = 0; $j <= $i; $j++) {
                 $controllerHandles[$i][] = $namespaceSegments[$j];
             }
-            $controllerHandles[$i] = implode('\\', $controllerHandles[$i]);
+            $controllerHandles[$i] = new Controller(implode('\\', $controllerHandles[$i]));
         }
-        $controllerHandles[] = $controller . '::' . $action;
+        $controllerHandles[] = new ControllerAction($controller . '::' . $action);
         return $controllerHandles;
     }
     
@@ -146,7 +149,7 @@ class ActionHandlesListener
             for ($j = 0; $j <= $i; $j++) {
                 $routeHandles[$i][] = $routeSegments[$j];
             }
-            $routeHandles[$i] = implode($this->routeSeparator, $routeHandles[$i]);
+            $routeHandles[$i] = new Route(implode($this->routeSeparator, $routeHandles[$i]));
         }
         return $routeHandles;
     }

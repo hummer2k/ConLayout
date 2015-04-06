@@ -89,24 +89,11 @@ class LayoutCollector
      * @param array $handles
      * @param array $priorities
      */
-    protected function prepareHandles(array $handles, array $priorities)
+    protected function prepareHandles(array $handles)
     {
         $preparedHandles = [];
         foreach ($handles as $handle) {
-            $found = false;
-            foreach ($priorities as $substr => $priority) {
-                if (false !== strpos($handle, $substr)) {
-                    if (is_callable($priority)) {
-                        $preparedHandles[$handle] = call_user_func($priority, $handle, $substr);
-                    } else {
-                        $preparedHandles[$handle] = (int) $priority;
-                    }
-                    $found = true;
-                }
-            }
-            if (!$found) {
-                $preparedHandles[$handle] = 0;
-            }
+            $preparedHandles[$handle->getName()] = $handle->getPriority();
         }
         arsort($preparedHandles);
         return $preparedHandles;

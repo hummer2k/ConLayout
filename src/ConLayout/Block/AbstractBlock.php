@@ -1,8 +1,8 @@
 <?php
 namespace ConLayout\Block;
 
-use Zend\View\Model\ViewModel,
-    Zend\Http\Request;
+use Zend\Http\Request;
+use Zend\View\Model\ViewModel;
 
 /**
  * @package ConLayout
@@ -30,7 +30,7 @@ abstract class AbstractBlock
     /**
      * 
      * @param \Zend\Http\Request $request
-     * @return \ConLayout\Block\AbstractBlock
+     * @return AbstractBlock
      */
     public function setRequest(Request $request)
     {
@@ -54,7 +54,7 @@ abstract class AbstractBlock
      * set the cache key information
      * 
      * @param array $info
-     * @return \ConLayout\Block\AbstractBlock
+     * @return AbstractBlock
      */
     public function setCacheKeyInfo(array $info)
     {
@@ -80,7 +80,7 @@ abstract class AbstractBlock
      * add cache key info
      * 
      * @param string $info
-     * @return \ConLayout\Block\AbstractBlock
+     * @return AbstractBlock
      */
     public function addCacheKeyInfo($info)
     {

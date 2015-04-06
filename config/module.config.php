@@ -25,15 +25,12 @@ return [
     'controller_plugins' => [
         'factories' => [
             'layoutManager' => 'ConLayout\Controller\Plugin\LayoutManagerFactory'
-        ],
-        'aliases' => [
-            'blockManager' => 'layoutManager'
         ]
     ],
     'con-layout' => [
         'handle_behavior' => \ConLayout\Listener\ActionHandlesListener::BEHAVIOR_COMBINED,
         'config_glob_paths' => [
-            'default' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
+            'default' => './{vendor/*/*/view,module/*/view}/layout.config.php'
         ],
         'enable_debug' => false,
         'enable_layout_cache' => false,
@@ -45,19 +42,6 @@ return [
         'content_capture_to' => 'content',
         'cache_buster' => [
             'internal_base_dir' => './public'
-        ],
-        'block_config_mutators' => [
-            'ConLayout\Config\Mutator\RemoveBlocks',
-            'ConLayout\Config\Mutator\MoveBlocks'
-        ],
-        'sorter' => [
-            'priorities' => [
-                'default'   => -1,
-                 '\\'       => 'ConLayout\Priority\Segments::getPriority',
-                '/'         => 'ConLayout\Priority\Segments::getPriority',
-                '::'        => 'ConLayout\Priority\ControllerAction::getPriority',
-                'error-'    => 15
-            ]
         ],
         'helpers' => [
             'headLink' => [

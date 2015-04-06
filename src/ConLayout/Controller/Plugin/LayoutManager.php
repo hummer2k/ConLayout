@@ -1,17 +1,17 @@
 <?php
 namespace ConLayout\Controller\Plugin;
 
-use ConLayout\Service\BlocksBuilder,
-    ConLayout\Service\LayoutService,
-    Zend\Mvc\Controller\Plugin\AbstractPlugin,
-    Zend\ServiceManager\ServiceLocatorAwareInterface,
-    Zend\ServiceManager\ServiceLocatorAwareTrait,
-    Zend\View\Model\ModelInterface,
-    Zend\View\Model\ViewModel,
-    Zend\View\Renderer\RendererInterface;
+use ConLayout\Handle\Handle;
+use ConLayout\Handle\HandleInterface;
+use ConLayout\LayoutManagerInterface;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\View\Model\ModelInterface;
+use Zend\View\Renderer\RendererInterface;
     
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutManager
@@ -22,118 +22,87 @@ class LayoutManager
     
     /**
      *
-     * @var BlocksBuilder
+     * @var LayoutManagerInterface
      */
-    protected $blocksBuilder;
+    protected $layoutManager;
     
     /**
      *
      * @var RendererInterface
      */
     protected $renderer;
-    
-    /**
-     *
-     * @var LayoutService
-     */
-    protected $layoutService;
-    
+        
     /**
      * 
-     * @param BlocksBuilder $blocksBuilder
-     * @param LayoutService $layoutService
+     * @param LayoutManagerInterface $layoutManager
      * @param RendererInterface $renderer
      */
     public function __construct(
-        BlocksBuilder $blocksBuilder,
-        LayoutService $layoutService,
+        LayoutManagerInterface $layoutManager,
         RendererInterface $renderer
     )
     {
-        $this->blocksBuilder = $blocksBuilder;
-        $this->layoutService = $layoutService;
+        $this->layoutManager = $layoutManager;
         $this->renderer = $renderer;
     }
     
     /**
      * 
-     * @param string|null $blockname
+     * @param string|null $blockId
      * @return mixed
      */
-    public function __invoke($blockname = null)
+    public function __invoke()
     {
-        if (null === $blockname) {
-            return $this;
-        }
-        return $this->blocksBuilder->getBlock($blockname);
+        return $this;
     }
     
     /**
      * 
-     * @param mixed $blockname 
+     * @param string|ModelInterface $blockIdOrViewModel
      * @return string rendered block
      */
-    public function render($blockname)
+    public function render($blockIdOrViewModel)
     {
-        if ($blockname instanceof ModelInterface) {
-            return $this->renderer->render($blockname);
+        if ($blockIdOrViewModel instanceof ModelInterface) {
+            return $this->renderer->render($blockIdOrViewModel);
         }
         return $this->renderer->render(
-            $this->blocksBuilder->getBlock($blockname)
+            $this->layoutManager->getBlock($blockIdOrViewModel)
         );
     }
     
     /**
      * 
-     * @param string $blockname
-     * @return ViewModel
+     * @param string $blockId
+     * @return ModelInterface
      */
-    public function getBlock($blockname)
+    public function getBlock($blockId)
     {
-        $blockConfig = $this->layoutService->getBlockConfig();
-        $this->blocksBuilder->setBlockConfig($blockConfig);
-        return $this->blocksBuilder->getBlock($blockname);
+        return $this->layoutManager->getBlock($blockId);
     }
-    
+
     /**
      * 
-     * @return LayoutService
+     * @param string|HandleInterface $handle
+     * @return LayoutManager
      */
-    public function getLayoutService()
+    public function addHandle($handle, $priority = 1)
     {
-        return $this->layoutService;
-    }
-    
-    /**
-     * 
-     * @param string $handle
-     * @return \ConLayout\Controller\Plugin\LayoutManager
-     */
-    public function addHandle($handle)
-    {
-        $this->layoutService->addHandle($handle);
+        if (is_string($handle)) {
+            $handle = new Handle($handle, $priority);
+        }
+        $this->layoutManager->addHandle($handle);
         return $this;
     }
-    
+        
     /**
      * 
      * @param array|string $handles
-     * @return \ConLayout\Controller\Plugin\LayoutManager
-     */
-    public function setHandles($handles)
-    {
-        $this->layoutService->setHandles($handles);
-        return $this;
-    }
-    
-    /**
-     * 
-     * @param array|string $handles
-     * @return \ConLayout\Controller\Plugin\Blocks
+     * @return LayoutManager
      */
     public function removeHandle($handles)
     {
-        $this->layoutService->removeHandle($handles);
+        $this->layoutManager->removeHandle($handles);
         return $this;
     }
 }

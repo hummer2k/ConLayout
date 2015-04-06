@@ -49,7 +49,7 @@ class Module
         }
         
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) use ($serviceManager) {
-            $serviceManager->get('ConLayout\Service\LayoutService')
+            $serviceManager->get('LayoutManager')
                 ->addHandle($e->getError());
         }, 100);
         

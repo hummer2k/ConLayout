@@ -5,6 +5,7 @@ namespace ConLayout\Service;
 use ConLayout\Config\CollectorInterface;
 use ConLayout\Config\Mutator\MutatorInterface;
 use ConLayout\Config\SorterInterface;
+use ConLayout\Handle\Handle;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Config\Config;
 use Zend\Stdlib\ArrayUtils;
@@ -25,9 +26,7 @@ class LayoutService
      *
      * @var array
      */
-    protected $handles = [
-        'default'
-    ];
+    protected $handles = [];
     
     /**
      *
@@ -85,6 +84,9 @@ class LayoutService
         $this->configCollector = $configCollector;
         $this->cache = $cache;
         $this->sorter = $sorter;
+        $this->handles = [
+            new Handle('default', -1)
+        ];
     }
     
     /**
@@ -145,6 +147,8 @@ class LayoutService
             );
             $this->cache->setItem(self::GLOBAL_LAYOUT_CACHE_KEY, $this->globalLayoutConfig);
         }
+        $config = new Config([]);
+        $config->
         return $this->globalLayoutConfig;
     }
     

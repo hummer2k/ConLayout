@@ -8,6 +8,7 @@ use Zend\ServiceManager\FactoryInterface;
 class SorterFactory implements FactoryInterface
 {
     use \ConLayout\OptionTrait;
+    
     /**
      * 
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
@@ -15,9 +16,9 @@ class SorterFactory implements FactoryInterface
      */
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        $priorities = $this->getOption($config, 'con-layout/sorter/priorities', array());
-        $sorter = new Sorter($priorities);
+        $layoutManager = $serviceLocator->get('LayoutManager');
+        $handles = $layoutManager->getHandles();
+        $sorter = new Sorter($handles);
         return $sorter;
     }
 }

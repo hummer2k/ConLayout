@@ -1,11 +1,10 @@
 <?php
 namespace ConLayout\Listener;
 
-use ConLayout\Debugger;
-use ConLayout\Service\BlocksBuilder;
-use ConLayout\Service\LayoutModifier;
-use ConLayout\Service\LayoutService;
 use ConLayout\AssetPreparer\AssetPreparerInterface;
+use ConLayout\Debugger;
+use ConLayout\LayoutManagerInterface;
+use ConLayout\Service\LayoutService;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -23,24 +22,12 @@ class LayoutModifierListener
     use ListenerAggregateTrait;
 
     const DEBUG_CSS = '/css/con-layout.css';
-    
+            
     /**
      *
-     * @var LayoutService
+     * @var LayoutManagerInterface
      */
-    protected $layoutService;
-    
-    /**
-     *
-     * @var BlocksBuilder
-     */
-    protected $blocksBuilder;
-        
-    /**
-     *
-     * @var LayoutModifier
-     */
-    protected $layoutModifier;
+    protected $layoutManager;
     
     /**
      *
@@ -74,25 +61,18 @@ class LayoutModifierListener
      */
     protected static $anonymousSuffix = 1;
 
-
     /**
      * 
-     * @param LayoutService $layoutService
-     * @param BlocksBuilder $blocksBuilder
-     * @param LayoutModifier $layoutModifier
+     * @param LayoutManagerInterface $layoutService
      */
     public function __construct(
-        LayoutService $layoutService, 
-        BlocksBuilder $blocksBuilder, 
-        LayoutModifier $layoutModifier,
+        LayoutManagerInterface $layoutManager,
         HelperPluginManager $viewHelperManager,
         Debugger $debugger,
-        $helperConfig = array()
+        $helperConfig = []
     )
     {
-        $this->layoutService     = $layoutService;
-        $this->blocksBuilder     = $blocksBuilder;
-        $this->layoutModifier    = $layoutModifier;
+        $this->layoutManager     = $layoutManager;
         $this->viewHelperManager = $viewHelperManager;
         $this->debugger          = $debugger;
         $this->helperConfig      = $helperConfig;
@@ -104,7 +84,7 @@ class LayoutModifierListener
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'addBlocksToLayout'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'injectBlocks'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTemplate'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyHelpers'));
     }
@@ -182,7 +162,7 @@ class LayoutModifierListener
      * @param MvcEvent $e
      * @return LayoutModifierListener
      */
-    public function addBlocksToLayout(MvcEvent $e)
+    public function injectBlocks(MvcEvent $e)
     {
         /* @var $layout ViewModel */
         $layout = $e->getViewModel();
@@ -190,39 +170,26 @@ class LayoutModifierListener
             return;
         }
 
-        $blockConfig = $this->layoutService->getBlockConfig();
-        $this->addActionViewModelsToBlockConfig($blockConfig, $layout);
+        foreach ($layout->getChildren() as $layoutChild) {
+            $blockId = $this->determineAnonymousBlockId($layoutChild);
+            $layoutChild->setVariable(
+                'nameInLayout',
+                $blockId
+            );
+            $layoutChild->setVariable('blockType', 'custom');
+            $this->layoutManager->addBlock($blockId, $layoutChild);
+        }
+        $layout->clearChildren();
 
-        $createdBlocks = $this->blocksBuilder->createBlocks($blockConfig);
+        $this->layoutManager
+            ->loadLayout()
+            ->injectBlocks($layout);
 
-        // add blocks to layout
         if ($this->debugger->isEnabled()) {
             $this->viewHelperManager->get('headlink')
                 ->appendStylesheet(self::DEBUG_CSS);
         }
-        $this->layoutModifier->addBlocksToLayout($createdBlocks, $layout);
         return $this;
-    }
-
-    /**
-     *
-     * @param array $blockConfig
-     * @param ViewModel $layout
-     */
-    protected function addActionViewModelsToBlockConfig(array &$blockConfig, ViewModel $layout)
-    {
-        /* @var $layoutChild ViewModel */
-        foreach ($layout->getChildren() as $layoutChild) {
-            $blockName = $this->determineAnonymousBlockname($layoutChild);
-            $layoutChild->setVariable(
-                'nameInLayout',
-                $blockName
-            );
-            $layoutChild->setVariable('blockType', 'custom');
-            $blockConfig[$layoutChild->captureTo()][$blockName]['instance']
-                = $layoutChild;
-        }
-        $layout->clearChildren();
     }
 
     /**
@@ -230,7 +197,7 @@ class LayoutModifierListener
      * @param ViewModel $viewModel
      * @return string
      */
-    protected function determineAnonymousBlockname(ViewModel $viewModel)
+    protected function determineAnonymousBlockId(ViewModel $viewModel)
     {
         $blockName = $viewModel->getVariable(
             'nameInLayout',

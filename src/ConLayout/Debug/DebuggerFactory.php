@@ -1,16 +1,19 @@
 <?php
 
-namespace ConLayout;
+namespace ConLayout\Debug;
+
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class DebuggerFactory implements \Zend\ServiceManager\FactoryInterface
+class DebuggerFactory implements FactoryInterface
 {
     use OptionTrait;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
         $debugger = new Debugger();

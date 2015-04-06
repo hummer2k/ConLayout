@@ -1,7 +1,9 @@
 <?php
-namespace ConLayout;
+namespace ConLayout\Cache;
 
+use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Factory
@@ -11,13 +13,13 @@ use Zend\ServiceManager\FactoryInterface;
 class CacheFactory
     implements FactoryInterface
 {
-    use OptionTrait;
+    use \ConLayout\OptionTrait;
     
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
         $cacheDir = $this->getOption($config, 'con-layout/cache_dir', './data/cache/con-layout');
-        $cache   = \Zend\Cache\StorageFactory::factory(array(
+        $cache   = StorageFactory::factory(array(
             'adapter' => array(
                 'name' => 'filesystem',
                 'options' => array(

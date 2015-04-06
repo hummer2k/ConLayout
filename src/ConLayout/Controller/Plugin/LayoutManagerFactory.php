@@ -17,8 +17,7 @@ class LayoutManagerFactory implements FactoryInterface
     {
         $sl = $serviceLocator->getServiceLocator();
         return new LayoutManager(
-            $sl->get('ConLayout\Service\BlocksBuilder'),
-            $sl->get('ConLayout\Service\LayoutService'),
+            $sl->get('ConLayout\LayoutManager'),
             $sl->get('ConLayout\View\Renderer\BlockRenderer')
         );
     }

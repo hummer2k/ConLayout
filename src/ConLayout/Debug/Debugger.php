@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayout;
+namespace ConLayout\Debug;
 
 use Zend\View\Model\ViewModel;
 
