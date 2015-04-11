@@ -1,5 +1,5 @@
 <?php
-namespace ConLayout\Listener;
+namespace ConLayout\Listener\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

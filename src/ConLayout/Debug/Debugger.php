@@ -2,7 +2,7 @@
 
 namespace ConLayout\Debug;
 
-use Zend\View\Model\ViewModel;
+use Zend\View\Model\ModelInterface;
 
 /**
  * @package ConLayout
@@ -38,11 +38,11 @@ class Debugger
 
     /**
      *
-     * @param ViewModel $block
+     * @param ModelInterface $block
      * @param string $captureTo
-     * @return ViewModel
+     * @return ModelInterface
      */
-    public function addDebugBlock(ViewModel $block, $captureTo)
+    public function addDebugBlock(ModelInterface $block, $captureTo)
     {
         $block->setCaptureTo('content');
         $debugBlock = clone $block;

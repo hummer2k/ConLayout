@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayout\Factory;
+namespace ConLayout\Block\Factory;
 
 use ConLayout\Debug\Debugger;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;

@@ -4,7 +4,6 @@ return [
         'ConLayout\LayoutManagerInterface' => 'ConLayout\LayoutManagerFactory',
         'ConLayout\Service\LayoutService' => 'ConLayout\Service\LayoutServiceFactory',
         'ConLayout\Config\CollectorInterface' => 'ConLayout\Config\CollectorFactory',
-        'ConLayout\Config\SorterInterface' => 'ConLayout\Config\SorterFactory',
         'ConLayout\Cache' => 'ConLayout\Cache\CacheFactory',
         'ConLayout\Listener\ActionHandlesListener' => 'ConLayout\Listener\ActionHandlesListenerFactory',
         'ConLayout\Listener\LayoutModifierListener' => 'ConLayout\Listener\LayoutModifierListenerFactory',

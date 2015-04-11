@@ -28,7 +28,6 @@ return [
         ]
     ],
     'con-layout' => [
-        'handle_behavior' => \ConLayout\Listener\ActionHandlesListener::BEHAVIOR_COMBINED,
         'config_glob_paths' => [
             'default' => './{vendor/*/*/view,module/*/view}/layout.config.php'
         ],
@@ -86,7 +85,7 @@ return [
     'zenddevelopertools' => [
         'profiler' => [
             'collectors' => [
-                'con-layout' => 'ConLayout\Zdt\Collector\LayoutCollector',
+               # 'con-layout' => 'ConLayout\Zdt\Collector\LayoutCollector',
             ],
         ],
         'toolbar' => [

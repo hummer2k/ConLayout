@@ -1,5 +1,5 @@
 <?php
-namespace ConLayout\Listener;
+namespace ConLayout\Listener\Factory;
 
 use ConLayout\OptionTrait;
 use Zend\ServiceManager\FactoryInterface;

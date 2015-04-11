@@ -1,9 +1,9 @@
 <?php
-namespace ConLayout\Listener;
+namespace ConLayout\Listener\Factory;
 
+use ConLayout\Listener\LayoutModifierListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout

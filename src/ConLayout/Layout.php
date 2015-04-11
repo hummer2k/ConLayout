@@ -3,8 +3,7 @@
 namespace ConLayout;
 
 use ConLayout\Factory\BlockFactoryInterface;
-use ConLayout\Handle\Handle;
-use ConLayout\Handle\HandleInterface;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerInterface;
@@ -14,9 +13,9 @@ use Zend\View\Model\ModelInterface;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutManager implements
+class Layout implements
     EventManagerAwareInterface,
-    LayoutManagerInterface
+    LayoutInterface
 {
     use EventManagerAwareTrait;
 
@@ -25,9 +24,9 @@ class LayoutManager implements
 
     /**
      *
-     * @var HandleInterface[]
+     * @var LayoutUpdaterInterface
      */
-    protected $handles = [];
+    protected $updater;
 
     /**
      * blocks registry
@@ -45,24 +44,15 @@ class LayoutManager implements
     /**
      *
      * @param BlockFactoryInterface $blockFactory
+     * @param LayoutUpdaterInterface $updater
      */
-    public function __construct(BlockFactoryInterface $blockFactory)
+    public function __construct(
+        BlockFactoryInterface $blockFactory,
+        LayoutUpdaterInterface $updater
+    )
     {
         $this->blockFactory = $blockFactory;
-        $this->handles = [
-            new Handle('default', -1)
-        ];
-    }
-
-    /**
-     *
-     * @return LayoutManager
-     */
-    public function loadLayout()
-    {
-        $this->generateBlocks();
-        $this->sortBlocks();
-        return $this;
+        $this->updater = $updater;
     }
 
     /**
@@ -70,9 +60,9 @@ class LayoutManager implements
      * @param array $blockConfig
      * @return array
      */
-    public function generateBlocks()
+    protected function generateBlocks()
     {
-        foreach ($blockConfig as $blockId => $specs) {
+        foreach ($this->updater->getBlocks() as $blockId => $specs) {
             $this->addBlock($blockId, $this->blockFactory->createBlock($blockId, $specs));
         }
         return $this;
@@ -82,7 +72,7 @@ class LayoutManager implements
      * 
      * @return LayoutManagerInterface
      */
-    public function sortBlocks()
+    protected function sortBlocks()
     {
         uasort($this->blocks, function($a, $b) {
             /* @var $a ModelInterface */
@@ -99,12 +89,12 @@ class LayoutManager implements
 
     /**
      *
-     * @param ModelInterface $layout
+     * @param ModelInterface $root
      * @return LayoutManagerInterface
      */
-    public function injectBlocks(ModelInterface $layout)
+    public function injectBlocks(ModelInterface $root)
     {
-        $this->addBlock(self::NAME_LAYOUT, $layout);
+        $this->addBlock(self::NAME_LAYOUT, $root);
         foreach ($this->getBlocks() as $blockId => $block) {
             if (!$this->isAllowed($blockId, $block)) continue;
             list($parent, $captureTo) = $this->getCaptureTo($block);
@@ -193,41 +183,6 @@ class LayoutManager implements
     public function getBlocks()
     {
         return $this->blocks;
-    }
-
-    /**
-     *
-     * @param HandleInterface $handle
-     * @return LayoutManager
-     */
-    public function addHandle(Handle\HandleInterface $handle)
-    {
-        $this->handles[] = $handle;
-        return $this;
-    }
-
-    /**
-     *
-     * @return HandleInterface[]
-     */
-    public function getHandles()
-    {
-        return $this->handles;
-    }
-
-    /**
-     *
-     * @param string $handle
-     * @return LayoutManager
-     */
-    public function removeHandle($handle)
-    {
-        foreach ($this->handles as $key => $handle) {
-            if ($handle->getName() === $handle) {
-                unset($this->handles[$key]);
-            }
-        }
-        return $this;
     }
 
     /**

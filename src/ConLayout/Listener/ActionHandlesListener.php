@@ -25,48 +25,9 @@ class ActionHandlesListener
 {
     use ListenerAggregateTrait;    
     use ServiceLocatorAwareTrait;
-    
-    const BEHAVIOR_CONTROLLER = 'controller'; 
-    const BEHAVIOR_ROUTENAME = 'routename';    
-    const BEHAVIOR_COMBINED = 'combined';
-            
-    /**
-     *
-     * @var string
-     */
-    protected $handleBehavior;
-    
-    /**
-     *
-     * @var LayoutService
-     */
-    protected $layoutService;
-    
-    /**
-     *
-     * @var string
-     */
-    protected $routeSeparator = '/';
-    
-    /**
-     *
-     * @var ViewModel
-     */
-    protected $contentViewModel;
-    
-    /**
-     * 
-     * @param string $handleBehavior
-     */
-    public function __construct(
-        $handleBehavior, 
-        LayoutService $layoutService
-    )
-    {
-        $this->setHandleBehavior($handleBehavior);
-        $this->setLayoutService($layoutService);
-    }
-    
+
+    protected $updater;
+                            
     /**
      * 
      * @param EventManagerInterface $events
@@ -85,7 +46,9 @@ class ActionHandlesListener
     {
         $routeMatch = $event->getRouteMatch();
         $handles = $this->getActionHandles($routeMatch);
-        $this->layoutService->addHandle($handles);
+        foreach ($handles as $handle) {
+            $this->updater->addHandle($handle);
+        }
         return $this;
     }
     
@@ -96,121 +59,18 @@ class ActionHandlesListener
      */
     public function getActionHandles(RouteMatch $routeMatch)
     {
-        $routeHandles = $this->getRouteHandles($routeMatch->getMatchedRouteName());
-        $controllerHandles = $this->getControllerHandles($routeMatch);
-
-        switch ($this->getHandleBehavior()) {
-            case self::BEHAVIOR_ROUTENAME:
-                $result = $routeHandles;
-                break;           
-            case self::BEHAVIOR_CONTROLLER:
-                $result = $controllerHandles;
-                break;
-            case self::BEHAVIOR_COMBINED:
-                $result = array_unique(array_merge($routeHandles, $controllerHandles));
-                break;
-        }
-        return $result;
-    }
-    
-    /**
-     * 
-     * @param RouteMatch $routeMatch
-     * @return array
-     */
-    protected function getControllerHandles(RouteMatch $routeMatch)
-    {
         $controller = $routeMatch->getParam('controller');
         $action = $routeMatch->getParam('action');
-        $controllerHandles = array();
+        $actionHandles = array();
         $namespaceSegments = explode('\\', $controller);
         $count = count($namespaceSegments);
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 1; $i <= $count; $i++) {
             for ($j = 0; $j <= $i; $j++) {
-                $controllerHandles[$i][] = $namespaceSegments[$j];
+                $actionHandles[$i][] = $namespaceSegments[$j];
             }
-            $controllerHandles[$i] = new Controller(implode('\\', $controllerHandles[$i]));
+            $actionHandles[$i] = new Handle(strtolower(implode('-', $actionHandles[$i])), $i);
         }
-        $controllerHandles[] = new ControllerAction($controller . '::' . $action);
-        return $controllerHandles;
-    }
-    
-    /**
-     * 
-     * @param string $routeName
-     * @return array
-     */
-    protected function getRouteHandles($routeName)
-    {
-        $routeSegments = explode($this->routeSeparator, $routeName);
-        $routeHandles = array();
-        $count = count($routeSegments);
-        for ($i = 0; $i < $count; $i++) {
-            for ($j = 0; $j <= $i; $j++) {
-                $routeHandles[$i][] = $routeSegments[$j];
-            }
-            $routeHandles[$i] = new Route(implode($this->routeSeparator, $routeHandles[$i]));
-        }
-        return $routeHandles;
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    public function getHandleBehavior()
-    {
-        return $this->handleBehavior;
-    }
-    
-    /**
-     * 
-     * @param string $handleBehavior
-     * @return ActionHandlesListener
-     */
-    public function setHandleBehavior($handleBehavior)
-    {
-        $this->handleBehavior = $handleBehavior;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return LayoutService
-     */
-    public function getLayoutService()
-    {
-        return $this->layoutService;
-    }
-
-    /**
-     * 
-     * @param LayoutService $layoutService
-     * @return ActionHandlesListener
-     */
-    public function setLayoutService(LayoutService $layoutService)
-    {
-        $this->layoutService = $layoutService;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    public function getRouteSeparator()
-    {
-        return $this->routeSeparator;
-    }
-
-    /**
-     * 
-     * @param string $routeSeparator
-     * @return ActionHandlesListener
-     */
-    public function setRouteSeparator($routeSeparator)
-    {
-        $this->routeSeparator = $routeSeparator;
-        return $this;
+        $actionHandles[] = new Handle(strtolower(implode('-', $actionHandles[$i])) . '-' . $action, $i + 1);
+        return $actionHandles;
     }
 }

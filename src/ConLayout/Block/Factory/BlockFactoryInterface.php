@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayout\Factory;
+namespace ConLayout\Block\Factory;
 
 use Zend\View\Model\ModelInterface;
 
