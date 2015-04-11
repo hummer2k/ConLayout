@@ -98,7 +98,7 @@ final class LayoutUpdater implements
      */
     private function fetch($handleToFetch)
     {
-        $this->fetchApplyFor($handleToFetch);
+        $this->fetchApplyForHandles($handleToFetch);
         $this->fetchHandle($handleToFetch);
     }
 
@@ -112,10 +112,10 @@ final class LayoutUpdater implements
      *
      * @param string $handleToFetch
      */
-    private function fetchApplyFor($handleToFetch)
+    private function fetchApplyForHandles($handleToFetch)
     {
         foreach ($this->globalLayoutStructure as $instructions) {
-            if ($includeHandles = $instructions->get(self::APPLY_FOR)) {
+            if ($includeHandles = $instructions->get(self::INSTRUCTION_APPLY_FOR)) {
                 if ($includeHandles->get($handleToFetch)) {
                     $this->layoutStructure->merge($instructions);
                 }
@@ -141,10 +141,12 @@ final class LayoutUpdater implements
     private function loadGlobalLayoutStructure()
     {
         $this->globalLayoutStructure = new Config([], true);
-        $this->getEventManager()->trigger(
-            __FUNCTION__, 
-            $this,
-            ['global_layout_structure' => $this->globalLayoutStructure]
-        );
+        foreach(['.pre', '', '.post'] as $eventSuffix) {
+            $this->getEventManager()->trigger(
+                __FUNCTION__ . $eventSuffix,
+                $this,
+                ['global_layout_structure' => $this->globalLayoutStructure]
+            );
+        }
     }
 }

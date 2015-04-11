@@ -9,7 +9,9 @@ use Zend\View\Model\ModelInterface;
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 interface LayoutInterface
-{
+{  
+    const BLOCK_NAME_LAYOUT = 'layout';
+
     /**
      * 
      * @param string $blockId

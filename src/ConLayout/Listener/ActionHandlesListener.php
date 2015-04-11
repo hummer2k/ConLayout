@@ -1,10 +1,8 @@
 <?php
 namespace ConLayout\Listener;
 
-use ConLayout\Handle\Controller;
-use ConLayout\Handle\ControllerAction;
-use ConLayout\Handle\Route;
-use ConLayout\Service\LayoutService;
+use ConLayout\Handle\Handle;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
@@ -13,7 +11,6 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\View\Model\ViewModel;
     
 /**
  * @package ConLayout
@@ -26,6 +23,10 @@ class ActionHandlesListener
     use ListenerAggregateTrait;    
     use ServiceLocatorAwareTrait;
 
+    /**
+     *
+     * @var LayoutUpdaterInterface
+     */
     protected $updater;
                             
     /**

@@ -4,6 +4,7 @@ namespace ConLayout;
 
 use ConLayout\Factory\BlockFactoryInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
+use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\EventManager\EventManagerInterface;
@@ -19,8 +20,14 @@ class Layout implements
 {
     use EventManagerAwareTrait;
 
-    const NAME_LAYOUT = 'layout';
     const CAPTURE_TO_DELIMITER = '::';
+
+    /**
+     * flag if blocks have already been generated
+     *
+     * @var bool
+     */
+    protected $blocksGenerated = false;
 
     /**
      *
@@ -58,14 +65,38 @@ class Layout implements
     /**
      *
      * @param array $blockConfig
-     * @return array
      */
     protected function generateBlocks()
     {
-        foreach ($this->updater->getBlocks() as $blockId => $specs) {
-            $this->addBlock($blockId, $this->blockFactory->createBlock($blockId, $specs));
+        if (false === $this->blocksGenerated) {
+            $blocks = $this->updater->getLayoutStructure()
+                ->get(self::INSTRUCTION_BLOCKS, []);
+            if ($blocks instanceof Config) {
+                $blocks = $blocks->toArray();
+            }
+            foreach ($blocks as $blockId => $specs) {
+                if ($this->isBlockRemoved($blockId)) continue;
+                $this->addBlock($blockId, $this->blockFactory->createBlock($blockId, $specs));
+            }
+            $this->sortBlocks();
+            $this->blocksGenerated = true;
         }
-        return $this;
+    }
+
+    /**
+     * check if block has been removed
+     *
+     * @param string $blockId
+     * @return boolean
+     */
+    protected function isBlockRemoved($blockId)
+    {
+        $removedBlocks = $this->updater->getLayoutStructure()
+            ->get(self::INSTRUCTION_REMOVE_BLOCKS, false);
+        if ($removedBlocks instanceof Config) {
+            return $removedBlocks->get($blockId, false);
+        }
+        return false;
     }
 
     /**
@@ -94,7 +125,6 @@ class Layout implements
      */
     public function injectBlocks(ModelInterface $root)
     {
-        $this->addBlock(self::NAME_LAYOUT, $root);
         foreach ($this->getBlocks() as $blockId => $block) {
             if (!$this->isAllowed($blockId, $block)) continue;
             list($parent, $captureTo) = $this->getCaptureTo($block);
@@ -114,10 +144,14 @@ class Layout implements
      */
     protected function isAllowed($blockId, ModelInterface $block)
     {
-        if ($blockId === self::NAME_LAYOUT) {
+        if ($blockId === self::BLOCK_NAME_LAYOUT) {
             return false;
         }
-        $results = $this->getEventManager()->trigger(__FUNCTION__, $this, ['block' => $block, 'block_id' => $blockId]);
+        $results = $this->getEventManager()->trigger(
+            __FUNCTION__,
+            $this,
+            ['block' => $block, 'block_id' => $blockId]
+        );
         $isAllowed = $results->last();
         return $isAllowed;
     }
@@ -160,7 +194,7 @@ class Layout implements
             return explode(self::CAPTURE_TO_DELIMITER, $captureTo);
         }
         return [
-            self::NAME_LAYOUT,
+            self::BLOCK_NAME_LAYOUT,
             $captureTo
         ];
     }
@@ -172,6 +206,7 @@ class Layout implements
      */
     public function getBlock($blockId)
     {
+        $this->generateBlocks();
         return isset($this->blocks[$blockId])
             ? $this->blocks[$blockId]
             : false;
@@ -182,23 +217,21 @@ class Layout implements
      */
     public function getBlocks()
     {
+        $this->generateBlocks();
         return $this->blocks;
     }
 
-    /**
-     *
-     * @param EventManagerInterface $eventManager
-     * @return LayoutManagerInterface
-     */
-    public function setEventManager(EventManagerInterface $eventManager)
+    protected function attachDefaultListeners()
     {
-        $eventManager->setIdentifiers([__CLASS__]);
-        $this->eventManager = $eventManager;
-
-        $this->eventManager->getSharedManager()->attach(__CLASS__, 'isAllowed', function() {
-            return true;
-        }, 10000);
-
-        return $this;
+        $this->getEventManager()
+            ->getSharedManager()
+            ->attach(
+                __CLASS__,
+                'isAllowed',
+                function() {
+                    return true;
+                },
+                10000
+            );
     }
 }

@@ -11,7 +11,7 @@ use Zend\Stdlib\Glob;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ConfigCollectorListener
+class LayoutUpdateListener
 {
     /**
      *
