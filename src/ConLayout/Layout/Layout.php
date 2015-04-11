@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayout;
+namespace ConLayout\Layout;
 
 use ConLayout\Factory\BlockFactoryInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;

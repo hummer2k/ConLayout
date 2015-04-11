@@ -1,7 +1,7 @@
 <?php
 namespace ConLayout\Listener;
 
-use ConLayout\LayoutInterface;
+use ConLayout\Layout\LayoutInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -73,7 +73,7 @@ class InjectBlocksListener
      * @param ViewModel $viewModel
      * @return string
      */
-    protected function determineAnonymousBlockId(ViewModel $viewModel)
+    private function determineAnonymousBlockId(ViewModel $viewModel)
     {
         $blockName = $viewModel->getVariable(
             'nameInLayout',

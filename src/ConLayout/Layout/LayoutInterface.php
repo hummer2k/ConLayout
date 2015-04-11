@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayout;
+namespace ConLayout\Layout;
 
 use Zend\View\Model\ModelInterface;
 

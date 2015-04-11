@@ -3,7 +3,9 @@ namespace ConLayout\Controller\Plugin;
 
 use ConLayout\Handle\Handle;
 use ConLayout\Handle\HandleInterface;
+use ConLayout\LayoutInterface;
 use ConLayout\LayoutManagerInterface;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -22,9 +24,15 @@ class LayoutManager
     
     /**
      *
-     * @var LayoutManagerInterface
+     * @var LayoutInterface
      */
-    protected $layoutManager;
+    protected $layout;
+
+    /**
+     *
+     * @var LayoutUpdaterInterface
+     */
+    protected $updater;
     
     /**
      *
@@ -34,15 +42,17 @@ class LayoutManager
         
     /**
      * 
-     * @param LayoutManagerInterface $layoutManager
+     * @param LayoutInterface $layout
      * @param RendererInterface $renderer
      */
     public function __construct(
-        LayoutManagerInterface $layoutManager,
+        LayoutInterface $layout,
+        LayoutUpdaterInterface $updater,
         RendererInterface $renderer
     )
     {
-        $this->layoutManager = $layoutManager;
+        $this->layout = $layout;
+        $this->updater = $updater;
         $this->renderer = $renderer;
     }
     
@@ -67,7 +77,7 @@ class LayoutManager
             return $this->renderer->render($blockIdOrViewModel);
         }
         return $this->renderer->render(
-            $this->layoutManager->getBlock($blockIdOrViewModel)
+            $this->layout->getBlock($blockIdOrViewModel)
         );
     }
     
@@ -78,7 +88,7 @@ class LayoutManager
      */
     public function getBlock($blockId)
     {
-        return $this->layoutManager->getBlock($blockId);
+        return $this->layout->getBlock($blockId);
     }
 
     /**
@@ -91,18 +101,18 @@ class LayoutManager
         if (is_string($handle)) {
             $handle = new Handle($handle, $priority);
         }
-        $this->layoutManager->addHandle($handle);
+        $this->updater->addHandle($handle);
         return $this;
     }
         
     /**
      * 
-     * @param array|string $handles
+     * @param string $handle
      * @return LayoutManager
      */
-    public function removeHandle($handles)
+    public function removeHandle($handle)
     {
-        $this->layoutManager->removeHandle($handles);
+        $this->updater->removeHandle($handle);
         return $this;
     }
 }

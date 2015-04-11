@@ -2,7 +2,7 @@
 
 namespace ConLayout\Listener;
 
-use ConLayout\LayoutInterface;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\View\Model\ModelInterface;
 
 /**
@@ -15,17 +15,9 @@ class LayoutTemplateListener
 {
     /**
      *
-     * @var LayoutInterface
+     * @var LayoutUpdaterInterface
      */
-    protected $layout;
-
-    /**
-     * @param LayoutInterface $layout
-     */
-    public function __construct(Layout $layout)
-    {
-        $this->layout = $layout;
-    }
+    protected $updater;
 
     /**
      * set layout template if no template was set e.g. through controller
@@ -39,7 +31,10 @@ class LayoutTemplateListener
         $layout = $e->getViewModel();
         $template = $layout->getTemplate();
         if ($template === '') {
-            $layout->setTemplate($this->layout->getLayoutTemplate());
+            $layoutTemplate = $this->updater->getLayoutStructure()->get(
+                LayoutUpdaterInterface::INSTRUCTION_LAYOUT_TEMPLATE, ''
+            );
+            $layout->setTemplate($layoutTemplate);
         }
     }
 }

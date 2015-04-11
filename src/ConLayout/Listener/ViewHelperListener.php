@@ -3,7 +3,8 @@
 namespace ConLayout\Listener;
 
 use ConLayout\AssetPreparer\AssetPreparerInterface;
-use ConLayout\LayoutInterface;
+use ConLayout\Updater\LayoutUpdaterInterface;
+use Zend\Config\Config;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
 
@@ -17,9 +18,9 @@ class ViewHelperListener
 {
     /**
      *
-     * @var LayoutInterface
+     * @var LayoutUpdaterInterface
      */
-    protected $layout;
+    protected $updater;
 
     /**
      *
@@ -31,33 +32,42 @@ class ViewHelperListener
      *
      * @var array
      */
-    protected $helperConfig = array();
+    protected $helperConfig = [];
 
     /**
-     * value preparers for view helpers in format:
-     *   'helperName' => array(ConLayout\AssetPreparer\AssetPreparerInterface)
+     * asset preparers for view helpers in format:
+     * 'helperName' => [
+     *     AssetPreparerInterface,
+     *     AssetPreparerInterface
+     * ]
      *
-     * @var array
+     * @var AssetPreparerInterface[]
      */
-    protected $assetPreparers = array();
+    protected $assetPreparers = [];
 
     /**
      * applies view helpers
      *
+     * @todo refactor
      * @param MvcEvent $e
      * @return LayoutModifierListener
      */
-    public function applyHelpers(MvcEvent $e)
+    public function applyViewHelpers(MvcEvent $e)
     {
-        $layoutConfig = $this->layoutService->getLayoutConfig();
-        foreach ($this->getHelperConfig() as $helper => $config) {
-            if (!isset($layoutConfig[$helper])) continue;
+        $viewHelperInstructions = $this->updater->getLayoutStructure()->get(
+            LayoutUpdaterInterface::INSTRUCTION_VIEW_HELPERS
+        );
+        if ($viewHelperInstructions instanceof Config) {
+            $viewHelperInstructions = $viewHelperInstructions->toArray();
+        }
+        foreach ($this->helperConfig as $helper => $config) {
+            if (!isset($viewHelperInstructions[$helper])) continue;
             $defaultMethod = isset($config['defaultMethod']) ? $config['defaultMethod'] : '__invoke';
             $viewHelper = $this->viewHelperManager->get($helper);
-            if (!is_array($layoutConfig[$helper])) {
-                $layoutConfig[$helper] = array($layoutConfig[$helper]);
+            if (!is_array($viewHelperInstructions[$helper])) {
+                $viewHelperInstructions[$helper] = array($viewHelperInstructions[$helper]);
             }
-            foreach ($layoutConfig[$helper] as $method => $value) {
+            foreach ($viewHelperInstructions[$helper] as $method => $value) {
                 if (!is_string($method)) {
                     $method = (is_array($value) && isset($value['method'])) ? $value['method'] : $defaultMethod;
                 }

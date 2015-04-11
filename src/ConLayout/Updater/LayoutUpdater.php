@@ -140,13 +140,27 @@ final class LayoutUpdater implements
      */
     private function loadGlobalLayoutStructure()
     {
-        $this->globalLayoutStructure = new Config([], true);
-        foreach(['.pre', '', '.post'] as $eventSuffix) {
-            $this->getEventManager()->trigger(
-                __FUNCTION__ . $eventSuffix,
-                $this,
-                ['global_layout_structure' => $this->globalLayoutStructure]
-            );
-        }
+        $globalLayoutStructure = new Config([], true);
+        $event = new Event\UpdateEvent();
+        $event->setGlobalLayoutStructure($globalLayoutStructure);
+
+        $results = $this->getEventManager()->trigger(
+            __FUNCTION__ . '.pre',
+            $this,
+            $event,
+            function ($result) {
+                return ($result instanceof Config);
+            }
+        );
+
+        $globalLayoutStructure = $results->last();
+
+        $this->getEventManager()->trigger(
+            __FUNCTION__ . '.post',
+            $this,
+            ['__RESULT__' => $globalLayoutStructure]
+        );
+
+        $this->globalLayoutStructure = $globalLayoutStructure;
     }
 }

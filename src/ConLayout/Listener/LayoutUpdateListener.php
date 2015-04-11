@@ -2,7 +2,7 @@
 
 namespace ConLayout\Listener;
 
-use Zend\Config\Config;
+use ConLayout\Updater\Event\UpdateEvent;
 use Zend\Config\Factory as ConfigFactory;
 use Zend\EventManager\EventInterface;
 use Zend\Stdlib\Glob;
@@ -33,15 +33,14 @@ class LayoutUpdateListener
 
     /**
      *
-     * @param EventInterface $e
+     * @param UpdateEvent $e
      */
-    public function onLoadGlobalLayoutStructure(EventInterface $e)
+    public function onLoadGlobalLayoutStructure(UpdateEvent $e)
     {
-        /* @var $config Config */
-        $layoutConfig = $e->getParam('global_layout_structure');
+        $globalLayoutStructure = $e->getGlobalLayoutStructure();
         foreach ($this->globPaths as $globPath) {
             foreach (Glob::glob($globPath, Glob::GLOB_BRACE) as $config) {
-                $layoutConfig->merge(
+                $globalLayoutStructure->merge(
                     ConfigFactory::fromFile($config, true)
                 );
             }
