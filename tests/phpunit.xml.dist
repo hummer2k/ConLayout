@@ -8,7 +8,7 @@
     </filter>
     <testsuites>
         <testsuite name="con-layout-test">
-            <directory>./ConLayoutTest/Update</directory>
+            <directory>./ConLayoutTest</directory>
         </testsuite>
     </testsuites>
 </phpunit>

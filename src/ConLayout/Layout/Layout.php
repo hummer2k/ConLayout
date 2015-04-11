@@ -70,7 +70,7 @@ class Layout implements
     {
         if (false === $this->blocksGenerated) {
             $blocks = $this->updater->getLayoutStructure()
-                ->get(self::INSTRUCTION_BLOCKS, []);
+                ->get(LayoutUpdaterInterface::INSTRUCTION_BLOCKS, []);
             if ($blocks instanceof Config) {
                 $blocks = $blocks->toArray();
             }
@@ -92,7 +92,7 @@ class Layout implements
     protected function isBlockRemoved($blockId)
     {
         $removedBlocks = $this->updater->getLayoutStructure()
-            ->get(self::INSTRUCTION_REMOVE_BLOCKS, false);
+            ->get(LayoutUpdaterInterface::INSTRUCTION_REMOVE_BLOCKS, false);
         if ($removedBlocks instanceof Config) {
             return $removedBlocks->get($blockId, false);
         }

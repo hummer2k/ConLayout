@@ -28,7 +28,16 @@ class ActionHandlesListener
      * @var LayoutUpdaterInterface
      */
     protected $updater;
-                            
+
+    /**
+     *
+     * @param LayoutUpdaterInterface $updater
+     */
+    public function __construct(LayoutUpdaterInterface $updater)
+    {
+        $this->updater = $updater;
+    }
+
     /**
      * 
      * @param EventManagerInterface $events
@@ -65,13 +74,14 @@ class ActionHandlesListener
         $actionHandles = array();
         $namespaceSegments = explode('\\', $controller);
         $count = count($namespaceSegments);
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             for ($j = 0; $j <= $i; $j++) {
                 $actionHandles[$i][] = $namespaceSegments[$j];
             }
-            $actionHandles[$i] = new Handle(strtolower(implode('-', $actionHandles[$i])), $i);
+            $handleName = strtolower(implode('-', $actionHandles[$i]));
+            $actionHandles[$i] = new Handle($handleName, $j);
         }
-        $actionHandles[] = new Handle(strtolower(implode('-', $actionHandles[$i])) . '-' . $action, $i + 1);
+        $actionHandles[] = new Handle($handleName . '-' . $action, $j + 1);
         return $actionHandles;
     }
 }

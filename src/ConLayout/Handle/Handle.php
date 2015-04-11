@@ -31,23 +31,8 @@ final class Handle implements HandleInterface
      */
     public function __construct($name, $priority)
     {
-        $this->assertHandleName($name);
         $this->name     = $name;
         $this->priority = $priority;
-    }
-
-    /**
-     *
-     * @param string $name
-     * @throws InvalidHandleNameException
-     */
-    private function assertHandleName($name)
-    {
-        if (!preg_match('/[^a-z0-9-]+/', $name)) {
-            throw new InvalidHandleNameException(
-                sprintf('Invalid handle name "%"', $name)
-            );
-        }
     }
 
     /**

@@ -10,5 +10,8 @@ use ConLayoutTest\AbstractTest;
  */
 class LayoutManagerTest extends AbstractTest
 {
-    
+    public function testLayoutManager()
+    {
+        
+    }
 }

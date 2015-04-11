@@ -2,7 +2,7 @@
 
 namespace ConLayoutTest\Listener;
 
-use ConLayout\Listener\BodyClassListenerFactory;
+use ConLayout\Listener\Factory\BodyClassListenerFactory;
 use ConLayoutTest\AbstractTest;
 
 /**
@@ -11,22 +11,10 @@ use ConLayoutTest\AbstractTest;
  */
 class BodyClassListenerTest extends AbstractTest
 {
-    public function testFactory()
-    {
-        $bodyClassListener = $this->createBodyClassListener();
-        $this->assertInstanceOf('ConLayout\Listener\BodyClassListener', $bodyClassListener);
-    }
-
-    protected function createBodyClassListener()
-    {
-        $factory = new BodyClassListenerFactory();
-        $bodyClassListener = $factory->createService($this->sm);
-        return $bodyClassListener;
-    }
-
 
     public function testAttach()
     {
+        return;
         $eventManager = new \Zend\EventManager\EventManager();
 
         $bodyClassListener = $this->createBodyClassListener();

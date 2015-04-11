@@ -12,15 +12,6 @@ use ConLayoutTest\AbstractTest;
  */
 class CacheBusterTest extends AbstractTest
 {
-    public function testFactory()
-    {
-        $factory = new CacheBusterFactory();
-        $this->assertInstanceOf(
-            'ConLayout\AssetPreparer\CacheBuster',
-            $factory->createService($this->sm)
-        );
-    }
-
     public function testMd5File()
     {
         $cacheBuster = new CacheBuster(
