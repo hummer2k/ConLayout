@@ -67,7 +67,7 @@ class ActionHandlesListener
      * @param RouteMatch $routeMatch
      * @return array
      */
-    public function getActionHandles(RouteMatch $routeMatch)
+    private function getActionHandles(RouteMatch $routeMatch)
     {
         $controller = $routeMatch->getParam('controller');
         $action = $routeMatch->getParam('action');

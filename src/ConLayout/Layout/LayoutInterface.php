@@ -10,7 +10,7 @@ use Zend\View\Model\ModelInterface;
  */
 interface LayoutInterface
 {  
-    const BLOCK_NAME_LAYOUT = 'layout';
+    const BLOCK_NAME_ROOT = 'root';
 
     /**
      * 
@@ -42,5 +42,5 @@ interface LayoutInterface
      *
      * @param ModelInterface $root
      */
-    public function injectBlocks(ModelInterface $root);
+    public function injectBlocks(ModelInterface $root = null);
 }

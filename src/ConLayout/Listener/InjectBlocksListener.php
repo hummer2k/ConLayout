@@ -63,8 +63,6 @@ class InjectBlocksListener
             $this->layout->addBlock($blockId, $childModel);
         }
         $root->clearChildren();
-
-        $this->layout->addBlock(LayoutInterface::BLOCK_NAME_LAYOUT, $root);
         $this->layout->injectBlocks($root);
     }
 

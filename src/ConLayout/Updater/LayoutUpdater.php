@@ -153,7 +153,9 @@ final class LayoutUpdater implements
             }
         );
 
-        $globalLayoutStructure = $results->last();
+        if ($results->stopped()) {
+            $globalLayoutStructure = $results->last();
+        }
 
         $this->getEventManager()->trigger(
             __FUNCTION__ . '.post',
@@ -162,5 +164,6 @@ final class LayoutUpdater implements
         );
 
         $this->globalLayoutStructure = $globalLayoutStructure;
+        $this->globalLayoutStructure->setReadOnly();
     }
 }

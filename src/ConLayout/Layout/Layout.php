@@ -2,12 +2,11 @@
 
 namespace ConLayout\Layout;
 
-use ConLayout\Factory\BlockFactoryInterface;
+use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
-use Zend\EventManager\EventManagerInterface;
 use Zend\View\Model\ModelInterface;
 
 /**
@@ -30,6 +29,13 @@ class Layout implements
     protected $blocksGenerated = false;
 
     /**
+     * flag if blocks have already been removed from layout structure
+     *
+     * @var bool
+     */
+    protected $blocksRemoved = false;
+
+    /**
      *
      * @var LayoutUpdaterInterface
      */
@@ -43,6 +49,12 @@ class Layout implements
     protected $blocks = [];
 
     /**
+     * 
+     * @var array
+     */
+    protected $removedBlocks = [];
+
+    /**
      *
      * @var BlockFactoryInterface
      */
@@ -50,8 +62,8 @@ class Layout implements
 
     /**
      *
-     * @param BlockFactoryInterface $blockFactory
-     * @param LayoutUpdaterInterface $updater
+     * @param   BlockFactoryInterface   $blockFactory
+     * @param   LayoutUpdaterInterface  $updater
      */
     public function __construct(
         BlockFactoryInterface $blockFactory,
@@ -63,6 +75,7 @@ class Layout implements
     }
 
     /**
+     * generate blocks from array configuration
      *
      * @param array $blockConfig
      */
@@ -83,23 +96,35 @@ class Layout implements
         }
     }
 
-    /**
-     * check if block has been removed
-     *
-     * @param string $blockId
-     * @return boolean
-     */
-    protected function isBlockRemoved($blockId)
+    protected function removeBlocksFromStructure()
     {
-        $removedBlocks = $this->updater->getLayoutStructure()
-            ->get(LayoutUpdaterInterface::INSTRUCTION_REMOVE_BLOCKS, false);
-        if ($removedBlocks instanceof Config) {
-            return $removedBlocks->get($blockId, false);
+        if (!$this->blocksRemoved) {
+            $removedBlocks = $this->updater->getLayoutStructure()
+                ->get(LayoutUpdaterInterface::INSTRUCTION_REMOVE_BLOCKS, []);
+            if ($removedBlocks instanceof Config) {
+                $removedBlocks = $removedBlocks->toArray();
+                foreach (array_keys($removedBlocks) as $removedBlockId) {
+                    $this->removeBlock($removedBlockId);
+                }
+            }
+            $this->blocksRemoved = true;
         }
-        return false;
     }
 
     /**
+     * check if block has been removed
+     *
+     * @param   string  $blockId
+     * @return  boolean
+     */
+    protected function isBlockRemoved($blockId)
+    {
+        $this->removeBlocksFromStructure();
+        return isset($this->removedBlocks[$blockId]);
+    }
+
+    /**
+     * sort the blocks by order option ascendant
      * 
      * @return LayoutManagerInterface
      */
@@ -119,12 +144,16 @@ class Layout implements
     }
 
     /**
+     * inject blocks into the root view model
      *
-     * @param ModelInterface $root
-     * @return LayoutManagerInterface
+     * @param   ModelInterface  $root
+     * @return  LayoutInterface
      */
-    public function injectBlocks(ModelInterface $root)
+    public function injectBlocks(ModelInterface $root = null)
     {
+        if (null !== $root) {
+            $this->addBlock(self::BLOCK_NAME_ROOT, $root);
+        }
         foreach ($this->getBlocks() as $blockId => $block) {
             if (!$this->isAllowed($blockId, $block)) continue;
             list($parent, $captureTo) = $this->getCaptureTo($block);
@@ -144,7 +173,7 @@ class Layout implements
      */
     protected function isAllowed($blockId, ModelInterface $block)
     {
-        if ($blockId === self::BLOCK_NAME_LAYOUT) {
+        if ($blockId === self::BLOCK_NAME_ROOT) {
             return false;
         }
         $results = $this->getEventManager()->trigger(
@@ -157,10 +186,11 @@ class Layout implements
     }
 
     /**
+     * adds a block to the registry
      *
-     * @param string $blockId
-     * @param ModelInterface $block
-     * @return LayoutManagerInterface
+     * @param   string          $blockId
+     * @param   ModelInterface  $block
+     * @return  LayoutInterface
      */
     public function addBlock($blockId, ModelInterface $block)
     {
@@ -169,23 +199,26 @@ class Layout implements
     }
 
     /**
+     * removes a single block from block registry
      *
-     * @param string $blockId
-     * @return LayoutManagerInterface
+     * @param   string          $blockId
+     * @return  LayoutInterface
      */
     public function removeBlock($blockId)
     {
         if (isset($this->blocks[$blockId])) {
             unset($this->blocks[$blockId]);
         }
+        $this->removedBlocks[$blockId] = true;
         return $this;
     }
 
     /**
      * retrieve parent and capture_to as array, e.g.: [ 'layout', 'content' ]
+     * so we are able to list() block_id and capture_to values
      *
-     * @param ModelInterface $block
-     * @return array
+     * @param   ModelInterface  $block
+     * @return  array
      */
     protected function getCaptureTo(ModelInterface $block)
     {
@@ -194,15 +227,16 @@ class Layout implements
             return explode(self::CAPTURE_TO_DELIMITER, $captureTo);
         }
         return [
-            self::BLOCK_NAME_LAYOUT,
+            self::BLOCK_NAME_ROOT,
             $captureTo
         ];
     }
 
     /**
+     * retrieve single block by its id
      *
-     * @param string $blockId
-     * @return false|ModelInterface
+     * @param   string                  $blockId
+     * @return  false|ModelInterface
      */
     public function getBlock($blockId)
     {
@@ -213,6 +247,12 @@ class Layout implements
     }
 
     /**
+     * retrieve generated blocks
+     * format:
+     * [
+     *     'block_id' => ModelInterface
+     * ]
+     *
      * @return ModelInterface[]
      */
     public function getBlocks()
@@ -221,6 +261,9 @@ class Layout implements
         return $this->blocks;
     }
 
+    /**
+     * attach default listeners: allows all blocks by default
+     */
     protected function attachDefaultListeners()
     {
         $this->getEventManager()
