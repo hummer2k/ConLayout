@@ -8,10 +8,8 @@ use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\View\Exception\DomainException;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Renderer\RendererInterface;
-use Zend\View\Renderer\TreeRendererInterface;
     
 /**
  * @package ConLayout
@@ -23,14 +21,7 @@ class LayoutManager
         ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
-
-    /**
-     * flag to check if blocks are already injected
-     *
-     * @var bool
-     */
-    protected $blocksInjected = false;
-    
+   
     /**
      *
      * @var LayoutInterface
@@ -75,63 +66,7 @@ class LayoutManager
     {
         return $this;
     }
-    
-    /**
-     * 
-     * @param string|ModelInterface $blockIdOrViewModel
-     * @return string rendered block
-     */
-    public function render($blockIdOrViewModel)
-    {
-        if (!$this->blocksInjected) {
-            $this->layout->injectBlocks();
-            $this->blocksInjected = true;
-        }
-        if (is_string($blockIdOrViewModel)) {
-            $blockIdOrViewModel = $this->layout->getBlock($blockIdOrViewModel);
-        }
-        if (!$blockIdOrViewModel instanceof ModelInterface) {
-            return '';
-        }
-
-        if ($blockIdOrViewModel->hasChildren()
-            && (!$this->renderer instanceof TreeRendererInterface
-                || !$this->renderer->canRenderTrees())
-        ) {
-            $this->renderChildren($blockIdOrViewModel);
-        }
-
-        return $this->renderer->render($blockIdOrViewModel);
-    }
-
-    /**
-     * Loop through children, rendering each
-     *
-     * @param  ModelInterface $viewModel
-     * @throws DomainException
-     * @return void
-     */
-    protected function renderChildren(ModelInterface $viewModel)
-    {
-        foreach ($viewModel as $child) {
-            if ($child->terminate()) {
-                throw new DomainException(
-                    'Inconsistent state; child view model is marked as terminal'
-                );
-            }
-            $result = $this->render($child);
-            $capture = $child->captureTo();
-            if (!empty($capture)) {
-                if ($child->isAppend()) {
-                    $oldResult = $viewModel->{$capture};
-                    $viewModel->setVariable($capture, $oldResult . $result);
-                } else {
-                    $viewModel->setVariable($capture, $result);
-                }
-            }
-        }
-    }
-    
+       
     /**
      * 
      * @param string $blockId

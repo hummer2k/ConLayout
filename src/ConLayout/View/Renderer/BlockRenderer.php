@@ -1,11 +1,7 @@
 <?php
 namespace ConLayout\View\Renderer;
 
-use Traversable;
 use Zend\EventManager\EventManagerAwareInterface;
-use Zend\View\Exception\DomainException;
-use Zend\View\Exception\InvalidArgumentException;
-use Zend\View\Exception\RuntimeException;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -18,7 +14,7 @@ class BlockRenderer
     extends PhpRenderer
     implements EventManagerAwareInterface
 {
-    use EventManagerAwareTrait;
+    use \Zend\EventManager\EventManagerAwareTrait;
         
     /**
      * {@inheritdoc}

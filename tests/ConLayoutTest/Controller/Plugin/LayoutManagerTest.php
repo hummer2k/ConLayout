@@ -4,12 +4,15 @@ namespace ConLayoutTest\Controller\Plugin;
 
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Controller\Plugin\LayoutManager;
+use ConLayout\Controller\Plugin\LayoutManagerFactory;
 use ConLayout\Debug\Debugger;
 use ConLayout\Handle\Handle;
 use ConLayout\Layout\Layout;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\View\Renderer\BlockRenderer;
 use ConLayoutTest\AbstractTest;
+use Zend\Mvc\Controller\PluginManager;
+use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -56,7 +59,7 @@ class LayoutManagerTest extends AbstractTest
 
     public function testFactory()
     {
-        $serviceManager = new \Zend\ServiceManager\ServiceManager();
+        $serviceManager = new ServiceManager();
         $serviceManager->setService(
             'ConLayout\Layout\LayoutInterface', $this->layout
         );
@@ -67,46 +70,16 @@ class LayoutManagerTest extends AbstractTest
             'ConLayout\View\Renderer\BlockRenderer', $this->renderer
         );
 
-        $controllerPluginManager = new \Zend\Mvc\Controller\PluginManager();
+        $controllerPluginManager = new PluginManager();
         $controllerPluginManager->setServiceLocator($serviceManager);
 
-        $factory = new \ConLayout\Controller\Plugin\LayoutManagerFactory();
+        $factory = new LayoutManagerFactory();
         $instance = $factory->createService($controllerPluginManager);
 
         $this->assertInstanceOf(
             'ConLayout\Controller\Plugin\LayoutManager',
             $instance
         );
-    }
-
-    public function testRenderBlockAndChild()
-    {
-        $widget = new ViewModel();
-        $widget->setTemplate('widget1');
-
-        $widgetContent = new ViewModel();
-        $widgetContent->setTemplate('widget-content');
-
-        $widget->addChild($widgetContent);
-
-        $result = $this->layoutManager->render($widget);
-
-        $expected = file_get_contents(__DIR__ . '/../../_files/rendered-widget.html');
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testRenderBlockString()
-    {
-        $result = $this->layoutManager->render('test-block');
-        $file = __DIR__ . '/../../_files/rendered-test-block.html';
-        $expected = file_get_contents($file);
-        $this->assertEquals($expected, $result);        
-    }
-
-    public function testRenderNotExistingBlock()
-    {
-        $result = $this->layoutManager->render('___NOT_EXIST___');
-        $this->assertSame('', $result);
     }
 
     public function testInvoke()
@@ -171,52 +144,5 @@ class LayoutManagerTest extends AbstractTest
         $this->layoutManager->addBlock('some-block', $block);
         $this->assertSame($block, $this->layoutManager->getBlock('some-block'));
         $this->assertSame($block, $this->layout->getBlock('some-block'));
-    }
-
-    public function testRenderChildrenAppend()
-    {
-        $widget1 =  (new ViewModel())
-            ->setTemplate('widget1');
-
-        $widgetContent1 = (new ViewModel())
-            ->setTemplate('widget-content')
-            ->setAppend(true)
-            ->setCaptureTo('widget1::content');
-
-        $widgetContent2 = (new ViewModel())
-            ->setTemplate('widget-content-after')
-            ->setAppend(true)
-            ->setOption('order', 10)
-            ->setCaptureTo('widget1::content');
-
-        $this->layout->addBlock('widget-content-1', $widgetContent1);
-        $this->layout->addBlock('widget-content-2', $widgetContent2);
-        $this->layout->addBlock('widget1', $widget1);
-
-        $file = __DIR__ . '/../../_files/rendered-widget-append.html';
-        
-        $result = $this->layoutManager->render('widget1');
-
-        $expected = file_get_contents($file);
-
-        $this->assertEquals($expected, $result);
-
-    }
-
-    /**
-     * @expectedException \Zend\View\Exception\DomainException
-     */
-    public function testThrowException()
-    {
-        $viewModel = (new ViewModel())->setTemplate('widget1');
-        $childModel = (new ViewModel())
-            ->setTemplate('widget-content')
-            ->setTerminal(true);
-
-        $viewModel->addChild($childModel);
-
-        $this->layout->addBlock('widget1', $viewModel);
-
-        $this->layoutManager->render('widget1');
     }
 }

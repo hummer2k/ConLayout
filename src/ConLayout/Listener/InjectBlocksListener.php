@@ -53,34 +53,6 @@ class InjectBlocksListener
         if ($root->terminate()) {
             return;
         }
-        foreach ($root->getChildren() as $childModel) {
-            $blockId = $this->determineAnonymousBlockId($childModel);
-            $childModel->setVariable(
-                'nameInLayout',
-                $blockId
-            );
-            $childModel->setVariable('blockType', 'custom');
-            $this->layout->addBlock($blockId, $childModel);
-        }
-        $root->clearChildren();
-        $this->layout->injectBlocks($root);
-    }
-
-    /**
-     *
-     * @param ViewModel $viewModel
-     * @return string
-     */
-    private function determineAnonymousBlockId(ViewModel $viewModel)
-    {
-        $blockName = $viewModel->getVariable(
-            'nameInLayout',
-            sprintf(
-                'anonymous.%s.%s',
-                $viewModel->captureTo(),
-                self::$anonymousSuffix++
-            )
-        );
-        return $blockName;
+        $this->layout->injectBlocks(LayoutInterface::BLOCK_NAME_ROOT, $root);
     }
 }

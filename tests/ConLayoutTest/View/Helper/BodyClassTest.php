@@ -13,7 +13,7 @@ class BodyClassTest extends \PHPUnit_Framework_TestCase
     {
         $helper = new BodyClass();
         $helper('my-class');
-        $helper->append('other-class');
+        $helper->addClass('other-class');
 
         $this->assertSame('my-class other-class', (string) $helper);
     }

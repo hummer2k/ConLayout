@@ -4,6 +4,7 @@ namespace ConLayoutTest\Layout;
 
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Layout\Layout;
+use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
 use Zend\ServiceManager\ServiceManager;
@@ -45,6 +46,28 @@ class LayoutTest extends AbstractTest
         $block = new ViewModel();
         $layout->addBlock('my-block', $block);
         $this->assertSame($block, $layout->getBlock('my-block'));
+    }
+
+    public function testAddAndGetBlockWithChild()
+    {
+        $layout = new Layout(
+            $this->blockFactory,
+            new LayoutUpdater()
+        );
+
+        $block = new ViewModel();
+        $childBlock = new ViewModel();
+        $block->addChild($childBlock);
+        $childChildBlock = new ViewModel();
+        $childBlock->addChild($childChildBlock);
+
+        $layout->addBlock('block-with-children', $block);
+        $this->assertCount(3, $layout->getBlocks());
+
+        $testBlock = $layout->getBlock('block-with-children', true);
+
+        $layoutModel = new ViewModel();
+        $layout->injectBlocks($layoutModel);
     }
 
     public function testGetBlocks()

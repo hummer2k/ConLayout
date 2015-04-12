@@ -8,6 +8,7 @@ use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\View\Model\ModelInterface;
+use Zend\View\Model\ViewModel;
 
 /**
  * @package ConLayout
@@ -20,6 +21,14 @@ class Layout implements
     use EventManagerAwareTrait;
 
     const CAPTURE_TO_DELIMITER = '::';
+
+    /**
+     * suffix for anonymous block names
+     * will be incremented on every addBlock call when block has no id
+     *
+     * @var int
+     */
+    protected static $anonymousSuffix = 1;
 
     /**
      * flag if blocks have already been generated
@@ -47,6 +56,12 @@ class Layout implements
      * @var ModelInterface[]
      */
     protected $blocks = [];
+
+    /**
+     *
+     * @var ModelInterface[]
+     */
+    protected $blocksByParent = [];
 
     /**
      * 
@@ -192,8 +207,21 @@ class Layout implements
      * @param   ModelInterface  $block
      * @return  LayoutInterface
      */
-    public function addBlock($blockId, ModelInterface $block)
+    public function addBlock($blockId, ViewModel $block, $parentId = LayoutInterface::BLOCK_NAME_ROOT)
     {
+        if ($block->hasChildren()) {
+            foreach ($block->getChildren() as $childBlock) {
+                $childBlockId = $this->determineAnonymousBlockId($childBlock);
+                $childBlock->setCaptureTo(
+                    $blockId . self::CAPTURE_TO_DELIMITER . $childBlock->captureTo()
+                );
+                $this->addBlock(
+                    $childBlockId,
+                    $childBlock
+                );
+            }
+            $block->clearChildren();
+        }
         $this->blocks[$blockId] = $block;
         return $this;
     }
@@ -236,14 +264,18 @@ class Layout implements
      * retrieve single block by its id
      *
      * @param   string                  $blockId
+     * @param   bool                    $recursive
      * @return  false|ModelInterface
      */
-    public function getBlock($blockId)
+    public function getBlock($blockId, $recursive = false)
     {
         $this->generateBlocks();
-        return isset($this->blocks[$blockId])
-            ? $this->blocks[$blockId]
-            : false;
+        if (isset($this->blocks[$blockId])) {
+            if (!$recursive) {
+                return $this->blocks[$blockId];
+            }
+        }
+        return false;
     }
 
     /**
@@ -259,6 +291,24 @@ class Layout implements
     {
         $this->generateBlocks();
         return $this->blocks;
+    }
+
+    /**
+     *
+     * @param ViewModel $block
+     * @return string
+     */
+    protected function determineAnonymousBlockId(ModelInterface $block)
+    {
+        $blockName = $block->getVariable(
+            'nameInLayout',
+            sprintf(
+                'anonymous.%s.%s',
+                $block->captureTo(),
+                self::$anonymousSuffix++
+            )
+        );
+        return $blockName;
     }
 
     /**

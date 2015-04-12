@@ -3,6 +3,7 @@
 namespace ConLayout\Layout;
 
 use Zend\View\Model\ModelInterface;
+use Zend\View\Model\ViewModel;
 
 /**
  * @package ConLayout
@@ -17,7 +18,7 @@ interface LayoutInterface
      * @param string $blockId
      * @return ModelInterface
      */
-    public function getBlock($blockId);
+    public function getBlock($blockId, $recursive = false);
 
     /**
      *
@@ -28,9 +29,10 @@ interface LayoutInterface
     /**
      *
      * @param string $blockId
-     * @param ModelInterface $block
+     * @param ViewModel $block
+     * @param string $parentId
      */
-    public function addBlock($blockId, ModelInterface $block);
+    public function addBlock($blockId, ViewModel $block, $parentId = LayoutInterface::BLOCK_NAME_ROOT);
 
     /**
      *
