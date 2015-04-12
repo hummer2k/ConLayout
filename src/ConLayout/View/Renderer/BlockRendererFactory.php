@@ -1,8 +1,9 @@
 <?php
 namespace ConLayout\View\Renderer;
 
-use Zend\ServiceManager\FactoryInterface,
-    ConLayout\OptionTrait;
+use ConLayout\OptionTrait;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @package ConLayout
@@ -14,23 +15,18 @@ class BlockRendererFactory implements FactoryInterface
     
     /**
      * 
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \ConLayout\View\Renderer\BlockRenderer
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return BlockRenderer
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
         $blockRenderer = new BlockRenderer();
-        $blockRenderer->setHelperPluginManager($serviceLocator->get('ViewHelperManager'));
-        $blockRenderer->setResolver($serviceLocator->get('Zend\View\Resolver\AggregateResolver'));
-        $cacheEnabled = $this->getOption($config, 'con-layout/enable_block_cache', false);
-        
-        if ($cacheEnabled) {
-            $cache = $this->getOption($config, 'con-layout/block_cache', 'ConLayout\Cache');
-            $blockRenderer
-                ->setCache($serviceLocator->get($cache))
-                ->setCacheEnabled();
-        }        
+        $blockRenderer->setHelperPluginManager(
+            $serviceLocator->get('ViewHelperManager')
+        );
+        $blockRenderer->setResolver(
+            $serviceLocator->get('Zend\View\Resolver\AggregateResolver')
+        );
         return $blockRenderer;
     }
 }

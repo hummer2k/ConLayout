@@ -1,20 +1,17 @@
 <?php
 return [
     'factories' => [
-        'ConLayout\LayoutManagerInterface' => 'ConLayout\LayoutManagerFactory',
-        'ConLayout\Service\LayoutService' => 'ConLayout\Service\LayoutServiceFactory',
-        'ConLayout\Config\CollectorInterface' => 'ConLayout\Config\CollectorFactory',
-        'ConLayout\Listener\ActionHandlesListener' => 'ConLayout\Listener\ActionHandlesListenerFactory',
-        'ConLayout\Listener\LayoutModifierListener' => 'ConLayout\Listener\LayoutModifierListenerFactory',
+        'ConLayout\Layout\LayoutInterface' => 'ConLayout\LayoutManagerFactory',
+        'ConLayout\Listener\ActionHandlesListener' => 'ConLayout\Listener\Factory\ActionHandlesListenerFactory',
+        'ConLayout\Listener\BodyClassListener' => 'ConLayout\Listener\Factory\BodyClassListenerFactory',
         'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
         'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
         'ConLayout\AssetPreparer\BasePath' => 'ConLayout\AssetPreparer\BasePathFactory',
-        'ConLayout\Listener\BodyClassListener' => 'ConLayout\Listener\BodyClassListenerFactory',
-        'ConLayout\Debug\Debugger' => 'ConLayout\Debug\DebuggerFactory',
         'ConLayout\AssetPreparer\CacheBuster' => 'ConLayout\AssetPreparer\CacheBusterFactory',
+        'ConLayout\Debug\Debugger' => 'ConLayout\Debug\DebuggerFactory',
     ],
     'aliases' => [
-        'LayoutManager' => 'ConLayout\LayoutManagerInterface',
+        'Layout' => 'ConLayout\Layout\LayoutInterface',
     ],
     'invokables' => [
         'ConLayout\Zdt\Collector\LayoutCollector' => 'ConLayout\Zdt\Collector\LayoutCollector',
