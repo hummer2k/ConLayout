@@ -118,8 +118,10 @@ class Layout implements
                 ->get(LayoutUpdaterInterface::INSTRUCTION_REMOVE_BLOCKS, []);
             if ($removedBlocks instanceof Config) {
                 $removedBlocks = $removedBlocks->toArray();
-                foreach (array_keys($removedBlocks) as $removedBlockId) {
-                    $this->removeBlock($removedBlockId);
+                foreach ($removedBlocks as $removedBlockId => $value) {
+                    if ($value) {
+                        $this->removeBlock($removedBlockId);
+                    }
                 }
             }
             $this->blocksRemoved = true;
@@ -207,7 +209,7 @@ class Layout implements
      * @param   ModelInterface  $block
      * @return  LayoutInterface
      */
-    public function addBlock($blockId, ViewModel $block, $parentId = LayoutInterface::BLOCK_NAME_ROOT)
+    public function addBlock($blockId, ViewModel $block)
     {
         if ($block->hasChildren()) {
             foreach ($block->getChildren() as $childBlock) {

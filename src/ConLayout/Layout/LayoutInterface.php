@@ -32,7 +32,7 @@ interface LayoutInterface
      * @param ViewModel $block
      * @param string $parentId
      */
-    public function addBlock($blockId, ViewModel $block, $parentId = LayoutInterface::BLOCK_NAME_ROOT);
+    public function addBlock($blockId, ViewModel $block);
 
     /**
      *
