@@ -29,6 +29,17 @@ class LayoutCollector
     protected $updater;
 
     /**
+     *
+     * @param LayoutInterface $layout
+     * @param LayoutUpdaterInterface $updater
+     */
+    public function __construct(LayoutInterface $layout, LayoutUpdaterInterface $updater)
+    {
+        $this->layout  = $layout;
+        $this->updater = $updater;
+    }
+
+        /**
      * 
      * @return string
      */
@@ -45,7 +56,7 @@ class LayoutCollector
     {
         return 600;
     }
-        
+
     /**
      * collect data for zdt
      * 
@@ -57,7 +68,7 @@ class LayoutCollector
         $layout = $mvcEvent->getViewModel();
         $data = array(
             'handles' => $this->updater->getHandles(true),
-            'layoutConfig' => $this->updater->getLayoutStructure()->toArray(),
+            'layout_structure' => $this->updater->getLayoutStructure()->toArray(),
             'blocks' => $this->layout->getBlocks(),
             'layout_template' => $layout->getTemplate()
         );
@@ -93,9 +104,9 @@ class LayoutCollector
      * 
      * @return array
      */
-    public function getLayoutConfig()
+    public function getLayoutStructure()
     {
-        return $this->data['layoutConfig'];
+        return $this->data['layout_structure'];
     }
     
     /**

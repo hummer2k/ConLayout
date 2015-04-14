@@ -3,9 +3,11 @@ namespace ConLayout;
 
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventInterface as Event;
+use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\View\Http\InjectViewModelListener;
 
 /**
  * ConLayout\Module
@@ -48,11 +50,23 @@ class Module implements ConfigProviderInterface
         if (!$request instanceof Request) {
             return;
         }
-        
+        /* @var $eventManager EventManager */
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) use ($serviceManager) {
             $serviceManager->get('ConLayout\Update\LayoutUpdate')
                 ->addHandle($e->getError());
         }, 100);
+
+        $listeners = [
+            'ConLayout\Listener\ActionHandlesListener',
+            'ConLayout\Listener\LayoutUpdateListener',
+            'ConLayout\Listener\LoadLayoutListener',
+            'ConLayout\Listener\LayoutTemplateListener',
+            'ConLayout\Listener\ViewHelperListener'
+        ];
+
+        foreach ($listeners as $listener) {
+            $eventManager->attach($serviceManager->get($listener));
+        }
     }
 
     /**

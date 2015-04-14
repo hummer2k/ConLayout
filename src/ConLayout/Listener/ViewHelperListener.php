@@ -5,6 +5,8 @@ namespace ConLayout\Listener;
 use ConLayout\AssetPreparer\AssetPreparerInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
 
@@ -15,7 +17,10 @@ use Zend\View\HelperPluginManager;
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class ViewHelperListener
+ implements ListenerAggregateInterface
 {
+    use \Zend\EventManager\ListenerAggregateTrait;
+
     /**
      *
      * @var LayoutUpdaterInterface
@@ -46,6 +51,31 @@ class ViewHelperListener
     protected $assetPreparers = [];
 
     /**
+     *
+     * @param LayoutUpdaterInterface $updater
+     * @param HelperPluginManager $viewHelperManager
+     * @param array $helperConfig
+     */
+    public function __construct(
+        LayoutUpdaterInterface $updater,
+        HelperPluginManager $viewHelperManager,
+        array $helperConfig
+    )
+    {
+        $this->updater           = $updater;
+        $this->viewHelperManager = $viewHelperManager;
+        $this->helperConfig      = $helperConfig;
+    }
+
+    /**
+     * @param EventManagerInterface $events
+     */
+    public function attach(EventManagerInterface $events)
+    {
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyViewHelpers'));
+    }
+
+    /**
      * applies view helpers
      *
      * @todo refactor
@@ -72,7 +102,7 @@ class ViewHelperListener
                     $method = (is_array($value) && isset($value['method'])) ? $value['method'] : $defaultMethod;
                 }
                 if (is_array($value)) {
-                    $args   = isset($value['args']) ? array_values($value['args']) : $value;
+                    $args   = isset($value['args']) ? array_values($value['args']) : array_values($value);
                     $args[0] = $this->prepareHelperValue($args[0], $helper);
                     call_user_func_array(array($viewHelper, $method), $args);
                 } else if (is_string($value)) {
@@ -99,5 +129,18 @@ class ViewHelperListener
             $value = $assetPreparer->prepare($value);
         }
         return $value;
+    }
+
+    /**
+     *
+     * @param string $helper
+     * @param AssetPreparerInterface $assetPreparer
+     */
+    public function addAssetPreparer($helper, AssetPreparerInterface $assetPreparer)
+    {
+        if (!isset($this->assetPreparers[$helper])) {
+            $this->assetPreparers[$helper] = [];
+        }
+        $this->assetPreparers[$helper][] = $assetPreparer;
     }
 }

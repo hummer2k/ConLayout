@@ -4,8 +4,7 @@ return [
     'default' => [        
         'layout' => 'layout/2cols-left',
         'headLink' => [
-            'assets/css/bootstrap.css',
-            '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css'
+            'assets/css/bootstrap.css',            
         ],
         'headScript' => [
             'js/jquery.min.js',

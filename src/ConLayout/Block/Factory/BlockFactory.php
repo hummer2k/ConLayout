@@ -38,7 +38,7 @@ class BlockFactory implements
         'actions'    => []
     ];
 
-    public function __construct(Debugger $debugger, $blockDefaults = [])
+    public function __construct(Debugger $debugger = null, $blockDefaults = [])
     {
         $this->debugger      = $debugger;
         $this->blockDefaults = ArrayUtils::merge(
@@ -55,13 +55,14 @@ class BlockFactory implements
      */
     public function createBlock($blockId, array $specs)
     {
+        /* @var $block ModelInterface */
         $class = $this->getOption('class', $specs);
         if ($this->serviceLocator->has($class)) {
             $block = $this->serviceLocator->get($class);
         } else {
             $block = new $class();
         }
-        $block->setVariable('nameInLayout', $blockId);
+        $block->setVariable('__BLOCK_ID__', $blockId);
         foreach ($this->getOption('options', $specs) as $name => $option) {
             $block->setOption($name, $option);
         }
@@ -75,6 +76,7 @@ class BlockFactory implements
         }
         $block->setTemplate($this->getOption('template', $specs));
         $block->setCaptureTo($this->getOption('capture_to', $specs));
+        $block->setAppend($this->getOption('append', $specs));
 
         if (method_exists($block, 'init')) {
             $block->init();

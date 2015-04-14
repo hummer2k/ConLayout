@@ -6,7 +6,7 @@ use Zend\Config\Config;
 use Zend\EventManager\Event;
 
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class UpdateEvent extends Event

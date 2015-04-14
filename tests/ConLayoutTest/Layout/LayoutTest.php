@@ -4,6 +4,7 @@ namespace ConLayoutTest\Layout;
 
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Layout\Layout;
+use ConLayout\Layout\LayoutFactory;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
@@ -37,6 +38,26 @@ class LayoutTest extends AbstractTest
         $this->blockFactory->setServiceLocator(new ServiceManager());
     }
 
+    public function testFactory()
+    {
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService(
+            'ConLayout\Block\Factory\BlockFactoryInterface',
+            new BlockFactory()
+        );
+
+        $serviceManager->setService(
+            'ConLayout\Updater\LayoutUpdaterInterface',
+            new LayoutUpdater()
+        );
+
+        $factory = new LayoutFactory();
+        $instance = $factory->createService($serviceManager);
+
+
+        $this->assertInstanceOf('ConLayout\Layout\LayoutInterface', $instance);
+    }
+
     public function testAddAndGetBlock()
     {
         $layout = new Layout(
@@ -46,28 +67,6 @@ class LayoutTest extends AbstractTest
         $block = new ViewModel();
         $layout->addBlock('my-block', $block);
         $this->assertSame($block, $layout->getBlock('my-block'));
-    }
-
-    public function testAddAndGetBlockWithChild()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            new LayoutUpdater()
-        );
-
-        $block = new ViewModel();
-        $childBlock = new ViewModel();
-        $block->addChild($childBlock);
-        $childChildBlock = new ViewModel();
-        $childBlock->addChild($childChildBlock);
-
-        $layout->addBlock('block-with-children', $block);
-        $this->assertCount(3, $layout->getBlocks());
-
-        $testBlock = $layout->getBlock('block-with-children', true);
-
-        $layoutModel = new ViewModel();
-        $layout->injectBlocks($layoutModel);
     }
 
     public function testGetBlocks()
@@ -112,6 +111,8 @@ class LayoutTest extends AbstractTest
         $layout->addBlock('block-3', $block3);
         $layout->addBlock('block-4', $block4);
 
+        $layout->load();
+
         $i = 1;
         foreach (array_keys($layout->getBlocks()) as $blockId) {
             $this->assertEquals($expectedOrder[$i], $blockId);
@@ -126,7 +127,8 @@ class LayoutTest extends AbstractTest
             $this->updaterMock
         );
         $layoutModel = new ViewModel();
-        $layout->injectBlocks($layoutModel);
+        $layout->setRoot($layoutModel);
+        $layout->load();
         $this->assertCount(2, $layoutModel->getChildren());
         $this->assertCount(1, $layout->getBlock('widget.1')->getChildren());
     }
@@ -139,7 +141,8 @@ class LayoutTest extends AbstractTest
         );
         $layoutModel = new ViewModel();
         $layout->removeBlock('widget.1');
-        $layout->injectBlocks($layoutModel);
+        $layout->setRoot($layoutModel);
+        $layout->load();
 
         $this->assertFalse($layout->getBlock('widget.1'));
         $this->assertCount(1, $layoutModel->getChildren());

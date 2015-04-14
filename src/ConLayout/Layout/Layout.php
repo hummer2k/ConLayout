@@ -90,6 +90,16 @@ class Layout implements
     }
 
     /**
+     * set root view model/layout
+     *
+     * @param ModelInterface $root
+     */
+    public function setRoot(ModelInterface $root)
+    {
+        $this->addBlock(self::BLOCK_ID_ROOT, $root);
+    }
+
+    /**
      * generate blocks from array configuration
      *
      * @param array $blockConfig
@@ -106,7 +116,6 @@ class Layout implements
                 if ($this->isBlockRemoved($blockId)) continue;
                 $this->addBlock($blockId, $this->blockFactory->createBlock($blockId, $specs));
             }
-            $this->sortBlocks();
             $this->blocksGenerated = true;
         }
     }
@@ -166,11 +175,9 @@ class Layout implements
      * @param   ModelInterface  $root
      * @return  LayoutInterface
      */
-    public function injectBlocks(ModelInterface $root = null)
+    public function load()
     {
-        if (null !== $root) {
-            $this->addBlock(self::BLOCK_NAME_ROOT, $root);
-        }
+        $this->sortBlocks();
         foreach ($this->getBlocks() as $blockId => $block) {
             if (!$this->isAllowed($blockId, $block)) continue;
             list($parent, $captureTo) = $this->getCaptureTo($block);
@@ -190,7 +197,7 @@ class Layout implements
      */
     protected function isAllowed($blockId, ModelInterface $block)
     {
-        if ($blockId === self::BLOCK_NAME_ROOT) {
+        if ($blockId === self::BLOCK_ID_ROOT) {
             return false;
         }
         $results = $this->getEventManager()->trigger(
@@ -257,7 +264,7 @@ class Layout implements
             return explode(self::CAPTURE_TO_DELIMITER, $captureTo);
         }
         return [
-            self::BLOCK_NAME_ROOT,
+            self::BLOCK_ID_ROOT,
             $captureTo
         ];
     }
@@ -266,16 +273,13 @@ class Layout implements
      * retrieve single block by its id
      *
      * @param   string                  $blockId
-     * @param   bool                    $recursive
      * @return  false|ModelInterface
      */
-    public function getBlock($blockId, $recursive = false)
+    public function getBlock($blockId)
     {
         $this->generateBlocks();
         if (isset($this->blocks[$blockId])) {
-            if (!$recursive) {
-                return $this->blocks[$blockId];
-            }
+            return $this->blocks[$blockId];
         }
         return false;
     }
@@ -303,7 +307,7 @@ class Layout implements
     protected function determineAnonymousBlockId(ModelInterface $block)
     {
         $blockName = $block->getVariable(
-            'nameInLayout',
+            '__BLOCK_ID__',
             sprintf(
                 'anonymous.%s.%s',
                 $block->captureTo(),

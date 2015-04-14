@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <bla>
+        <blocks>
+            <xml.block capture_to="sidebarLeft" template="sidebar-test">
+                <variables title="Hellooo" />
+                <options order="-10" />
+            </xml.block>
+        </blocks>
+    </bla>
+</layout>

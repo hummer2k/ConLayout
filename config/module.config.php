@@ -28,8 +28,11 @@ return [
         ]
     ],
     'con-layout' => [
-        'config_glob_paths' => [
-            'default' => './{vendor/*/*/view,module/*/view}/layout.config.php'
+        'update_listener' => [
+            'glob_paths' => [
+                'default' => __DIR__ . '/layout.config.php',
+                'xml' => __DIR__ . '/layout.config.xml'
+            ]
         ],
         'enable_debug' => false,
         'enable_layout_cache' => false,
@@ -42,7 +45,7 @@ return [
         'cache_buster' => [
             'internal_base_dir' => './public'
         ],
-        'helpers' => [
+        'view_helpers' => [
             'headLink' => [
                 'defaultMethod' => 'appendStylesheet',
             ],
@@ -85,7 +88,7 @@ return [
     'zenddevelopertools' => [
         'profiler' => [
             'collectors' => [
-               # 'con-layout' => 'ConLayout\Zdt\Collector\LayoutCollector',
+                'con-layout' => 'ConLayout\Zdt\Collector\LayoutCollector',
             ],
         ],
         'toolbar' => [

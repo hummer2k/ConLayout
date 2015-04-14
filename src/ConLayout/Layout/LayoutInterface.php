@@ -11,22 +11,25 @@ use Zend\View\Model\ViewModel;
  */
 interface LayoutInterface
 {  
-    const BLOCK_NAME_ROOT = 'root';
+    const BLOCK_ID_ROOT = 'root';
 
     /**
-     * 
+     * retrieve single block by block id
+     *
      * @param string $blockId
      * @return ModelInterface
      */
-    public function getBlock($blockId, $recursive = false);
+    public function getBlock($blockId);
 
     /**
+     * retrieve all blocks
      *
      * @return ModelInterface[]
      */
     public function getBlocks();
 
     /**
+     * add a single block
      *
      * @param string $blockId
      * @param ViewModel $block
@@ -35,14 +38,21 @@ interface LayoutInterface
     public function addBlock($blockId, ViewModel $block);
 
     /**
+     * removes a single block
      *
      * @param string $blockId
      */
     public function removeBlock($blockId);
 
     /**
+     * load the layout
+     */
+    public function load();
+
+    /**
+     * set root view model/layout
      *
      * @param ModelInterface $root
      */
-    public function injectBlocks(ModelInterface $root = null);
+    public function setRoot(ModelInterface $root);
 }

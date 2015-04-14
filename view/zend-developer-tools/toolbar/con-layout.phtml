@@ -7,7 +7,7 @@
     <div class="zdt-toolbar-detail" style="right: 0; max-width: 38%">
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-pre">
-                <?php \Zend\Debug\Debug::dump($collector->getLayoutConfig()); ?>
+                <?php \Zend\Debug\Debug::dump($collector->getLayoutStructure()); ?>
             </span>
         </span>
         <hr>
@@ -25,7 +25,7 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>ID</th>
                         <th>Class</th>
                         <th>Capture to</th>
                         <th>Template</th>
@@ -34,17 +34,17 @@
                 <tbody>
                 <?php foreach ($loadedBlocks as $blockName => $block): ?>
                     <tr>
-                        <td style="text-transform: none !important;cursor: pointer" data-block-name-label="<?php echo $blockName ?>">
-                            <?php echo $blockName ?>
+                        <td style="text-transform: none !important;cursor: pointer" data-block-name-label="<?= $blockName ?>">
+                            <?= $blockName ?>
                         </td>
                         <td>
-                            <?php echo $block['class'] ?>
+                            <?= get_class($block) ?>
                         </td>
                         <td>
-                            <?php echo $block['capture_to'] ?>
+                            <?= $block->captureTo() ?>
                         </td>
                         <td>
-                            <?php echo $block['template'] ?>
+                            <?= $block->getTemplate() ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -63,10 +63,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                <?php foreach($collector->getHandles() as $handle => $priority): ?>
+                <?php foreach($collector->getHandles() as $handle): ?>
                    <tr>
-                       <td><?php echo $handle ?></td>
-                       <td><?php echo $priority ?></td>
+                       <td><?= $handle->getName() ?></td>
+                       <td><?= $handle->getPriority() ?></td>
                    </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -75,7 +75,7 @@
         <hr>
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-label">Layout Template</span>
-            <span class="zdt-detail-value"><?php echo $collector->getLayoutTemplate() ?></span>
+            <span class="zdt-detail-value"><?= $collector->getLayoutTemplate() ?></span>
         </span>
     </div>
 </div>

@@ -1,8 +1,8 @@
 <?php
+
 namespace ConLayout\Listener\Factory;
 
-use ConLayout\Listener\ActionHandlesListener;
-use ConLayout\OptionTrait;
+use ConLayout\Listener\LoadLayoutListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -10,20 +10,18 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ActionHandlesListenerFactory implements FactoryInterface
+class LoadLayoutListenerFactory implements FactoryInterface
 {
-    use OptionTrait;
-    
     /**
-     * 
+     *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return ActionHandlesListener
+     * @return LoadLayoutListener
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $actionHandlesListener = new ActionHandlesListener(
-            $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface')
+        $injectBlocksListener = new LoadLayoutListener(
+            $serviceLocator->get('ConLayout\Layout\LayoutInterface')
         );
-        return $actionHandlesListener;
+        return $injectBlocksListener;
     }
 }

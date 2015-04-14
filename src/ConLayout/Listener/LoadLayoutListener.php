@@ -7,13 +7,12 @@ use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ModelInterface;
-use Zend\View\Model\ViewModel;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class InjectBlocksListener
+class LoadLayoutListener
     implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
@@ -31,14 +30,22 @@ class InjectBlocksListener
     protected static $anonymousSuffix = 1;
 
     /**
+     *
+     * @param LayoutInterface $layout
+     */
+    public function __construct(LayoutInterface $layout)
+    {
+        $this->layout = $layout;
+    }
+
+    /**
      * 
      * @param EventManagerInterface $events
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'injectBlocks'));
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTemplate'));
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyHelpers'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'loadLayout'));
+        #$this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyHelpers'));
     }
     
     /**
@@ -46,13 +53,14 @@ class InjectBlocksListener
      * 
      * @param MvcEvent $e
      */
-    public function injectBlocks(MvcEvent $e)
+    public function loadLayout(MvcEvent $e)
     {
         /* @var $root ModelInterface */
         $root = $e->getViewModel();
         if ($root->terminate()) {
             return;
         }
-        $this->layout->injectBlocks(LayoutInterface::BLOCK_NAME_ROOT, $root);
+        $this->layout->setRoot($root);
+        $this->layout->load();
     }
 }

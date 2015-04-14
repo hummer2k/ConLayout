@@ -2,8 +2,6 @@
 
 namespace ConLayout\Handle;
 
-use ConLayout\Exception\InvalidHandleNameException;
-
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>

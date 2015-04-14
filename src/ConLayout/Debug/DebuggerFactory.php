@@ -4,6 +4,7 @@ namespace ConLayout\Debug;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ConLayout\OptionTrait;
 
 /**
  * @package ConLayout

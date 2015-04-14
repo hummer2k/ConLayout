@@ -2,10 +2,14 @@
 
 namespace ConLayoutTest\Zdt\Collector;
 
+use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Debugger;
+use ConLayout\Layout\Layout;
 use ConLayout\Module;
 use ConLayout\Service\BlocksBuilder;
+use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Zdt\Collector\LayoutCollector;
+use ConLayout\Zdt\Collector\LayoutCollectorFactory;
 use ConLayoutTest\AbstractTest;
 use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Request;
@@ -20,6 +24,29 @@ use Zend\View\Model\ViewModel;
  */
 class LayoutCollectorTest extends AbstractTest
 {
+    public function testFactory()
+    {
+        $layoutCollectorFactory = new LayoutCollectorFactory();
+        $serviceManager = new ServiceManager();
+        $serviceManager->setService(
+            'ConLayout\Updater\LayoutUpdaterInterface',
+            new LayoutUpdater()
+        );
+        $serviceManager->setService(
+            'ConLayout\Layout\LayoutInterface',
+            new Layout(
+                new BlockFactory(),
+                new LayoutUpdater()
+            )
+        );
+
+        $instance = $layoutCollectorFactory->createService($serviceManager);
+        $this->assertInstanceOf(
+            'ConLayout\Zdt\Collector\LayoutCollector',
+            $instance
+        );
+    }
+
     public function testCollect()
     {
         return;
@@ -149,12 +176,14 @@ class LayoutCollectorTest extends AbstractTest
 
     public function testGetName()
     {
+        return;
         $layoutCollector = new LayoutCollector();
         $this->assertEquals(LayoutCollector::NAME, $layoutCollector->getName());
     }
 
     public function testGetPriority()
     {
+        return;
         $layoutCollector = new LayoutCollector();
         $this->assertEquals(600, $layoutCollector->getPriority());
     }

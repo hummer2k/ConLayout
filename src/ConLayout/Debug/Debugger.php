@@ -47,7 +47,7 @@ class Debugger
         $block->setCaptureTo('content');
         $debugBlock = clone $block;
         $debugBlock->setVariables(array(
-            'blockName' => $block->getVariable('nameInLayout'),
+            'blockName' => $block->getVariable('__BLOCK_ID__'),
             'blockTemplate' => $block->getTemplate(),
             'blockClass' => get_class($block),
             'originalBlock' => $block,

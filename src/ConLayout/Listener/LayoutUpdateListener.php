@@ -4,15 +4,19 @@ namespace ConLayout\Listener;
 
 use ConLayout\Updater\Event\UpdateEvent;
 use Zend\Config\Factory as ConfigFactory;
-use Zend\EventManager\EventInterface;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Stdlib\Glob;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutUpdateListener
+class LayoutUpdateListener 
+    implements  ListenerAggregateInterface
 {
+    use \Zend\EventManager\ListenerAggregateTrait;
+
     /**
      *
      * @var array
@@ -29,6 +33,19 @@ class LayoutUpdateListener
             $globPaths = [$globPaths];
         }
         $this->globPaths = $globPaths;
+    }
+
+    /**
+     *
+     * @param EventManagerInterface $events
+     */
+    public function attach(EventManagerInterface $events)
+    {
+        $events->getSharedManager()->attach(
+            'ConLayout\Updater\LayoutUpdater',
+            'loadGlobalLayoutStructure.pre',
+            [$this, 'onLoadGlobalLayoutStructure']
+        );
     }
 
     /**
