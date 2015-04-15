@@ -32,10 +32,10 @@ interface LayoutInterface
      * add a single block
      *
      * @param string $blockId
-     * @param ViewModel $block
+     * @param ModelInterface $block
      * @param string $parentId
      */
-    public function addBlock($blockId, ViewModel $block);
+    public function addBlock($blockId, ModelInterface $block);
 
     /**
      * removes a single block

@@ -4,7 +4,7 @@ return [
     'default' => [        
         'layout' => 'layout/2cols-left',
         'headLink' => [
-            'assets/css/bootstrap.css',            
+            'assets/css/bootstrap.css',
         ],
         'headScript' => [
             'js/jquery.min.js',

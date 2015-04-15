@@ -7,6 +7,7 @@ use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
+use Zend\View\Model\ClearableModelInterface;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
 
@@ -216,7 +217,7 @@ class Layout implements
      * @param   ModelInterface  $block
      * @return  LayoutInterface
      */
-    public function addBlock($blockId, ViewModel $block)
+    public function addBlock($blockId, ModelInterface $block)
     {
         if ($block->hasChildren()) {
             foreach ($block->getChildren() as $childBlock) {
@@ -229,7 +230,9 @@ class Layout implements
                     $childBlock
                 );
             }
-            $block->clearChildren();
+            if ($block instanceof ClearableModelInterface) {
+                $block->clearChildren();
+            }
         }
         $this->blocks[$blockId] = $block;
         return $this;

@@ -1,6 +1,25 @@
 <?php
 return [
-   'conlabz-core-controller-index-index' => [
+    'conlabz-core-controller-index-index' => [
+        'view_helpers' => [
+            'headLink' => [
+                'another-css' => false,
+                'some-id' => [
+                    'prependStylesheet' => '/css/lorem/ipsum.css'
+                ]
+            ],
+            'headMeta' => [
+                'charset' => [
+                    'setCharset' => 'utf-8'
+                ]
+            ],
+            'headScript' => [
+                'jquery-1.11.2' => [
+                    'method' => 'prependFile',
+                    '//code.jquery.com/jquery-1.11.2.min.js',
+                ]
+            ]
+        ],
         'blocks' => [
             'widget.before.content' => [
                 'capture_to' => 'anonymous.content.1::childHtml',
@@ -13,6 +32,10 @@ return [
             'headTitle' => [
                 'MY TITLE!'
             ],
+            'headLink' => [
+                'main-css' => '/css/main.css',
+                'another-css' => '/css/another.css'
+            ]
         ],
         'blocks' => [
             'head' => [

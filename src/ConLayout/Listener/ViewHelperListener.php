@@ -97,20 +97,35 @@ class ViewHelperListener
             if (!is_array($viewHelperInstructions[$helper])) {
                 $viewHelperInstructions[$helper] = array($viewHelperInstructions[$helper]);
             }
-            foreach ($viewHelperInstructions[$helper] as $method => $value) {
-                if (!is_string($method)) {
-                    $method = (is_array($value) && isset($value['method'])) ? $value['method'] : $defaultMethod;
-                }
+            foreach ($viewHelperInstructions[$helper] as $value) {
+                if (false === $value) continue;
+                $method = $this->getHelperMethod($value, $defaultMethod, $viewHelper);
                 if (is_array($value)) {
-                    $args   = isset($value['args']) ? array_values($value['args']) : array_values($value);
+                    $args   = array_values((array) $value);
                     $args[0] = $this->prepareHelperValue($args[0], $helper);
-                    call_user_func_array(array($viewHelper, $method), $args);
+                    call_user_func_array([$viewHelper, $method], $args);
                 } else if (is_string($value)) {
                     $viewHelper->{$method}($this->prepareHelperValue($value, $helper));
                 }
             }
         }
         return $this;
+    }
+
+    private function getHelperMethod(&$value, $defaultMethod, $viewHelper)
+    {
+        if (is_array($value)) {
+            if (isset($value['method'])) {
+                $method = $value['method'];
+                unset($value['method']);
+            } else {
+                $method = current(array_keys($value));
+            }
+            if (is_string($method) && is_callable([$viewHelper, $method])) {
+                return $method;
+            }
+        }
+        return $defaultMethod;
     }
 
      /**

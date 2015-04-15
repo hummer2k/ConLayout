@@ -17,7 +17,8 @@ use Zend\View\Renderer\RendererInterface;
  */
 class LayoutManager
     extends AbstractPlugin
-    implements 
+    implements
+        LayoutInterface,
         ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
@@ -83,7 +84,7 @@ class LayoutManager
      * @param ModelInterface $block
      * @return LayoutManager
      */
-    public function addBlock($blockId, $block)
+    public function addBlock($blockId, ModelInterface $block)
     {
         $this->layout->addBlock($blockId, $block);
         return $this;
@@ -124,6 +125,36 @@ class LayoutManager
     public function removeHandle($handle)
     {
         $this->updater->removeHandle($handle);
+        return $this;
+    }
+
+    /**
+     *
+     * @return ModelInterface[]
+     */
+    public function getBlocks()
+    {
+        return $this->layout->getBlocks();
+    }
+
+    /**
+     * 
+     * @return LayoutManager
+     */
+    public function load()
+    {
+        $this->layout->load();
+        return $this;
+    }
+
+    /**
+     *
+     * @param ModelInterface $root
+     * @return LayoutManager
+     */
+    public function setRoot(ModelInterface $root)
+    {
+        $this->layout->setRoot($root);
         return $this;
     }
 }
