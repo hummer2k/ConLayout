@@ -91,6 +91,12 @@ class BlockTest extends AbstractTest
 
         $this->assertSame($request, $block->getRequest());
     }
+
+    public function testGetRequestFromNull()
+    {
+        $block = new BlockDummy();
+        $this->assertInstanceOf('Zend\Stdlib\RequestInterface', $block->getRequest());
+    }
 }
 
 class BlockDummy extends AbstractBlock

@@ -29,7 +29,7 @@ class AddAssetPreparerDelegator implements DelegatorFactoryInterface
         $assetPreparersConfig = $this->getOption(
             $serviceLocator->get('Config'),
             'con-layout/asset_preparers',
-            [[]]
+            []
         );
         foreach ($assetPreparersConfig as $helper => $assetPreparers) {
             if (!is_array($assetPreparers)) continue;
