@@ -1,6 +1,7 @@
 <?php
 namespace ConLayout\Listener\Factory;
 
+use ConLayout\Listener\BodyClassListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

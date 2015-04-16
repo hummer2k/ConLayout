@@ -17,14 +17,21 @@ return [
         'ConLayout\Layout\LayoutInterface' => 'ConLayout\Layout\LayoutFactory',
         'ConLayout\Updater\LayoutUpdaterInterface' => 'ConLayout\Updater\LayoutUpdaterFactory',
         'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
-        'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
+        'ConLayout\View\Strategy\BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
          
-        'ConLayout\Zdt\Collector\LayoutCollector' => 'ConLayout\Zdt\Collector\LayoutCollectorFactory',
+        'ConLayout\Zdt\Collector\LayoutCollector' => 'ConLayout\Zdt\Collector\LayoutCollectorFactory'
     ],
     'aliases' => [
         'Layout' => 'ConLayout\Layout\LayoutInterface',
+        'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategy'
     ],
     'invokables' => [
-        
+        'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
+            => 'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator',
+    ],
+    'delegators' => [
+        'ConLayout\Listener\ViewHelperListener' => [
+            'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
+        ]
     ]
 ];

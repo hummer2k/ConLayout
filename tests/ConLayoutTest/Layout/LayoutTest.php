@@ -5,6 +5,7 @@ namespace ConLayoutTest\Layout;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutFactory;
+use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
@@ -67,6 +68,70 @@ class LayoutTest extends AbstractTest
         $block = new ViewModel();
         $layout->addBlock('my-block', $block);
         $this->assertSame($block, $layout->getBlock('my-block'));
+    }
+
+    public function testAddBlockWithChildren()
+    {
+        $layout = new Layout(
+            $this->blockFactory,
+            new LayoutUpdater()
+        );
+        $block1 = new ViewModel();
+        $block2 = new ViewModel([
+            LayoutInterface::BLOCK_ID_VAR => 'child1'
+        ]);
+        $block3 = new ViewModel([
+            LayoutInterface::BLOCK_ID_VAR => 'child2'
+        ]);
+        $block1->addChild($block2);
+        $block1->addChild($block3);
+
+        $layout->addBlock('my-block', $block1);
+
+        $this->assertCount(3, $layout->getBlocks());
+
+        $this->assertSame(
+            $block2,
+            $layout->getBlock('child1')
+        );
+
+        $this->assertSame(
+            $block3,
+            $layout->getBlock('child2')
+        );
+
+    }
+
+    public function testAddBlockWithChildChildren()
+    {
+        $layout = new Layout(
+            $this->blockFactory,
+            new LayoutUpdater()
+        );
+        $block1 = new ViewModel();
+        $block2 = new ViewModel([
+            LayoutInterface::BLOCK_ID_VAR => 'child1'
+        ]);
+        $block3 = new ViewModel([
+            LayoutInterface::BLOCK_ID_VAR => 'child2'
+        ]);
+        $block1->addChild($block2);
+        $block2->addChild($block3);
+
+        $layout->addBlock('my-block', $block1);
+
+        $this->assertCount(3, $layout->getBlocks());
+
+        $this->assertSame(
+            $block2,
+            $layout->getBlock('child1')
+        );
+
+        $this->assertSame(
+            $block3,
+            $layout->getBlock('child2')
+        );
+
     }
 
     public function testGetBlocks()
@@ -161,5 +226,31 @@ class LayoutTest extends AbstractTest
         $layout->removeBlock('some-block');
 
         $this->assertFalse($layout->getBlock('some-block'));
+    }
+
+    public function testIsAllowed()
+    {
+        $layout = new Layout(
+            $this->blockFactory,
+            $this->updaterMock
+        );
+
+        $layout->getEventManager()->getSharedManager()
+            ->attach('ConLayout\Layout\Layout', 'isAllowed', function($e) {
+                $blockId = $e->getParam('block_id');
+                if ($blockId === 'widget.1') {
+                    return false;
+                }
+                return true;
+            });
+
+        $layout->addBlock('mr.widget', new ViewModel());
+
+        $root = new ViewModel();
+        $layout->setRoot($root);
+        $layout->load();
+
+        $this->assertCount(2, $root->getChildren());
+
     }
 }

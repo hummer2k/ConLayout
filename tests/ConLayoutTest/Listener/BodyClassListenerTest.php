@@ -2,8 +2,11 @@
 
 namespace ConLayoutTest\Listener;
 
-use ConLayout\Listener\Factory\BodyClassListenerFactory;
+use ConLayout\Listener\BodyClassListener;
+use ConLayout\View\Helper\BodyClass;
 use ConLayoutTest\AbstractTest;
+use Zend\EventManager\EventManager;
+use Zend\Mvc\Router\Http\RouteMatch;
 
 /**
  * @package 
@@ -12,25 +15,33 @@ use ConLayoutTest\AbstractTest;
 class BodyClassListenerTest extends AbstractTest
 {
 
-    public function testAttach()
+    public function testAddBodyClass()
     {
-        return;
-        $eventManager = new \Zend\EventManager\EventManager();
+        $bodyClassHelper = new BodyClass();
+        $listener = new BodyClassListener($bodyClassHelper);
 
-        $bodyClassListener = $this->createBodyClassListener();
-
-        $bodyClassListener->attach($eventManager);
-        $routeMatch = new \Zend\Mvc\Router\Http\RouteMatch(array());
-        $routeMatch->setMatchedRouteName('my/ROUTE/name');
-
+        $routeMatch = new RouteMatch([]);
+        $routeMatch->setMatchedRouteName('my/SOME/route');
         $event = new \Zend\Mvc\MvcEvent();
         $event->setRouteMatch($routeMatch);
 
-        $eventManager->trigger(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, $event);
+        $listener->addBodyClass($event);
 
-        /* @var $helper \ConLayout\View\Helper\BodyClass */
-        $helper = $this->sm->get('viewHelperManager')->get('bodyClass');
+        $this->assertEquals('my-some-route', (string) $bodyClassHelper);
+    }
 
-        $this->assertEquals('my-route-name', (string) $helper);
+    public function testAttach()
+    {
+        $eventManager = new EventManager();
+        $listener = new BodyClassListener(new BodyClass());
+
+        $before = $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH);
+        $this->assertCount(0, $before);
+
+        $eventManager->attach($listener);
+
+        $after = $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH);
+        $this->assertCount(1, $after);
+
     }
 }

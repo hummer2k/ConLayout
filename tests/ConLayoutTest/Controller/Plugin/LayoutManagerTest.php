@@ -8,6 +8,7 @@ use ConLayout\Controller\Plugin\LayoutManagerFactory;
 use ConLayout\Debug\Debugger;
 use ConLayout\Handle\Handle;
 use ConLayout\Layout\Layout;
+use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\View\Renderer\BlockRenderer;
 use ConLayoutTest\AbstractTest;
@@ -144,5 +145,39 @@ class LayoutManagerTest extends AbstractTest
         $this->layoutManager->addBlock('some-block', $block);
         $this->assertSame($block, $this->layoutManager->getBlock('some-block'));
         $this->assertSame($block, $this->layout->getBlock('some-block'));
+    }
+
+    public function testGetBlocks()
+    {
+        $this->assertInternalType('array', $this->layoutManager->getBlocks());
+        $this->layoutManager->addBlock('test-block', new ViewModel());
+        $this->assertCount(1, $this->layoutManager->getBlocks());
+    }
+
+    public function testSetRoot()
+    {
+        $root = new ViewModel();
+        $this->layoutManager->setRoot($root);
+
+        $this->assertSame(
+            $root,
+            $this->layout->getBlock(LayoutInterface::BLOCK_ID_ROOT)
+        );
+    }
+
+    public function testLoad()
+    {
+        $root = new ViewModel();
+        $content = new ViewModel();
+        $someWidget = new ViewModel();
+
+        $this->layoutManager->addBlock('root::content', $content);
+        $this->layoutManager->addBlock('root::sidebarLeft', $someWidget);
+        $this->layout->setRoot($root);
+
+        $this->layoutManager->load();
+
+        // layout already has a block added via setUp()
+        $this->assertCount(3, $root->getChildren());
     }
 }

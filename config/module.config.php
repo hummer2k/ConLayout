@@ -43,7 +43,7 @@ return [
         'child_capture_to' => 'childHtml',
         'content_capture_to' => 'content',
         'cache_buster' => [
-            'internal_base_dir' => './public'
+            'internal_base_dir' => './pub'
         ],
         'view_helpers' => [
             'headLink' => [
@@ -66,15 +66,18 @@ return [
             ],
             'doctype' => []
         ],
-        'value_preparers' => [
+        'asset_preparers' => [
             'headLink' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath',
+                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
             ],
             'headScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath',
+                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
             ],
             'inlineScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath',
+                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
             ]
         ]
     ],

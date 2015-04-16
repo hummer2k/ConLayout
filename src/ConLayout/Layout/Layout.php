@@ -22,6 +22,7 @@ class Layout implements
     use EventManagerAwareTrait;
 
     const CAPTURE_TO_DELIMITER = '::';
+    const ANONYMOUS_ID_PATTERN = 'anonymous.%s.%s';
 
     /**
      * suffix for anonymous block names
@@ -310,9 +311,9 @@ class Layout implements
     protected function determineAnonymousBlockId(ModelInterface $block)
     {
         $blockName = $block->getVariable(
-            '__BLOCK_ID__',
+            self::BLOCK_ID_VAR,
             sprintf(
-                'anonymous.%s.%s',
+                self::ANONYMOUS_ID_PATTERN,
                 $block->captureTo(),
                 self::$anonymousSuffix++
             )

@@ -20,66 +20,23 @@ class ModuleTest extends AbstractTest
         $this->assertInternalType('array', $module->getAutoloaderConfig());
         $this->assertInternalType('array', $module->getConfig());
         $this->assertInternalType('array', $module->getServiceConfig());
-
     }
 
-    public function testOnBootstrap()
+    public function testServicesAndFactories()
     {
-        return;
+        $sm = Bootstrap::getServiceManager();
         $module = new Module();
 
-        $mvcEvent = new \Zend\Mvc\MvcEvent();
-        
-        $serviceManager = clone $this->sm;
-        $serviceManager->setAllowOverride(true);
-        $eventManager = new EventManager();
-        $serviceManager->setService('EventManager', $eventManager);
-        $serviceManager->setService('Request', new Request());
-        $serviceManager->setService('Response', new Response());
-        $application = new Application([], $serviceManager);
+        $services = $module->getServiceConfig();
 
-        $mvcEvent->setApplication($application);
-
-        $module->onBootstrap($mvcEvent);
-
-        $this->assertCount(1, $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR));
-        $this->assertCount(3, $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_RENDER));
-        $this->assertCount(2, $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
-
-        $mvcEvent->setError('error-test');
-
-        $layoutService = $serviceManager->get('ConLayout\Service\LayoutService')->reset();
-        $eventManager->trigger(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR, $mvcEvent);
-
-        $handles = $layoutService->getHandles();
-
-        $this->assertEquals([
-            'default',
-            'error-test'
-        ], $handles);
-
-    }
-
-    public function testOnBootstrapConsole()
-    {
-        return;
-        $module = new Module();
-
-        $mvcEvent = new \Zend\Mvc\MvcEvent();
-
-        $serviceManager = clone $this->sm;
-        $serviceManager->setAllowOverride(true);
-        $eventManager = new EventManager();
-        $serviceManager->setService('EventManager', $eventManager);
-        $application = new Application([], $serviceManager);
-
-        $mvcEvent->setApplication($application);
-
-        $module->onBootstrap($mvcEvent);
-
-        $this->assertCount(0, $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR));
-        $this->assertCount(0, $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_RENDER));
-        $this->assertCount(0, $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
-
+        foreach(['invokables', 'factories'] as $type) {
+            foreach (array_keys($services[$type]) as $name) {
+                $instance = $sm->get($name);
+                $this->assertInstanceOf(
+                    $name,
+                    $instance
+                );
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ use Zend\View\Model\ViewModel;
 interface LayoutInterface
 {  
     const BLOCK_ID_ROOT = 'root';
+    const BLOCK_ID_VAR  = '__BLOCK_ID__';
 
     /**
      * retrieve single block by block id
