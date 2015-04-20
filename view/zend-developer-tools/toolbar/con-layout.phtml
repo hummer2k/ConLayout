@@ -41,7 +41,10 @@
                             <?= get_class($block) ?>
                         </td>
                         <td>
-                            <?= $block->captureTo() ?>
+                            <?= $block->getVariable('captureTo') 
+                                ? $block->getVariable('captureTo')
+                                : $block->captureTo()
+                            ?>
                         </td>
                         <td>
                             <?= $block->getTemplate() ?>

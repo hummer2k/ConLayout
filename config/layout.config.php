@@ -34,7 +34,8 @@ return [
             ],
             'headLink' => [
                 'main-css' => '/css/main.css',
-                'another-css' => '/css/another.css'
+                'another-css' => '/css/another.css',
+                'con-layout-debug' => '/css/con-layout.css',
             ]
         ],
         'blocks' => [

@@ -17,7 +17,6 @@ class BlockFactoryFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
         $blockFactory = new BlockFactory(
-            $serviceLocator->get('ConLayout\Debug\Debugger'),
             $this->getOption($config, 'con-layout/block_factory/defaults', [])
         );
         return $blockFactory;

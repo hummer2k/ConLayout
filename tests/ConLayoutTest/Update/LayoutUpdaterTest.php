@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayoutTest;
+namespace ConLayoutTest\Update;
 
 use ConLayout\Handle\Handle;
 use ConLayout\Updater\Event\UpdateEvent;

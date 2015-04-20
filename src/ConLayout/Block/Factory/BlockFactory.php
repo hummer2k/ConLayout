@@ -3,6 +3,7 @@
 namespace ConLayout\Block\Factory;
 
 use ConLayout\Debug\Debugger;
+use ConLayout\Layout\LayoutInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\Stdlib\ArrayUtils;
@@ -20,12 +21,6 @@ class BlockFactory implements
 
     /**
      *
-     * @var Debugger
-     */
-    protected $debugger;
-
-    /**
-     *
      * @var array
      */
     protected $blockDefaults = [
@@ -38,9 +33,8 @@ class BlockFactory implements
         'actions'    => []
     ];
 
-    public function __construct(Debugger $debugger = null, $blockDefaults = [])
+    public function __construct($blockDefaults = [])
     {
-        $this->debugger      = $debugger;
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
             $blockDefaults
@@ -62,7 +56,7 @@ class BlockFactory implements
         } else {
             $block = new $class();
         }
-        $block->setVariable('__BLOCK_ID__', $blockId);
+        $block->setVariable(LayoutInterface::BLOCK_ID_VAR, $blockId);
         foreach ($this->getOption('options', $specs) as $name => $option) {
             $block->setOption($name, $option);
         }

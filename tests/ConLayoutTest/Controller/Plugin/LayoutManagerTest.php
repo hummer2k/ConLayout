@@ -35,7 +35,7 @@ class LayoutManagerTest extends AbstractTest
         $updater = new LayoutUpdater();
         $this->updater = $updater;
         $layout = new Layout(
-            new BlockFactory(new Debugger()),
+            new BlockFactory(),
             $updater
         );
 

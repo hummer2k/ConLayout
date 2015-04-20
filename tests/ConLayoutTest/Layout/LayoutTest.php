@@ -33,9 +33,7 @@ class LayoutTest extends AbstractTest
         $this->updaterMock->method('getLayoutStructure')
             ->willReturn(new Config($this->layoutStructure));
 
-        $this->blockFactory = new BlockFactory(
-            $this->getMock('ConLayout\Debug\Debugger')
-        );
+        $this->blockFactory = new BlockFactory();
         $this->blockFactory->setServiceLocator(new ServiceManager());
     }
 
