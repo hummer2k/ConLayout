@@ -4,7 +4,7 @@ namespace ConLayoutTest\View\Helper;
 use ConLayout\View\Helper\BodyClass;
 
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BodyClassTest extends \PHPUnit_Framework_TestCase
@@ -16,5 +16,9 @@ class BodyClassTest extends \PHPUnit_Framework_TestCase
         $helper->addClass('other-class');
 
         $this->assertSame('my-class other-class', (string) $helper);
+
+        $helper->removeClass('other-class');
+
+        $this->assertSame('my-class', (string) $helper);
     }
 }
