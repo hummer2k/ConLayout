@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <default>
+        <blocks>
+            <header capture_to="header" />
+            <block1 capture_to="sidebarLeft" />
+            <footer capture_to="footer" />
+        </blocks>
+    </default>
+</layout>

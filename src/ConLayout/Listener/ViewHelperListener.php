@@ -92,7 +92,7 @@ class ViewHelperListener
         }
         foreach ($this->helperConfig as $helper => $config) {
             if (!isset($viewHelperInstructions[$helper])) continue;
-            $defaultMethod = isset($config['defaultMethod']) ? $config['defaultMethod'] : '__invoke';
+            $defaultMethod = isset($config['default_method']) ? $config['default_method'] : '__invoke';
             $viewHelper = $this->viewHelperManager->get($helper);
             if (!is_array($viewHelperInstructions[$helper])) {
                 $viewHelperInstructions[$helper] = array($viewHelperInstructions[$helper]);
@@ -100,13 +100,15 @@ class ViewHelperListener
             foreach ($viewHelperInstructions[$helper] as $value) {
                 if (false === $value) continue;
                 $method = $this->getHelperMethod($value, $defaultMethod, $viewHelper);
-                if (is_array($value)) {
-                    $args   = array_values((array) $value);
-                    $args[0] = $this->prepareHelperValue($args[0], $helper);
-                    call_user_func_array([$viewHelper, $method], $args);
-                } else if (is_string($value)) {
-                    $viewHelper->{$method}($this->prepareHelperValue($value, $helper));
+                if (!is_array($value)) {
+                    $value = [$value];
                 }
+                $args   = array_values($value);
+                if (is_array($args[0])) {
+                    $args = $args[0];
+                }
+                $args[0] = $this->prepareHelperValue($args[0], $helper);
+                call_user_func_array([$viewHelper, $method], $args);
             }
         }
         return $this;
@@ -115,12 +117,7 @@ class ViewHelperListener
     private function getHelperMethod(&$value, $defaultMethod, $viewHelper)
     {
         if (is_array($value)) {
-            if (isset($value['method'])) {
-                $method = $value['method'];
-                unset($value['method']);
-            } else {
-                $method = current(array_keys($value));
-            }
+            $method = current(array_keys($value));
             if (is_string($method) && is_callable([$viewHelper, $method])) {
                 return $method;
             }

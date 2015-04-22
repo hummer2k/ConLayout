@@ -5,6 +5,7 @@ namespace ConLayoutTest\Update;
 use ConLayout\Handle\Handle;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
+use ConLayoutTest\AbstractTest;
 use Zend\Cache\StorageFactory;
 use Zend\Config\Config;
 use Zend\EventManager\EventInterface;
@@ -16,7 +17,7 @@ use Zend\EventManager\ListenerAggregateInterface;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutUpdaterTest extends \PHPUnit_Framework_TestCase
+class LayoutUpdaterTest extends AbstractTest
 {
     public function testAddHandle()
     {
@@ -112,20 +113,6 @@ class LayoutUpdaterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([
             'default'
         ], $updater->getHandles());
-    }
-
-    protected function attachGlobalLayoutStructureListener(
-        EventManager $eventManager
-    )
-    {
-        $eventManager->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'loadGlobalLayoutStructure.pre',
-            function(UpdateEvent $e) {
-                $globalLayoutStructure = $e->getGlobalLayoutStructure();
-                $globalLayoutStructure->merge($this->getGlobalLayoutStructure());
-            }
-        );
     }
 
     protected function getGlobalLayoutStructure()

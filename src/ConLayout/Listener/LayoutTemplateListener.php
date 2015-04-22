@@ -44,7 +44,7 @@ class LayoutTemplateListener
         $this->updater = $updater;
     }
 
-            /**
+    /**
      * set layout template if no template was set e.g. through controller
      * layout plugin
      *

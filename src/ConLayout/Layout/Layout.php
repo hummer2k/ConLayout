@@ -78,6 +78,13 @@ class Layout implements
     protected $blockFactory;
 
     /**
+     * flag if layout has been loaded
+     *
+     * @var bool
+     */
+    protected $isLoaded = false;
+
+    /**
      *
      * @param   BlockFactoryInterface   $blockFactory
      * @param   LayoutUpdaterInterface  $updater
@@ -179,13 +186,16 @@ class Layout implements
      */
     public function load()
     {
-        $this->sortBlocks();
-        foreach ($this->getBlocks() as $blockId => $block) {
-            if (!$this->isAllowed($blockId, $block)) continue;
-            list($parent, $captureTo) = $this->getCaptureTo($block);
-            if ($parentBlock = $this->getBlock($parent)) {
-                $parentBlock->addChild($block, $captureTo);
+        if (false === $this->isLoaded) {
+            $this->sortBlocks();
+            foreach ($this->getBlocks() as $blockId => $block) {
+                if (!$this->isAllowed($blockId, $block)) continue;
+                list($parent, $captureTo) = $this->getCaptureTo($block);
+                if ($parentBlock = $this->getBlock($parent)) {
+                    $parentBlock->addChild($block, $captureTo);
+                }
             }
+            $this->isLoaded = true;
         }
         return $this;
     }

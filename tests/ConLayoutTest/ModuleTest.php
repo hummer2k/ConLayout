@@ -61,6 +61,8 @@ class ModuleTest extends AbstractTest
         $event = new \Zend\Mvc\MvcEvent();
         $event->setApplication($application);
         $em = $application->getEventManager();
+        
+        $em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
 
         $this->assertCount(0, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
         $this->assertCount(0, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_RENDER));

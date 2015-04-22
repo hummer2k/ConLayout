@@ -45,7 +45,6 @@ class LoadLayoutListener
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'loadLayout'));
-        #$this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyHelpers'));
     }
     
     /**

@@ -46,25 +46,25 @@ return [
             'internal_base_dir' => './pub'
         ],
         'view_helpers' => [
+            'doctype' => [],
             'headLink' => [
-                'defaultMethod' => 'appendStylesheet',
+                'default_method' => 'appendStylesheet',
             ],
             'headScript' => [
-                'defaultMethod' => 'appendFile',
+                'default_method' => 'appendFile',
             ],
             'inlineScript' => [
-                'defaultMethod' => 'appendFile',
+                'default_method' => 'appendFile',
             ],
             'headTitle' => [
-                'defaultMethod' => 'append'
+                'default_method' => 'append'
             ],
             'headMeta' => [
-                'defaultMethod' => 'appendName'
+                'default_method' => 'appendName'
             ],
             'bodyClass' => [
-                'defaultMethod' => 'append'
-            ],
-            'doctype' => []
+                'default_method' => 'addClass'
+            ],            
         ],
         'asset_preparers' => [
             'headLink' => [
