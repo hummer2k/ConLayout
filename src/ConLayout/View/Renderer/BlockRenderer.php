@@ -2,17 +2,13 @@
 namespace ConLayout\View\Renderer;
 
 use Zend\EventManager\EventManagerAwareInterface;
-use Zend\View\Model\ModelInterface;
 use Zend\View\Renderer\PhpRenderer;
-
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockRenderer
-    extends PhpRenderer
-    implements EventManagerAwareInterface
+class BlockRenderer extends PhpRenderer implements EventManagerAwareInterface
 {
     use \Zend\EventManager\EventManagerAwareTrait;
         
@@ -20,12 +16,12 @@ class BlockRenderer
      * {@inheritdoc}
      */
     public function render($nameOrModel, $values = null)
-    {   
+    {
         $results = $this->getEventManager()->trigger(
             __FUNCTION__ . '.pre',
             $this,
             ['block' => $nameOrModel],
-            function($result) {
+            function ($result) {
                 return is_string($result);
             }
         );

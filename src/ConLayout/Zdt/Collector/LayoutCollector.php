@@ -11,8 +11,7 @@ use Zend\Mvc\MvcEvent;
  *
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutCollector
-    extends AbstractCollector
+class LayoutCollector extends AbstractCollector
 {
     const NAME = 'con-layout';
 

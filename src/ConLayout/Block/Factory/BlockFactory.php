@@ -13,7 +13,7 @@ use Zend\View\Model\ModelInterface;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockFactory implements 
+class BlockFactory implements
     BlockFactoryInterface,
     ServiceLocatorAwareInterface
 {

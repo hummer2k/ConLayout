@@ -11,8 +11,7 @@ use Zend\Mvc\MvcEvent;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BodyClassListener
-    extends AbstractListenerAggregate
+class BodyClassListener extends AbstractListenerAggregate
 {
     /**
      *
@@ -35,7 +34,7 @@ class BodyClassListener
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH,  array($this, 'addBodyClass'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'addBodyClass'));
     }
     
     /**
@@ -43,7 +42,7 @@ class BodyClassListener
      * @param MvcEvent $e
      * @return BodyClassListener
      */
-    public function addBodyClass(MvcEvent $e) 
+    public function addBodyClass(MvcEvent $e)
     {
         $helper = $this->bodyClassHelper;
         $routeMatchName = $e->getRouteMatch()->getMatchedRouteName();
@@ -51,5 +50,4 @@ class BodyClassListener
         $helper(strtolower($className));
         return $this;
     }
-    
 }

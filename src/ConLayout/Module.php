@@ -46,7 +46,7 @@ class Module implements ConfigProviderInterface
     public function onBootstrap(Event $e)
     {
         $application    = $e->getApplication();
-        $serviceManager = $application->getServiceManager();        
+        $serviceManager = $application->getServiceManager();
         $eventManager   = $application->getEventManager();
         $request        = $serviceManager->get('Request');
 
@@ -54,7 +54,7 @@ class Module implements ConfigProviderInterface
             return;
         }
         /* @var $eventManager EventManager */
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) use ($serviceManager) {
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function ($e) use ($serviceManager) {
             $serviceManager->get('ConLayout\Updater\LayoutUpdaterInterface')
                 ->addHandle(new Handle($e->getError(), 15));
         }, 100);

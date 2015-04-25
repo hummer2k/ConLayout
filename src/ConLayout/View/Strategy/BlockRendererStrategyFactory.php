@@ -18,7 +18,7 @@ class BlockRendererStrategyFactory implements FactoryInterface
     {
         $blockRenderer =  $serviceLocator->get('ConLayout\View\Renderer\BlockRenderer');
         $blockRendererStrategy = new BlockRendererStrategy(
-           $blockRenderer
+            $blockRenderer
         );
         return $blockRendererStrategy;
     }

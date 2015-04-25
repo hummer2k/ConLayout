@@ -12,8 +12,7 @@ use Zend\View\ViewEvent;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockRendererStrategy
-    extends AbstractListenerAggregate    
+class BlockRendererStrategy extends AbstractListenerAggregate
 {
     /**
      *

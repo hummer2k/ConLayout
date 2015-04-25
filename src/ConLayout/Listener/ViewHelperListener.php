@@ -16,8 +16,7 @@ use Zend\View\HelperPluginManager;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ViewHelperListener
- implements ListenerAggregateInterface
+class ViewHelperListener implements ListenerAggregateInterface
 {
     use \Zend\EventManager\ListenerAggregateTrait;
 
@@ -60,8 +59,7 @@ class ViewHelperListener
         LayoutUpdaterInterface $updater,
         HelperPluginManager $viewHelperManager,
         array $helperConfig
-    )
-    {
+    ) {
         $this->updater           = $updater;
         $this->viewHelperManager = $viewHelperManager;
         $this->helperConfig      = $helperConfig;
@@ -91,14 +89,18 @@ class ViewHelperListener
             $viewHelperInstructions = $viewHelperInstructions->toArray();
         }
         foreach ($this->helperConfig as $helper => $config) {
-            if (!isset($viewHelperInstructions[$helper])) continue;
+            if (!isset($viewHelperInstructions[$helper])) {
+                continue;
+            }
             $defaultMethod = isset($config['default_method']) ? $config['default_method'] : '__invoke';
             $viewHelper = $this->viewHelperManager->get($helper);
             if (!is_array($viewHelperInstructions[$helper])) {
                 $viewHelperInstructions[$helper] = array($viewHelperInstructions[$helper]);
             }
             foreach ($viewHelperInstructions[$helper] as $value) {
-                if (false === $value) continue;
+                if (false === $value) {
+                    continue;
+                }
                 $method = $this->getHelperMethod($value, $defaultMethod, $viewHelper);
                 if (!is_array($value)) {
                     $value = [$value];

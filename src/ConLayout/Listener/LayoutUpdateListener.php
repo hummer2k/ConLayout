@@ -12,8 +12,7 @@ use Zend\Stdlib\Glob;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutUpdateListener 
-    implements  ListenerAggregateInterface
+class LayoutUpdateListener implements ListenerAggregateInterface
 {
     use \Zend\EventManager\ListenerAggregateTrait;
 

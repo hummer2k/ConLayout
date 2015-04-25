@@ -16,11 +16,11 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ActionHandlesListener
-    implements  ListenerAggregateInterface,
-                ServiceLocatorAwareInterface    
+class ActionHandlesListener implements
+    ListenerAggregateInterface,
+    ServiceLocatorAwareInterface
 {
-    use ListenerAggregateTrait;    
+    use ListenerAggregateTrait;
     use ServiceLocatorAwareTrait;
 
     /**
@@ -44,7 +44,7 @@ class ActionHandlesListener
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH,  array($this, 'addActionHandles'), 999);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'addActionHandles'), 999);
     }
     
     /**

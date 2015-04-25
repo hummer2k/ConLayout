@@ -8,10 +8,9 @@ use Zend\View\Model\ViewModel;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-abstract class AbstractBlock
-    extends ViewModel
-    implements BlockInterface,
-               CacheableInterface
+abstract class AbstractBlock extends ViewModel implements
+    BlockInterface,
+    CacheableInterface
 {
     const CACHE_KEY_PREFIX = 'block-';
     
@@ -95,7 +94,7 @@ abstract class AbstractBlock
      */
     public function getCacheKey()
     {
-        return static::CACHE_KEY_PREFIX 
+        return static::CACHE_KEY_PREFIX
             . md5(implode('|', $this->getCacheKeyInfo()));
     }
     

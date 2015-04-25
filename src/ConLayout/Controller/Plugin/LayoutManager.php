@@ -15,11 +15,9 @@ use Zend\View\Renderer\RendererInterface;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutManager
-    extends AbstractPlugin
-    implements
-        LayoutInterface,
-        ServiceLocatorAwareInterface
+class LayoutManager extends AbstractPlugin implements
+    LayoutInterface,
+    ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
    
@@ -51,8 +49,7 @@ class LayoutManager
         LayoutInterface $layout,
         LayoutUpdaterInterface $updater,
         RendererInterface $renderer
-    )
-    {
+    ) {
         $this->layout = $layout;
         $this->updater = $updater;
         $this->renderer = $renderer;

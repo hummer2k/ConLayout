@@ -8,7 +8,6 @@ use Zend\Stdlib\ArrayUtils;
 use RuntimeException;
 
 error_reporting(E_ALL | E_STRICT);
-chdir(dirname(dirname(dirname(__DIR__))));
 
 class Bootstrap
 {

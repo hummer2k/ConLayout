@@ -22,8 +22,7 @@ class AddAssetPreparerDelegator implements DelegatorFactoryInterface
         $name,
         $requestedName,
         $callback
-    )
-    {
+    ) {
         /* @var $viewHelperListener ViewHelperListener */
         $viewHelperListener = $callback();
         $assetPreparersConfig = $this->getOption(
@@ -32,9 +31,13 @@ class AddAssetPreparerDelegator implements DelegatorFactoryInterface
             []
         );
         foreach ($assetPreparersConfig as $helper => $assetPreparers) {
-            if (!is_array($assetPreparers)) continue;
+            if (!is_array($assetPreparers)) {
+                continue;
+            }
             foreach ($assetPreparers as $assetPreparer) {
-                if (false === $assetPreparer) continue;
+                if (false === $assetPreparer) {
+                    continue;
+                }
                 $viewHelperListener->addAssetPreparer(
                     $helper,
                     $serviceLocator->get($assetPreparer)

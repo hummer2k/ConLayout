@@ -3,14 +3,13 @@
 namespace ConLayout\Layout;
 
 use Zend\View\Model\ModelInterface;
-use Zend\View\Model\ViewModel;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 interface LayoutInterface
-{  
+{
     const BLOCK_ID_ROOT = 'root';
     const BLOCK_ID_VAR  = '__BLOCK_ID__';
 

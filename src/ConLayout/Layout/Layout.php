@@ -100,8 +100,7 @@ class Layout implements
     public function __construct(
         BlockFactoryInterface $blockFactory,
         LayoutUpdaterInterface $updater
-    )
-    {
+    ) {
         $this->blockFactory = $blockFactory;
         $this->updater = $updater;
     }
@@ -130,7 +129,9 @@ class Layout implements
                 $blocks = $blocks->toArray();
             }
             foreach ($blocks as $blockId => $specs) {
-                if ($this->isBlockRemoved($blockId)) continue;
+                if ($this->isBlockRemoved($blockId)) {
+                    continue;
+                }
                 $this->addBlock($blockId, $this->blockFactory->createBlock($blockId, $specs));
             }
             $this->blocksGenerated = true;
@@ -173,7 +174,7 @@ class Layout implements
      */
     protected function sortBlocks()
     {
-        uasort($this->blocks, function($a, $b) {
+        uasort($this->blocks, function ($a, $b) {
             /* @var $a ModelInterface */
             /* @var $b ModelInterface */
             $orderA = $a->getOption('order', 0);
@@ -197,7 +198,9 @@ class Layout implements
         if (false === $this->isLoaded) {
             $this->sortBlocks();
             foreach ($this->getBlocks() as $blockId => $block) {
-                if (!$this->isAllowed($blockId, $block)) continue;
+                if (!$this->isAllowed($blockId, $block)) {
+                    continue;
+                }
                 list($parent, $captureTo) = $this->getCaptureTo($block);
                 if (null !== $this->debugger) {
                     $block = $this->debugger->addDebugBlock($block, $parent, $captureTo);
@@ -353,7 +356,7 @@ class Layout implements
             ->attach(
                 __CLASS__,
                 'isAllowed',
-                function() {
+                function () {
                     return true;
                 },
                 10000

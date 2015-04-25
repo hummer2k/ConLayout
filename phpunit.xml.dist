@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="./tests/Bootstrap.php">
+<phpunit bootstrap="./tests/Bootstrap.php" colors="true" verbose="true">
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
@@ -8,7 +8,7 @@
     </filter>
     <testsuites>
         <testsuite name="con-layout-test">
-            <directory>./tests/ConLayoutTest</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>

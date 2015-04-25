@@ -15,8 +15,8 @@ use Zend\Mvc\MvcEvent;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutTemplateListener
-    implements ListenerAggregateInterface
+class LayoutTemplateListener implements
+    ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
 
@@ -57,7 +57,8 @@ class LayoutTemplateListener
         $template = $layout->getTemplate();
         if ($template === '') {
             $layoutTemplate = $this->updater->getLayoutStructure()->get(
-                LayoutUpdaterInterface::INSTRUCTION_LAYOUT_TEMPLATE, ''
+                LayoutUpdaterInterface::INSTRUCTION_LAYOUT_TEMPLATE,
+                ''
             );
             $layout->setTemplate($layoutTemplate);
         }

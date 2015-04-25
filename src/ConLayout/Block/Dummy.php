@@ -7,8 +7,7 @@ namespace ConLayout\Block;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de> *
  */
-class Dummy
-    extends AbstractBlock
+class Dummy extends AbstractBlock
 {
     protected $template = 'blocks/dummy';
     
@@ -16,7 +15,7 @@ class Dummy
     
     public function init()
     {
-        // do stuff        
+        // do stuff
         $this->setVariables(array(
             'title' => 'Dummy Block',
             'text' => 'This is a dummy block.'

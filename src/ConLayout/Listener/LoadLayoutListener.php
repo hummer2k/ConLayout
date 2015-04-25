@@ -12,8 +12,7 @@ use Zend\View\Model\ModelInterface;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LoadLayoutListener
-    implements ListenerAggregateInterface
+class LoadLayoutListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
             
