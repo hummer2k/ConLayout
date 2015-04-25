@@ -18,9 +18,11 @@ class CacheBusterTest extends AbstractTest
         $factory = new CacheBusterFactory();
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('Config', [
-            'con-layout/cache_buster/internal_base_dir' => __DIR__ . '/_files'
-        ]);
+
+        $options = new \ConLayout\Options\ModuleOptions();
+        $options->setCacheBusterInternalBaseDir(__DIR__ . '/_files');
+
+        $serviceManager->setService('ConLayout\Options\ModuleOptions', $options);
 
         $instance = $factory->createService($serviceManager);
 

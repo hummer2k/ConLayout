@@ -19,7 +19,9 @@ return [
         'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
         'ConLayout\View\Strategy\BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
          
-        'ConLayout\Zdt\Collector\LayoutCollector' => 'ConLayout\Zdt\Collector\LayoutCollectorFactory'
+        'ConLayout\Zdt\Collector\LayoutCollector' => 'ConLayout\Zdt\Collector\LayoutCollectorFactory',
+
+        'ConLayout\Options\ModuleOptions' => 'ConLayout\Options\ModuleOptionsFactory',
     ],
     'aliases' => [
         'Layout' => 'ConLayout\Layout\LayoutInterface',

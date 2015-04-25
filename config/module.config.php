@@ -28,23 +28,13 @@ return [
         ]
     ],
     'con-layout' => [
-        'update_listener' => [
-            'glob_paths' => [
-                'default' => __DIR__ . '/layout.config.php',
-                'xml' => __DIR__ . '/layout.config.xml'
-            ]
+        'update_listener_glob_paths' => [
+            'default' => __DIR__ . '/layout.config.php',
+            'xml' => __DIR__ . '/layout.config.xml'
         ],
         'enable_debug' => false,
-        'enable_layout_cache' => false,
-        'enable_block_cache' => false,
-        'layout_cache' => 'ConLayout\Cache',
-        'block_cache' => 'ConLayout\Cache',
-        'cache_dir' => './data/cache/con-layout',
         'child_capture_to' => 'childHtml',
-        'content_capture_to' => 'content',
-        'cache_buster' => [
-            'internal_base_dir' => './pub'
-        ],
+        'cache_buster_internal_base_dir' => './pub',
         'view_helpers' => [
             'doctype' => [],
             'headLink' => [

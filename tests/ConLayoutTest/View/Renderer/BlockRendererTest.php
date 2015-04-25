@@ -3,10 +3,9 @@
 namespace ConLayoutTest\View\Renderer;
 
 use ConLayout\Block\AbstractBlock;
-use ConLayout\View\Renderer\BlockRendererFactory;
+use ConLayout\View\Renderer\BlockRenderer;
 use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Bootstrap;
-use Zend\Cache\Storage\Adapter\AdapterOptions;
 use Zend\View\Helper\ViewModel as ViewModelHelper;
 
 /**
@@ -15,16 +14,28 @@ use Zend\View\Helper\ViewModel as ViewModelHelper;
  */
 class BlockRendererTest extends AbstractTest
 {
-    protected function createBlockRenderer()
+    protected $blockRenderer;
+
+    public function setUp()
     {
-        return Bootstrap::getServiceManager()
-            ->get('ConLayout\View\Renderer\BlockRenderer');
+        parent::setUp();
+        $this->blockRenderer = Bootstrap::getServiceManager()
+            ->create('ConLayout\View\Renderer\BlockRenderer');
+    }
+
+    /**
+     *
+     * @return BlockRenderer
+     */
+    protected function getBlockRenderer()
+    {
+        return $this->blockRenderer;
     }
 
     public function testMagicDelegationToCurrentViewModel()
     {
         $currentViewModel = new TestBlock();
-        $renderer = $this->createBlockRenderer();
+        $renderer = $this->getBlockRenderer();
         /* @var $viewModelHelper ViewModelHelper */
         $viewModelHelper = Bootstrap::getServiceManager()
             ->get('ViewHelperManager')
@@ -42,7 +53,7 @@ class BlockRendererTest extends AbstractTest
 
     public function testRender()
     {
-        $renderer = $this->createBlockRenderer();
+        $renderer = $this->getBlockRenderer();
         $html = $renderer->render($this->getViewModel());
 
         $this->assertEquals(
@@ -56,6 +67,40 @@ class BlockRendererTest extends AbstractTest
             $html
         );
 
+    }
+
+    public function testRenderWithCachePre()
+    {
+        $renderer = clone $this->getBlockRenderer();
+        $em = clone Bootstrap::getServiceManager()
+            ->get('EventManager');
+        $renderer->setEventManager($em);
+        $em->getSharedManager()->attach(
+            'ConLayout\View\Renderer\BlockRenderer',
+            'render.pre',
+            function($e) {
+                return 'cached';
+            }
+        );
+        $this->assertEquals('cached', $renderer->render($this->getViewModel()));
+    }
+
+    public function testRenderWithCachePost()
+    {
+        $renderer = $this->getBlockRenderer();
+        $em = $renderer->getEventManager();
+        
+        $em->getSharedManager()
+            ->attach(
+            'ConLayout\View\Renderer\BlockRenderer',
+            'render.post',
+            function($e) {
+                $result = $e->getParam('__RESULT__');
+                $this->assertEquals($result, $this->getRenderedHtml());
+            }
+        );
+
+        $renderer->render($this->getViewModel());
     }
 
     protected function getViewModel()

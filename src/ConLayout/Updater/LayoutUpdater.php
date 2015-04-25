@@ -79,9 +79,9 @@ final class LayoutUpdater implements
     /**
      * {@inheritdoc}
      */
-    public function getLayoutStructure($force = false)
+    public function getLayoutStructure()
     {
-        if (null === $this->layoutStructure || $force) {
+        if (null === $this->layoutStructure) {
             $this->layoutStructure = new Config([], true);
             $this->loadGlobalLayoutStructure();
             foreach ($this->getHandles() as $handle) {

@@ -15,8 +15,7 @@ return [
             ],
             'headScript' => [
                 'jquery-1.11.2' => [
-                    'method' => 'prependFile',
-                    '//code.jquery.com/jquery-1.11.2.min.js',
+                    'prependFile' => '//code.jquery.com/jquery-1.11.2.min.js',
                 ]
             ]
         ],

@@ -4,7 +4,6 @@ namespace ConLayout\Debug;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ConLayout\OptionTrait;
 
 /**
  * @package ConLayout
@@ -12,13 +11,9 @@ use ConLayout\OptionTrait;
  */
 class DebuggerFactory implements FactoryInterface
 {
-    use OptionTrait;
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
         $debugger = new Debugger();
-        $debugger->setEnabled($this->getOption($config, 'con-layout/enable_debug', false));
         return $debugger;
     }
 }

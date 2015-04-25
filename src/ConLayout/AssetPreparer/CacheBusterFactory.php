@@ -2,6 +2,7 @@
 
 namespace ConLayout\AssetPreparer;
 
+use ConLayout\Options\ModuleOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -15,8 +16,9 @@ class CacheBusterFactory implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        $internalBaseDir = $this->getOption($config, 'con-layout/cache_buster/internal_base_dir', './public');
+        /* @var $options ModuleOptions */
+        $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
+        $internalBaseDir = $options->getCacheBusterInternalBaseDir();
         $cacheBuster = new CacheBuster($internalBaseDir);
         return $cacheBuster;
     }

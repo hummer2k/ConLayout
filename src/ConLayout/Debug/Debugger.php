@@ -2,6 +2,7 @@
 
 namespace ConLayout\Debug;
 
+use ConLayout\Layout\Layout;
 use Zend\View\Model\ModelInterface;
 
 /**
@@ -10,31 +11,12 @@ use Zend\View\Model\ModelInterface;
  */
 class Debugger
 {
-    /**
-     *
-     * @var boolean
-     */
-    protected $isEnabled = false;
-
-    /**
-     *
-     * @return boolean
-     */
-    public function isEnabled()
-    {
-        return $this->isEnabled;
-    }
-
-    /**
-     *
-     * @param boolean $flag
-     * @return \ConLayout\Debugger
-     */
-    public function setEnabled($flag = true)
-    {
-        $this->isEnabled = (bool) $flag;
-        return $this;
-    }
+    const VAR_BLOCK_NAME        = '__BLOCK_NAME__';
+    const VAR_BLOCK_TPL         = '__BLOCK_TPL__';
+    const VAR_BLOCK_CLASS       = '__BLOCK_CLASS__';
+    const VAR_BLOCK_ORIGINAL    = '__BLOCK_ORIGINAL__';
+    const VAR_BLOCK_CAPTURE_TO  = '__BLOCK_CAPTURE_TO__';
+    const VAR_BLOCK_TYPE        = '__BLOCK_TYPE__';
 
     /**
      *
@@ -47,11 +29,11 @@ class Debugger
         $block->setCaptureTo('content');
         $debugBlock = clone $block;
         $debugBlock->setVariables(array(
-            'blockName' => $block->getVariable('__BLOCK_ID__'),
-            'blockTemplate' => $block->getTemplate(),
-            'blockClass' => get_class($block),
-            'originalBlock' => $block,
-            'captureTo' => $captureTo
+            self::VAR_BLOCK_NAME => $block->getVariable(Layout::BLOCK_ID_VAR),
+            self::VAR_BLOCK_TPL => $block->getTemplate(),
+            self::VAR_BLOCK_CLASS => get_class($block),
+            self::VAR_BLOCK_ORIGINAL => $block,
+            self::VAR_BLOCK_CAPTURE_TO => $captureTo
         ));
         $debugBlock->setCaptureTo($captureTo);
         $debugBlock->setTemplate('blocks/debug');

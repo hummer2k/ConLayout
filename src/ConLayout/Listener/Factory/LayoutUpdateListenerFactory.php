@@ -3,6 +3,7 @@
 namespace ConLayout\Listener\Factory;
 
 use ConLayout\Listener\LayoutUpdateListener;
+use ConLayout\Options\ModuleOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,10 +22,10 @@ class LayoutUpdateListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        $globPaths = $this->getOption($config, 'con-layout/update_listener/glob_paths', []);
+        /* @var $options ModuleOptions */
+        $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
         $layoutUpdateListener = new LayoutUpdateListener(
-            $globPaths
+            $options->getUpdateListenerGlobPaths()
         );
         return $layoutUpdateListener;
     }

@@ -77,11 +77,6 @@ class LayoutCollector
         return $this;
     }
 
-    public function isDebug()
-    {
-        return !empty($this->data['debug']);
-    }
-
     /**
      *
      * @return string

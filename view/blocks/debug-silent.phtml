@@ -1,4 +1,10 @@
-<!-- [BLOCK START: <?php echo $this->blockName ?>]-->
-<!-- [template: <?php echo $this->blockTemplate ?>, class: <?php echo $this->blockClass ?>] -->
+<?php
+use ConLayout\Debug\Debugger;
+$blockName = Debugger::VAR_BLOCK_NAME;
+$blockTpl  = Debugger::VAR_BLOCK_TPL;
+$blockClass = Debugger::VAR_BLOCK_CLASS;
+?>
+<!-- [BLOCK START: <?php echo $this->{$blockName} ?>]-->
+<!-- [template: <?php echo $this->{$blockTpl} ?>, class: <?php echo $this->{$blockClass} ?>] -->
 <?php echo $this->content ?>
-<!-- [BLOCK END: <?php echo $this->blockName ?>]-->
+<!-- [BLOCK END: <?php echo $this->{$blockName} ?>]-->

@@ -26,12 +26,12 @@ class BlockRenderer
             $this,
             ['block' => $nameOrModel],
             function($result) {
-                return $result instanceof ModelInterface;
+                return is_string($result);
             }
         );
 
         if ($results->stopped()) {
-            $rendered = $results->last();
+            return $results->last();
         } else {
             $rendered = parent::render($nameOrModel, $values);
         }

@@ -3,7 +3,10 @@
 namespace ConLayout\View\Strategy;
 
 use ConLayout\Block\Dummy;
+use ConLayout\View\Renderer\BlockRenderer;
 use ConLayoutTest\AbstractTest;
+use ConLayoutTest\Bootstrap;
+use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\View\Model\ViewModel;
 
@@ -13,24 +16,47 @@ use Zend\View\Model\ViewModel;
  */
 class BlockStrategyTest extends AbstractTest
 {
-    protected function createStrategy()
+    /**
+     *
+     * @var BlockRendererStrategy
+     */
+    protected $strategy;
+
+    /**
+     *
+     * @var EventManager
+     */
+    protected $em;
+
+    public function setUp()
     {
-        return;
-        $factory = new BlockRendererStrategyFactory();
-        return $factory->createService($this->sm);
+        parent::setUp();
+        $this->strategy = Bootstrap::getServiceManager()
+            ->create('ConLayout\View\Strategy\BlockRendererStrategy');
+        $this->em = Bootstrap::getServiceManager()
+            ->create('EventManager');
     }
 
     public function testAttach()
     {
-        return;
-        $strategy = $this->createStrategy();
-        $strategy->attach($this->sm->get('EventManager'));
+        $this->strategy->attach($this->em);
+
+        $this->assertCount(
+            1,
+            $this->em->getListeners(\Zend\View\ViewEvent::EVENT_RENDERER)
+        );
+
+        $this->assertCount(
+            1,
+            $this->em->getListeners(\Zend\View\ViewEvent::EVENT_RESPONSE)
+        );
+
     }
 
-    public function testSelectInject()
+    public function testSelectRendererAndInjectResponse()
     {
-        return;
-        $strategy = $this->createStrategy();
+        $renderer = new BlockRenderer();
+        $strategy = new BlockRendererStrategy($renderer);
 
         $viewEvent = new \Zend\View\ViewEvent();
         $viewEvent->setModel(new ViewModel());
@@ -40,20 +66,19 @@ class BlockStrategyTest extends AbstractTest
         $dummyBlock = new Dummy();
         $viewEvent->setModel($dummyBlock);
 
-        $this->assertInstanceOf('ConLayout\View\Renderer\BlockRenderer', $strategy->selectRenderer($viewEvent));
-        $this->assertInstanceOf('Zend\View\Renderer\RendererInterface', $strategy->selectRenderer($viewEvent));
-
+        $this->assertSame(
+            $renderer,
+            $strategy->selectRenderer($viewEvent)
+        );
+        
         $this->assertNull($strategy->injectResponse($viewEvent));
 
         $response = new Response();
-        $viewEvent->setRenderer($this->sm->get('ConLayout\View\Renderer\BlockRenderer'));
+        $viewEvent->setRenderer($renderer);
         $viewEvent->setResult('test');
         $viewEvent->setResponse($response);
         $strategy->injectResponse($viewEvent);
 
         $this->assertEquals('test', $response->getContent());
-
-
-
     }
 }
