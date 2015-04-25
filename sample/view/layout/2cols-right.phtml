@@ -1,0 +1,26 @@
+<?= $this->doctype() ?>
+<html>
+    <head>
+        <?= $this->headTitle() ?>
+        <?= $this->headMeta() ?>
+        <?= $this->headLink() ?>
+        <?= $this->headScript() ?>
+    </head>
+    <body class="layout-2cols-right">
+        <?= $this->header ?>
+        <div class="container">
+            <div class="row">
+                <section class="content col-sm-9">
+                    <?= $this->breadcrumbs ?>
+                    <?= $this->flashMessenger()->render() ?>
+                    <?= $this->content; ?>
+                </section>
+                <aside class="sidebar col-sm-3">
+                    <?= $this->sidebarRight ?>
+                </aside>
+            </div>
+            <?= $this->footer ?>
+        </div>
+        <?= $this->inlineScript() ?>
+    </body>
+</html>

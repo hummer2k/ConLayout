@@ -24,7 +24,7 @@ class Debugger
      * @param string $captureTo
      * @return ModelInterface
      */
-    public function addDebugBlock(ModelInterface $block, $captureTo)
+    public function addDebugBlock(ModelInterface $block, $parent, $captureTo)
     {
         $block->setCaptureTo('content');
         $debugBlock = clone $block;
@@ -33,7 +33,7 @@ class Debugger
             self::VAR_BLOCK_TPL => $block->getTemplate(),
             self::VAR_BLOCK_CLASS => get_class($block),
             self::VAR_BLOCK_ORIGINAL => $block,
-            self::VAR_BLOCK_CAPTURE_TO => $captureTo
+            self::VAR_BLOCK_CAPTURE_TO => $parent . Layout::CAPTURE_TO_DELIMITER . $captureTo
         ));
         $debugBlock->setCaptureTo($captureTo);
         $debugBlock->setTemplate('blocks/debug');

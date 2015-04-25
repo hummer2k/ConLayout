@@ -6,6 +6,7 @@ use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutFactory;
 use ConLayout\Layout\LayoutInterface;
+use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
@@ -48,6 +49,11 @@ class LayoutTest extends AbstractTest
         $serviceManager->setService(
             'ConLayout\Updater\LayoutUpdaterInterface',
             new LayoutUpdater()
+        );
+
+        $serviceManager->setService(
+            'ConLayout\Options\ModuleOptions',
+            new ModuleOptions()
         );
 
         $factory = new LayoutFactory();

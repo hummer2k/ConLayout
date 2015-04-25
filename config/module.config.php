@@ -3,6 +3,7 @@ return [
     'view_manager' => [
         'template_path_stack' => [
             __DIR__ . '/../view',
+            //__DIR__ . '/../sample/view'
         ],
         'template_map' => [
             'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',
@@ -26,51 +27,7 @@ return [
         'factories' => [
             'layoutManager' => 'ConLayout\Controller\Plugin\LayoutManagerFactory'
         ]
-    ],
-    'con-layout' => [
-        'update_listener_glob_paths' => [
-            'default' => __DIR__ . '/layout.config.php',
-            'xml' => __DIR__ . '/layout.config.xml'
-        ],
-        'enable_debug' => false,
-        'child_capture_to' => 'childHtml',
-        'cache_buster_internal_base_dir' => './pub',
-        'view_helpers' => [
-            'doctype' => [],
-            'headLink' => [
-                'default_method' => 'appendStylesheet',
-            ],
-            'headScript' => [
-                'default_method' => 'appendFile',
-            ],
-            'inlineScript' => [
-                'default_method' => 'appendFile',
-            ],
-            'headTitle' => [
-                'default_method' => 'append'
-            ],
-            'headMeta' => [
-                'default_method' => 'appendName'
-            ],
-            'bodyClass' => [
-                'default_method' => 'addClass'
-            ],            
-        ],
-        'asset_preparers' => [
-            'headLink' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
-            ],
-            'headScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
-            ],
-            'inlineScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
-            ]
-        ]
-    ],
+    ],    
     'asset_manager' => [
         'resolver_configs' => [
             'paths' => [

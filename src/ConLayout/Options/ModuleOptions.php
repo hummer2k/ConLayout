@@ -14,37 +14,37 @@ class ModuleOptions extends AbstractOptions
      *
      * @var boolean
      */
-    protected $enableDebug;
+    protected $enableDebug = false;
 
     /**
      *
      * @var string
      */
-    protected $childCaptureTo;
+    protected $childCaptureTo = 'childHtml';
 
     /**
      *
      * @var array
      */
-    protected $viewHelpers;
+    protected $viewHelpers = [];
 
     /**
      *
      * @var array
      */
-    protected $assetPreparers;
+    protected $assetPreparers = [];
 
     /**
      *
      * @var string
      */
-    protected $cacheBusterInternalBaseDir;
+    protected $cacheBusterInternalBaseDir = './public';
 
     /**
      *
      * @var array
      */
-    protected $updateListenerGlobPaths;
+    protected $updateListenerGlobPaths = [];
 
     public function getEnableDebug()
     {

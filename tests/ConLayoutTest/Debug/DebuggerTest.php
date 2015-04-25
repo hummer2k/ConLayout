@@ -36,7 +36,7 @@ class DebuggerTest extends AbstractTest
             'test.block'
         );
 
-        $debugBlock = $debugger->addDebugBlock($viewModel, 'myCaptureTo');
+        $debugBlock = $debugger->addDebugBlock($viewModel, 'parent', 'myCaptureTo');
 
         $this->assertSame(
             $viewModel,
@@ -45,7 +45,7 @@ class DebuggerTest extends AbstractTest
 
         $this->assertEquals(
             $debugBlock->getVariable(Debugger::VAR_BLOCK_CAPTURE_TO),
-            'myCaptureTo'
+            'parent::myCaptureTo'
         );
 
         $this->assertEquals(

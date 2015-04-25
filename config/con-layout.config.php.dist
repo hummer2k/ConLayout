@@ -1,66 +1,46 @@
 <?php
-$config = [
-        'handle_behavior' => \ConLayout\Listener\ActionHandlesListener::BEHAVIOR_COMBINED,
-        'config_glob_paths' => [
-            'default' => './{vendor/*/*/config,module/*/config,design/module/*}/layout.config.php'
+return [
+    'con-layout' => [
+        'update_listener_glob_paths' => [
+            'default' => './module/*/layout/*.{xml,php}',
+            'sample' => __DIR__ . '/../sample/layout/*.{php,xml}',
         ],
-        'enable_debug' => false,
-        'enable_layout_cache' => false,
-        'enable_block_cache' => false,
-        'layout_cache' => 'ConLayout\Cache',
-        'block_cache' => 'ConLayout\Cache',
-        'cache_dir' => './data/cache/con-layout',
-        'child_capture_to' => 'childHtml',
-        'content_capture_to' => 'content',
-        'cache_buster' => [
-            'internal_base_dir' => './public'
-        ],
-        'block_config_mutators' => [
-            'ConLayout\Config\Mutator\RemoveBlocks'
-        ],
-        'sorter' => [
-            'priorities' => [
-                'default'   => -20,
-                '\\'        => 'ConLayout\Priority\Segments::getPriority',
-                '/'         => 'ConLayout\Priority\Segments::getPriority',
-                '::'        => 'ConLayout\Priority\ControllerAction::getPriority',
-                'error-'    => 15
-            ]
-        ],
-        'helpers' => [
+        'enable_debug' => true,
+        'cache_buster_internal_base_dir' => './public',
+        'view_helpers' => [
+            'doctype' => [],
             'headLink' => [
-                'defaultMethod' => 'appendStylesheet',
+                'default_method' => 'appendStylesheet',
             ],
             'headScript' => [
-                'defaultMethod' => 'appendFile',
+                'default_method' => 'appendFile',
             ],
             'inlineScript' => [
-                'defaultMethod' => 'appendFile',
+                'default_method' => 'appendFile',
             ],
             'headTitle' => [
-                'defaultMethod' => 'append'
+                'default_method' => 'append'
             ],
             'headMeta' => [
-                'defaultMethod' => 'appendName'
+                'default_method' => 'appendName'
             ],
             'bodyClass' => [
-                'defaultMethod' => 'append'
-            ],
-            'doctype' => []
+                'default_method' => 'addClass'
+            ]
         ],
-        'value_preparers' => [
+        'asset_preparers' => [
             'headLink' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath',
+                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
             ],
             'headScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath',
+                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
             ],
             'inlineScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath'
+                'basePath' => 'ConLayout\AssetPreparer\BasePath',
+                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
             ]
         ]
-    ],
-];
-return [
-    'con-layout' => $config
+    ]
 ];

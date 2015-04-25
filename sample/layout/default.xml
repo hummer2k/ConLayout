@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- sample layout update as xml -->
+<layout>
+    <default>
+        <blocks>
+            <widget.hello.world capture_to="sidebarLeft" template="widgets/hello-world">
+                <variables heading="Hello" body="World" />
+                <options order="-10" />
+            </widget.hello.world>
+        </blocks>
+    </default>
+    <error-controller-not-found layout="layout/1col" />
+</layout>

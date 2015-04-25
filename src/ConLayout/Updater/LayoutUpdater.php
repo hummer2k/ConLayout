@@ -140,9 +140,9 @@ final class LayoutUpdater implements
      */
     private function loadGlobalLayoutStructure()
     {
-        $globalLayoutStructure = new Config([], true);
+        $this->globalLayoutStructure = new Config([], true);
         $event = new Event\UpdateEvent();
-        $event->setGlobalLayoutStructure($globalLayoutStructure);
+        $event->setGlobalLayoutStructure($this->globalLayoutStructure);
 
         $results = $this->getEventManager()->trigger(
             __FUNCTION__ . '.pre',
@@ -154,16 +154,15 @@ final class LayoutUpdater implements
         );
 
         if ($results->stopped()) {
-            $globalLayoutStructure = $results->last();
+            $this->globalLayoutStructure = $results->last();
         }
 
         $this->getEventManager()->trigger(
             __FUNCTION__ . '.post',
             $this,
-            ['__RESULT__' => $globalLayoutStructure]
+            ['__RESULT__' => $this->globalLayoutStructure]
         );
 
-        $this->globalLayoutStructure = $globalLayoutStructure;
         $this->globalLayoutStructure->setReadOnly();
     }
 }

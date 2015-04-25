@@ -3,6 +3,8 @@
 namespace ConLayout\Layout;
 
 use ConLayout\Block\Factory\BlockFactoryInterface;
+use ConLayout\Debug\Debugger;
+use ConLayout\Handle\Handle;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
@@ -23,6 +25,12 @@ class Layout implements
 
     const CAPTURE_TO_DELIMITER = '::';
     const ANONYMOUS_ID_PATTERN = 'anonymous.%s.%s';
+
+    /**
+     *
+     * @var Debugger
+     */
+    protected $debugger;
 
     /**
      * suffix for anonymous block names
@@ -191,6 +199,9 @@ class Layout implements
             foreach ($this->getBlocks() as $blockId => $block) {
                 if (!$this->isAllowed($blockId, $block)) continue;
                 list($parent, $captureTo) = $this->getCaptureTo($block);
+                if (null !== $this->debugger) {
+                    $block = $this->debugger->addDebugBlock($block, $parent, $captureTo);
+                }
                 if ($parentBlock = $this->getBlock($parent)) {
                     $parentBlock->addChild($block, $captureTo);
                 }
@@ -320,15 +331,16 @@ class Layout implements
      */
     protected function determineAnonymousBlockId(ModelInterface $block)
     {
-        $blockName = $block->getVariable(
-            self::BLOCK_ID_VAR,
-            sprintf(
+        $blockId = $block->getVariable(self::BLOCK_ID_VAR);
+        if (!$blockId) {
+            $blockId = sprintf(
                 self::ANONYMOUS_ID_PATTERN,
                 $block->captureTo(),
                 self::$anonymousSuffix++
-            )
-        );
-        return $blockName;
+            );
+            $block->setVariable(self::BLOCK_ID_VAR, $blockId);
+        }
+        return $blockId;
     }
 
     /**
@@ -346,5 +358,17 @@ class Layout implements
                 },
                 10000
             );
+    }
+
+    /**
+     *
+     * @param Debugger $debugger
+     * @return Layout
+     */
+    public function setDebugger(Debugger $debugger)
+    {
+        $this->updater->addHandle(new Handle('con-layout-debug', 0));
+        $this->debugger = $debugger;
+        return $this;
     }
 }
