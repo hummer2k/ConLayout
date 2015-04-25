@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="Bootstrap.php">
+<phpunit bootstrap="./tests/Bootstrap.php">
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./../src</directory>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
     <testsuites>
         <testsuite name="con-layout-test">
-            <directory>./ConLayoutTest</directory>
+            <directory>./tests/ConLayoutTest</directory>
         </testsuite>
     </testsuites>
 </phpunit>
