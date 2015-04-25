@@ -1,6 +1,19 @@
 {
     "name": "conlabz/conlayout",
-    "description": "zf2 module to handle layouts",
+    "description": "Module for handling ZF2 layouts with blocks and handles like magento",
+    "keywords": [
+        "zf2",
+        "layout",
+        "handles",
+        "blocks"
+    ],
+    "authors": [
+        {
+          "name": "Cornelius Adams",
+          "email": "cornelius.adams@conlabz.de",
+          "homepage": "http://www.conlabz.de/"
+        }
+    ],
     "require": {
         "php": ">=5.4.0",
         "zendframework/zendframework": "2.*",
