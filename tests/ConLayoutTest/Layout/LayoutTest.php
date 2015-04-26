@@ -3,6 +3,7 @@
 namespace ConLayoutTest\Layout;
 
 use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\Debug\Debugger;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutFactory;
 use ConLayout\Layout\LayoutInterface;
@@ -27,6 +28,7 @@ class LayoutTest extends AbstractTest
 
     public function setUp()
     {
+        parent::setUp();
         $this->layoutStructure = include __DIR__ . '/_files/layout-structure.php';
         $this->updaterMock = $this->getMockBuilder(
             'ConLayout\Updater\LayoutUpdaterInterface'
@@ -41,6 +43,7 @@ class LayoutTest extends AbstractTest
     public function testFactory()
     {
         $serviceManager = new ServiceManager();
+        $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
             'ConLayout\Block\Factory\BlockFactoryInterface',
             new BlockFactory()
@@ -61,6 +64,23 @@ class LayoutTest extends AbstractTest
 
 
         $this->assertInstanceOf('ConLayout\Layout\LayoutInterface', $instance);
+
+        $serviceManager->setService(
+            'ConLayout\Options\ModuleOptions',
+            new ModuleOptions(['enable_debug' => true])
+        );
+
+        $debugger = new Debugger();
+        $serviceManager->setService(
+            'ConLayout\Debug\Debugger',
+            $debugger
+        );
+
+        $factory = new LayoutFactory();
+        $instance = $factory->createService($serviceManager);
+
+        $this->assertInstanceOf('ConLayout\Layout\LayoutInterface', $instance);
+        $this->assertSame($debugger, $instance->getDebugger());
     }
 
     public function testAddAndGetBlock()
@@ -255,6 +275,36 @@ class LayoutTest extends AbstractTest
         $layout->load();
 
         $this->assertCount(2, $root->getChildren());
+
+    }
+
+    public function testAnonymousBlockId()
+    {
+        $viewModel = new ViewModel();
+        $child = new ViewModel();
+        $viewModel->addChild($child);
+        $this->layout->addBlock('test.block', $viewModel);
+
+        $this->assertEquals(
+            'anonymous.content.1',
+            $child->getVariable(LayoutInterface::BLOCK_ID_VAR)
+        );
+    }
+
+    public function testDebugger()
+    {
+        $debugger = new Debugger();
+        $this->layout->setDebugger($debugger);
+        $block = new ViewModel();
+        $this->layout->addBlock('test.block', $block);
+        $this->layout->load();
+
+        $wrappedBlock = $this->layout->getBlock('test.block');
+
+        $this->assertSame(
+            $block,
+            $wrappedBlock->getVariable(Debugger::VAR_BLOCK_ORIGINAL)
+        );
 
     }
 }

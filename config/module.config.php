@@ -3,7 +3,6 @@ return [
     'view_manager' => [
         'template_path_stack' => [
             __DIR__ . '/../view',
-            //__DIR__ . '/../sample/view'
         ],
         'template_map' => [
             'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',

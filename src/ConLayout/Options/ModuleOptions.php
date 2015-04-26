@@ -18,12 +18,6 @@ class ModuleOptions extends AbstractOptions
 
     /**
      *
-     * @var string
-     */
-    protected $childCaptureTo = 'childHtml';
-
-    /**
-     *
      * @var array
      */
     protected $viewHelpers = [];
@@ -50,12 +44,7 @@ class ModuleOptions extends AbstractOptions
     {
         return $this->enableDebug;
     }
-
-    public function getChildCaptureTo()
-    {
-        return $this->childCaptureTo;
-    }
-
+   
     public function getViewHelpers()
     {
         return $this->viewHelpers;
@@ -69,12 +58,6 @@ class ModuleOptions extends AbstractOptions
     public function setEnableDebug($enableDebug)
     {
         $this->enableDebug = $enableDebug;
-        return $this;
-    }
-
-    public function setChildCaptureTo($childCaptureTo)
-    {
-        $this->childCaptureTo = $childCaptureTo;
         return $this;
     }
 

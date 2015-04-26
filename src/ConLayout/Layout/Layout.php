@@ -68,12 +68,6 @@ class Layout implements
     protected $blocks = [];
 
     /**
-     *
-     * @var ModelInterface[]
-     */
-    protected $blocksByParent = [];
-
-    /**
      * 
      * @var array
      */
@@ -373,5 +367,14 @@ class Layout implements
         $this->updater->addHandle(new Handle('con-layout-debug', 0));
         $this->debugger = $debugger;
         return $this;
+    }
+
+    /**
+     *
+     * @return Debugger
+     */
+    public function getDebugger()
+    {
+        return $this->debugger;
     }
 }

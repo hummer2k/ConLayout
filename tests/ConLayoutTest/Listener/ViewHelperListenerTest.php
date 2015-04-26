@@ -63,7 +63,8 @@ class ViewHelperListenerTest extends AbstractTest
                                 100,
                                 '/js/functions.js'
                             ]
-                        ]
+                        ],
+                        'will-be-ignored' => false
                     ]
                 ]
             ]

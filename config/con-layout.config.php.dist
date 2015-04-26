@@ -1,11 +1,14 @@
 <?php
+use ConLayout\Listener\LayoutUpdateListener;
+
 return [
     'con-layout' => [
         'update_listener_glob_paths' => [
-            'default' => './module/*/layout/*.{xml,php}',
-            'sample' => __DIR__ . '/../sample/layout/*.{php,xml}',
+            LayoutUpdateListener::AREA_GLOBAL => [
+                'default' => './module/*/layout/global/*.{xml,php}',
+            ]
         ],
-        'enable_debug' => true,
+        'enable_debug' => false,
         'cache_buster_internal_base_dir' => './public',
         'view_helpers' => [
             'doctype' => [],

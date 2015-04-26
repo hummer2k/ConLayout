@@ -12,8 +12,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class AddAssetPreparerDelegator implements DelegatorFactoryInterface
 {
-    use \ConLayout\OptionTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -25,15 +23,10 @@ class AddAssetPreparerDelegator implements DelegatorFactoryInterface
     ) {
         /* @var $viewHelperListener ViewHelperListener */
         $viewHelperListener = $callback();
-        $assetPreparersConfig = $this->getOption(
-            $serviceLocator->get('Config'),
-            'con-layout/asset_preparers',
-            []
-        );
+        $moduleOptions = $serviceLocator->get('ConLayout\Options\ModuleOptions');
+        $assetPreparersConfig = $moduleOptions->getAssetPreparers();
         foreach ($assetPreparersConfig as $helper => $assetPreparers) {
-            if (!is_array($assetPreparers)) {
-                continue;
-            }
+            $assetPreparers = (array) $assetPreparers;
             foreach ($assetPreparers as $assetPreparer) {
                 if (false === $assetPreparer) {
                     continue;
