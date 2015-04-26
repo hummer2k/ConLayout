@@ -1,10 +1,14 @@
 <?php
 namespace ConLayout\Zdt\Collector;
 
+use Closure;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ZendDeveloperTools\Collector\AbstractCollector;
+use Traversable;
 use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\ArrayUtils;
+use ZendDeveloperTools\Collector\AbstractCollector;
+use ZendDeveloperTools\Stub\ClosureStub;
 
 /**
  * Collector for ZendDeveloperToolbar
@@ -39,16 +43,16 @@ class LayoutCollector extends AbstractCollector
     }
 
         /**
-     * 
+     *
      * @return string
      */
     public function getName()
     {
         return self::NAME;
     }
-    
+
     /**
-     * 
+     *
      * @return int
      */
     public function getPriority()
@@ -58,17 +62,25 @@ class LayoutCollector extends AbstractCollector
 
     /**
      * collect data for zdt
-     * 
+     *
      * @param \Zend\Mvc\MvcEvent $mvcEvent
      * @return LayoutCollector
      */
     public function collect(MvcEvent $mvcEvent)
     {
         $layout = $mvcEvent->getViewModel();
+        $blocks = [];
+        foreach ($this->layout->getBlocks() as $blockName => $block) {
+            $blocks[$blockName] = [
+                'template' => $block->getTemplate(),
+                'capture_to' => $block->captureTo(),
+                'class' => get_class($block)
+            ];
+        }
         $data = array(
             'handles' => $this->updater->getHandles(true),
             'layout_structure' => $this->updater->getLayoutStructure()->toArray(),
-            'blocks' => $this->layout->getBlocks(),
+            'blocks' => $blocks,
             'layout_template' => $layout->getTemplate()
         );
 
@@ -84,27 +96,27 @@ class LayoutCollector extends AbstractCollector
     {
         return $this->data['layout_template'];
     }
-    
+
     /**
-     * 
+     *
      * @return array
      */
     public function getHandles()
     {
         return $this->data['handles'];
     }
-    
+
     /**
-     * 
+     *
      * @return array
      */
     public function getLayoutStructure()
     {
         return $this->data['layout_structure'];
     }
-    
+
     /**
-     * 
+     *
      * @return array
      */
     public function getBlocks()

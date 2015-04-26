@@ -33,8 +33,10 @@ class LayoutCollectorTest extends AbstractTest
     public function setUp()
     {
         parent::setUp();
-        $this->collector = \ConLayoutTest\Bootstrap::getServiceManager()
-            ->create('ConLayout\Zdt\Collector\LayoutCollector');
+        $this->collector = new LayoutCollector(
+            $this->layout,
+            $this->layoutUpdater
+        );
     }
 
     public function testFactory()
@@ -79,6 +81,12 @@ class LayoutCollectorTest extends AbstractTest
         $layoutModel = new ViewModel();
         $layoutModel->setTemplate('layout/2cols-left');
         $event->setViewModel($layoutModel);
+        
+        $testBlock = new ViewModel();
+        $testBlock->setTemplate('test/block');
+        $testBlock->setCaptureTo('sidebarLeft');
+
+        $this->layout->addBlock('test.block', $testBlock);
 
         $this->collector->collect($event);
         
@@ -100,6 +108,23 @@ class LayoutCollectorTest extends AbstractTest
         $this->assertInternalType(
             'array',
             $this->collector->getBlocks()
+        );
+
+        $testBlockArray = current($this->collector->getBlocks());
+
+        $this->assertEquals(
+            'test/block',
+            $testBlockArray['template']
+        );
+
+        $this->assertEquals(
+            'sidebarLeft',
+            $testBlockArray['capture_to']
+        );
+
+        $this->assertEquals(
+            'Zend\View\Model\ViewModel',
+            $testBlockArray['class']
         );
 
         $this->assertInternalType(

@@ -190,6 +190,7 @@ class Layout implements
     public function load()
     {
         if (false === $this->isLoaded) {
+            $this->generateBlocks();
             $this->sortBlocks();
             foreach ($this->getBlocks() as $blockId => $block) {
                 if (!$this->isAllowed($blockId, $block)) {

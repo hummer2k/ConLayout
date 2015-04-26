@@ -1,6 +1,5 @@
 <?php
 /* @var $collector LayoutCollector */
-use ConLayout\Debug\Debugger;
 use ConLayout\Zdt\Collector\LayoutCollector;
 use Zend\Debug\Debug;
 ?>
@@ -43,16 +42,13 @@ use Zend\Debug\Debug;
                             <?= $blockName ?>
                         </td>
                         <td>
-                            <?= get_class($block) ?>
+                            <?= $block['class'] ?>
                         </td>
                         <td>
-                            <?= $block->getVariable(Debugger::VAR_BLOCK_CAPTURE_TO)
-                                ? $block->getVariable(Debugger::VAR_BLOCK_CAPTURE_TO)
-                                : $block->captureTo()
-                            ?>
+                            <?= $block['capture_to'] ?>
                         </td>
                         <td>
-                            <?= $block->getTemplate() ?>
+                            <?= $block['template'] ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
