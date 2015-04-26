@@ -108,7 +108,7 @@ class LayoutUpdateListener implements ListenerAggregateInterface
             self::AREA_GLOBAL,
             $this->getArea()
         ];
-        foreach($areas as $area) {
+        foreach ($areas as $area) {
             if (isset($this->globPaths[$area])) {
                 $globPaths = ArrayUtils::merge(
                     $globPaths,
