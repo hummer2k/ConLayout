@@ -39,7 +39,7 @@ class NameActionViewModelListener implements
         $result = $e->getResult();
         if ($result instanceof ModelInterface) {
             $result->setVariable(
-                LayoutInterface::BLOCK_ID_VAR, 
+                LayoutInterface::BLOCK_ID_VAR,
                 LayoutInterface::BLOCK_ID_ACTION_RESULT
             );
         }

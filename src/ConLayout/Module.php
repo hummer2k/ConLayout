@@ -13,7 +13,7 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class Module implements 
+class Module implements
     ConfigProviderInterface,
     ServiceProviderInterface,
     BootstrapListenerInterface,
