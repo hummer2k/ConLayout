@@ -83,10 +83,37 @@ final class LayoutUpdater implements
     {
         if (null === $this->layoutStructure) {
             $this->layoutStructure = new Config([], true);
-            $this->loadGlobalLayoutStructure();
-            foreach ($this->getHandles() as $handle) {
-                $this->fetch($handle);
+            
+            $handles = $this->getHandles();
+            $event = new Event\UpdateEvent();
+            $event->setLayoutStructure($this->layoutStructure);
+            $event->setHandles($handles);
+            
+            $results = $this->getEventManager()->trigger(
+                __FUNCTION__ . '.pre',
+                $this,
+                $event,
+                function ($result) {
+                    return ($result instanceof Config);
+                }
+            );
+            
+            if ($results->stopped()) {
+                $this->layoutStructure = $results->last();
+            } else {
+                $this->loadGlobalLayoutStructure();
+                foreach ($handles as $handle) {
+                    $this->fetch($handle);
+                }
             }
+            
+            $this->getEventManager()->trigger(
+                __FUNCTION__ . '.post',
+                $this,
+                ['__RESULT__' => $this->layoutStructure]
+            );
+            
+            $this->layoutStructure->setReadOnly();
         }
         return $this->layoutStructure;
     }

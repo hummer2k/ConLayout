@@ -47,8 +47,6 @@ class UpdateEvent extends Event
     }
 
     /**
-     *
-     * @codeCoverageIgnore
      * @return Config
      */
     public function getLayoutStructure()
@@ -57,8 +55,6 @@ class UpdateEvent extends Event
     }
 
     /**
-     *
-     * @codeCoverageIgnore
      * @return array
      */
     public function getHandles()
@@ -67,7 +63,6 @@ class UpdateEvent extends Event
     }
 
     /**
-     * @codeCoverageIgnore
      * @param Config $layoutStructure
      * @return UpdateEvent
      */
@@ -78,7 +73,6 @@ class UpdateEvent extends Event
     }
 
     /**
-     * @codeCoverageIgnore
      * @param array $handles
      * @return UpdateEvent
      */

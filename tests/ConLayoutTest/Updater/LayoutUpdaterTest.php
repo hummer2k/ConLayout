@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayoutTest\Update;
+namespace ConLayoutTest\Updater;
 
 use ConLayout\Handle\Handle;
 use ConLayout\Updater\Event\UpdateEvent;
@@ -147,7 +147,7 @@ class LayoutUpdaterTest extends AbstractTest
         ], $layoutStructure->toArray());
     }
 
-    public function testGetLayoutStructureWithCache()
+    public function testGetLayoutStructureWithGlobalCache()
     {
         $eventManager = new EventManager();
         $this->attachGlobalLayoutStructureListener($eventManager);
@@ -183,6 +183,51 @@ class LayoutUpdaterTest extends AbstractTest
             'cached' => true
         ], $layoutStructure->toArray());
 
+    }
+    
+    public function testGetLayoutStructureWithCache()
+    {
+        $eventManager = new EventManager();
+        
+        $eventManager->getSharedManager()->attach(
+            'ConLayout\Updater\LayoutUpdater',
+            'getLayoutStructure.pre',
+            function (UpdateEvent $e) {
+                $this->assertSame([
+                    'default',
+                    'test-handle'
+                ], $e->getHandles());
+                
+                $this->assertInstanceOf(
+                    'Zend\Config\Config',
+                    $e->getLayoutStructure()
+                );
+                
+                return new Config(['blocks' => ['block1' => ['template' => '/my/tpl']]]);
+            }
+        );
+        
+        $eventManager->getSharedManager()->attach(
+            'ConLayout\Updater\LayoutUpdater',
+            'getLayoutStructure.post',
+            function (EventInterface $e) {
+                $result = $e->getParam('__RESULT__');
+                $block1 = $result->get('blocks')
+                    ->get('block1')
+                    ->toArray();
+                
+                $this->assertEquals(
+                    ['template' => '/my/tpl'],
+                    $block1
+                );
+            }
+        );        
+        
+        $updater = new LayoutUpdater();
+        $updater->addHandle(new Handle('test-handle', 5));
+        $updater->setEventManager($eventManager);
+        
+        $updater->getLayoutStructure();
     }
 }
 
