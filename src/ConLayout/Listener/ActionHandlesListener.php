@@ -44,13 +44,13 @@ class ActionHandlesListener implements
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'addActionHandles'), 999);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'addActionHandles'], 1000);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'addErrorHandle'], 100);
     }
     
     /**
      * 
      * @param EventInterface $event
-     * @return ActionHandlesListener
      */
     public function addActionHandles(EventInterface $event)
     {
@@ -59,7 +59,15 @@ class ActionHandlesListener implements
         foreach ($handles as $handle) {
             $this->updater->addHandle($handle);
         }
-        return $this;
+    }
+    
+    /**
+     * 
+     * @param EventInterface $event
+     */
+    public function addErrorHandle(EventInterface $event)
+    {
+        $this->updater->addHandle(new Handle($event->getError(), 15));
     }
     
     /**

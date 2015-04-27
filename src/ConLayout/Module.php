@@ -53,11 +53,6 @@ class Module implements ConfigProviderInterface
         if (!$request instanceof Request) {
             return;
         }
-        /* @var $eventManager EventManager */
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function ($e) use ($serviceManager) {
-            $serviceManager->get('ConLayout\Updater\LayoutUpdaterInterface')
-                ->addHandle(new Handle($e->getError(), 15));
-        }, 100);
 
         $listeners = [
             'ConLayout\Listener\ActionHandlesListener',
