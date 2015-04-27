@@ -21,29 +21,29 @@ class Module implements
 {
     /**
      * retrieve module config
-     * 
+     *
      * @return array
      */
     public function getConfig()
     {
         return array_merge(
             include __DIR__ . '/../../config/module.config.php',
-            include __DIR__ . '/../../config/con-layout.config.php.dist'
+            include __DIR__ . '/../../config/con-layout.global.php.dist'
         );
     }
-    
+
     /**
      * retrieve services
-     * 
+     *
      * @return array
      */
     public function getServiceConfig()
     {
         return include __DIR__ . '/../../config/service.config.php';
     }
-    
+
     /**
-     * 
+     *
      * @param EventInterface $e
      */
     public function onBootstrap(Event $e)
@@ -72,7 +72,7 @@ class Module implements
     }
 
     /**
-     * 
+     *
      * @return array
      */
     public function getAutoloaderConfig()
