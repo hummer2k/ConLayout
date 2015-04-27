@@ -24,7 +24,7 @@ abstract class AbstractBlock extends ViewModel implements
      *
      * @var array
      */
-    protected $cacheKeyInfo = array();
+    protected $cacheKeyInfo = [];
                
     /**
      * 

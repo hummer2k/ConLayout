@@ -32,7 +32,7 @@ class LayoutTemplateListener implements
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTemplate'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, [$this, 'setLayoutTemplate']);
     }
 
     /**

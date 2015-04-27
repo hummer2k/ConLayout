@@ -11,6 +11,7 @@ use Zend\View\Model\ModelInterface;
 interface LayoutInterface
 {
     const BLOCK_ID_ROOT = 'root';
+    const BLOCK_ID_ACTION_RESULT = 'action.result';
     const BLOCK_ID_VAR  = '__BLOCK_ID__';
 
     /**

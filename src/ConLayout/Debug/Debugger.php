@@ -28,13 +28,13 @@ class Debugger
     {
         $block->setCaptureTo('content');
         $debugBlock = clone $block;
-        $debugBlock->setVariables(array(
+        $debugBlock->setVariables([
             self::VAR_BLOCK_NAME => $block->getVariable(Layout::BLOCK_ID_VAR),
             self::VAR_BLOCK_TPL => $block->getTemplate(),
             self::VAR_BLOCK_CLASS => get_class($block),
             self::VAR_BLOCK_ORIGINAL => $block,
             self::VAR_BLOCK_CAPTURE_TO => $parent . Layout::CAPTURE_TO_DELIMITER . $captureTo
-        ));
+        ]);
         $debugBlock->setCaptureTo($captureTo);
         $debugBlock->setTemplate('blocks/debug');
         $debugBlock->addChild($block);

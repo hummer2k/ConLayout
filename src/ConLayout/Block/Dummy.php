@@ -16,33 +16,33 @@ class Dummy extends AbstractBlock
     public function init()
     {
         // do stuff
-        $this->setVariables(array(
+        $this->setVariables([
             'title' => 'Dummy Block',
             'text' => 'This is a dummy block.'
-        ));
+        ]);
         $this->limit = $this->getRequest()->getQuery('limit', 10);
     }
     
     public function getArticles()
     {
-        $articles = array(
-            array(
+        $articles = [
+            [
                 'title' => 'Lorem ipsum',
                 'text' => 'dolor sit amet.'
-            ),
-            array(
+            ],
+            [
                 'title' => 'Lorem ipsum',
                 'text' => 'dolor sit amet.'
-            ),
-            array(
+            ],
+            [
                 'title' => 'Lorem ipsum',
                 'text' => 'dolor sit amet.'
-            ),
-            array(
+            ],
+            [
                 'title' => 'Lorem ipsum',
                 'text' => 'dolor sit amet.'
-            ),
-        );
+            ],
+        ];
         return array_slice($articles, 0, $this->limit);
     }
     

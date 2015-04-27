@@ -24,12 +24,6 @@ class LoadLayoutListener implements ListenerAggregateInterface
     
     /**
      *
-     * @var int
-     */
-    protected static $anonymousSuffix = 1;
-
-    /**
-     *
      * @param LayoutInterface $layout
      */
     public function __construct(LayoutInterface $layout)
@@ -43,11 +37,11 @@ class LoadLayoutListener implements ListenerAggregateInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'loadLayout'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, [$this, 'loadLayout']);
     }
     
     /**
-     * inject blocks to root ViewModel or layout if not flagged as terminal
+     * set layout root and load layout
      * 
      * @param MvcEvent $e
      */

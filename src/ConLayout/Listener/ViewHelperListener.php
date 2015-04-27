@@ -9,6 +9,7 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
+use Zend\EventManager\ListenerAggregateTrait;
 
 /**
  * Listener to apply view helpers from layout structure
@@ -18,7 +19,7 @@ use Zend\View\HelperPluginManager;
  */
 class ViewHelperListener implements ListenerAggregateInterface
 {
-    use \Zend\EventManager\ListenerAggregateTrait;
+    use ListenerAggregateTrait;
 
     /**
      *
@@ -70,7 +71,7 @@ class ViewHelperListener implements ListenerAggregateInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'applyViewHelpers'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, [$this, 'applyViewHelpers']);
     }
 
     /**
@@ -95,7 +96,7 @@ class ViewHelperListener implements ListenerAggregateInterface
             $defaultMethod = isset($config['default_method']) ? $config['default_method'] : '__invoke';
             $viewHelper = $this->viewHelperManager->get($helper);
             if (!is_array($viewHelperInstructions[$helper])) {
-                $viewHelperInstructions[$helper] = array($viewHelperInstructions[$helper]);
+                $viewHelperInstructions[$helper] = [$viewHelperInstructions[$helper]];
             }
             foreach ($viewHelperInstructions[$helper] as $value) {
                 if (false === $value) {

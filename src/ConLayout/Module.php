@@ -1,20 +1,23 @@
 <?php
 namespace ConLayout;
 
-use ConLayout\Handle\Handle;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventInterface as Event;
-use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\Mvc\MvcEvent;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
 /**
- * ConLayout\Module
- * 
- * 
+ * @package ConLayout
+ * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class Module implements ConfigProviderInterface
+class Module implements 
+    ConfigProviderInterface,
+    ServiceProviderInterface,
+    BootstrapListenerInterface,
+    AutoloaderProviderInterface
 {
     /**
      * retrieve module config
@@ -59,7 +62,8 @@ class Module implements ConfigProviderInterface
             'ConLayout\Listener\LayoutUpdateListener',
             'ConLayout\Listener\LoadLayoutListener',
             'ConLayout\Listener\LayoutTemplateListener',
-            'ConLayout\Listener\ViewHelperListener'
+            'ConLayout\Listener\ViewHelperListener',
+            'ConLayout\Listener\NameActionViewModelListener'
         ];
 
         foreach ($listeners as $listener) {
@@ -73,12 +77,12 @@ class Module implements ConfigProviderInterface
      */
     public function getAutoloaderConfig()
     {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+        return [
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
+                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__
+                ]
+            ]
+        ];
     }
 }

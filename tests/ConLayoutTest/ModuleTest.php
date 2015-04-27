@@ -74,7 +74,7 @@ class ModuleTest extends AbstractTest
 
         $module->onBootstrap($event);
 
-        $this->assertCount(1, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
+        $this->assertCount(2, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
         $this->assertCount(3,  $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_RENDER));
 
         $this->assertCount(1, $em->getSharedManager()->getListeners(

@@ -79,7 +79,7 @@ class ActionHandlesListener implements
     {
         $controller = $routeMatch->getParam('controller');
         $action = $routeMatch->getParam('action');
-        $actionHandles = array();
+        $actionHandles = [];
         $namespaceSegments = explode('\\', $controller);
         $count = count($namespaceSegments);
         for ($i = 0; $i < $count; $i++) {

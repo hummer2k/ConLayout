@@ -1,14 +1,10 @@
 <?php
 namespace ConLayout\Zdt\Collector;
 
-use Closure;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Traversable;
 use Zend\Mvc\MvcEvent;
-use Zend\Stdlib\ArrayUtils;
 use ZendDeveloperTools\Collector\AbstractCollector;
-use ZendDeveloperTools\Stub\ClosureStub;
 
 /**
  * Collector for ZendDeveloperToolbar
@@ -77,12 +73,12 @@ class LayoutCollector extends AbstractCollector
                 'class' => get_class($block)
             ];
         }
-        $data = array(
+        $data = [
             'handles' => $this->updater->getHandles(true),
             'layout_structure' => $this->updater->getLayoutStructure()->toArray(),
             'blocks' => $blocks,
             'layout_template' => $layout->getTemplate()
-        );
+        ];
 
         $this->data = $data;
         return $this;
