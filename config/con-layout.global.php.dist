@@ -3,12 +3,35 @@ use ConLayout\Listener\LayoutUpdateListener;
 
 return [
     'con-layout' => [
+        /**
+         * Glob paths to search for layout updates
+         *
+         * Files are collected by ConLayout\Listener\LayoutUpdateListener
+         * via Zend\Config\Factory::fromFile()
+         *
+         * format:
+         *  [
+         *      'area_code' => [
+         *          'default' => './path1/*.{xml,php}',
+         *          'my-module' => __DIR__ . '/../layout/*.php'
+         *      ],
+         *      'backend' => [
+         *          'default' => './module/Backend/layout/*.{xml,php}'
+         *      ]
+         *  ]
+         */
         'update_listener_glob_paths' => [
             LayoutUpdateListener::AREA_GLOBAL => [
                 'default' => './module/*/layout/global/*.{xml,php}',
             ]
         ],
+        /**
+         * shows block hints
+         */
         'enable_debug' => false,
+        /**
+         * base dir to assets
+         */
         'cache_buster_internal_base_dir' => './public',
         'view_helpers' => [
             'doctype' => [],

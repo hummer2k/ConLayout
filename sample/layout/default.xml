@@ -7,6 +7,9 @@
                 <variables heading="Hello" body="World" />
                 <options order="-10" />
             </widget.hello.world>
+            <another.widget capture_to="sidebarLeft" template="widgets/hello-world">
+                <variables heading="Another widget" body="Lorem Ipsum dolor sit amet." />
+            </another.widget>
         </blocks>
     </default>
     <error-controller-not-found layout="layout/1col" />

@@ -51,5 +51,5 @@ return [
                 'template' => 'widgets/current-time'
             ]
         ]
-    ]    
+    ]
 ];
