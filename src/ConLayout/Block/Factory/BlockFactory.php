@@ -40,7 +40,7 @@ class BlockFactory implements
             $blockDefaults
         );
     }
-    
+
     /**
      *
      * @param string $blockId
@@ -68,7 +68,9 @@ class BlockFactory implements
                 call_user_func_array([$block, $method], $params);
             }
         }
-        $block->setTemplate($this->getOption('template', $specs));
+        if ($template = $this->getOption('template', $specs)) {
+            $block->setTemplate($template);
+        }
         $block->setCaptureTo($this->getOption('capture_to', $specs));
         $block->setAppend($this->getOption('append', $specs));
 

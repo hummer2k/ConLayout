@@ -14,6 +14,19 @@ use Zend\View\Model\ViewModel;
  */
 class BlockFactoryTest extends AbstractTest
 {
+        /**
+     *
+     * @var BlockFactoryInterface
+     */
+    protected $factory;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->factory = new BlockFactory();
+        $this->factory->setServiceLocator(new ServiceManager());
+    }
+
     public function testCreateBlock()
     {
         $factory = new BlockFactory();
@@ -82,6 +95,19 @@ class BlockFactoryTest extends AbstractTest
         );
 
     }
+
+    public function testCreateBlockWithTemplate()
+    {
+        $block = $this->factory->createBlock('block.id', [
+            'class' => 'ConLayoutTest\Block\Factory\TplBlock'
+        ]);
+        $this->assertEquals('already/set/template', $block->getTemplate());
+    }
+}
+
+class TplBlock extends ViewModel
+{
+    protected $template = 'already/set/template';
 }
 
 class MyBlock extends ViewModel
