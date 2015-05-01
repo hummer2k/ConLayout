@@ -5,7 +5,6 @@ namespace ConLayoutTest\Controller\Plugin;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Controller\Plugin\LayoutManager;
 use ConLayout\Controller\Plugin\LayoutManagerFactory;
-use ConLayout\Debug\Debugger;
 use ConLayout\Handle\Handle;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;

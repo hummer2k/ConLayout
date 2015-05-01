@@ -11,12 +11,12 @@ use Zend\Config\Config;
  */
 interface LayoutUpdaterInterface
 {
-    const INSTRUCTION_APPLY_FOR       = 'apply_for';
     const INSTRUCTION_LAYOUT_TEMPLATE = 'layout';
     const INSTRUCTION_BLOCKS          = 'blocks';
     const INSTRUCTION_REMOVE_BLOCKS   = 'remove_blocks';
     const INSTRUCTION_VIEW_HELPERS    = 'view_helpers';
-    
+    const INSTRUCTION_INCLUDE         = 'include';
+
     /**
      * retrieve layout structure for current request
      * respectively current handles

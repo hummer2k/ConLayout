@@ -7,7 +7,7 @@ use ConLayoutTest\AbstractTest;
 use Zend\EventManager\EventManager;
 use Zend\Mvc\Router\Http\RouteMatch;
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class ActionHandlesListenerTest extends AbstractTest
@@ -35,9 +35,8 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->assertEquals([
             'default',
             'app',
-            'app-controller',
-            'app-controller-index',
-            'app-controller-index-index'
+            'app-index',
+            'app-index-index'
         ], $updater->getHandles());
 
     }

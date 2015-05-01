@@ -36,7 +36,7 @@ class LayoutTemplateListener implements
     }
 
     /**
-     * 
+     *
      * @param LayoutUpdaterInterface $updater
      */
     public function __construct(LayoutUpdaterInterface $updater)
@@ -58,7 +58,7 @@ class LayoutTemplateListener implements
         if ($template === '') {
             $layoutTemplate = $this->updater->getLayoutStructure()->get(
                 LayoutUpdaterInterface::INSTRUCTION_LAYOUT_TEMPLATE,
-                ''
+                'layout/layout'
             );
             $layout->setTemplate($layoutTemplate);
         }

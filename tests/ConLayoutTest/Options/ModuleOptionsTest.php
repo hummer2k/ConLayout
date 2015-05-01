@@ -17,7 +17,8 @@ class ModuleOptionsTest extends AbstractTest
         $this->assertInternalType('array', $moduleOptions->getAssetPreparers());
         $this->assertInternalType('array', $moduleOptions->getViewHelpers());
         $this->assertInternalType('string', $moduleOptions->getCacheBusterInternalBaseDir());
-        $this->assertInternalType('array', $moduleOptions->getUpdateListenerGlobPaths());
+        $this->assertInternalType('array', $moduleOptions->getLayoutUpdatePaths());
+        $this->assertInternalType('array', $moduleOptions->getLayoutUpdateExtensions());
         $this->assertFalse($moduleOptions->getEnableDebug());
     }
 
@@ -35,8 +36,5 @@ class ModuleOptionsTest extends AbstractTest
 
         $moduleOptions->setEnableDebug(true);
         $this->assertTrue($moduleOptions->getEnableDebug());
-
-        $moduleOptions->setUpdateListenerGlobPaths(['global' => '/path/layout.php']);
-        $this->assertEquals(['global' => '/path/layout.php'], $moduleOptions->getUpdateListenerGlobPaths());
     }
 }

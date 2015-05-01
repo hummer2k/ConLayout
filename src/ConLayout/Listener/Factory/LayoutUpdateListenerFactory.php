@@ -8,25 +8,18 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @package ConLayout
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutUpdateListenerFactory implements FactoryInterface
 {
-    use \ConLayout\OptionTrait;
-
-    /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return LayoutUpdateListener
-     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $options ModuleOptions */
         $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
-        $layoutUpdateListener = new LayoutUpdateListener(
-            $options->getUpdateListenerGlobPaths()
-        );
-        return $layoutUpdateListener;
+        $paths = $options->getLayoutUpdatePaths();
+        $extensions = $options->getLayoutUpdateExtensions();
+        $listener = new LayoutUpdateListener($paths, $extensions);
+        return $listener;
     }
 }

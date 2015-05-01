@@ -8,7 +8,7 @@ use Zend\Config\Config;
 use Zend\View\Model\ViewModel;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutTemplateListenerTest extends AbstractTest
@@ -48,12 +48,10 @@ class LayoutTemplateListenerTest extends AbstractTest
         $this->assertEquals('3cols', $layout->getTemplate());
     }
 
-    protected function getGlobalLayoutStructure()
+    protected function getLayoutStructure()
     {
         return new Config([
-            'default' => [
-                'layout' => '2cols-left'
-            ]
+            'layout' => '2cols-left'
         ]);
     }
 }

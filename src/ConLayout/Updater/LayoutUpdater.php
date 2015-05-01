@@ -2,8 +2,8 @@
 
 namespace ConLayout\Updater;
 
-use ConLayout\Handle\Handle;
-use ConLayout\Handle\HandleInterface;
+use ConLayout\Updater\Event\FetchEvent;
+use ConLayout\Updater\Event\UpdateEvent;
 use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
@@ -12,27 +12,10 @@ use Zend\EventManager\EventManagerAwareTrait;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-final class LayoutUpdater implements
-    EventManagerAwareInterface,
-    LayoutUpdaterInterface
+final class LayoutUpdater extends AbstractUpdater
+    implements EventManagerAwareInterface
 {
     use EventManagerAwareTrait;
-
-    /**
-     * Format:
-     * (string) handle-name => (int) priority
-     *
-     * @var array
-     */
-    private $handles = [
-        'default' => -1
-    ];
-
-    /**
-     *
-     * @var Config
-     */
-    private $globalLayoutStructure;
 
     /**
      *
@@ -41,54 +24,24 @@ final class LayoutUpdater implements
     private $layoutStructure;
 
     /**
-     * {@inheritdoc}
+     * @var FetchEvent
      */
-    public function addHandle(HandleInterface $handle)
-    {
-        $this->handles[$handle->getName()] = $handle->getPriority();
-        return $this;
-    }
+    private $event;
 
     /**
-     * {@inheritdoc}
-     */
-    public function removeHandle($handleName)
-    {
-        if (isset($this->handles[$handleName])) {
-            unset($this->handles[$handleName]);
-        }
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHandles($asObject = false)
-    {
-        asort($this->handles);
-        if ($asObject) {
-            $handles = [];
-            foreach ($this->handles as $handle => $priority) {
-                $handles[] = new Handle($handle, $priority);
-            }
-            return $handles;
-        }
-        return array_keys($this->handles);
-    }
-
-    /**
-     * {@inheritdoc}
+     *
+     * @return Config
      */
     public function getLayoutStructure()
     {
         if (null === $this->layoutStructure) {
             $this->layoutStructure = new Config([], true);
-            
+
             $handles = $this->getHandles();
-            $event = new Event\UpdateEvent();
+            $event = new UpdateEvent();
             $event->setLayoutStructure($this->layoutStructure);
             $event->setHandles($handles);
-            
+
             $results = $this->getEventManager()->trigger(
                 __FUNCTION__ . '.pre',
                 $this,
@@ -97,99 +50,51 @@ final class LayoutUpdater implements
                     return ($result instanceof Config);
                 }
             );
-            
+
             if ($results->stopped()) {
                 $this->layoutStructure = $results->last();
             } else {
-                $this->loadGlobalLayoutStructure();
                 foreach ($handles as $handle) {
                     $this->fetch($handle);
                 }
             }
-            
+
             $this->getEventManager()->trigger(
                 __FUNCTION__ . '.post',
                 $this,
                 ['__RESULT__' => $this->layoutStructure]
             );
-            
+
             $this->layoutStructure->setReadOnly();
         }
         return $this->layoutStructure;
     }
 
     /**
-     * fetch layout structure for handle and merge with layout structure
      *
-     * @param string $handleToFetch
+     * @param string $handle
      */
-    private function fetch($handleToFetch)
+    private function fetch($handle)
     {
-        $this->fetchApplyForHandles($handleToFetch);
-        $this->fetchHandle($handleToFetch);
-    }
-
-    /**
-     * fetches apply_for key:
-     * 'my-handle' => [
-     *     'apply_for' => [
-     *         'another-handle' => true
-     *     ]
-     * ]
-     *
-     * @param string $handleToFetch
-     */
-    private function fetchApplyForHandles($handleToFetch)
-    {
-        foreach ($this->globalLayoutStructure as $instructions) {
-            if ($includeHandles = $instructions->get(self::INSTRUCTION_APPLY_FOR)) {
-                if ($includeHandles->get($handleToFetch)) {
-                    $this->layoutStructure->merge($instructions);
-                }
-            }
-        }
-    }
-
-    /**
-     * fetches handle
-     *
-     * @param string $handleToFetch
-     */
-    private function fetchHandle($handleToFetch)
-    {
-        if ($config = $this->globalLayoutStructure->get($handleToFetch)) {
-            $this->layoutStructure->merge($config);
-        }
-    }
-
-    /**
-     * event driven load application wide layout structure
-     */
-    private function loadGlobalLayoutStructure()
-    {
-        $this->globalLayoutStructure = new Config([], true);
-        $event = new Event\UpdateEvent();
-        $event->setGlobalLayoutStructure($this->globalLayoutStructure);
-
-        $results = $this->getEventManager()->trigger(
-            __FUNCTION__ . '.pre',
+        $event = $this->getEvent();
+        $event->setHandle($handle);
+        $this->events->trigger(
+            __FUNCTION__,
             $this,
-            $event,
-            function ($result) {
-                return ($result instanceof Config);
-            }
+            $event
         );
+    }
 
-        if ($results->stopped()) {
-            $this->globalLayoutStructure = $results->last();
+    /**
+     *
+     * @return FetchEvent
+     */
+    private function getEvent()
+    {
+        if (null === $this->event) {
+            $this->event = new FetchEvent();
+            $this->event->setLayoutStructure($this->layoutStructure);
         }
-
-        $this->getEventManager()->trigger(
-            __FUNCTION__ . '.post',
-            $this,
-            ['__RESULT__' => $this->globalLayoutStructure]
-        );
-
-        $this->globalLayoutStructure->setReadOnly();
+        return $this->event;
     }
 }

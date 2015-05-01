@@ -3,9 +3,10 @@
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\LayoutUpdateListener;
-use ConLayout\Updater\Event\UpdateEvent;
+use ConLayout\Updater\Event\FetchEvent;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
+use Zend\EventManager\EventManager;
 
 /**
  * @package ConLayout
@@ -13,75 +14,120 @@ use Zend\Config\Config;
  */
 class LayoutUpdateListenerTest extends AbstractTest
 {
-    public function testOnLoadGlobalLayoutStructure()
+    protected $listener;
+
+    protected $layoutStructure;
+
+    public function setUp()
     {
-        $listener = new LayoutUpdateListener([
-            LayoutUpdateListener::AREA_GLOBAL => __DIR__ . '/_files/layout.{php,xml}'
+        parent::setUp();
+        $this->listener = new LayoutUpdateListener([
+            LayoutUpdateListener::AREA_GLOBAL => [
+                __DIR__ . '/_files/module1',
+                __DIR__ . '/_files/module2'
+            ],
+            'area1' => [
+                __DIR__ . '/_files/module1/area1'
+            ],
+            'area2' => [
+                __DIR__ . '/_files/module1/area2'
+            ]
         ]);
-
-        $globalLayoutStructure = new Config([], true);
-
-        $event = new UpdateEvent();
-        $event->setGlobalLayoutStructure($globalLayoutStructure);
-
-        $listener->onLoadGlobalLayoutStructure($event);
-
-        $aStructure = $globalLayoutStructure->toArray();
-        $blocks = $aStructure['default']['blocks'];
-        
-        $this->assertArrayHasKey('header', $blocks);
-        $this->assertArrayHasKey('footer', $blocks);
-        $this->assertArrayHasKey('widget1', $blocks);
-
+        $this->layoutStructure = new Config([], true);
     }
 
-    public function testArea1()
+    protected function getEvent($handle = 'default')
     {
-        $listener = new LayoutUpdateListener([
-            LayoutUpdateListener::AREA_GLOBAL => __DIR__ . '/_files/layout.{php,xml}',
-            'area1' => __DIR__ . '/_files/area1/layout.php',
-            'area2' => __DIR__ . '/_files/area2/layout.php'
-        ]);
-
-        $listener->setArea('area1');
-
-        $globalLayoutStructure = new Config([], true);
-
-        $event = new UpdateEvent();
-        $event->setGlobalLayoutStructure($globalLayoutStructure);
-        $listener->onLoadGlobalLayoutStructure($event);
-        $aStructure = $globalLayoutStructure->toArray();        
-        $blocks = $aStructure['default']['blocks'];
-
-        $this->assertArrayHasKey('header', $blocks);
-        $this->assertArrayHasKey('footer', $blocks);
-        $this->assertArrayHasKey('widget1', $blocks);
-        $this->assertArrayHasKey('area1.widget', $blocks);
-        $this->assertFalse(isset($blocks['area2.widget']));
+        $event = new FetchEvent();
+        $event->setHandle($handle);
+        $event->setLayoutStructure($this->layoutStructure);
+        return $event;
     }
 
-    public function testArea2()
+    public function testAttach()
     {
-        $listener = new LayoutUpdateListener([
-            LayoutUpdateListener::AREA_GLOBAL => __DIR__ . '/_files/layout.{php,xml}',
-            'area1' => __DIR__ . '/_files/area1/layout.php',
-            'area2' => __DIR__ . '/_files/area2/layout.php'
-        ]);
+        $eventManager = new EventManager();
+        $eventManager->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
 
-        $listener->setArea('area2');
+        $this->listener->attach($eventManager);
 
-        $globalLayoutStructure = new Config([], true);
+        $listeners = $eventManager->getSharedManager()->getListeners(
+            'ConLayout\Updater\LayoutUpdater',
+            'fetch'
+        );
 
-        $event = new UpdateEvent();
-        $event->setGlobalLayoutStructure($globalLayoutStructure);
-        $listener->onLoadGlobalLayoutStructure($event);
-        $aStructure = $globalLayoutStructure->toArray();
-        $blocks = $aStructure['default']['blocks'];
+        $this->assertCount(1, $listeners);
+    }
 
-        $this->assertArrayHasKey('header', $blocks);
-        $this->assertArrayHasKey('footer', $blocks);
-        $this->assertArrayHasKey('widget1', $blocks);
-        $this->assertArrayHasKey('area2.widget', $blocks);
-        $this->assertFalse(isset($blocks['area1.widget']));
+    public function testFetchDefault()
+    {
+        $event = $this->getEvent();
+        $this->listener->fetch($event);
+
+        $layoutStructure = $event->getLayoutStructure()->toArray();
+
+        $this->assertEquals([
+            'blocks' => [
+                'header' => [],
+                'footer' => [],
+                'widget1' => [],
+                'widget2' => []
+            ]
+        ], $layoutStructure);
+    }
+
+    public function testFetchInclude()
+    {
+        $event = $this->getEvent('include');
+        $this->listener->fetch($event);
+
+        $layoutStructure = $event->getLayoutStructure()->toArray();
+
+        $this->assertEquals([
+            'blocks' => [
+                'widget.included' => [],
+                'another.handle.block' => []
+            ]
+        ], $layoutStructure);
+    }
+
+    public function testFetchArea1()
+    {
+        $event = $this->getEvent();
+        $this->listener->setArea('area1');
+        $this->listener->fetch($event);
+
+        $layoutStructure = $event->getLayoutStructure()->toArray();
+
+        $this->assertEquals([
+            'blocks' => [
+                'header' => [
+                    'template' => 'area1-header-tpl'
+                ],
+                'footer' => [],
+                'widget1' => [],
+                'widget2' => []
+            ]
+        ], $layoutStructure);
+    }
+
+    public function testFetchArea2()
+    {
+        $event = $this->getEvent();
+        $this->listener->setArea('area2');
+        $this->listener->fetch($event);
+
+        $layoutStructure = $event->getLayoutStructure()->toArray();
+
+        $this->assertEquals([
+            'blocks' => [
+                'header' => [],
+                'footer' => [
+                    'template' => 'area2-footer-tpl'
+                ],
+                'widget1' => [],
+                'widget2' => []
+            ]
+        ], $layoutStructure);
     }
 }

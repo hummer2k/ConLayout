@@ -38,13 +38,19 @@ class ModuleOptions extends AbstractOptions
      *
      * @var array
      */
-    protected $updateListenerGlobPaths = [];
+    protected $layoutUpdatePaths = [];
+
+    /**
+     *
+     * @var array
+     */
+    protected $layoutUpdateExtensions = ['php'];
 
     public function getEnableDebug()
     {
         return $this->enableDebug;
     }
-   
+
     public function getViewHelpers()
     {
         return $this->viewHelpers;
@@ -78,20 +84,33 @@ class ModuleOptions extends AbstractOptions
         return $this->cacheBusterInternalBaseDir;
     }
 
-    public function getUpdateListenerGlobPaths()
-    {
-        return $this->updateListenerGlobPaths;
-    }
-
     public function setCacheBusterInternalBaseDir($cacheBusterInternalBaseDir)
     {
         $this->cacheBusterInternalBaseDir = $cacheBusterInternalBaseDir;
         return $this;
     }
 
-    public function setUpdateListenerGlobPaths($updateListenerGlobPaths)
+    public function getLayoutUpdatePaths()
     {
-        $this->updateListenerGlobPaths = $updateListenerGlobPaths;
+        return $this->layoutUpdatePaths;
+    }
+
+    public function getLayoutUpdateExtensions()
+    {
+        return $this->layoutUpdateExtensions;
+    }
+
+    public function setLayoutUpdatePaths(array $layoutUpdatePaths)
+    {
+        $this->layoutUpdatePaths = array_unique($layoutUpdatePaths);
         return $this;
     }
+
+    public function setLayoutUpdateExtensions(array $layoutUpdateExtensions)
+    {
+        $this->layoutUpdateExtensions = array_unique($layoutUpdateExtensions);
+        return $this;
+    }
+
+
 }

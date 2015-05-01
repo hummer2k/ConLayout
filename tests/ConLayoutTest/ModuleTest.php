@@ -12,7 +12,7 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\View\HelperPluginManager;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class ModuleTest extends AbstractTest
@@ -61,27 +61,16 @@ class ModuleTest extends AbstractTest
         $event = new \Zend\Mvc\MvcEvent();
         $event->setApplication($application);
         $em = $application->getEventManager();
-        
+
         $em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
 
         $this->assertCount(0, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
         $this->assertCount(0, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_RENDER));
 
-        $this->assertFalse($em->getSharedManager()->getListeners(
-            'ConLayout\Updater\LayoutUpdater',
-            'loadGlobalLayoutStructure.pre'
-        ));
-
         $module->onBootstrap($event);
 
         $this->assertCount(2, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
         $this->assertCount(3,  $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_RENDER));
-
-        $this->assertCount(1, $em->getSharedManager()->getListeners(
-            'ConLayout\Updater\LayoutUpdater',
-            'loadGlobalLayoutStructure.pre'
-        ));
-
 
         $layoutUpdater = $sm->get('ConLayout\Updater\LayoutUpdaterInterface');
 
@@ -112,9 +101,9 @@ class ModuleTest extends AbstractTest
         $sm = $application->getServiceManager();
         $sm->setAllowOverride(true);
         $sm->setService('Request', new ConsoleRequest());
-        
+
         $em = $application->getEventManager();
-        
+
         $event = new \Zend\Mvc\MvcEvent();
         $event->setApplication($application);
 

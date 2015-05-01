@@ -22,50 +22,48 @@ use Zend\View\Renderer\PhpRenderer;
  */
 class ViewHelperListenerTest extends AbstractTest
 {
-    protected function getGlobalLayoutStructure()
+    protected function getLayoutStructure()
     {
         return new Config([
-            'default' => [
-                'view_helpers' => [
-                    'doctype' => 'HTML5',
-                    'headLink' => [
-                        'main'   => '/css/main.css',
-                        'test'   => [
-                            'prependStylesheet' => '/css/test.css'
-                        ]
-                    ],
-                    'headTitle' => [
-                        'My Title',
-                        'Another Title',
-                        [
-                            'prepend' => 'First'
-                        ]
-                    ],
-                    'headMeta' => [
-                        ['setCharset' => 'utf8'],
-                        ['description', 'My description'],
-                        ['keywords', 'keyword1, keyword2, keyword3']
-                    ],
-                    'headScript' => [
-                        'jquery-ui' => '/js/jquery-ui.min.js',
-                        'jquery' => [
-                            'prependFile' =>  '/js/jquery.min.js'
-                        ],
-                        'modernizr' => [
-                            'appendFile' => [
-                                '/js/modernizr.js',
-                                'text/javascript',
-                                ['conditional' => 'lt IE 9']
-                            ]
-                        ],
-                        'funcs' => [
-                            'offsetSetFile' => [
-                                100,
-                                '/js/functions.js'
-                            ]
-                        ],
-                        'will-be-ignored' => false
+            'view_helpers' => [
+                'doctype' => 'HTML5',
+                'headLink' => [
+                    'main'   => '/css/main.css',
+                    'test'   => [
+                        'prependStylesheet' => '/css/test.css'
                     ]
+                ],
+                'headTitle' => [
+                    'My Title',
+                    'Another Title',
+                    [
+                        'prepend' => 'First'
+                    ]
+                ],
+                'headMeta' => [
+                    ['setCharset' => 'utf8'],
+                    ['description', 'My description'],
+                    ['keywords', 'keyword1, keyword2, keyword3']
+                ],
+                'headScript' => [
+                    'jquery-ui' => '/js/jquery-ui.min.js',
+                    'jquery' => [
+                        'prependFile' =>  '/js/jquery.min.js'
+                    ],
+                    'modernizr' => [
+                        'appendFile' => [
+                            '/js/modernizr.js',
+                            'text/javascript',
+                            ['conditional' => 'lt IE 9']
+                        ]
+                    ],
+                    'funcs' => [
+                        'offsetSetFile' => [
+                            100,
+                            '/js/functions.js'
+                        ]
+                    ],
+                    'will-be-ignored' => false
                 ]
             ]
         ]);
@@ -74,16 +72,11 @@ class ViewHelperListenerTest extends AbstractTest
     public function testApplyViewHelpers()
     {
         $config = Bootstrap::getServiceManager()->get('Config');
-        $eventManager = new EventManager();
-        $updater = new LayoutUpdater();
-        $updater->setEventManager($eventManager);
-
-        $this->attachGlobalLayoutStructureListener($eventManager);
 
         $helperPluginManager = new HelperPluginManager();
 
         $listener = new ViewHelperListener(
-            $updater,
+            $this->layoutUpdater,
             $helperPluginManager,
             $config['con-layout']['view_helpers']
         );
@@ -113,7 +106,7 @@ class ViewHelperListenerTest extends AbstractTest
 
         $listener->applyViewHelpers($mvcEvent);
 
-        
+
 
         $expected = '<link href="/assets/css/test.css" media="screen" rel="stylesheet" type="text/css">' . PHP_EOL
                   . '<link href="/assets/css/main.css" media="screen" rel="stylesheet" type="text/css">';

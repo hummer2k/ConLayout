@@ -3,289 +3,118 @@
 namespace ConLayoutTest\Updater;
 
 use ConLayout\Handle\Handle;
+use ConLayout\Updater\Event\FetchEvent;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
-use Zend\Cache\StorageFactory;
 use Zend\Config\Config;
-use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutUpdaterTest extends AbstractTest
+class EventDrivenLayoutUpdaterTest extends AbstractTest
 {
-    public function testAddHandle()
+    protected $em;
+
+    protected $layoutStructure;
+
+    public function setUp()
     {
-        $updater = new LayoutUpdater();
-        $this->assertSame([
-            'default'
-        ], $updater->getHandles());
-
-        $updater->addHandle(new Handle('my-handle', 5));
-
-        $this->assertSame([
-            'default',
-            'my-handle'
-        ], $updater->getHandles());
-
-        $updater->addHandle(new Handle('test-handle', 2));
-
-        $this->assertSame([
-            'default',
-            'test-handle',
-            'my-handle'
-        ], $updater->getHandles());
-    }
-
-    public function testGetHandlesAsObject()
-    {
-        $updater = new LayoutUpdater();
-        $updater->addHandle(new Handle('my-handle', 2));
-
-        $handles = $updater->getHandles(true);
-
-        foreach ($handles as $handle) {
-            $this->assertInstanceOf('ConLayout\Handle\Handle', $handle);
-            $this->assertInstanceOf('ConLayout\Handle\HandleInterface', $handle);
-        }
-    }
-
-    public function testApplyForHandles()
-    {
-        $eventManager = new EventManager();
-        $updater = new LayoutUpdater();
-
-        $newGlobalLayoutStructure = $this->getGlobalLayoutStructure();
-        $newGlobalLayoutStructure->merge(new Config([
-            'my-handle' => [
-                'apply_for' => [
-                    'test-handle' => true
-                ],
-                'blocks' => [
-                    'my.widget' => []
-                ]
-            ],
-            'test-handle' => [
-            ]
-        ]));
-
-         $eventManager->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'loadGlobalLayoutStructure.pre',
-            function(UpdateEvent $e) use ($newGlobalLayoutStructure) {
-                $globalLayoutStructure = $e->getGlobalLayoutStructure();
-                $globalLayoutStructure->merge($newGlobalLayoutStructure);
-            }
-        );
-
-        $updater->addHandle(new Handle('test-handle', 5));
-
-        $layoutStructure = $updater->getLayoutStructure();
-
-        $expected = [
-            'my-block' => [
-                'capture_to' => 'sidebarLeft'
-            ],
-            'my.widget' => []
-        ];
-
-        $this->assertSame($expected, $layoutStructure->get('blocks')->toArray());
-
-    }
-
-    public function testRemoveHandle()
-    {
-        $updater = new LayoutUpdater();
-        $updater->addHandle(new Handle('test-handle', 2));
-
-        $this->assertSame([
-            'default',
-            'test-handle'
-        ], $updater->getHandles());
-
-        $updater->removeHandle('test-handle');
-
-        $this->assertSame([
-            'default'
-        ], $updater->getHandles());
-    }
-
-    protected function getGlobalLayoutStructure()
-    {
-        return new Config([
+        parent::setUp();
+        $this->updater = new LayoutUpdater();
+        $this->em = new EventManager();
+                $instructions = [
             'default' => [
                 'blocks' => [
-                    'my-block' => [
-                        'capture_to' => 'sidebarLeft'
-                    ]
-                ]
-            ]
-        ], true);
-    }
-
-    public function testGetLayoutStructure()
-    {
-        $eventManager = new EventManager();
-        $this->attachGlobalLayoutStructureListener($eventManager);
-
-        $updater = new LayoutUpdater();
-        $updater->setEventManager($eventManager);
-
-        $layoutStructure = $updater->getLayoutStructure();
-
-        $this->assertEquals([
-            'blocks' => [
-                'my-block' => [
-                    'capture_to' => 'sidebarLeft'
-                ]
-            ]
-        ], $layoutStructure->toArray());
-    }
-
-    public function testGetLayoutStructureWithGlobalCache()
-    {
-        $eventManager = new EventManager();
-        $this->attachGlobalLayoutStructureListener($eventManager);
-
-        $layoutCacheListener = new LayoutCacheListener();
-        $layoutCacheListener->attach($eventManager);
-
-        $updater = new LayoutUpdater();
-        $updater->setEventManager($eventManager);
-
-        $layoutStructure = $updater->getLayoutStructure();
-
-        $this->assertEquals([
-            'blocks' => [
-                'my-block' => [
-                    'capture_to' => 'sidebarLeft'
-                ]
-            ]
-        ], $layoutStructure->toArray());
-
-
-        $updater2 = new LayoutUpdater();
-        $updater2->setEventManager($eventManager);
-
-        $layoutStructure = $updater2->getLayoutStructure();
-
-        $this->assertEquals([
-            'blocks' => [
-                'my-block' => [
-                    'capture_to' => 'sidebarLeft'
+                    'header' => [],
+                    'footer' => []
                 ]
             ],
-            'cached' => true
-        ], $layoutStructure->toArray());
-
+            'another-handle' => [
+                'blocks' => [
+                    'widget1' => []
+                ]
+            ]
+        ];
+        $this->em->getSharedManager()->clearListeners(
+            'ConLayout\Updater\LayoutUpdater'
+        );
+        $this->em->getSharedManager()->attach(
+            'ConLayout\Updater\LayoutUpdater',
+            'fetch',
+            function (FetchEvent $e) use ($instructions) {
+                $handle = $e->getHandle();
+                $this->layoutStructure = $e->getLayoutStructure();
+                if (isset($instructions[$handle])) {
+                    $instructionsConfig = new Config(
+                        $instructions[$handle]
+                    );
+                    $this->layoutStructure->merge($instructionsConfig);
+                }
+            }
+        );
     }
-    
-    public function testGetLayoutStructureWithCache()
+
+    public function testDefaultHandle()
     {
-        $eventManager = new EventManager();
-        
-        $eventManager->getSharedManager()->attach(
+        $layoutStructure = $this->updater->getLayoutStructure()->toArray();
+        $this->assertEquals([
+            'blocks' => [
+                'header' => [],
+                'footer' => []
+            ]
+        ], $layoutStructure);
+    }
+
+    public function testAnotherHandle()
+    {
+        $this->updater->addHandle(new Handle('another-handle', 1));
+        $this->assertEquals([
+            'blocks' => [
+                'header' => [],
+                'footer' => [],
+                'widget1' => []
+            ]
+        ], $this->updater->getLayoutStructure()->toArray());
+    }
+
+    public function testShortCircuiting()
+    {
+        $this->em->getSharedManager()->attach(
             'ConLayout\Updater\LayoutUpdater',
             'getLayoutStructure.pre',
             function (UpdateEvent $e) {
-                $this->assertSame([
-                    'default',
-                    'test-handle'
+                return new Config(['cached' => true]);
+            }
+        );
+
+        $layoutStructure = $this->updater->getLayoutStructure()->toArray();
+
+        $this->assertEquals([
+            'cached' => true
+        ], $layoutStructure);
+    }
+
+    public function testUpdateEvent()
+    {
+        $this->em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
+        $this->em->getSharedManager()->attach(
+            'ConLayout\Updater\LayoutUpdater',
+            'getLayoutStructure.pre',
+            function (UpdateEvent $e) {
+                $this->assertEquals([
+                    'default'
                 ], $e->getHandles());
-                
-                $this->assertInstanceOf(
-                    'Zend\Config\Config',
-                    $e->getLayoutStructure()
-                );
-                
-                return new Config(['blocks' => ['block1' => ['template' => '/my/tpl']]]);
+                $testLayoutStructure = new Config(['test' => 'test']);
+                $e->getLayoutStructure()->merge($testLayoutStructure);
             }
         );
-        
-        $eventManager->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'getLayoutStructure.post',
-            function (EventInterface $e) {
-                $result = $e->getParam('__RESULT__');
-                $block1 = $result->get('blocks')
-                    ->get('block1')
-                    ->toArray();
-                
-                $this->assertEquals(
-                    ['template' => '/my/tpl'],
-                    $block1
-                );
-            }
-        );        
-        
-        $updater = new LayoutUpdater();
-        $updater->addHandle(new Handle('test-handle', 5));
-        $updater->setEventManager($eventManager);
-        
-        $updater->getLayoutStructure();
-    }
-}
+        $layoutStructure = $this->updater->getLayoutStructure()->toArray();
 
-class LayoutCacheListener implements ListenerAggregateInterface
-{
-    use \Zend\EventManager\ListenerAggregateTrait;
-
-    const CACHE_KEY = 'global-layout-structure';
-
-    protected $cache;
-    
-    public function __construct()
-    {
-        $this->cache = StorageFactory::factory([
-            'adapter' => [
-                'name' => 'memory'
-            ],
-            'plugins' => [
-                'exception_handler' => [
-                    'throw_exceptions' => false
-                ],
-                'Serializer'
-            ]
-        ]);
-    }
-
-    public function attach(EventManagerInterface $events)
-    {
-        $events->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'loadGlobalLayoutStructure.pre',
-            array($this, 'loadCache'),
-            100
-        );
-        $events->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'loadGlobalLayoutStructure.post',
-            array($this, 'saveCache'),
-            -100
-        );
-    }
-
-    public function loadCache(UpdateEvent $e)
-    {
-        if ($this->cache->hasItem(self::CACHE_KEY)) {
-            $cachedGLobalLayoutConfig = new Config(
-                $this->cache->getItem(self::CACHE_KEY), true
-            );
-            return $cachedGLobalLayoutConfig;
-        }
-    }
-
-    public function saveCache(EventInterface $e)
-    {
-        /* @var $result Config */
-        $result = $e->getParam('__RESULT__');
-        $aResult = $result->toArray();
-        $aResult['default']['cached'] = true;
-        $this->cache->setItem(self::CACHE_KEY, $aResult);
+        $this->assertEquals([
+            'test' => 'test'
+        ], $layoutStructure);
     }
 }

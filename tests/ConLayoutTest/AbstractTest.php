@@ -2,16 +2,17 @@
 namespace ConLayoutTest;
 
 use ConLayout\Block\Factory\BlockFactory;
-use ConLayoutTest\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Updater\Event\UpdateEvent;
+use ConLayout\Updater\Event\FetchEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Config\Config;
+use ConLayoutTest\Layout\Layout;
 use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerInterface;
+use Zend\Config\Config;
 use Zend\View\Resolver\TemplateMapResolver;
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
@@ -28,13 +29,28 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     protected $layout;
 
+    /**
+     *
+     * @var EventManagerInterface
+     */
+    protected $em;
+
     public function setUp()
     {
         $eventManager = new EventManager();
         $this->layoutUpdater = new LayoutUpdater();
         $this->layoutUpdater->setEventManager($eventManager);
 
-        $this->attachGlobalLayoutStructureListener($eventManager);
+        $this->em = $eventManager;
+        $this->em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
+        $this->em->getSharedManager()->attach(
+            'ConLayout\Updater\LayoutUpdater',
+            'fetch',
+            function (FetchEvent $e) {
+                $layoutStructure = $e->getLayoutStructure();
+                $layoutStructure->merge($this->getLayoutStructure());
+            }
+        );
 
         $this->layout = new Layout(
             new BlockFactory(),
@@ -52,23 +68,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    protected function getGlobalLayoutStructure()
+    protected function getLayoutStructure()
     {
-        return new Config([]);
-    }
-
-    protected function attachGlobalLayoutStructureListener(
-        EventManager $eventManager
-    )
-    {
-        $eventManager->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
-        $eventManager->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'loadGlobalLayoutStructure.pre',
-            function(UpdateEvent $e) {
-                $globalLayoutStructure = $e->getGlobalLayoutStructure();
-                $globalLayoutStructure->merge($this->getGlobalLayoutStructure());
-            }
-        );
+        return new Config([], true);
     }
 }

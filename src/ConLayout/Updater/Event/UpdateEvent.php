@@ -12,11 +12,6 @@ use Zend\EventManager\Event;
 class UpdateEvent extends Event
 {
     /**
-     * @var Config
-     */
-    protected $globalLayoutStructure;
-
-    /**
      *
      * @var Config
      */
@@ -27,24 +22,6 @@ class UpdateEvent extends Event
      * @var array
      */
     protected $handles;
-
-    /**
-     * @return Config
-     */
-    public function getGlobalLayoutStructure()
-    {
-        return $this->globalLayoutStructure;
-    }
-
-    /**
-     * @param Config $globalLayoutStructure
-     * @return UpdateEvent
-     */
-    public function setGlobalLayoutStructure(Config $globalLayoutStructure)
-    {
-        $this->globalLayoutStructure = $globalLayoutStructure;
-        return $this;
-    }
 
     /**
      * @return Config
