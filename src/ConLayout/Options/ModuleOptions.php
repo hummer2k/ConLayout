@@ -111,6 +111,4 @@ class ModuleOptions extends AbstractOptions
         $this->layoutUpdateExtensions = array_unique($layoutUpdateExtensions);
         return $this;
     }
-
-
 }

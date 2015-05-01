@@ -42,8 +42,7 @@ class ActionHandlesListener implements
     public function __construct(
         LayoutUpdaterInterface $updater,
         array $excludeSegments = ['Controller']
-    )
-    {
+    ) {
         $this->updater = $updater;
         $this->excludeSegments = $excludeSegments;
     }

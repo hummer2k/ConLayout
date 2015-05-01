@@ -12,8 +12,8 @@ use Zend\EventManager\EventManagerAwareTrait;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-final class LayoutUpdater extends AbstractUpdater
-    implements EventManagerAwareInterface
+final class LayoutUpdater extends AbstractUpdater implements
+    EventManagerAwareInterface
 {
     use EventManagerAwareTrait;
 
