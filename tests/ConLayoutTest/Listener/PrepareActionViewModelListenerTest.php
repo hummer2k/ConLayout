@@ -50,4 +50,18 @@ class PrepareActionViewModelListenerTest extends AbstractTest
         $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
         $this->assertTrue($viewModel->isAppend());
     }
+
+    public function testDoNothingOnTerminal()
+    {
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+        $viewModel->setAppend(false);
+
+        $this->mvcEvent->setResult($viewModel);
+        $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
+
+        $this->assertFalse($viewModel->isAppend());
+        $this->assertNull($viewModel->getVariable(LayoutInterface::BLOCK_ID_VAR));
+
+    }
 }

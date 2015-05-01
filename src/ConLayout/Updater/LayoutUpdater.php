@@ -24,11 +24,6 @@ final class LayoutUpdater extends AbstractUpdater implements
     private $layoutStructure;
 
     /**
-     * @var FetchEvent
-     */
-    private $event;
-
-    /**
      *
      * @return Config
      */
@@ -58,24 +53,11 @@ final class LayoutUpdater extends AbstractUpdater implements
             $this->getEventManager()->trigger(
                 __FUNCTION__ . '.post',
                 $this,
-                ['__RESULT__' => $this->layoutStructure]
+                $event
             );
 
             $this->layoutStructure->setReadOnly();
         }
         return $this->layoutStructure;
-    }
-
-    /**
-     *
-     * @return FetchEvent
-     */
-    private function getEvent()
-    {
-        if (null === $this->event) {
-            $this->event = new FetchEvent();
-            $this->event->setLayoutStructure($this->layoutStructure);
-        }
-        return $this->event;
     }
 }
