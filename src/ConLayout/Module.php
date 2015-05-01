@@ -63,7 +63,7 @@ class Module implements
             'ConLayout\Listener\LoadLayoutListener',
             'ConLayout\Listener\LayoutTemplateListener',
             'ConLayout\Listener\ViewHelperListener',
-            'ConLayout\Listener\NameActionViewModelListener'
+            'ConLayout\Listener\PrepareActionViewModelListener'
         ];
 
         foreach ($listeners as $listener) {

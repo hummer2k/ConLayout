@@ -30,8 +30,8 @@ return [
     'invokables' => [
         'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
             => 'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator',
-        'ConLayout\Listener\NameActionViewModelListener'
-            => 'ConLayout\Listener\NameActionViewModelListener'
+        'ConLayout\Listener\PrepareActionViewModelListener'
+            => 'ConLayout\Listener\PrepareActionViewModelListener'
     ],
     'delegators' => [
         'ConLayout\Listener\ViewHelperListener' => [

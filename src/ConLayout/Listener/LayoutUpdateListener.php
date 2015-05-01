@@ -2,8 +2,9 @@
 
 namespace ConLayout\Listener;
 
-use ConLayout\Updater\Event\FetchEvent;
+use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdaterInterface;
+use Zend\Config\Config;
 use Zend\Config\Factory as ConfigFactory;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
@@ -64,20 +65,22 @@ class LayoutUpdateListener implements ListenerAggregateInterface
     {
         $events->getSharedManager()->attach(
             'ConLayout\Updater\LayoutUpdater',
-            'fetch',
+            'getLayoutStructure.pre',
             [$this, 'fetch']
         );
     }
 
     /**
      *
-     * @param FetchEvent $event
+     * @param UpdateEvent $event
      */
-    public function fetch(FetchEvent $event)
+    public function fetch(UpdateEvent $event)
     {
-        $handle = $event->getHandle();
+        $handles = $event->getHandles();
         $this->layoutStructure = $event->getLayoutStructure();
-        $this->fetchHandle($handle);
+        foreach ($handles as $handle) {
+            $this->fetchHandle($handle);
+        }
         $this->cleanUpLayoutStructure();
     }
 

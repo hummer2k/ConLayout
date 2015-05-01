@@ -3,13 +3,13 @@ namespace ConLayoutTest;
 
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Updater\Event\FetchEvent;
+use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\Layout\Layout;
+use Zend\Config\Config;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
-use Zend\Config\Config;
 use Zend\View\Resolver\TemplateMapResolver;
 /**
  * @package
@@ -45,8 +45,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $this->em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
         $this->em->getSharedManager()->attach(
             'ConLayout\Updater\LayoutUpdater',
-            'fetch',
-            function (FetchEvent $e) {
+            'getLayoutStructure.pre',
+            function (UpdateEvent $e) {
                 $layoutStructure = $e->getLayoutStructure();
                 $layoutStructure->merge($this->getLayoutStructure());
             }

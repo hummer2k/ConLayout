@@ -53,10 +53,6 @@ final class LayoutUpdater extends AbstractUpdater implements
 
             if ($results->stopped()) {
                 $this->layoutStructure = $results->last();
-            } else {
-                foreach ($handles as $handle) {
-                    $this->fetch($handle);
-                }
             }
 
             $this->getEventManager()->trigger(
@@ -68,21 +64,6 @@ final class LayoutUpdater extends AbstractUpdater implements
             $this->layoutStructure->setReadOnly();
         }
         return $this->layoutStructure;
-    }
-
-    /**
-     *
-     * @param string $handle
-     */
-    private function fetch($handle)
-    {
-        $event = $this->getEvent();
-        $event->setHandle($handle);
-        $this->events->trigger(
-            __FUNCTION__,
-            $this,
-            $event
-        );
     }
 
     /**

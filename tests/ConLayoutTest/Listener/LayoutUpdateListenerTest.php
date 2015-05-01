@@ -3,7 +3,7 @@
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\LayoutUpdateListener;
-use ConLayout\Updater\Event\FetchEvent;
+use ConLayout\Updater\Event\UpdateEvent;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
 use Zend\EventManager\EventManager;
@@ -38,8 +38,8 @@ class LayoutUpdateListenerTest extends AbstractTest
 
     protected function getEvent($handle = 'default')
     {
-        $event = new FetchEvent();
-        $event->setHandle($handle);
+        $event = new UpdateEvent();
+        $event->setHandles([$handle]);
         $event->setLayoutStructure($this->layoutStructure);
         return $event;
     }
@@ -53,7 +53,7 @@ class LayoutUpdateListenerTest extends AbstractTest
 
         $listeners = $eventManager->getSharedManager()->getListeners(
             'ConLayout\Updater\LayoutUpdater',
-            'fetch'
+            'getLayoutStructure.pre'
         );
 
         $this->assertCount(1, $listeners);

@@ -15,7 +15,7 @@ use Zend\View\Model\ModelInterface;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class NameActionViewModelListener implements
+class PrepareActionViewModelListener implements
     ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
@@ -26,14 +26,14 @@ class NameActionViewModelListener implements
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'nameActionViewModel'], -300);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'prepareActionViewModel'], -300);
     }
 
     /**
      *
      * @param MvcEvent $e
      */
-    public function nameActionViewModel(MvcEvent $e)
+    public function prepareActionViewModel(MvcEvent $e)
     {
         /* @var $layout ModelInterface */
         $result = $e->getResult();
@@ -42,6 +42,7 @@ class NameActionViewModelListener implements
                 LayoutInterface::BLOCK_ID_VAR,
                 LayoutInterface::BLOCK_ID_ACTION_RESULT
             );
+            $result->setAppend(true);
         }
     }
 }

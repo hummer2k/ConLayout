@@ -3,7 +3,6 @@
 namespace ConLayoutTest\Updater;
 
 use ConLayout\Handle\Handle;
-use ConLayout\Updater\Event\FetchEvent;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
@@ -14,7 +13,7 @@ use Zend\EventManager\EventManager;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class EventDrivenLayoutUpdaterTest extends AbstractTest
+class LayoutUpdaterTest extends AbstractTest
 {
     protected $em;
 
@@ -43,15 +42,17 @@ class EventDrivenLayoutUpdaterTest extends AbstractTest
         );
         $this->em->getSharedManager()->attach(
             'ConLayout\Updater\LayoutUpdater',
-            'fetch',
-            function (FetchEvent $e) use ($instructions) {
-                $handle = $e->getHandle();
+            'getLayoutStructure.pre',
+            function (UpdateEvent $e) use ($instructions) {
+                $handles = $e->getHandles();
                 $this->layoutStructure = $e->getLayoutStructure();
-                if (isset($instructions[$handle])) {
-                    $instructionsConfig = new Config(
-                        $instructions[$handle]
-                    );
-                    $this->layoutStructure->merge($instructionsConfig);
+                foreach ($handles as $handle) {
+                    if (isset($instructions[$handle])) {
+                        $instructionsConfig = new Config(
+                            $instructions[$handle]
+                        );
+                        $this->layoutStructure->merge($instructionsConfig);
+                    }
                 }
             }
         );
