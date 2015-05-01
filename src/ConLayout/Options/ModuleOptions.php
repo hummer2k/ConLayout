@@ -102,13 +102,13 @@ class ModuleOptions extends AbstractOptions
 
     public function setLayoutUpdatePaths(array $layoutUpdatePaths)
     {
-        $this->layoutUpdatePaths = array_unique($layoutUpdatePaths);
+        $this->layoutUpdatePaths = $layoutUpdatePaths;
         return $this;
     }
 
     public function setLayoutUpdateExtensions(array $layoutUpdateExtensions)
     {
-        $this->layoutUpdateExtensions = array_unique($layoutUpdateExtensions);
+        $this->layoutUpdateExtensions = $layoutUpdateExtensions;
         return $this;
     }
 }
