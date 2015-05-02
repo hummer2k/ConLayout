@@ -117,7 +117,7 @@ class ViewHelperListener implements ListenerAggregateInterface
         return $this;
     }
 
-    private function getHelperMethod(&$value, $defaultMethod, $viewHelper)
+    private function getHelperMethod($value, $defaultMethod, $viewHelper)
     {
         if (is_array($value)) {
             $method = current(array_keys($value));

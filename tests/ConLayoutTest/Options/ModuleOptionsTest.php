@@ -37,4 +37,20 @@ class ModuleOptionsTest extends AbstractTest
         $moduleOptions->setEnableDebug(true);
         $this->assertTrue($moduleOptions->getEnableDebug());
     }
+
+    public function testSetLayoutUpdateExtensions()
+    {
+        $moduleOptions = new ModuleOptions();
+        $layoutUpdateExtensions = [
+            'php' => 'php',
+            'xml' => false,
+            'yaml'
+        ];
+        $moduleOptions->setLayoutUpdateExtensions($layoutUpdateExtensions);
+
+        $this->assertEquals([
+            'php' => 'php',
+            'yaml' => 'yaml'
+        ], $moduleOptions->getLayoutUpdateExtensions());
+    }
 }

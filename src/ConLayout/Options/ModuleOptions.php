@@ -44,7 +44,7 @@ class ModuleOptions extends AbstractOptions
      *
      * @var array
      */
-    protected $layoutUpdateExtensions = ['php'];
+    protected $layoutUpdateExtensions = ['php' => 'php'];
 
     public function getEnableDebug()
     {
@@ -108,7 +108,15 @@ class ModuleOptions extends AbstractOptions
 
     public function setLayoutUpdateExtensions(array $layoutUpdateExtensions)
     {
-        $this->layoutUpdateExtensions = $layoutUpdateExtensions;
+        foreach ($layoutUpdateExtensions as $extension => $value) {
+            if (false === $value) {
+                continue;
+            }
+            if (is_string($value)) {
+                $extension = $value;
+            }
+            $this->layoutUpdateExtensions[$extension] = $extension;
+        }
         return $this;
     }
 }

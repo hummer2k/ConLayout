@@ -3,25 +3,63 @@ use ConLayout\Listener\LayoutUpdateListener;
 return [
     'con-layout' => [
         /**
+         * paths where to search for layout updates
          *
+         * see README.md for adding new areas
+         *
+         * format & examples: [
+         *      'global' => [
+         *          './themes/my-theme/layout/global'
+         *      ],
+         *      'frontend' => [
+         *          './themes/my-theme/layout/frontend'
+         *      ],
+         *      'backend' => [
+         *          ./'themes/admin-theme/layout',
+         *          __DIR__ . '/../layout/backend' // in a module.config.php
+         *      ]
+         *  ]
          */
         'layout_update_paths' => [
             LayoutUpdateListener::AREA_GLOBAL => []
         ],
         /**
+         * allowed config types
          *
+         * you can explicitly disable an extension by setting its value to false
+         *
+         *  'layout_update_extensions' => [
+         *      'xml' => false,
+         *      'php',
+         *      'yaml'
+         *  ]
+         *
+         * @see http://framework.zend.com/manual/current/en/modules/zend.config.reader.html
          */
         'layout_update_extensions' => [
             'php'
         ],
         /**
          * shows block hints
+         *
+         * debug css is automatically inserted by rwoverdijk/assetmanager
+         * if this module is installed
+         *
+         * if you are not using this module, you can copy con-layout.css
+         * from conlayout/public/assets/css to your public/css directory
          */
         'enable_debug' => false,
         /**
          * base dir to assets
+         *
+         * is used by ConLayout\AssetPreparer\CacheBuster to read the file
+         * and appends an md5 query string so that browsers always pull the
+         * latest asset from the server
          */
         'cache_buster_internal_base_dir' => './public',
+        /**
+         * available view helpers for view_helpers-instructions
+         */
         'view_helpers' => [
             'doctype' => [],
             'headLink' => [
@@ -43,6 +81,19 @@ return [
                 'default_method' => 'addClass'
             ]
         ],
+        /**
+         * values of view_helpers instructions are prepared before they are
+         * passed to the helper.
+         *
+         * You can create your own preparer by implementing
+         * ConLayout\AssetPreparer\AssetPreparerInterface or disable with
+         * value false:
+         *
+         * 'headLink' => [
+         *      'basePath' => false,
+         *      'myPreparer' => 'Acme\AssetPreparer\MyPreparer'
+         *  ]
+         */
         'asset_preparers' => [
             'headLink' => [
                 'basePath' => 'ConLayout\AssetPreparer\BasePath',
