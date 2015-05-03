@@ -6,21 +6,17 @@ use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Renderer\RendererInterface;
-    
+use Zend\View\Renderer\TreeRendererInterface;
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutManager extends AbstractPlugin implements
-    LayoutInterface,
-    ServiceLocatorAwareInterface
+    LayoutInterface
 {
-    use ServiceLocatorAwareTrait;
-   
     /**
      *
      * @var LayoutInterface
@@ -32,13 +28,13 @@ class LayoutManager extends AbstractPlugin implements
      * @var LayoutUpdaterInterface
      */
     protected $updater;
-    
+
     /**
      *
      * @var RendererInterface
      */
     protected $renderer;
-        
+
     /**
      *
      * @param LayoutInterface $layout
@@ -54,9 +50,9 @@ class LayoutManager extends AbstractPlugin implements
         $this->updater = $updater;
         $this->renderer = $renderer;
     }
-    
+
     /**
-     * 
+     *
      * @param string|null $blockId
      * @return mixed
      */
@@ -64,9 +60,9 @@ class LayoutManager extends AbstractPlugin implements
     {
         return $this;
     }
-       
+
     /**
-     * 
+     *
      * @param string $blockId
      * @return ModelInterface
      */
@@ -74,9 +70,9 @@ class LayoutManager extends AbstractPlugin implements
     {
         return $this->layout->getBlock($blockId);
     }
-    
+
     /**
-     * 
+     *
      * @param string $blockId
      * @param ModelInterface $block
      * @return LayoutManager
@@ -113,9 +109,9 @@ class LayoutManager extends AbstractPlugin implements
         $this->updater->addHandle($handle);
         return $this;
     }
-        
+
     /**
-     * 
+     *
      * @param string $handle
      * @return LayoutManager
      */
@@ -135,7 +131,7 @@ class LayoutManager extends AbstractPlugin implements
     }
 
     /**
-     * 
+     *
      * @return LayoutManager
      */
     public function load()
