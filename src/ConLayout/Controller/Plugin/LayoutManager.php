@@ -120,7 +120,7 @@ class LayoutManager extends AbstractPlugin implements
         foreach ($handles as $handle => $priority) {
             if (is_string($handle) && !$priority instanceof HandleInterface) {
                 $handle = new Handle($handle, $priority);
-            } else if ($priority instanceof HandleInterface) {
+            } elseif ($priority instanceof HandleInterface) {
                 $handle = $priority;
             }
             $newHandles[] = $handle;

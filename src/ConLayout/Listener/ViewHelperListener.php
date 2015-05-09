@@ -105,7 +105,7 @@ class ViewHelperListener implements ListenerAggregateInterface
                 $method = $this->getHelperMethod($value, $defaultMethod, $viewHelper);
                 if (!is_array($value)) {
                     $value = [$value];
-                    }
+                }
                 $args   = array_values($value);
                 if (is_array($args[0])) {
                     $args = $args[0];
