@@ -20,6 +20,7 @@ class ModuleOptionsTest extends AbstractTest
         $this->assertInternalType('array', $moduleOptions->getLayoutUpdatePaths());
         $this->assertInternalType('array', $moduleOptions->getLayoutUpdateExtensions());
         $this->assertFalse($moduleOptions->getEnableDebug());
+        $this->assertInternalType('array', $moduleOptions->getBlockDefaults());
     }
 
     public function testSettersGetters()
@@ -36,6 +37,12 @@ class ModuleOptionsTest extends AbstractTest
 
         $moduleOptions->setEnableDebug(true);
         $this->assertTrue($moduleOptions->getEnableDebug());
+
+        $moduleOptions->setBlockDefaults(['class' => 'MyBlock']);
+
+        $this->assertSame([
+            'class' => 'MyBlock'
+        ], $moduleOptions->getBlockDefaults());
     }
 
     public function testSetLayoutUpdateExtensions()

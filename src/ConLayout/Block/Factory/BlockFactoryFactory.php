@@ -2,6 +2,7 @@
 
 namespace ConLayout\Block\Factory;
 
+use ConLayout\Options\ModuleOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -11,13 +12,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class BlockFactoryFactory implements FactoryInterface
 {
-    use \ConLayout\OptionTrait;
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        /* @var $options ModuleOptions */
+        $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
         $blockFactory = new BlockFactory(
-            $this->getOption($config, 'con-layout/block_factory/defaults', [])
+            $options->getBlockDefaults()
         );
         return $blockFactory;
     }

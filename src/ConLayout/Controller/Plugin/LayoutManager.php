@@ -8,7 +8,6 @@ use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Renderer\RendererInterface;
-use Zend\View\Renderer\TreeRendererInterface;
 
 /**
  * @package ConLayout
@@ -107,6 +106,26 @@ class LayoutManager extends AbstractPlugin implements
             $handle = new Handle($handle, $priority);
         }
         $this->updater->addHandle($handle);
+        return $this;
+    }
+
+    /**
+     *
+     * @param array $handles
+     * @return LayoutManager
+     */
+    public function setHandles(array $handles)
+    {
+        $newHandles = [];
+        foreach ($handles as $handle => $priority) {
+            if (is_string($handle) && !$priority instanceof HandleInterface) {
+                $handle = new Handle($handle, $priority);
+            } else if ($priority instanceof HandleInterface) {
+                $handle = $priority;
+            }
+            $newHandles[] = $handle;
+        }
+        $this->updater->setHandles($handles);
         return $this;
     }
 

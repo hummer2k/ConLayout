@@ -105,12 +105,12 @@ class ViewHelperListener implements ListenerAggregateInterface
                 $method = $this->getHelperMethod($value, $defaultMethod, $viewHelper);
                 if (!is_array($value)) {
                     $value = [$value];
-                }
+                    }
                 $args   = array_values($value);
                 if (is_array($args[0])) {
                     $args = $args[0];
                 }
-                $args[0] = $this->prepareHelperValue($args[0], $helper);
+                    $args[0] = $this->prepareHelperValue($args[0], $helper);
                 call_user_func_array([$viewHelper, $method], $args);
             }
         }
@@ -128,7 +128,7 @@ class ViewHelperListener implements ListenerAggregateInterface
         return $defaultMethod;
     }
 
-     /**
+    /**
      *
      * @param mixed $value value to prepare
      * @param string $helper view helper name

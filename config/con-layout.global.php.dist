@@ -58,6 +58,18 @@ return [
          */
         'cache_buster_internal_base_dir' => './public',
         /**
+         * block defaults
+         */
+        'block_defaults' => [
+            'capture_to' => 'childHtml',
+            'append'     => true,
+            'class'      => 'Zend\View\Model\ViewModel',
+            'options'    => [],
+            'variables'  => [],
+            'template'   => '',
+            'actions'    => []
+        ],
+        /**
          * available view helpers for view_helpers-instructions
          */
         'view_helpers' => [

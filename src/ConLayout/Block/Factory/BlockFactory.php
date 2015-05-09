@@ -2,7 +2,7 @@
 
 namespace ConLayout\Block\Factory;
 
-use ConLayout\Debug\Debugger;
+use ConLayout\Block\BlockInterface;
 use ConLayout\Layout\LayoutInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -33,7 +33,11 @@ class BlockFactory implements
         'actions'    => []
     ];
 
-    public function __construct($blockDefaults = [])
+    /**
+     *
+     * @param array $blockDefaults
+     */
+    public function __construct(array $blockDefaults = [])
     {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
@@ -73,6 +77,10 @@ class BlockFactory implements
         }
         $block->setCaptureTo($this->getOption('capture_to', $specs));
         $block->setAppend($this->getOption('append', $specs));
+
+        if ($block instanceof BlockInterface) {
+            $block->setRequest($this->serviceLocator->get('Request'));
+        }
 
         if (method_exists($block, 'init')) {
             $block->init();

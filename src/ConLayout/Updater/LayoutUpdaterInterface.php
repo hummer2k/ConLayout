@@ -33,6 +33,13 @@ interface LayoutUpdaterInterface
     public function addHandle(HandleInterface $handle);
 
     /**
+     * set/replace handles
+     *
+     * @param array $handles
+     */
+    public function setHandles(array $handles);
+
+    /**
      * removes a handle by name
      *
      * @param string $handleName
