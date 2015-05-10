@@ -125,7 +125,7 @@ class LayoutManager extends AbstractPlugin implements
             }
             $newHandles[] = $handle;
         }
-        $this->updater->setHandles($handles);
+        $this->updater->setHandles($newHandles);
         return $this;
     }
 
