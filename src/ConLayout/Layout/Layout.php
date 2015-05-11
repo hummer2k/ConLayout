@@ -68,7 +68,7 @@ class Layout implements
     protected $blocks = [];
 
     /**
-     * 
+     *
      * @var array
      */
     protected $removedBlocks = [];
@@ -163,7 +163,7 @@ class Layout implements
 
     /**
      * sort the blocks by order option ascendant
-     * 
+     *
      * @return LayoutManagerInterface
      */
     protected function sortBlocks()
@@ -202,6 +202,7 @@ class Layout implements
                 }
                 if ($parentBlock = $this->getBlock($parent)) {
                     $parentBlock->addChild($block, $captureTo);
+                    $block->setOption('parent_block', $parentBlock);
                 }
             }
             $this->isLoaded = true;

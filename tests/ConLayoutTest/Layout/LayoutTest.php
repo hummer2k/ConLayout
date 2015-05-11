@@ -15,7 +15,7 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutTest extends AbstractTest
@@ -306,5 +306,40 @@ class LayoutTest extends AbstractTest
             $wrappedBlock->getVariable(Debugger::VAR_BLOCK_ORIGINAL)
         );
 
+    }
+
+    public function testParentBlock()
+    {
+        $parent = new ViewModel();
+        $child  = new ViewModel();
+        $child->setVariable(LayoutInterface::BLOCK_ID_VAR, 'child');
+
+        $child2 = new ViewModel();
+        $child2->setVariable(LayoutInterface::BLOCK_ID_VAR, 'child2');
+        $child->addChild($child2);
+
+        $parent->addChild($child);
+
+        $this->layout->setRoot($parent);
+        $this->layout->load();
+
+        $childBlock = $this->layout->getBlock('child');
+
+        $this->assertSame(
+            $parent,
+            $childBlock->getOption('parent_block')
+        );
+
+        $child2Block = $this->layout->getBlock('child2');
+
+        $this->assertSame(
+            $childBlock,
+            $child2Block->getOption('parent_block')
+        );
+
+        $this->assertSame(
+            $parent,
+            $child2Block->getOption('parent_block')->getOption('parent_block')
+        );
     }
 }

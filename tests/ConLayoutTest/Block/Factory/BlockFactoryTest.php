@@ -2,9 +2,12 @@
 
 namespace ConLayoutTest\Block\Factory;
 
+use ConLayout\Block\AbstractBlock;
 use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayoutTest\AbstractTest;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
 
@@ -20,11 +23,18 @@ class BlockFactoryTest extends AbstractTest
      */
     protected $factory;
 
+    /**
+     *
+     * @var ServiceManager
+     */
+    protected $sm;
+
     public function setUp()
     {
         parent::setUp();
         $this->factory = new BlockFactory();
-        $this->factory->setServiceLocator(new ServiceManager());
+        $this->sm = new ServiceManager();
+        $this->factory->setServiceLocator($this->sm);
     }
 
     public function testCreateBlock()
@@ -103,6 +113,20 @@ class BlockFactoryTest extends AbstractTest
         ]);
         $this->assertEquals('already/set/template', $block->getTemplate());
     }
+
+    public function testCreateBlockImpl()
+    {
+        $request = new Request();
+        $this->sm->setService('Request', $request);
+        $block = $this->factory->createBlock('test.block.impl', [
+            'class' => 'ConLayoutTest\Block\Factory\BlockImpl'
+        ]);
+        $this->assertInstanceof(
+            'Zend\Stdlib\RequestInterface',
+            $block->getRequest()
+        );
+        $this->assertSame($request, $block->getRequest());
+    }
 }
 
 class TplBlock extends ViewModel
@@ -123,4 +147,9 @@ class MyBlock extends ViewModel
     {
         return $this->initialized;
     }
+}
+
+class BlockImpl extends AbstractBlock
+{
+
 }
