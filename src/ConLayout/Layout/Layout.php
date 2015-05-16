@@ -68,7 +68,7 @@ class Layout implements
     protected $blocks = [];
 
     /**
-     * 
+     *
      * @var array
      */
     protected $removedBlocks = [];
@@ -126,7 +126,8 @@ class Layout implements
                 if ($this->isBlockRemoved($blockId)) {
                     continue;
                 }
-                $this->addBlock($blockId, $this->blockFactory->createBlock($blockId, $specs));
+                $block = $this->blockFactory->createBlock($blockId, $specs);
+                $this->addBlock($blockId, $block);
             }
             $this->blocksGenerated = true;
         }
@@ -163,7 +164,7 @@ class Layout implements
 
     /**
      * sort the blocks by order option ascendant
-     * 
+     *
      * @return LayoutManagerInterface
      */
     protected function sortBlocks()
@@ -202,6 +203,7 @@ class Layout implements
                 }
                 if ($parentBlock = $this->getBlock($parent)) {
                     $parentBlock->addChild($block, $captureTo);
+                    $block->setOption('parent_block', $parentBlock);
                 }
             }
             $this->isLoaded = true;
@@ -245,10 +247,7 @@ class Layout implements
                 $childBlock->setCaptureTo(
                     $blockId . self::CAPTURE_TO_DELIMITER . $childBlock->captureTo()
                 );
-                $this->addBlock(
-                    $childBlockId,
-                    $childBlock
-                );
+                $this->addBlock($childBlockId, $childBlock);
             }
             if ($block instanceof ClearableModelInterface) {
                 $block->clearChildren();

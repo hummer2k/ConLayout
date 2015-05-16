@@ -118,4 +118,19 @@ class LayoutUpdaterTest extends AbstractTest
             'test' => 'test'
         ], $layoutStructure);
     }
+
+    public function testSetHandles()
+    {
+        $this->layoutUpdater->setHandles([
+            new Handle('handle-1', 5),
+            new Handle('handle-2', 0),
+            new Handle('handle-3', 2)
+        ]);
+
+        $this->assertSame([
+            'handle-2',
+            'handle-3',
+            'handle-1'
+        ], $this->layoutUpdater->getHandles());
+    }
 }

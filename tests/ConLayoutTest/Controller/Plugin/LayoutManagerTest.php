@@ -179,4 +179,34 @@ class LayoutManagerTest extends AbstractTest
         // layout already has a block added via setUp()
         $this->assertCount(3, $root->getChildren());
     }
+
+    public function testSetHandlesScalar()
+    {
+        $this->layoutManager->setHandles([
+            'my-handle-1' => 5,
+            'my-handle-2' => 3,
+            'my-handle-3' => 6
+        ]);
+
+        $this->assertSame([
+            'my-handle-2',
+            'my-handle-1',
+            'my-handle-3'
+        ], $this->updater->getHandles());
+    }
+
+    public function testSetHandlesObject()
+    {
+        $this->layoutManager->setHandles([
+            new Handle('my-handle-1', 5),
+            new Handle('my-handle-2', 3),
+            new Handle('my-handle-3', 6)
+        ]);
+
+        $this->assertSame([
+            'my-handle-2',
+            'my-handle-1',
+            'my-handle-3'
+        ], $this->updater->getHandles());
+    }
 }

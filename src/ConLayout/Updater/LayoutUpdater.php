@@ -2,7 +2,6 @@
 
 namespace ConLayout\Updater;
 
-use ConLayout\Updater\Event\FetchEvent;
 use ConLayout\Updater\Event\UpdateEvent;
 use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
@@ -48,13 +47,13 @@ final class LayoutUpdater extends AbstractUpdater implements
 
             if ($results->stopped()) {
                 $this->layoutStructure = $results->last();
+            } else {
+                $this->getEventManager()->trigger(
+                    __FUNCTION__ . '.post',
+                    $this,
+                    $event
+                );
             }
-
-            $this->getEventManager()->trigger(
-                __FUNCTION__ . '.post',
-                $this,
-                $event
-            );
 
             $this->layoutStructure->setReadOnly();
         }

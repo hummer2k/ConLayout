@@ -1,6 +1,7 @@
 {
     "name": "hummer2k/conlayout",
     "description": "Module for handling ZF2 layouts with blocks and handles like magento",
+    "license": "MIT",
     "keywords": [
         "zf2",
         "layout",

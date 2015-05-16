@@ -46,66 +46,126 @@ class ModuleOptions extends AbstractOptions
      */
     protected $layoutUpdateExtensions = ['php' => 'php'];
 
+    /**
+     *
+     * @var array
+     */
+    protected $blockDefaults = [];
+
+    /**
+     *
+     * @return bool
+     */
     public function getEnableDebug()
     {
         return $this->enableDebug;
     }
 
+    /**
+     *
+     * @return array
+     */
     public function getViewHelpers()
     {
         return $this->viewHelpers;
     }
 
+    /**
+     *
+     * @return array
+     */
     public function getAssetPreparers()
     {
         return $this->assetPreparers;
     }
 
+    /**
+     *
+     * @param bool $enableDebug
+     * @return ModuleOptions
+     */
     public function setEnableDebug($enableDebug)
     {
         $this->enableDebug = $enableDebug;
         return $this;
     }
 
-    public function setViewHelpers($viewHelpers)
+    /**
+     *
+     * @param array $viewHelpers
+     * @return ModuleOptions
+     */
+    public function setViewHelpers(array $viewHelpers)
     {
         $this->viewHelpers = $viewHelpers;
         return $this;
     }
 
-    public function setAssetPreparers($assetPreparers)
+    /**
+     *
+     * @param array $assetPreparers
+     * @return ModuleOptions
+     */
+    public function setAssetPreparers(array $assetPreparers)
     {
         $this->assetPreparers = $assetPreparers;
         return $this;
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getCacheBusterInternalBaseDir()
     {
         return $this->cacheBusterInternalBaseDir;
     }
 
+    /**
+     *
+     * @param string $cacheBusterInternalBaseDir
+     * @return ModuleOptions
+     */
     public function setCacheBusterInternalBaseDir($cacheBusterInternalBaseDir)
     {
         $this->cacheBusterInternalBaseDir = $cacheBusterInternalBaseDir;
         return $this;
     }
 
+    /**
+     *
+     * @return array
+     */
     public function getLayoutUpdatePaths()
     {
         return $this->layoutUpdatePaths;
     }
 
+    /**
+     *
+     * @return array
+     */
     public function getLayoutUpdateExtensions()
     {
         return $this->layoutUpdateExtensions;
     }
 
+    /**
+     *
+     * @param array $layoutUpdatePaths
+     * @return ModuleOptions
+     */
     public function setLayoutUpdatePaths(array $layoutUpdatePaths)
     {
         $this->layoutUpdatePaths = $layoutUpdatePaths;
         return $this;
     }
 
+    /**
+     *
+     * @param array $layoutUpdateExtensions
+     * @return ModuleOptions
+     */
     public function setLayoutUpdateExtensions(array $layoutUpdateExtensions)
     {
         foreach ($layoutUpdateExtensions as $extension => $value) {
@@ -117,6 +177,26 @@ class ModuleOptions extends AbstractOptions
             }
             $this->layoutUpdateExtensions[$extension] = $extension;
         }
+        return $this;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getBlockDefaults()
+    {
+        return $this->blockDefaults;
+    }
+
+    /**
+     *
+     * @param array $blockDefaults
+     * @return ModuleOptions
+     */
+    public function setBlockDefaults(array $blockDefaults)
+    {
+        $this->blockDefaults = $blockDefaults;
         return $this;
     }
 }

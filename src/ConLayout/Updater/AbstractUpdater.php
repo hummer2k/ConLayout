@@ -32,6 +32,20 @@ abstract class AbstractUpdater implements
     }
 
     /**
+     *
+     * @param array|HandleInterface[] $handles
+     * @return AbstractUpdater
+     */
+    public function setHandles(array $handles)
+    {
+        $this->handles = [];
+        foreach ($handles as $handle) {
+            $this->addHandle($handle);
+        }
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function removeHandle($handleName)

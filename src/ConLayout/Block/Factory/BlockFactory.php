@@ -2,12 +2,14 @@
 
 namespace ConLayout\Block\Factory;
 
-use ConLayout\Debug\Debugger;
+use ConLayout\Block\BlockInterface;
 use ConLayout\Layout\LayoutInterface;
+use Zend\EventManager\EventManagerAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ModelInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * @package ConLayout
@@ -15,9 +17,11 @@ use Zend\View\Model\ModelInterface;
  */
 class BlockFactory implements
     BlockFactoryInterface,
-    ServiceLocatorAwareInterface
+    ServiceLocatorAwareInterface,
+    EventManagerAwareInterface
 {
     use ServiceLocatorAwareTrait;
+    use EventManagerAwareTrait;
 
     /**
      *
@@ -33,7 +37,11 @@ class BlockFactory implements
         'actions'    => []
     ];
 
-    public function __construct($blockDefaults = [])
+    /**
+     *
+     * @param array $blockDefaults
+     */
+    public function __construct(array $blockDefaults = [])
     {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
@@ -49,6 +57,14 @@ class BlockFactory implements
      */
     public function createBlock($blockId, array $specs)
     {
+        $this->getEventManager()->trigger(
+            __METHOD__ . '.pre',
+            $this,
+            [
+                'block_id' => $blockId,
+                'specs' => $specs
+            ]
+        );
         /* @var $block ModelInterface */
         $class = $this->getOption('class', $specs);
         if ($this->serviceLocator->has($class)) {
@@ -74,10 +90,22 @@ class BlockFactory implements
         $block->setCaptureTo($this->getOption('capture_to', $specs));
         $block->setAppend($this->getOption('append', $specs));
 
+        if ($block instanceof BlockInterface) {
+            $block->setRequest($this->serviceLocator->get('Request'));
+        }
+
         if (method_exists($block, 'init')) {
             $block->init();
         }
-
+        $this->getEventManager()->trigger(
+            'createBlock.post',
+            $this,
+            [
+                'block' => $block,
+                'specs' => $specs,
+                'block_id' => $blockId
+            ]
+        );
         return $block;
     }
 
