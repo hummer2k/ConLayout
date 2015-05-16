@@ -4,10 +4,12 @@ namespace ConLayout\Block\Factory;
 
 use ConLayout\Block\BlockInterface;
 use ConLayout\Layout\LayoutInterface;
+use Zend\EventManager\EventManagerAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ModelInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * @package ConLayout
@@ -15,9 +17,11 @@ use Zend\View\Model\ModelInterface;
  */
 class BlockFactory implements
     BlockFactoryInterface,
-    ServiceLocatorAwareInterface
+    ServiceLocatorAwareInterface,
+    EventManagerAwareInterface
 {
     use ServiceLocatorAwareTrait;
+    use EventManagerAwareTrait;
 
     /**
      *
@@ -53,6 +57,14 @@ class BlockFactory implements
      */
     public function createBlock($blockId, array $specs)
     {
+        $this->getEventManager()->trigger(
+            __METHOD__ . '.pre',
+            $this,
+            [
+                'block_id' => $blockId,
+                'specs' => $specs
+            ]
+        );
         /* @var $block ModelInterface */
         $class = $this->getOption('class', $specs);
         if ($this->serviceLocator->has($class)) {
@@ -85,7 +97,15 @@ class BlockFactory implements
         if (method_exists($block, 'init')) {
             $block->init();
         }
-
+        $this->getEventManager()->trigger(
+            'createBlock.post',
+            $this,
+            [
+                'block' => $block,
+                'specs' => $specs,
+                'block_id' => $blockId
+            ]
+        );
         return $block;
     }
 
