@@ -28,7 +28,7 @@ class BlockFactory implements
      * @var array
      */
     protected $blockDefaults = [
-        'capture_to' => 'childHtml',
+        'capture_to' => 'content',
         'append'     => true,
         'class'      => 'Zend\View\Model\ViewModel',
         'options'    => [],
@@ -97,15 +97,21 @@ class BlockFactory implements
         if (method_exists($block, 'init')) {
             $block->init();
         }
-        $this->getEventManager()->trigger(
+        $results = $this->getEventManager()->trigger(
             'createBlock.post',
             $this,
             [
                 'block' => $block,
                 'specs' => $specs,
                 'block_id' => $blockId
-            ]
+            ],
+            function ($result) {
+                return $result instanceof ModelInterface;
+            }
         );
+        if ($results->stopped()) {
+            $block = $results->last();
+        }
         return $block;
     }
 

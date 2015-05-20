@@ -61,7 +61,7 @@ return [
          * block defaults
          */
         'block_defaults' => [
-            'capture_to' => 'childHtml',
+            'capture_to' => 'content',
             'append'     => true,
             'class'      => 'Zend\View\Model\ViewModel',
             'options'    => [],

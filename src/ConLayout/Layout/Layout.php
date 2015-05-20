@@ -282,6 +282,13 @@ class Layout implements
     protected function getCaptureTo(ModelInterface $block)
     {
         $captureTo = $block->captureTo();
+        if ($parent = $block->getOption('parent')) {
+            $captureTo = explode(self::CAPTURE_TO_DELIMITER, $captureTo);
+            return [
+                $parent,
+                end($captureTo)
+            ];
+        }
         if (false !== strpos($captureTo, self::CAPTURE_TO_DELIMITER)) {
             return explode(self::CAPTURE_TO_DELIMITER, $captureTo);
         }
