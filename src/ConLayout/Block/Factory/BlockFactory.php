@@ -88,21 +88,8 @@ class BlockFactory implements
         if ($template = $this->getOption('template', $specs)) {
             $block->setTemplate($template);
         }
-        if (false !== ($wrapper = $this->getOption('wrapper', $specs))) {
-            if (is_string($wrapper)) {
-                $wrapper = ['template' => $wrapper];
-            } elseif (is_array($wrapper) && (!isset($wrapper['template']))) {
-                $wrapper = array_merge(
-                    $wrapper,
-                    ['template' => 'blocks/wrapper']
-                );
-            }
-            $originalTpl = $block->getTemplate();
-            $block->setTemplate($wrapper['template']);
-            if (isset($wrapper['html_class'])) {
-                $block->setVariable('htmlWrapperClass', $wrapper['html_class']);
-            }
-            $block->setVariable('originalTpl', $originalTpl);
+        if (false !== ($wrapperOptions = $this->getOption('wrapper', $specs))) {
+            $this->wrapBlock($block, $wrapperOptions);
         }
         $block->setCaptureTo($this->getOption('capture_to', $specs));
         $block->setAppend($this->getOption('append', $specs));
@@ -130,6 +117,33 @@ class BlockFactory implements
             $block = $results->last();
         }
         return $block;
+    }
+
+    /**
+     * assign wrapper template to block
+     *
+     * @param ModelInterface $block
+     * @param array|string $options
+     */
+    protected function wrapBlock(ModelInterface $block, $options)
+    {
+        if (is_string($options)) {
+            $options = ['template' => $options];
+        } elseif (is_array($options) && (!isset($options['template']))) {
+            $options = array_merge(
+                $options,
+                ['template' => 'blocks/wrapper']
+            );
+        }
+        $originalTpl = $block->getTemplate();
+        $block->setTemplate($options['template']);
+        if (isset($options['html_class'])) {
+            $block->setVariable('htmlWrapperClass', $options['html_class']);
+        }
+        if (isset($options['html_tag'])) {
+            $block->setVariable('htmlWrapperTag', $options['html_tag']);
+        }
+        $block->setVariable('originalTpl', $originalTpl);
     }
 
     /**

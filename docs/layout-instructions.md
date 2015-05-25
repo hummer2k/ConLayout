@@ -74,6 +74,20 @@ return [
                 'order' => -10
             ],
             /**
+             * wraps a block with another template
+             * accepts 3 optional parameters 'template', 'html_class' and 
+             * 'html_tag'
+             * 
+             * if false, wrapper will be disabled: 'wrapper' => false,
+             * 
+             * defaults: html_tag: 'div', 'template: 'blocks/wrapper'
+             */
+            'wrapper' => [
+                'template' => 'blocks/wrapper',
+                'html_class' => 'col-xs-12',
+                'html_tag' => 'div'
+            ],
+            /**
              * perform some actions on the block class/method calls
              */
             'actions'   => [
