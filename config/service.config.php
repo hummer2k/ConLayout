@@ -25,7 +25,8 @@ return [
     ],
     'aliases' => [
         'Layout' => 'ConLayout\Layout\LayoutInterface',
-        'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategy'
+        'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategy',
+        'BlockRenderer' => 'ConLayout\View\Renderer\BlockRenderer'
     ],
     'invokables' => [
         'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'

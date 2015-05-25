@@ -5,24 +5,28 @@ use ConLayout\AssetPreparer\AssetPreparerInterface;
 use Zend\View\Helper\BasePath as BasePathHelper;
 
 /**
- * @package 
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BasePath implements AssetPreparerInterface
 {
-    protected $basePathHelper;
-    
     /**
-     * 
+     *
+     * @var BasePathHelper $basePathHelper
+     */
+    protected $basePathHelper;
+
+    /**
+     *
      * @param BasePathHelper $basePathHelper
      */
     public function __construct(BasePathHelper $basePathHelper)
     {
         $this->basePathHelper = $basePathHelper;
     }
-    
+
     /**
-     * 
+     *
      * @param string $value asset url to prepare
      * @return string prepared asset url
      */

@@ -1,0 +1,6 @@
+<?php
+$vars = $this->viewModel()->getCurrent()->getVariables();
+?>
+<div class="<?= $this->htmlWrapperClass ?>">
+    <?= $this->partial($this->originalTpl, $vars) ?>
+</div>

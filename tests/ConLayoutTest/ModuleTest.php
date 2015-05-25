@@ -70,7 +70,6 @@ class ModuleTest extends AbstractTest
         $module->onBootstrap($event);
 
         $this->assertCount(2, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
-        $this->assertCount(3,  $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_RENDER));
 
         $layoutUpdater = $sm->get('ConLayout\Updater\LayoutUpdaterInterface');
 

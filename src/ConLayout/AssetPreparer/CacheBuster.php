@@ -6,10 +6,26 @@ namespace ConLayout\AssetPreparer;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class CacheBuster implements AssetPreparerInterface
+class CacheBuster implements
+    AssetPreparerInterface,
+    OriginalValueAwareInterface
 {
-    protected $internalBasePath = './public';
+    /**
+     *
+     * @var string
+     */
+    protected $internalBasePath;
 
+    /**
+     *
+     * @var string
+     */
+    protected $originalValue;
+
+    /**
+     *
+     * @param string $internalBasePath
+     */
     public function __construct($internalBasePath = './public')
     {
         $this->internalBasePath = $internalBasePath;
@@ -29,8 +45,25 @@ class CacheBuster implements AssetPreparerInterface
         return $value;
     }
 
+    /**
+     *
+     * @param mixed $originalValue
+     */
+    public function setOriginalValue($originalValue)
+    {
+        $this->originalValue = $originalValue;
+    }
+
+    /**
+     *
+     * @param string $value
+     * @return string
+     */
     protected function getFilePath($value)
     {
+        if (null !== $this->originalValue) {
+            $value = $this->originalValue;
+        }
         return $this->internalBasePath . '/' . ltrim($value, '/');
     }
 }

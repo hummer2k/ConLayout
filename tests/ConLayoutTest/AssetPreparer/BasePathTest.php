@@ -10,7 +10,7 @@ use Zend\View\Helper\BasePath;
 use Zend\View\HelperPluginManager;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BasePathTest extends AbstractTest
@@ -52,7 +52,7 @@ class BasePathTest extends AbstractTest
     public function testBasePathLocal()
     {
         $value  = '/css/styles.css';
-        $result = $this->basePathPreparer->prepare($value);
+        $result = $this->basePathPreparer->prepare($value, $value);
 
         $this->assertEquals('/my/base/css/styles.css', $result);
     }
@@ -60,7 +60,7 @@ class BasePathTest extends AbstractTest
     public function testBasePathRemote()
     {
         $value  = '//cdn.example.com/css/styles.css';
-        $result = $this->basePathPreparer->prepare($value);
+        $result = $this->basePathPreparer->prepare($value, $value);
 
         $this->assertEquals($value, $result);
     }
@@ -68,7 +68,7 @@ class BasePathTest extends AbstractTest
     public function testBasePathHttp()
     {
         $value  = 'http://cdn.example.com/css/styles.css';
-        $result = $this->basePathPreparer->prepare($value);
+        $result = $this->basePathPreparer->prepare($value, $value);
 
         $this->assertEquals($value, $result);
     }
@@ -76,7 +76,7 @@ class BasePathTest extends AbstractTest
     public function testBasePathHttps()
     {
         $value  = 'https://cdn.example.com/css/styles.css';
-        $result = $this->basePathPreparer->prepare($value);
+        $result = $this->basePathPreparer->prepare($value, $value);
 
         $this->assertEquals($value, $result);
     }

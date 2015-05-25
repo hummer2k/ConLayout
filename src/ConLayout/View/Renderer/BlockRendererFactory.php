@@ -1,7 +1,6 @@
 <?php
 namespace ConLayout\View\Renderer;
 
-use ConLayout\OptionTrait;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -11,10 +10,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class BlockRendererFactory implements FactoryInterface
 {
-    use OptionTrait;
-    
     /**
-     * 
+     *
      * @param ServiceLocatorInterface $serviceLocator
      * @return BlockRenderer
      */

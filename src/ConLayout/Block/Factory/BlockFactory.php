@@ -34,7 +34,8 @@ class BlockFactory implements
         'options'    => [],
         'variables'  => [],
         'template'   => '',
-        'actions'    => []
+        'actions'    => [],
+        'wrapper'    => false
     ];
 
     /**
@@ -86,6 +87,22 @@ class BlockFactory implements
         }
         if ($template = $this->getOption('template', $specs)) {
             $block->setTemplate($template);
+        }
+        if (false !== ($wrapper = $this->getOption('wrapper', $specs))) {
+            if (is_string($wrapper)) {
+                $wrapper = ['template' => $wrapper];
+            } elseif (is_array($wrapper) && (!isset($wrapper['template']))) {
+                $wrapper = array_merge(
+                    $wrapper,
+                    ['template' => 'blocks/wrapper']
+                );
+            }
+            $originalTpl = $block->getTemplate();
+            $block->setTemplate($wrapper['template']);
+            if (isset($wrapper['html_class'])) {
+                $block->setVariable('htmlWrapperClass', $wrapper['html_class']);
+            }
+            $block->setVariable('originalTpl', $originalTpl);
         }
         $block->setCaptureTo($this->getOption('capture_to', $specs));
         $block->setAppend($this->getOption('append', $specs));

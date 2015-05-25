@@ -7,13 +7,11 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class CacheBusterFactory implements FactoryInterface
 {
-    use \ConLayout\OptionTrait;
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $options ModuleOptions */

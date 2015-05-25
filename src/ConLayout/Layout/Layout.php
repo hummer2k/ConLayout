@@ -191,6 +191,11 @@ class Layout implements
     public function load()
     {
         if (false === $this->isLoaded) {
+            $this->getEventManager()->trigger(
+                __FUNCTION__ . '.pre',
+                $this,
+                []
+            );
             $this->generateBlocks();
             $this->sortBlocks();
             foreach ($this->getBlocks() as $blockId => $block) {
@@ -207,6 +212,11 @@ class Layout implements
                 }
             }
             $this->isLoaded = true;
+            $this->getEventManager()->trigger(
+                __FUNCTION__ . '.post',
+                $this,
+                []
+            );
         }
         return $this;
     }

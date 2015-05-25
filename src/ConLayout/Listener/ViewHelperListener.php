@@ -3,13 +3,15 @@
 namespace ConLayout\Listener;
 
 use ConLayout\AssetPreparer\AssetPreparerInterface;
+use ConLayout\AssetPreparer\OriginalValueAwareInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
+use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Mvc\MvcEvent;
 use Zend\View\HelperPluginManager;
-use Zend\EventManager\ListenerAggregateTrait;
 
 /**
  * Listener to apply view helpers from layout structure
@@ -71,7 +73,12 @@ class ViewHelperListener implements ListenerAggregateInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, [$this, 'applyViewHelpers']);
+        $this->listeners[] = $events->getSharedManager()
+            ->attach(
+                'ConLayout\Layout\Layout',
+                'load.pre',
+                [$this, 'applyViewHelpers']
+            );
     }
 
     /**
@@ -81,7 +88,7 @@ class ViewHelperListener implements ListenerAggregateInterface
      * @param MvcEvent $e
      * @return LayoutModifierListener
      */
-    public function applyViewHelpers(MvcEvent $e)
+    public function applyViewHelpers(EventInterface $e)
     {
         $viewHelperInstructions = $this->updater->getLayoutStructure()->get(
             LayoutUpdaterInterface::INSTRUCTION_VIEW_HELPERS
@@ -110,7 +117,7 @@ class ViewHelperListener implements ListenerAggregateInterface
                 if (is_array($args[0])) {
                     $args = $args[0];
                 }
-                    $args[0] = $this->prepareHelperValue($args[0], $helper);
+                $args[0] = $this->prepareHelperValue($args[0], $helper);
                 call_user_func_array([$viewHelper, $method], $args);
             }
         }
@@ -139,8 +146,12 @@ class ViewHelperListener implements ListenerAggregateInterface
         if (!isset($this->assetPreparers[$helper])) {
             return $value;
         }
+        $originalValue = $value;
         /* @var $assetPreparer AssetPreparerInterface */
         foreach ($this->assetPreparers[$helper] as $assetPreparer) {
+            if ($assetPreparer instanceof OriginalValueAwareInterface) {
+                $assetPreparer->setOriginalValue($originalValue);
+            }
             $value = $assetPreparer->prepare($value);
         }
         return $value;

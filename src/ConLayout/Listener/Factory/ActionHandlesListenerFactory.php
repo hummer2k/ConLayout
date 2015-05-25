@@ -2,7 +2,6 @@
 namespace ConLayout\Listener\Factory;
 
 use ConLayout\Listener\ActionHandlesListener;
-use ConLayout\OptionTrait;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -12,10 +11,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ActionHandlesListenerFactory implements FactoryInterface
 {
-    use OptionTrait;
-    
     /**
-     * 
+     *
      * @param ServiceLocatorInterface $serviceLocator
      * @return ActionHandlesListener
      */
