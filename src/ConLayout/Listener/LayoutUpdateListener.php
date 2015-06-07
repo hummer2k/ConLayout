@@ -18,6 +18,7 @@ use Zend\Stdlib\Glob;
 class LayoutUpdateListener implements ListenerAggregateInterface
 {
     const AREA_GLOBAL = 'global';
+    const AREA_DEFAULT = 'frontend';
 
     use ListenerAggregateTrait;
 
@@ -25,7 +26,7 @@ class LayoutUpdateListener implements ListenerAggregateInterface
      *
      * @var string
      */
-    protected $area = self::AREA_GLOBAL;
+    protected $area;
 
     /**
      *
@@ -51,10 +52,14 @@ class LayoutUpdateListener implements ListenerAggregateInterface
      * @param array $paths
      * @param array $extensions
      */
-    public function __construct(array $paths = [], array $extensions = ['php'])
-    {
+    public function __construct(
+        array $paths = [],
+        array $extensions = ['php'],
+        $defaultArea = self::AREA_DEFAULT
+    ) {
         $this->paths = $paths;
         $this->extensions = $extensions;
+        $this->area = $defaultArea;
     }
 
     /**

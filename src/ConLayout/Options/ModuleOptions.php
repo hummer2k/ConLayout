@@ -2,6 +2,7 @@
 
 namespace ConLayout\Options;
 
+use ConLayout\Listener\LayoutUpdateListener;
 use Zend\Stdlib\AbstractOptions;
 
 /**
@@ -51,6 +52,35 @@ class ModuleOptions extends AbstractOptions
      * @var array
      */
     protected $blockDefaults = [];
+
+    /**
+     *
+     * @var array
+     */
+    protected $defaultArea;
+
+    /**
+     *
+     * @return string
+     */
+    public function getDefaultArea()
+    {
+        if (!$this->defaultArea) {
+            $this->defaultArea = LayoutUpdateListener::AREA_DEFAULT;
+        }
+        return $this->defaultArea;
+    }
+
+    /**
+     *
+     * @param string $defaultArea
+     * @return ModuleOptions
+     */
+    public function setDefaultArea($defaultArea)
+    {
+        $this->defaultArea = $defaultArea;
+        return $this;
+    }
 
     /**
      *

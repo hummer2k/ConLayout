@@ -39,6 +39,7 @@ return [
         'layout_update_extensions' => [
             'php'
         ],
+        'default_area' => \ConLayout\Listener\LayoutUpdateListener::AREA_DEFAULT,
         /**
          * shows block hints
          *

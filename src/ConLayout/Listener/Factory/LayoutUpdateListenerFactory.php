@@ -19,7 +19,8 @@ class LayoutUpdateListenerFactory implements FactoryInterface
         $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
         $paths = $options->getLayoutUpdatePaths();
         $extensions = $options->getLayoutUpdateExtensions();
-        $listener = new LayoutUpdateListener($paths, $extensions);
+        $defaultArea = $options->getDefaultArea();
+        $listener = new LayoutUpdateListener($paths, $extensions, $defaultArea);
         return $listener;
     }
 }
