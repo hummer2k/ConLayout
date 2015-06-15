@@ -2,6 +2,7 @@
 namespace ConLayout\Block;
 
 use Zend\Http\Request;
+use Zend\View\Renderer\RendererInterface;
 
 /**
  * @package ConLayout
@@ -16,8 +17,19 @@ interface BlockInterface
     public function setRequest(Request $request);
 
     /**
-     * 
+     *
      * @return Request
      */
     public function getRequest();
+
+    /**
+     *
+     * @param RendererInterface $view
+     */
+    public function setView(RendererInterface $view);
+
+    /**
+     * @return RendererInterface
+     */
+    public function getView();
 }

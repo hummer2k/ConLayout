@@ -3,6 +3,7 @@ namespace ConLayout\Block;
 
 use Zend\Http\Request;
 use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\RendererInterface;
 
 /**
  * @package ConLayout
@@ -13,21 +14,27 @@ abstract class AbstractBlock extends ViewModel implements
     CacheableInterface
 {
     const CACHE_KEY_PREFIX = 'block-';
-    
+
     /**
      *
      * @var Request
      */
     protected $request;
-    
+
+    /**
+     *
+     * @var RendererInterface
+     */
+    protected $view;
+
     /**
      *
      * @var array
      */
     protected $cacheKeyInfo = [];
-               
+
     /**
-     * 
+     *
      * @param \Zend\Http\Request $request
      * @return AbstractBlock
      */
@@ -36,9 +43,9 @@ abstract class AbstractBlock extends ViewModel implements
         $this->request = $request;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return Request
      */
     public function getRequest()
@@ -48,10 +55,30 @@ abstract class AbstractBlock extends ViewModel implements
         }
         return $this->request;
     }
-    
+
+    /**
+     *
+     * @param RendererInterface $view
+     * @return AbstractBlock
+     */
+    public function setView(RendererInterface $view)
+    {
+        $this->view = $view;
+        return $this;
+    }
+
+    /**
+     *
+     * @return RendererInterface
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
+
     /**
      * set the cache key information
-     * 
+     *
      * @param array $info
      * @return AbstractBlock
      */
@@ -60,10 +87,10 @@ abstract class AbstractBlock extends ViewModel implements
         $this->cacheKeyInfo = $info;
         return $this;
     }
-    
+
     /**
      * retrieve cache key information
-     * 
+     *
      * @return array
      */
     public function getCacheKeyInfo()
@@ -74,10 +101,10 @@ abstract class AbstractBlock extends ViewModel implements
         ], $this->cacheKeyInfo);
         return $cacheKeyInfo;
     }
-    
+
     /**
      * add cache key info
-     * 
+     *
      * @param string $info
      * @return AbstractBlock
      */
@@ -86,10 +113,10 @@ abstract class AbstractBlock extends ViewModel implements
         $this->cacheKeyInfo[] = (string) $info;
         return $this;
     }
-    
+
     /**
      * retrieve hashed cache key
-     * 
+     *
      * @return string
      */
     public function getCacheKey()
@@ -97,11 +124,11 @@ abstract class AbstractBlock extends ViewModel implements
         return static::CACHE_KEY_PREFIX
             . md5(implode('|', $this->getCacheKeyInfo()));
     }
-    
+
     /**
      * retrieve cache ttl in seconds
      * if false, block will not be cached
-     * 
+     *
      * @return int|false
      */
     public function getCacheTtl()

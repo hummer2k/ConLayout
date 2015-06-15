@@ -64,4 +64,15 @@ class PrepareActionViewModelListenerTest extends AbstractTest
         $this->assertNull($viewModel->getVariable(LayoutInterface::BLOCK_ID_VAR));
 
     }
+
+    public function testDoNotSetBlockIdIfAlreadySet()
+    {
+        $viewModel = new ViewModel();
+        $viewModel->setVariable(LayoutInterface::BLOCK_ID_VAR, 'the.block');
+
+        $this->mvcEvent->setResult($viewModel);
+        $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
+
+        $this->assertEquals('the.block', $viewModel->getVariable(LayoutInterface::BLOCK_ID_VAR));
+    }
 }

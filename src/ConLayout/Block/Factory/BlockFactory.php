@@ -96,6 +96,7 @@ class BlockFactory implements
 
         if ($block instanceof BlockInterface) {
             $block->setRequest($this->serviceLocator->get('Request'));
+            $block->setView($this->serviceLocator->get('ViewRenderer'));
         }
 
         if (method_exists($block, 'init')) {

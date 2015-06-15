@@ -2,6 +2,7 @@
 
 namespace ConLayout\Block\Factory;
 
+use ConLayout\Block\BlockInterface;
 use Zend\View\Model\ModelInterface;
 
 /**
@@ -14,7 +15,7 @@ interface BlockFactoryInterface
      *
      * @param string $blockId
      * @param array $specs
-     * @return ModelInterface
+     * @return ModelInterface|BlockInterface
      */
     public function createBlock($blockId, array $specs);
 }

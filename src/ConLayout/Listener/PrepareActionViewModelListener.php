@@ -38,10 +38,12 @@ class PrepareActionViewModelListener implements
         /* @var $layout ModelInterface */
         $result = $e->getResult();
         if ($result instanceof ModelInterface && !$result->terminate()) {
-            $result->setVariable(
-                LayoutInterface::BLOCK_ID_VAR,
-                LayoutInterface::BLOCK_ID_ACTION_RESULT
-            );
+            if (!$result->getVariable(LayoutInterface::BLOCK_ID_VAR)) {
+                $result->setVariable(
+                    LayoutInterface::BLOCK_ID_VAR,
+                    LayoutInterface::BLOCK_ID_ACTION_RESULT
+                );
+            }
             $result->setAppend(true);
         }
     }
