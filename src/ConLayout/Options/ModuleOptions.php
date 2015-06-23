@@ -61,6 +61,34 @@ class ModuleOptions extends AbstractOptions
 
     /**
      *
+     * @var array
+     */
+    protected $excludeActionHandleSegments = [
+        'Controller'
+    ];
+
+    /**
+     *
+     * @return array
+     */
+    public function getExcludeActionHandleSegments()
+    {
+        return $this->excludeActionHandleSegments;
+    }
+
+    /**
+     *
+     * @param array $excludeActionHandleSegments
+     * @return ModuleOptions
+     */
+    public function setExcludeActionHandleSegments(array $excludeActionHandleSegments)
+    {
+        $this->excludeActionHandleSegments = $excludeActionHandleSegments;
+        return $this;
+    }
+
+    /**
+     *
      * @return string
      */
     public function getDefaultArea()

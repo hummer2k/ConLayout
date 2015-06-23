@@ -14,6 +14,7 @@ class ModuleOptionsTest extends AbstractTest
     public function testDefaults()
     {
         $moduleOptions = new ModuleOptions();
+        $this->assertInternalType('array', $moduleOptions->getExcludeActionHandleSegments());
         $this->assertInternalType('array', $moduleOptions->getAssetPreparers());
         $this->assertInternalType('array', $moduleOptions->getViewHelpers());
         $this->assertInternalType('string', $moduleOptions->getCacheBusterInternalBaseDir());
@@ -47,6 +48,16 @@ class ModuleOptionsTest extends AbstractTest
         $this->assertSame([
             'class' => 'MyBlock'
         ], $moduleOptions->getBlockDefaults());
+
+        $excludeActionHandleSegments = [
+            'Controller',
+            'Backend'
+        ];
+        $moduleOptions->setExcludeActionHandleSegments($excludeActionHandleSegments);
+        $this->assertEquals(
+            $excludeActionHandleSegments,
+            $moduleOptions->getExcludeActionHandleSegments()
+        );
     }
 
     public function testSetLayoutUpdateExtensions()
