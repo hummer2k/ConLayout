@@ -81,7 +81,7 @@ class BlockFactory implements
         $class = $this->getOption('class', $specs);
         if (null !== $this->blockManager && $this->blockManager->has($class)) {
             $block = $this->blockManager->get($class);
-        } else if ($this->serviceLocator->has($class)) {
+        } elseif ($this->serviceLocator->has($class)) {
             $block = $this->serviceLocator->get($class);
         } else {
             $block = new $class();
