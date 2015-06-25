@@ -125,4 +125,11 @@ class ModuleTest extends AbstractTest
         $application = new Application([], $sm);
         return $application;
     }
+
+    public function testInit()
+    {
+        $module = new Module();
+        $manager = Bootstrap::getServiceManager()->get('ModuleManager');
+        $module->init($manager);
+    }
 }

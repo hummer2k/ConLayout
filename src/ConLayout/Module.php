@@ -7,7 +7,9 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\ModuleManagerInterface;
 
 /**
  * @package ConLayout
@@ -17,7 +19,8 @@ class Module implements
     ConfigProviderInterface,
     ServiceProviderInterface,
     BootstrapListenerInterface,
-    AutoloaderProviderInterface
+    AutoloaderProviderInterface,
+    InitProviderInterface
 {
     /**
      * retrieve module config
@@ -42,6 +45,22 @@ class Module implements
         return include __DIR__ . '/../../config/service.config.php';
     }
 
+    /**
+     *
+     * @param ModuleManagerInterface $manager
+     */
+    public function init(ModuleManagerInterface $manager)
+    {
+        $sm = $manager->getEvent()->getParam('ServiceManager');
+        $serviceListener = $sm->get('ServiceListener');
+        $serviceListener->addServiceManager(
+            'BlockManager',
+            'blocks',
+            'ConLayout\ModuleManager\Feature\BlockProviderInterface',
+            'getBlockConfig'
+        );
+    }
+    
     /**
      *
      * @param EventInterface $e
