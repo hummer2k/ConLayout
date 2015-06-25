@@ -5,11 +5,12 @@ namespace ConLayout\Block\Factory;
 use ConLayout\Block\BlockInterface;
 use ConLayout\Layout\LayoutInterface;
 use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ModelInterface;
-use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * @package ConLayout
@@ -40,14 +41,24 @@ class BlockFactory implements
 
     /**
      *
-     * @param array $blockDefaults
+     * @var ServiceLocatorInterface
      */
-    public function __construct(array $blockDefaults = [])
-    {
+    protected $blockManager;
+
+    /**
+     *
+     * @param array $blockDefaults
+     * @param ServiceLocatorInterface $blockManager
+     */
+    public function __construct(
+        array $blockDefaults = [],
+        ServiceLocatorInterface $blockManager = null
+    ) {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
             $blockDefaults
         );
+        $this->blockManager = $blockManager;
     }
 
     /**
@@ -68,7 +79,9 @@ class BlockFactory implements
         );
         /* @var $block ModelInterface */
         $class = $this->getOption('class', $specs);
-        if ($this->serviceLocator->has($class)) {
+        if (null !== $this->blockManager && $this->blockManager->has($class)) {
+            $block = $this->blockManager->get($class);
+        } else if ($this->serviceLocator->has($class)) {
             $block = $this->serviceLocator->get($class);
         } else {
             $block = new $class();

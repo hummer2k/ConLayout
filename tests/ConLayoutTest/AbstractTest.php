@@ -2,11 +2,13 @@
 namespace ConLayoutTest;
 
 use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\BlockManager;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\Layout\Layout;
+use PHPUnit_Framework_TestCase;
 use Zend\Config\Config;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
@@ -15,7 +17,7 @@ use Zend\View\Resolver\TemplateMapResolver;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-abstract class AbstractTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
     /**
      *
