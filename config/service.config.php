@@ -1,6 +1,8 @@
 <?php
 return [
     'factories' => [
+        'ConLayout\BlockManager' => 'ConLayout\BlockManagerFactory',
+
         'ConLayout\AssetPreparer\BasePath' => 'ConLayout\AssetPreparer\BasePathFactory',
         'ConLayout\AssetPreparer\CacheBuster' => 'ConLayout\AssetPreparer\CacheBusterFactory',
 
@@ -26,7 +28,8 @@ return [
     'aliases' => [
         'Layout' => 'ConLayout\Layout\LayoutInterface',
         'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategy',
-        'BlockRenderer' => 'ConLayout\View\Renderer\BlockRenderer'
+        'BlockRenderer' => 'ConLayout\View\Renderer\BlockRenderer',
+        'BlockManager' => 'ConLayout\BlockManager'
     ],
     'invokables' => [
         'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'

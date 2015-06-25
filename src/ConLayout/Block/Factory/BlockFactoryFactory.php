@@ -17,7 +17,8 @@ class BlockFactoryFactory implements FactoryInterface
         /* @var $options ModuleOptions */
         $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
         $blockFactory = new BlockFactory(
-            $options->getBlockDefaults()
+            $options->getBlockDefaults(),
+            $serviceLocator->get('ConLayout\BlockManager')
         );
         return $blockFactory;
     }

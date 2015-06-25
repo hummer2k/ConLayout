@@ -107,6 +107,21 @@ class BlockFactoryTest extends AbstractTest
 
     }
 
+    public function testBlockFromBlockManager()
+    {
+        $blockManager = new \ConLayout\BlockManager();
+        $class = 'ConLayoutTest\Block\Factory\MyBlock';
+        $blockManager->setInvokableClass(
+            'MyBlock',
+            $class
+        );
+        $blockFactory = new BlockFactory([], $blockManager);
+        $block = $blockFactory->createBlock('my.block', [
+            'class' => 'MyBlock'
+        ]);
+        $this->assertInstanceOf($class, $block);
+    }
+
     public function testCreateBlockWithTemplate()
     {
         $block = $this->factory->createBlock('block.id', [
