@@ -1,3 +1,4 @@
 /public/.sass-cache/
 /tests/TestConfig.php
 /vendor/
+composer.lock

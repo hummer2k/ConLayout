@@ -10,7 +10,7 @@ use Zend\ServiceManager\FactoryInterface;
 class BlockRendererStrategyFactory implements FactoryInterface
 {
     /**
-     * 
+     *
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
      * @return \ConLayout\View\Strategy\BlockRendererStrategy
      */

@@ -32,7 +32,7 @@ class LoadLayoutListener implements ListenerAggregateInterface
     }
 
     /**
-     * 
+     *
      * @param EventManagerInterface $events
      */
     public function attach(EventManagerInterface $events)
@@ -42,7 +42,7 @@ class LoadLayoutListener implements ListenerAggregateInterface
     
     /**
      * set layout root and load layout
-     * 
+     *
      * @param MvcEvent $e
      */
     public function loadLayout(MvcEvent $e)

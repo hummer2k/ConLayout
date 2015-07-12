@@ -20,7 +20,7 @@ class BodyClassListener extends AbstractListenerAggregate
     protected $bodyClassHelper;
     
     /**
-     * 
+     *
      * @param BodyClass $bodyClassHelper
      */
     public function __construct(BodyClass $bodyClassHelper)
@@ -29,7 +29,7 @@ class BodyClassListener extends AbstractListenerAggregate
     }
     
     /**
-     * 
+     *
      * @param EventManagerInterface $events
      */
     public function attach(EventManagerInterface $events)
@@ -38,7 +38,7 @@ class BodyClassListener extends AbstractListenerAggregate
     }
     
     /**
-     * 
+     *
      * @param MvcEvent $e
      * @return BodyClassListener
      */

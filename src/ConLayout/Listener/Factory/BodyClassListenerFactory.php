@@ -12,7 +12,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class BodyClassListenerFactory implements FactoryInterface
 {
     /**
-     * 
+     *
      * @param ServiceLocatorInterface $serviceLocator
      * @return BodyClassListener
      */
