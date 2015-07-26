@@ -12,7 +12,7 @@ class BodyClass extends AbstractHelper
     protected $classes = [];
     
     /**
-     * 
+     *
      * @param type $classname
      * @return BodyClass
      */
@@ -35,7 +35,7 @@ class BodyClass extends AbstractHelper
     }
     
     /**
-     * 
+     *
      * @param string $classname
      * @return BodyClass
      */
@@ -46,7 +46,7 @@ class BodyClass extends AbstractHelper
     }
     
     /**
-     * 
+     *
      * @return string class names space separated
      */
     public function __toString()

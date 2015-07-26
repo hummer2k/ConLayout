@@ -11,7 +11,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class LayoutManagerFactory implements FactoryInterface
 {
     /**
-     * 
+     *
      * @param ServiceLocatorInterface $serviceLocator
      * @return LayoutManager
      */

@@ -21,7 +21,7 @@ class BlockRendererStrategy extends AbstractListenerAggregate
     protected $renderer;
     
     /**
-     * 
+     *
      * @param BlockRenderer $renderer
      */
     public function __construct(BlockRenderer $renderer)
@@ -39,7 +39,7 @@ class BlockRendererStrategy extends AbstractListenerAggregate
     }
     
     /**
-     * 
+     *
      * @param \Zend\View\ViewEvent $e
      * @return RendererInterface|null
      */
@@ -53,7 +53,7 @@ class BlockRendererStrategy extends AbstractListenerAggregate
     }
     
     /**
-     * 
+     *
      * @param ViewEvent $e
      * @return null
      */
