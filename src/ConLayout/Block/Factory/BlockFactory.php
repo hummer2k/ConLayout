@@ -21,6 +21,8 @@ class BlockFactory implements
     ServiceLocatorAwareInterface,
     EventManagerAwareInterface
 {
+    const WRAPPER_DEFAULT = 'blocks/wrapper';
+
     use ServiceLocatorAwareTrait;
     use EventManagerAwareTrait;
 
@@ -94,8 +96,14 @@ class BlockFactory implements
             $block->setVariable($name, $variable);
         }
         foreach ($this->getOption('actions', $specs) as $method => $params) {
+            $params = (array) $params;
             if (is_callable([$block, $method])) {
                 call_user_func_array([$block, $method], $params);
+            } else {
+                $method = key($params);
+                if (is_callable([$block, $method])) {
+                    call_user_func_array([$block, $method], (array) current($params));
+                }
             }
         }
         if ($template = $this->getOption('template', $specs)) {
@@ -146,7 +154,7 @@ class BlockFactory implements
         } elseif (is_array($options) && (!isset($options['template']))) {
             $options = array_merge(
                 $options,
-                ['template' => 'blocks/wrapper']
+                ['template' => self::WRAPPER_DEFAULT]
             );
         }
         $originalTpl = $block->getTemplate();

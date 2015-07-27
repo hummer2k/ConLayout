@@ -70,6 +70,93 @@ class BlockFactoryTest extends AbstractTest
         $this->assertEquals('value_my-option', $block->getOptions()['my-option']);
     }
 
+    public function testMultipleActions()
+    {
+        $factory = new BlockFactory();
+        $factory->setServiceLocator(new ServiceManager());
+
+        $specs = [
+            'actions' => [
+                'set_some_option' => [
+                    'setOption' => ['my-option', 'value_my-option']
+                ],
+                'set_another_option' => [
+                    'setOption' => ['some-other-option', 'some-option-value']
+                ],
+                'setVariable' => ['testVar', 'valueTestVar'],
+                'set_some_var' => [
+                    'setVariable' => ['testVar2', 'SOME_VAR']
+                ],
+                'set_another_var' => [
+                    'setVariable' => ['testVar3', 'ANOTHER_VAR']
+                ]
+            ]
+        ];
+
+        $block = $factory->createBlock('block.id', $specs);
+
+        $this->assertEquals('value_my-option', $block->getOption('my-option'));
+        $this->assertEquals('some-option-value', $block->getOption('some-other-option'));
+        $this->assertEquals('valueTestVar', $block->getVariable('testVar'));
+        $this->assertEquals('SOME_VAR', $block->getVariable('testVar2'));
+        $this->assertEquals('ANOTHER_VAR', $block->getVariable('testVar3'));
+    }
+
+    public function testWrapBlockString()
+    {
+        $factory = new BlockFactory();
+        $factory->setServiceLocator(new ServiceManager());
+
+        $specs = [
+            'template' => 'my/tpl',
+            'wrapper' => 'my/wrapper'
+        ];
+
+        $block = $factory->createBlock('my-block', $specs);
+
+        $this->assertEquals('my/wrapper', $block->getTemplate());
+
+    }
+
+    public function testWrapBlockArray()
+    {
+        $factory = new BlockFactory();
+        $factory->setServiceLocator(new ServiceManager());
+
+        $specs = [
+            'template' => 'my/tpl',
+            'wrapper' => [
+                'template'   => 'my/wrapper',
+                'html_class' => 'my-wrapper-class',
+                'html_tag'   => 'div'
+            ]
+        ];
+
+        $block = $factory->createBlock('my-block', $specs);
+
+        $this->assertEquals('my/wrapper', $block->getTemplate());
+
+        $this->assertEquals('my-wrapper-class', $block->getVariable('htmlWrapperClass'));
+        $this->assertEquals('div', $block->getVariable('htmlWrapperTag'));
+    }
+
+    public function testWrapBlockArrayWithoutTemplate()
+    {
+        $factory = new BlockFactory();
+        $factory->setServiceLocator(new ServiceManager());
+
+        $specs = [
+            'template' => 'my/tpl',
+            'wrapper' => [
+                'html_tag'   => 'div'
+            ]
+        ];
+
+        $block = $factory->createBlock('my-block', $specs);
+
+        $this->assertEquals(BlockFactory::WRAPPER_DEFAULT, $block->getTemplate());
+    }
+
     public function testClass()
     {
         $factory = new BlockFactory();
