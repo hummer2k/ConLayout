@@ -5,6 +5,7 @@ namespace ConLayoutTest\Layout;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Debug\Debugger;
 use ConLayout\Layout\Layout;
+use ConLayoutTest\Layout\Layout as TestLayout;
 use ConLayout\Layout\LayoutFactory;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Options\ModuleOptions;
@@ -156,6 +157,33 @@ class LayoutTest extends AbstractTest
             $layout->getBlock('child2')
         );
 
+    }
+
+    public function testGetCaptureTo()
+    {
+        $viewModel = new ViewModel();
+        $viewModel->setCaptureTo('root::footer');
+        $viewModel->setOption('parent', 'some.parent');
+
+        $layout = new TestLayout($this->blockFactory, $this->updaterMock);
+
+        $this->assertEquals([
+            'some.parent',
+            'footer'
+        ], $layout->getCaptureTo($viewModel));
+    }
+
+    public function testGetCaptureToDefault()
+    {
+        $viewModel = new ViewModel();
+        $viewModel->setOption('parent', 'some.parent');
+
+        $layout = new TestLayout($this->blockFactory, $this->updaterMock);
+
+        $this->assertEquals([
+            'some.parent',
+            'content'
+        ], $layout->getCaptureTo($viewModel));
     }
 
     public function testGetBlocks()
