@@ -1,5 +1,4 @@
 <?php
-$vars = $this->viewModel()->getCurrent()->getVariables();
 $tag = strlen($this->htmlWrapperTag)
     ? $this->htmlWrapperTag
     : 'div';
@@ -8,5 +7,5 @@ $htmlClass = strlen($this->htmlWrapperClass)
     : '';
 ?>
 <?= '<' . $tag . $htmlClass . '>' ?>
-    <?= $this->partial($this->originalTpl, $vars) ?>
+    <?= $this->render($this->originalTpl) ?>
 <?= '</' . $tag . '>'; ?>

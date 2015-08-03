@@ -23,6 +23,12 @@ abstract class AbstractUpdater implements
     ];
 
     /**
+     *
+     * @var string
+     */
+    protected $area = self::AREA_DEFAULT;
+
+    /**
      * {@inheritdoc}
      */
     public function addHandle(HandleInterface $handle)
@@ -70,5 +76,23 @@ abstract class AbstractUpdater implements
             return $handles;
         }
         return array_keys($this->handles);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+        return $this;
     }
 }

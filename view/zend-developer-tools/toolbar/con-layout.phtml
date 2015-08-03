@@ -18,7 +18,7 @@ use Zend\Debug\Debug;
         <hr>
         <span class="zdt-toolbar-info">
             <span class="zdt-toolbar-info zdt-toolbar-info-heading">
-                Loaded blocks (view models)
+                Loaded blocks
             </span>
             <?php $loadedBlocks = $collector->getBlocks() ?>
             <?php if (!count($loadedBlocks)): ?>
@@ -79,15 +79,14 @@ use Zend\Debug\Debug;
         </span>
         <hr>
         <span class="zdt-toolbar-info">
-            <span class="zdt-detail-label">Layout Template</span>
-            <span class="zdt-detail-value"><?= $collector->getLayoutTemplate() ?></span>
+            <span class="zdt-detail-label">Current Area</span>
+            <span class="zdt-detail-value"><?= $collector->getCurrentArea() ?></span>
         </span>
     </div>
 </div>
 <script>
-
+    jQuery || document.write('<script src="//code.jquery.com/jquery-2.1.4.min.js"><\/script>');
     jQuery(function($) {
-
         $('.zdt-conlayout-entry').on('mouseenter', function() {
             var $detail = $(this).find('.zdt-toolbar-detail');
             var offset  = $(this).offset().left;
@@ -98,13 +97,11 @@ use Zend\Debug\Debug;
                 $detail.css('right', 0);
             } else {
                 $detail.css('right', 'auto');
-
             }
-            console.log(offset, width, offsetWidth);
         });
 
         $('[data-block-name-label]').on('mouseenter', function() {
-            $('[data-block-name="' + $(this).data('blockNameLabel') + '"]').addClass('block-highlight')
+            $('[data-block-name="' + $(this).data('blockNameLabel') + '"]').addClass('block-highlight');
         }).on('mouseleave', function() {
             if (!$(this).hasClass('toggled')) {
                 $('[data-block-name="' + $(this).data('blockNameLabel') + '"]').removeClass('block-highlight');

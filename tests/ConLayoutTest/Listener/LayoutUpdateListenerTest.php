@@ -87,6 +87,10 @@ class LayoutUpdateListenerTest extends AbstractTest
             'blocks' => [
                 'widget.included' => [],
                 'another.handle.block' => []
+            ],
+            'include' => [
+                'included-handle',
+                'another-handle'
             ]
         ], $layoutStructure);
     }

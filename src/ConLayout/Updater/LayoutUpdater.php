@@ -35,6 +35,7 @@ final class LayoutUpdater extends AbstractUpdater implements
             $event = new UpdateEvent();
             $event->setLayoutStructure($this->layoutStructure);
             $event->setHandles($handles);
+            $event->setArea($this->getArea());
 
             $results = $this->getEventManager()->trigger(
                 __FUNCTION__ . '.pre',

@@ -82,20 +82,12 @@ class LayoutUpdateListener implements ListenerAggregateInterface
     public function fetch(UpdateEvent $event)
     {
         $handles = $event->getHandles();
+        if ($area = $event->getArea()) {
+            $this->setArea($area);
+        }
         $this->layoutStructure = $event->getLayoutStructure();
         foreach ($handles as $handle) {
             $this->fetchHandle($handle);
-        }
-        $this->cleanUpLayoutStructure();
-    }
-
-    /**
-     * removes unnecessary layout instructions
-     */
-    protected function cleanUpLayoutStructure()
-    {
-        if (isset($this->layoutStructure[LayoutUpdaterInterface::INSTRUCTION_INCLUDE])) {
-            unset($this->layoutStructure[LayoutUpdaterInterface::INSTRUCTION_INCLUDE]);
         }
     }
 
