@@ -17,6 +17,9 @@ interface LayoutUpdaterInterface
     const INSTRUCTION_VIEW_HELPERS    = 'view_helpers';
     const INSTRUCTION_INCLUDE         = 'include';
 
+    const AREA_GLOBAL   = 'global';
+    const AREA_DEFAULT  = 'frontend';
+
     /**
      * retrieve layout structure for current request
      * respectively current handles
@@ -53,4 +56,18 @@ interface LayoutUpdaterInterface
      * @return string[]|HandleInterface[]
      */
     public function getHandles($asObject = false);
+
+    /**
+     * set current area
+     *
+     * @param string $area
+     */
+    public function setArea($area);
+
+    /**
+     * retrieve current area
+     *
+     * @return string
+     */
+    public function getArea();
 }

@@ -2,6 +2,7 @@
 namespace ConLayout\Zdt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
+use ConLayout\Listener\LayoutUpdateListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Mvc\MvcEvent;
 use ZendDeveloperTools\Collector\AbstractCollector;
@@ -59,7 +60,7 @@ class LayoutCollector extends AbstractCollector
     /**
      * collect data for zdt
      *
-     * @param \Zend\Mvc\MvcEvent $mvcEvent
+     * @param MvcEvent $mvcEvent
      * @return LayoutCollector
      */
     public function collect(MvcEvent $mvcEvent)
@@ -77,7 +78,8 @@ class LayoutCollector extends AbstractCollector
             'handles' => $this->updater->getHandles(true),
             'layout_structure' => $this->updater->getLayoutStructure()->toArray(),
             'blocks' => $blocks,
-            'layout_template' => $layout->getTemplate()
+            'layout_template' => $layout->getTemplate(),
+            'current_area' => $this->updater->getArea()
         ];
 
         $this->data = $data;
@@ -91,6 +93,15 @@ class LayoutCollector extends AbstractCollector
     public function getLayoutTemplate()
     {
         return $this->data['layout_template'];
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getCurrentArea()
+    {
+        return $this->data['current_area'];
     }
 
     /**

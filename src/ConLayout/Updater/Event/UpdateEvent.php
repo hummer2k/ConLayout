@@ -24,6 +24,12 @@ class UpdateEvent extends Event
     protected $handles;
 
     /**
+     *
+     * @var string
+     */
+    protected $area;
+
+    /**
      * @return Config
      */
     public function getLayoutStructure()
@@ -56,6 +62,26 @@ class UpdateEvent extends Event
     public function setHandles(array $handles)
     {
         $this->handles = $handles;
+        return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
+
+    /**
+     *
+     * @param string $area
+     * @return UpdateEvent
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
         return $this;
     }
 }
