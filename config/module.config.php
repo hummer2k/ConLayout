@@ -14,18 +14,6 @@ return [
         // are able to set the template via layout()-helper in controller
         'layout' => ''
     ],
-    'view_helpers' => [
-        'invokables' => [
-            'ConLayout\View\Helper\BodyClass' => 'ConLayout\View\Helper\BodyClass',
-        ],
-        'factories' => [
-            'ConLayout\View\Helper\Block' => 'ConLayout\View\Helper\BlockFactory'
-        ],
-        'aliases' => [
-            'bodyClass' => 'ConLayout\View\Helper\BodyClass',
-            'block' => 'ConLayout\View\Helper\Block'
-        ]
-    ],
     'controller_plugins' => [
         'factories' => [
             'layoutManager' => 'ConLayout\Controller\Plugin\LayoutManagerFactory'
@@ -33,8 +21,8 @@ return [
     ],
     'asset_manager' => [
         'resolver_configs' => [
-            'paths' => [
-                __DIR__ . '/../public/assets'
+            'map' => [
+                'css/con-layout.css' => __DIR__ . '/../public/css/con-layout.css'
             ]
         ]
     ],

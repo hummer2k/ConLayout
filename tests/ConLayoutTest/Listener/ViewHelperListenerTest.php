@@ -30,38 +30,43 @@ class ViewHelperListenerTest extends AbstractTest
                 'headLink' => [
                     'main'   => '/css/main.css',
                     'test'   => [
-                        'prependStylesheet' => '/css/test.css'
+                        'method' => 'prependStylesheet',
+                        'args' => '/css/test.css'
                     ]
                 ],
                 'headTitle' => [
                     'My Title',
                     'Another Title',
                     [
-                        'prepend' => 'First'
+                        'method' => 'prepend',
+                        'args' => 'First'
                     ]
                 ],
                 'headMeta' => [
-                    ['setCharset' => 'utf8'],
+                    'charset' => [
+                        'method' => 'setCharset',
+                        'args'   => 'utf8'
+                    ],
                     ['description', 'My description'],
                     ['keywords', 'keyword1, keyword2, keyword3']
                 ],
                 'headScript' => [
                     'jquery-ui' => '/js/jquery-ui.min.js',
                     'jquery' => [
-                        'prependFile' =>  '/js/jquery.min.js'
+                        'method' => 'prependFile',
+                        'args' => '/js/jquery.min.js'
                     ],
                     'modernizr' => [
-                        'appendFile' => [
+                        'method' => 'appendFile',
+                        'args' => [
                             '/js/modernizr.js',
                             'text/javascript',
                             ['conditional' => 'lt IE 9']
                         ]
                     ],
                     'funcs' => [
-                        'offsetSetFile' => [
-                            100,
-                            '/js/functions.js'
-                        ]
+                        'method' => 'offsetSetFile',
+                        'args' => [100, '/js/functions.js']
                     ],
                     'will-be-ignored' => false
                 ]

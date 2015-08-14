@@ -1,11 +1,6 @@
 <?php
-$tag = strlen($this->htmlWrapperTag)
-    ? $this->htmlWrapperTag
-    : 'div';
-$htmlClass = strlen($this->htmlWrapperClass)
-    ? ' class="' . $this->htmlWrapperClass . '"'
-    : '';
+$wrapper = $this->wrapper($this->wrapperTag);
 ?>
-<?= '<' . $tag . $htmlClass . '>' ?>
-    <?= $this->render($this->originalTpl) ?>
-<?= '</' . $tag . '>'; ?>
+<?= $wrapper->openTag($this->wrapperAttributes) ?>
+<?= $this->render($this->originalTemplate) ?>
+<?= $wrapper->closeTag() ?>

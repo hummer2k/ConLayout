@@ -149,23 +149,24 @@ class BlockFactory implements
      */
     protected function wrapBlock(ModelInterface $block, $options)
     {
+        $attributes = $options;
         if (is_string($options)) {
-            $options = ['template' => $options];
+            $wrapperTemplate = $options;
+            $attributes = [];
         } elseif (is_array($options) && (!isset($options['template']))) {
-            $options = array_merge(
-                $options,
-                ['template' => self::WRAPPER_DEFAULT]
-            );
+            $wrapperTemplate = self::WRAPPER_DEFAULT;
+        } else {
+            $wrapperTemplate = $options['template'];
+            unset($attributes['template']);
         }
-        $originalTpl = $block->getTemplate();
-        $block->setTemplate($options['template']);
-        if (isset($options['html_class'])) {
-            $block->setVariable('htmlWrapperClass', $options['html_class']);
+        if (isset($options['tag'])) {
+            $block->setVariable('wrapperTag', $options['tag']);
+            unset($attributes['tag']);
         }
-        if (isset($options['html_tag'])) {
-            $block->setVariable('htmlWrapperTag', $options['html_tag']);
-        }
-        $block->setVariable('originalTpl', $originalTpl);
+        $originalTemplate = $block->getTemplate();
+        $block->setTemplate($wrapperTemplate);
+        $block->setVariable('wrapperAttributes', $attributes);
+        $block->setVariable('originalTemplate', $originalTemplate);
     }
 
     /**

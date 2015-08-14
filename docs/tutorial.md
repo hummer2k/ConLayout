@@ -560,7 +560,7 @@ If you now go to http://your.zf2-skeleton.app/application/index/include the
 layout structure should be the same as defined in our `default.php` since the
 default-handle is the only one that matches in this request.
 
-To do so, create a new layout update file for the handle 
+Create a new layout update file for the handle 
 `application-index-include` with the following content:
 
 ````php
@@ -594,6 +594,3 @@ return [
 ````
 
 The widget should now be disappeared.
-
-Any questions? Feel free to open an issue on 
-[Github](https://github.com/hummer2k/ConLayout/).

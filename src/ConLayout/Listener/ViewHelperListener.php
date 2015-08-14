@@ -102,21 +102,14 @@ class ViewHelperListener implements ListenerAggregateInterface
             }
             $defaultMethod = isset($config['default_method']) ? $config['default_method'] : '__invoke';
             $viewHelper = $this->viewHelperManager->get($helper);
-            if (!is_array($viewHelperInstructions[$helper])) {
-                $viewHelperInstructions[$helper] = [$viewHelperInstructions[$helper]];
-            }
+            $viewHelperInstructions[$helper] = (array) $viewHelperInstructions[$helper];
             foreach ($viewHelperInstructions[$helper] as $value) {
-                if (false === $value) {
+                if (!$value) {
                     continue;
                 }
+                $value = (array) $value;
                 $method = $this->getHelperMethod($value, $defaultMethod, $viewHelper);
-                if (!is_array($value)) {
-                    $value = [$value];
-                }
-                $args   = array_values($value);
-                if (is_array($args[0])) {
-                    $args = $args[0];
-                }
+                $args   = isset($value['args']) ? (array) $value['args'] : array_values($value);
                 $args[0] = $this->prepareHelperValue($args[0], $helper);
                 call_user_func_array([$viewHelper, $method], $args);
             }
@@ -126,11 +119,8 @@ class ViewHelperListener implements ListenerAggregateInterface
 
     private function getHelperMethod($value, $defaultMethod, $viewHelper)
     {
-        if (is_array($value)) {
-            $method = current(array_keys($value));
-            if (is_string($method) && is_callable([$viewHelper, $method])) {
-                return $method;
-            }
+        if (isset($value['method']) && is_callable([$viewHelper, $value['method']])) {
+            return $value['method'];
         }
         return $defaultMethod;
     }

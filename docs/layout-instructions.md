@@ -75,23 +75,30 @@ return [
             ],
             /**
              * wraps a block with another template
-             * accepts 3 optional parameters 'template', 'html_class' and 
-             * 'html_tag'
-             * 
+             *
              * if false, wrapper will be disabled: 'wrapper' => false,
-             * 
-             * defaults: html_tag: 'div', 'template: 'blocks/wrapper'
+             *
+             * defaults: tag: 'div', 'template: 'blocks/wrapper'
              */
             'wrapper' => [
                 'template' => 'blocks/wrapper',
-                'html_class' => 'col-xs-12',
-                'html_tag' => 'div'
+                'class' => 'col-xs-12',
+                'tag' => 'div'
+            ],
+            // just set a custom template
+            'wrapper' => 'my/wrapper',
+            // or add more attributes for the wrapper tag
+            'wrapper' => [
+                'id' => 'some-id',
+                'title' => 'Wrapper Title'
             ],
             /**
              * perform some actions on the block class/method calls
              */
             'actions'   => [
-                'method' => ['param1', 'param2', 'param3'] // $block->method('param1', 'param2', 'param3');
+                'my-action' => [
+                    'method' => ['param1', 'param2', 'param3'] // $block->method('param1', 'param2', 'param3');
+                ]
             ]
         ]
     ]

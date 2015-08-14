@@ -4,6 +4,7 @@ namespace ConLayout\Debug;
 
 use ConLayout\Layout\Layout;
 use Zend\View\Model\ModelInterface;
+use Zend\View\Model\ViewModel;
 
 /**
  * @package ConLayout
