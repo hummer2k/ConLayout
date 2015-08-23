@@ -19,13 +19,6 @@ return [
             'layoutManager' => 'ConLayout\Controller\Plugin\LayoutManagerFactory'
         ]
     ],
-    'asset_manager' => [
-        'resolver_configs' => [
-            'map' => [
-                'css/con-layout.css' => __DIR__ . '/../public/css/con-layout.css'
-            ]
-        ]
-    ],
     'zenddevelopertools' => [
         'profiler' => [
             'collectors' => [

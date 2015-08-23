@@ -47,16 +47,6 @@ return [
             'Controller'
         ],
         /**
-         * shows block hints
-         *
-         * debug css is automatically inserted by rwoverdijk/assetmanager
-         * if this module is installed
-         *
-         * if you are not using this module, you can copy con-layout.css
-         * from conlayout/public/assets/css to your public/css directory
-         */
-        'enable_debug' => false,
-        /**
          * base dir to assets
          *
          * is used by ConLayout\AssetPreparer\CacheBuster to read the file

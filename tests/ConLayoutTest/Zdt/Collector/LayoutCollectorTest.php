@@ -3,18 +3,12 @@
 namespace ConLayoutTest\Zdt\Collector;
 
 use ConLayout\Block\Factory\BlockFactory;
-use ConLayout\Debugger;
 use ConLayout\Layout\Layout;
-use ConLayout\Module;
-use ConLayout\Service\BlocksBuilder;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Zdt\Collector\LayoutCollector;
 use ConLayout\Zdt\Collector\LayoutCollectorFactory;
 use ConLayoutTest\AbstractTest;
-use Zend\EventManager\EventManager;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Http\PhpEnvironment\Response;
-use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
 
@@ -77,11 +71,11 @@ class LayoutCollectorTest extends AbstractTest
 
     public function testCollect()
     {
-        $event = new \Zend\Mvc\MvcEvent();
+        $event = new MvcEvent();
         $layoutModel = new ViewModel();
         $layoutModel->setTemplate('layout/2cols-left');
         $event->setViewModel($layoutModel);
-        
+
         $testBlock = new ViewModel();
         $testBlock->setTemplate('test/block');
         $testBlock->setCaptureTo('sidebarLeft');
@@ -89,7 +83,7 @@ class LayoutCollectorTest extends AbstractTest
         $this->layout->addBlock('test.block', $testBlock);
 
         $this->collector->collect($event);
-        
+
         $this->assertEquals(
             'layout/2cols-left',
             $this->collector->getLayoutTemplate()

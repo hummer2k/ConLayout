@@ -19,7 +19,7 @@ class BlockRendererStrategy extends AbstractListenerAggregate
      * @var BlockRenderer
      */
     protected $renderer;
-    
+
     /**
      *
      * @param BlockRenderer $renderer
@@ -28,7 +28,7 @@ class BlockRendererStrategy extends AbstractListenerAggregate
     {
         $this->renderer = $renderer;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -37,10 +37,10 @@ class BlockRendererStrategy extends AbstractListenerAggregate
         $this->listeners[] = $events->attach(ViewEvent::EVENT_RENDERER, [$this, 'selectRenderer'], $priority);
         $this->listeners[] = $events->attach(ViewEvent::EVENT_RESPONSE, [$this, 'injectResponse'], $priority);
     }
-    
+
     /**
      *
-     * @param \Zend\View\ViewEvent $e
+     * @param ViewEvent $e
      * @return RendererInterface|null
      */
     public function selectRenderer(ViewEvent $e)
@@ -51,7 +51,7 @@ class BlockRendererStrategy extends AbstractListenerAggregate
         }
         return $this->renderer;
     }
-    
+
     /**
      *
      * @param ViewEvent $e

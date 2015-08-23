@@ -10,6 +10,8 @@ use Zend\View\Helper\AbstractHtmlElement;
  */
 class Wrapper extends AbstractHtmlElement
 {
+    const DEFAULT_TAG = 'div';
+
     /**
      *
      * @var string
@@ -23,7 +25,7 @@ class Wrapper extends AbstractHtmlElement
      */
     public function __invoke($tag = null)
     {
-        $this->tag = $tag ?: 'div';
+        $this->tag = $tag ?: static::DEFAULT_TAG;
         return $this;
     }
 
@@ -34,7 +36,15 @@ class Wrapper extends AbstractHtmlElement
      */
     public function openTag($attributes = [])
     {
-        return '<' . $this->tag . ' ' . $this->htmlAttribs($attributes) . '>';
+        $htmlAttribs = '';
+        if (count($attributes)) {
+            $htmlAttribs = $this->htmlAttribs($attributes);
+        }
+        return sprintf(
+            '<%s%s>',
+            $this->tag,
+            $htmlAttribs
+        );
     }
 
     /**

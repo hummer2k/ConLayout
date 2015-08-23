@@ -164,6 +164,7 @@ class BlockFactory implements
             unset($attributes['tag']);
         }
         $originalTemplate = $block->getTemplate();
+        $block->setOption('is_wrapped', true);
         $block->setTemplate($wrapperTemplate);
         $block->setVariable('wrapperAttributes', $attributes);
         $block->setVariable('originalTemplate', $originalTemplate);

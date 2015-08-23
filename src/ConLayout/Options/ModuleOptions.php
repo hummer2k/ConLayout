@@ -112,15 +112,6 @@ class ModuleOptions extends AbstractOptions
 
     /**
      *
-     * @return bool
-     */
-    public function getEnableDebug()
-    {
-        return $this->enableDebug;
-    }
-
-    /**
-     *
      * @return array
      */
     public function getViewHelpers()
@@ -138,11 +129,13 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
+     * just here for bc
      *
+     * @codeCoverageIgnore
      * @param bool $enableDebug
      * @return ModuleOptions
      */
-    public function setEnableDebug($enableDebug)
+    public function setEnableDebug($enableDebug = false)
     {
         $this->enableDebug = $enableDebug;
         return $this;

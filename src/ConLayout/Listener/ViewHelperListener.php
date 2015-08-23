@@ -121,6 +121,11 @@ class ViewHelperListener implements ListenerAggregateInterface
     {
         if (isset($value['method']) && is_callable([$viewHelper, $value['method']])) {
             return $value['method'];
+        } else {
+            $method = current(array_keys($value));
+            if (is_string($method)) {
+                return $method;
+            }
         }
         return $defaultMethod;
     }

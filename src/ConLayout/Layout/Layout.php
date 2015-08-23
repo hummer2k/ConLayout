@@ -3,8 +3,6 @@
 namespace ConLayout\Layout;
 
 use ConLayout\Block\Factory\BlockFactoryInterface;
-use ConLayout\Debug\Debugger;
-use ConLayout\Handle\Handle;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
@@ -25,12 +23,6 @@ class Layout implements
 
     const CAPTURE_TO_DELIMITER = '::';
     const ANONYMOUS_ID_PATTERN = 'anonymous.%s.%s';
-
-    /**
-     *
-     * @var Debugger
-     */
-    protected $debugger;
 
     /**
      * suffix for anonymous block names
@@ -203,9 +195,6 @@ class Layout implements
                     continue;
                 }
                 list($parent, $captureTo) = $this->getCaptureTo($block);
-                if (null !== $this->debugger) {
-                    $block = $this->debugger->addDebugBlock($block, $parent, $captureTo);
-                }
                 if ($parentBlock = $this->getBlock($parent)) {
                     $parentBlock->addChild($block, $captureTo);
                     $block->setOption('parent_block', $parentBlock);
@@ -372,26 +361,5 @@ class Layout implements
                 },
                 10000
             );
-    }
-
-    /**
-     *
-     * @param Debugger $debugger
-     * @return Layout
-     */
-    public function setDebugger(Debugger $debugger)
-    {
-        $this->updater->addHandle(new Handle('con-layout-debug', 0));
-        $this->debugger = $debugger;
-        return $this;
-    }
-
-    /**
-     *
-     * @return Debugger
-     */
-    public function getDebugger()
-    {
-        return $this->debugger;
     }
 }
