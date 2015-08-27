@@ -161,6 +161,18 @@ class Layout implements
      */
     protected function sortBlocks()
     {
+        foreach ($this->blocks as $block) {
+            if ($beforeBlockId = $block->getOption('before')) {
+                if ($beforeBlock = $this->getBlock($beforeBlockId)) {
+                    $block->setOption('order', $beforeBlock->getOption('order', 0) - 1);
+                }
+            }
+            if ($afterBlockId = $block->getOption('after')) {
+                if ($afterBlock = $this->getBlock($afterBlockId)) {
+                    $block->setOption('order', $afterBlock->getOption('order', 0) + 1);
+                }
+            }
+        }
         uasort($this->blocks, function ($a, $b) {
             /* @var $a ModelInterface */
             /* @var $b ModelInterface */

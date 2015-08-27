@@ -77,6 +77,42 @@ class LayoutTest extends AbstractTest
         $this->assertSame($block, $layout->getBlock('my-block'));
     }
 
+    public function testAddSortBlockWithBeforeAndAfter()
+    {
+        $layout = new Layout(
+            $this->blockFactory,
+            new LayoutUpdater()
+        );
+        $block1 = new ViewModel([], ['after' => 'block2']);
+        $block2 = new Viewmodel();
+        $block3 = new ViewModel([], ['before' => 'block2']);
+        $block4 = new ViewModel([], ['before' => 'block3']);
+        $block5 = new ViewModel([], ['after' => 'block1']);
+
+        $expectedOrder = [
+            0 => 'block4',
+            1 => 'block3',
+            2 => 'block2',
+            3 => 'block1',
+            4 => 'block5'
+        ];
+
+        $layout->addBlock('block1', $block1);
+        $layout->addBlock('block2', $block2);
+        $layout->addBlock('block3', $block3);
+        $layout->addBlock('block4', $block4);
+        $layout->addBlock('block5', $block5);
+
+        $layout->load();
+
+        $i = 0;
+        foreach ($layout->getBlocks() as $blockId => $block) {
+            $this->assertEquals($expectedOrder[$i], $blockId);
+            $i++;
+        }
+
+    }
+
     public function testAddBlockWithChildren()
     {
         $layout = new Layout(
