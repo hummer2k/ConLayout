@@ -1,5 +1,6 @@
 <?php
-use ConLayout\Listener\LayoutUpdateListener;
+
+use ConLayout\Updater\LayoutUpdaterInterface;
 return [
     'view_manager' => [
         'template_path_stack' => [
@@ -8,7 +9,7 @@ return [
     ],
     'con-layout' => [
         'layout_update_paths' => [
-            LayoutUpdateListener::AREA_GLOBAL => [
+            LayoutUpdaterInterface::AREA_GLOBAL => [
                 './vendor/hummer2k/conlayout/sample/layout'
             ]
         ],
