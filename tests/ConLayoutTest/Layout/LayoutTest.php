@@ -90,11 +90,11 @@ class LayoutTest extends AbstractTest
         $block5 = new ViewModel([], ['after' => 'block1']);
 
         $expectedOrder = [
-            0 => 'block4',
-            1 => 'block3',
-            2 => 'block2',
-            3 => 'block1',
-            4 => 'block5'
+            'block4',
+            'block3',
+            'block2',
+            'block1',
+            'block5'
         ];
 
         $layout->addBlock('block1', $block1);
@@ -105,11 +105,7 @@ class LayoutTest extends AbstractTest
 
         $layout->load();
 
-        $i = 0;
-        foreach ($layout->getBlocks() as $blockId => $block) {
-            $this->assertEquals($expectedOrder[$i], $blockId);
-            $i++;
-        }
+        $this->assertSame($expectedOrder, array_keys($layout->getBlocks()));
 
     }
 

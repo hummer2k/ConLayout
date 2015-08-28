@@ -71,7 +71,11 @@ return [
              * add options, for example to define the sort order
              */
             'options' => [
-                'order' => -10
+                'order' => -10,
+                // insert this block
+                'before' => 'some.other.block',
+                // or
+                'after' => 'some.other.block'
             ],
             /**
              * wraps a block with another template

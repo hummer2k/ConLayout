@@ -125,7 +125,10 @@ class Layout implements
         }
     }
 
-    protected function removeBlocksFromStructure()
+    /**
+     * removes blocks defined in layout instructions
+     */
+    protected function removeBlocksByInstructions()
     {
         if (!$this->blocksRemoved) {
             $removedBlocks = $this->updater->getLayoutStructure()
@@ -150,7 +153,7 @@ class Layout implements
      */
     protected function isBlockRemoved($blockId)
     {
-        $this->removeBlocksFromStructure();
+        $this->removeBlocksByInstructions();
         return isset($this->removedBlocks[$blockId]);
     }
 
