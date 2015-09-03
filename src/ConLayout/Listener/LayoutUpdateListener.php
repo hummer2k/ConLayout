@@ -9,6 +9,7 @@ use Zend\Config\Factory as ConfigFactory;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
+use Zend\Stdlib\Exception\RuntimeException;
 use Zend\Stdlib\Glob;
 
 /**
@@ -99,7 +100,11 @@ class LayoutUpdateListener implements ListenerAggregateInterface
     {
         $globPaths = $this->getGlobPaths($handle);
         foreach ($globPaths as $globPath) {
-            $configFiles = Glob::glob($globPath, Glob::GLOB_BRACE);
+            try {
+                $configFiles = Glob::glob($globPath, Glob::GLOB_BRACE);
+            } catch (RuntimeException $e) {
+                continue;
+            }
             foreach ($configFiles as $configFile) {
                 $config = ConfigFactory::fromFile($configFile, true);
                 if ($includeHandles = $config->get(LayoutUpdaterInterface::INSTRUCTION_INCLUDE)) {
