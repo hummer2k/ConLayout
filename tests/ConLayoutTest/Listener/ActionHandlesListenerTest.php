@@ -31,6 +31,13 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->event->setRouteMatch($this->routeMatch);
     }
     
+    /**
+     * @covers ActionHandlesListener::mapController
+     * @covers ActionHandlesListener::inflectName
+     * @covers ActionHandlesListener::deriveModuleNamespace
+     * @covers ActionHandlesListener::deriveControllerSubNamespace
+     * @covers ActionHandlesListener::deriveControllerClass
+     */
     public function testUsesModuleAndControllerOnlyIfNoActionInRouteMatch()
     {
         $this->routeMatch->setParam('controller', 'Foo\Controller\SomewhatController');
