@@ -5,6 +5,7 @@ use ConLayout\Listener\ActionHandlesListener;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
 use Zend\EventManager\EventManager;
+use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\RouteMatch;
 /**
  * @package
@@ -23,7 +24,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $actionHandlesListener = new ActionHandlesListener(
             $updater
         );
-        $event = new \Zend\Mvc\MvcEvent();
+        $event = new MvcEvent();
         $routeMatch = new RouteMatch([
             'controller' => 'App\Controller\Index',
             'action' => 'index'
@@ -40,6 +41,36 @@ class ActionHandlesListenerTest extends AbstractTest
         ], $updater->getHandles());
 
     }
+    
+    /**
+     * @see https://github.com/hummer2k/ConLayout/issues/4
+     */
+    public function testActionHandlesWithCamelCase()
+    {
+        $updater = new LayoutUpdater();
+    
+        $this->assertEquals([
+            'default'
+        ], $updater->getHandles());
+    
+        $actionHandlesListener = new ActionHandlesListener($updater);
+        $event = new MvcEvent();
+    
+        $routeMatch = new RouteMatch([
+            'controller' => 'SomeModule\HomeController\Index',
+            'action' => 'index'
+        ]);
+    
+        $event->setRouteMatch($routeMatch);
+        $actionHandlesListener->addActionHandles($event);
+    
+        $this->assertEquals([
+            'default',
+            'some-module',
+            'some-module-home',
+            'some-module-home-index'
+        ], $updater->getHandles());
+    }
 
     public function testAttach()
     {
@@ -49,10 +80,7 @@ class ActionHandlesListenerTest extends AbstractTest
         );
 
         $listener->attach($eventManager);
-
-        $listeners = $eventManager->getListeners(
-            \Zend\Mvc\MvcEvent::EVENT_DISPATCH
-        );
+        $listeners = $eventManager->getListeners(MvcEvent::EVENT_DISPATCH);
 
         foreach ($listeners as $attachedListener) {
             $this->assertTrue($attachedListener->getCallback()[0] === $listener);
