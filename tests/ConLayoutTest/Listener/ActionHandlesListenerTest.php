@@ -39,7 +39,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'default',
             'foo',
             'foo-somewhat'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testNormalizesLiteralControllerNameIfNoNamespaceSeparatorPresent()
@@ -49,7 +49,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->assertEquals([
             'default',
             'somewhat'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testNormalizesNamesToLowercase()
@@ -63,7 +63,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'somewhat.derived-some',
             'somewhat.derived-some-uber',
             'somewhat.derived-some-uber-cool'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testMapsSubNamespaceToSubDirectoryWithControllerFromRouteMatch()
@@ -86,7 +86,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'aj-sweet-apple-acres-reports-cider-sales-pinkie',
             'aj-sweet-apple-acres-reports-cider-sales-pinkie-pie',
             'aj-sweet-apple-acres-reports-cider-sales-pinkie-pie-revenue'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testMapsSubNamespaceToSubDirectoryWithControllerFromRouteMatchHavingSubNamespace()
@@ -109,7 +109,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'aj-sweet-apple-acres-reports-cider-sales-pinkie',
             'aj-sweet-apple-acres-reports-cider-sales-pinkie-pie', 
             'aj-sweet-apple-acres-reports-cider-sales-pinkie-pie-revenue'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testMapsSubNamespaceToSubDirectoryWithControllerFromEventTarget()
@@ -130,7 +130,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'con-layout-test-test-asset',
             'con-layout-test-test-asset-sample',
             'con-layout-test-test-asset-sample-test'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testMapsSubNamespaceToSubDirectoryWithControllerFromEventTargetShouldMatchControllerFromRouteParam()
@@ -141,12 +141,12 @@ class ActionHandlesListenerTest extends AbstractTest
         $moduleRouteListener = new ModuleRouteListener;
         $moduleRouteListener->onRoute($this->event);
         $this->listener->injectActionHandles($this->event);
-        $handles1 = $this->updater->getHandles();
+        $handles1 = $this->listener->getUpdater()->getHandles();
         
         $myController = new SampleController();
         $this->event->setTarget($myController);
         $this->listener->injectActionHandles($this->event);
-        $handles2 = $this->updater->getHandles();
+        $handles2 = $this->listener->getUpdater()->getHandles();
         
         $this->assertEquals($handles1, $handles2);
     }
@@ -163,7 +163,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'mapped-ns-sub',
             'mapped-ns-sub-ns',
             'mapped-ns-sub-ns-sample'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     
         $this->updater = new LayoutUpdater;
         $this->listener = new ActionHandlesListener;
@@ -179,7 +179,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'con-layout',
             'con-layout-test',
             'con-layout-test-sample'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testControllerNotMatchedByMapIsNotAffected()
@@ -195,7 +195,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'con-layout-test',
             'con-layout-test-sample',
             'con-layout-test-sample-test'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testFullControllerNameMatchIsMapped()
@@ -212,7 +212,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'default',
             'string',
             'string-value'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testOnlyFullNamespaceMatchIsMapped()
@@ -233,7 +233,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'foo-matched-bar',
             'foo-matched-bar-baz',
             'foo-matched-bar-baz-index'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testControllerMapMatchedPrefixReplacedByStringValue()
@@ -250,7 +250,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'default',
             'string_value',
             'string_value-index'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testUsingNamespaceRouteParameterGivesSameResultAsFullControllerParameter()
@@ -258,7 +258,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $controller1 = 'MappedNs\Foo\Controller\Bar\Baz\Sample';
         $this->routeMatch->setParam('controller', $controller1);
         $this->listener->injectActionHandles($this->event);
-        $handles1 = $this->updater->getHandles();
+        $handles1 = $this->listener->getUpdater()->getHandles();
     
         $controller2 = 'MappedNs\Foo\Controller\Bar';
         $this->routeMatch->setParam(ModuleRouteListener::MODULE_NAMESPACE, $controller2);
@@ -266,7 +266,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $moduleRouteListener = new ModuleRouteListener;
         $moduleRouteListener->onRoute($this->event);
         $this->listener->injectActionHandles($this->event);
-        $handles2 = $this->updater->getHandles();
+        $handles2 = $this->listener->getUpdater()->getHandles();
         
         $this->assertEquals($handles1, $handles2);
     }
@@ -291,7 +291,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'foo-matched-bar-baz',
             'foo-matched-bar-baz-index',
             'foo-matched-bar-baz-index-test'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testControllerMapRuleSetToFalseIsIgnored()
@@ -313,7 +313,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'foo-matched-bar',
             'foo-matched-bar-index',
             'foo-matched-bar-index-test'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testControllerMapMoreSpecificRuleMatchesFirst()
@@ -344,12 +344,12 @@ class ActionHandlesListenerTest extends AbstractTest
             'default',
             'some',
             'some-sample'
-        ], $this->updater->getHandles());
+        ], $this->listener->getUpdater()->getHandles());
     }
     
     public function testLayoutUpdaterContainsOnlyDefaultHandle()
     {
-        $this->assertEquals(['default'], $this->updater->getHandles());
+        $this->assertEquals(['default'], $this->listener->getUpdater()->getHandles());
     }
     
     public function testListenerAttachesDispatchErrorEventAtExpectedPriority()
