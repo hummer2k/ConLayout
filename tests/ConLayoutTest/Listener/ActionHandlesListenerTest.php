@@ -391,4 +391,22 @@ class ActionHandlesListenerTest extends AbstractTest
         }
         $this->assertTrue($found, 'Listener not found');
     }
+    
+    public function testGetterAndSetters()
+    {
+        $updater = new LayoutUpdater;
+        $this->listener->setUpdater($updater);
+        $this->assertEquals($updater, $this->listener->getUpdater());
+    
+        $controllerMap = [
+            'Some/Name' => true,
+            'Other/Name' => 'string'
+        ];
+        $this->listener->setControllerMap($controllerMap);
+        $this->assertEquals($controllerMap, $this->listener->getControllerMap());
+    
+        $preferRouteMatchController = true;
+        $this->listener->setPreferRouteMatchController($preferRouteMatchController);
+        $this->assertEquals($preferRouteMatchController, $this->listener->isPreferRouteMatchController());
+    }
 }
