@@ -271,7 +271,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
      * @param string $name
      * @return string
      */
-    protected function inflectName($name)
+    private function inflectName($name)
     {
         if (!$this->inflector) {
             $this->inflector = new CamelCaseToDash();
@@ -286,7 +286,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
      * @param string $controller
      * @return string
      */
-    protected function deriveModuleNamespace($controller)
+    private function deriveModuleNamespace($controller)
     {
         if (!strstr($controller, '\\')) {
             return '';
@@ -301,7 +301,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
      * @param string $namespace
      * @return string
      */
-    protected function deriveControllerSubNamespace($namespace)
+    private function deriveControllerSubNamespace($namespace)
     {
         if (!strstr($namespace, '\\')) {
             return '';
@@ -322,7 +322,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
      * @param string $controller
      * @return string
      */
-    protected function deriveControllerClass($controller)
+    private function deriveControllerClass($controller)
     {
         if (strstr($controller, '\\')) {
             $controller = substr($controller, strrpos($controller, '\\') + 1);
