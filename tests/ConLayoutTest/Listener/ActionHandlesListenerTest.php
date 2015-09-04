@@ -32,11 +32,7 @@ class ActionHandlesListenerTest extends AbstractTest
     }
     
     /**
-     * @covers ActionHandlesListener::mapController
-     * @covers ActionHandlesListener::inflectName
-     * @covers ActionHandlesListener::deriveModuleNamespace
-     * @covers ActionHandlesListener::deriveControllerSubNamespace
-     * @covers ActionHandlesListener::deriveControllerClass
+     * @covers ActionHandlesListener::<protected>
      */
     public function testUsesModuleAndControllerOnlyIfNoActionInRouteMatch()
     {
