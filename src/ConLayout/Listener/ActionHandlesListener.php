@@ -57,7 +57,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     
     /**
      * Retrieve the layout updater instance.
-     * 
+     *
      * @return LayoutUpdaterInterface
      */
     public function getUpdater()
@@ -67,7 +67,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     
     /**
      * Set the layout updater instance.
-     * 
+     *
      * @param LayoutUpdaterInterface $updater
      * @return ActionHandlesListener
      */
@@ -80,7 +80,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     
     /**
      * Retrieve an array of controller namespace -> action handle mappings.
-     * 
+     *
      * @return array
      */
     public function getControllerMap()
@@ -90,7 +90,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     
     /**
      * Set an array of controller namespace -> action handle mappings.
-     * 
+     *
      * @param array $controllerMap
      * @return ActionHandlesListener
      */
@@ -104,7 +104,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     
     /**
      * Whether to force the use of the route match controller param.
-     * 
+     *
      * @return boolean
      */
     public function isPreferRouteMatchController()
@@ -114,7 +114,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     
     /**
      * Set whether to force the use of the route match controller param.
-     * 
+     *
      * @param boolean $preferRouteMatchController
      * @return ActionHandlesListener
      */
@@ -147,8 +147,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     {
         $handles = $this->getActionHandles($event);
         
-        foreach ($handles as $handle)
-        {
+        foreach ($handles as $handle) {
             $this->updater->addHandle($handle);
         }
     }
@@ -219,8 +218,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
         $previousHandle = '';
         $handleParts = explode(self::HANDLE_SEPARATOR, $actionHandle);
         
-        foreach ($handleParts as $index => $name)
-        {
+        foreach ($handleParts as $index => $name) {
             $actionHandles[] = new Handle($previousHandle.$name, $priority);
             $priority += 10;
             $previousHandle .= $name.self::HANDLE_SEPARATOR;
@@ -242,8 +240,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
         }
         
         foreach ($this->controllerMap as $namespace => $replacement) {
-            if (
-                false == $replacement
+            if (false == $replacement
                 || !($controller === $namespace || strpos($controller, $namespace . '\\') === 0)
             ) {
                 continue;
