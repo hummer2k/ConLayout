@@ -25,22 +25,22 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     /**
      * Priority for the module handle.
      */
-    const MODULE_HANDLE_PRIORITY = 10;
+    const HANDLE_PRIORITY_MODULE = 10;
     
     /**
      * Priority for the controller handle.
      */
-    const CONTROLLER_HANDLE_PRIORITY = 20;
+    const HANDLE_PRIORITY_CONTROLLER = 20;
     
     /**
      * Priority for the controller action handle.
      */
-    const ACTION_HANDLE_PRIORITY = 30;
+    const HANDLE_PRIORITY_ACTION = 30;
     
     /**
      * Priority for all error handles.
      */
-    const ERROR_HANDLE_PRIORITY = 40;
+    const HANDLE_PRIORITY_ERROR = 40;
     
     /**
      * Layout updater instance.
@@ -111,7 +111,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
      */
     public function addErrorHandle(EventInterface $event)
     {
-        $this->updater->addHandle(new Handle($event->getError(), self::ERROR_HANDLE_PRIORITY));
+        $this->updater->addHandle(new Handle($event->getError(), self::HANDLE_PRIORITY_ERROR));
     }
     
     /**
@@ -156,9 +156,9 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
         }
         
         $actionHandles = [
-            new Handle($module, self::MODULE_HANDLE_PRIORITY),
-            new Handle($module.'-'.$controller, self::CONTROLLER_HANDLE_PRIORITY),
-            new Handle($module.'-'.$controller.'-'.$action, self::ACTION_HANDLE_PRIORITY),
+            new Handle($module, self::HANDLE_PRIORITY_MODULE),
+            new Handle($module.'-'.$controller, self::HANDLE_PRIORITY_CONTROLLER),
+            new Handle($module.'-'.$controller.'-'.$action, self::HANDLE_PRIORITY_ACTION),
         ];
         
         return $actionHandles;
@@ -226,7 +226,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
      * @param string $name
      * @return string
      */
-    protected function inflectName($name)
+    private function inflectName($name)
     {
         if (!$this->inflector)
         {

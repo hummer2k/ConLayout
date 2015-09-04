@@ -19,7 +19,7 @@ abstract class AbstractUpdater implements
      * @var array
      */
     protected $handles = [
-        'default' => -1
+        'default' => self::HANDLE_PRIORITY_DEFAULT
     ];
 
     /**

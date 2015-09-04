@@ -19,6 +19,11 @@ interface LayoutUpdaterInterface
 
     const AREA_GLOBAL   = 'global';
     const AREA_DEFAULT  = 'frontend';
+    
+    /**
+     * Priority for the default handle.
+     */
+    const HANDLE_PRIORITY_DEFAULT = -1;
 
     /**
      * retrieve layout structure for current request
