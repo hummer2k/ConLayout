@@ -1,3 +1,5 @@
+/build/
+/.idea/
 /public/.sass-cache/
 /tests/TestConfig.php
 /vendor/

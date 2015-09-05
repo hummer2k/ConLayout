@@ -21,10 +21,12 @@ class ActionHandlesListenerFactory implements FactoryInterface
     {
         /* @var $moduleOptions ModuleOptions */
         $moduleOptions = $serviceLocator->get('ConLayout\Options\ModuleOptions');
-        $actionHandlesListener = new ActionHandlesListener(
-            $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface'),
-            $moduleOptions->getExcludeActionHandleSegments()
-        );
+        $updater = $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface');
+        $actionHandlesListener = new ActionHandlesListener();
+        $actionHandlesListener->setUpdater($updater);
+        $actionHandlesListener->setControllerMap($moduleOptions->getControllerMap());
+        $actionHandlesListener->setPreferRouteMatchController($moduleOptions->isPreferRouteMatchController());
+        
         return $actionHandlesListener;
     }
 }

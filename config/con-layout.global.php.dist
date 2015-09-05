@@ -41,11 +41,35 @@ return [
         ],
         'default_area' => LayoutUpdateListener::AREA_DEFAULT,
         /**
-         * exclude segments of controller namespace
+         * Array of controller namespace -> action handle mappings. Assuming that the setting
+         * 'prefer_route_match_controller' is set to 'false' and the controller fully qualified
+         * class name is 'FooBar\Controller\IndexController::test'.
+         * 
+         *  'controller_map' => [
+         *      'FooBar' => 'custom-handle'
+         *  ]
+         * 
+         * The action handles injected would be:
+         * 
+         *  'default'
+         *  'custom-handle'
+         *  'custom-handle/index'
+         *  'custom-handle/index/test'
+         *
+         * Instead of:
+         *
+         *  'default'
+         *  'foo-bar'
+         *  'foo-bar/index'
+         *  'foo-bar/index/test'
          */
-        'exclude_action_handle_segments' => [
-            'Controller'
+        'controller_map' => [
+            
         ],
+        /**
+         * Whether to force the use of the route match controller param.
+         */
+        'prefer_route_match_controller' => false,
         /**
          * shows block hints
          *
