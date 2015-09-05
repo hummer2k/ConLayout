@@ -23,9 +23,9 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
     use ServiceLocatorAwareTrait;
     
     /**
-     * Character used to separate parts of a controller name.
+     * Character used to separate parts of a template name.
      */
-    const HANDLE_SEPARATOR = '-';
+    const TEMPLATE_SEPARATOR = '/';
     
     /**
      * Layout updater instance.
@@ -184,15 +184,15 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
             $controller = $routeMatchController;
         }
         
-        $actionHandle = $this->mapController($controller);
-        if (!$actionHandle) {
+        $template = $this->mapController($controller);
+        if (!$template) {
             $module     = $this->deriveModuleNamespace($controller);
             
             if ($namespace = $routeMatch->getParam(ModuleRouteListener::MODULE_NAMESPACE)) {
                 $controllerSubNs = $this->deriveControllerSubNamespace($namespace);
                 if (!empty($controllerSubNs)) {
                     if (!empty($module)) {
-                        $module .= self::HANDLE_SEPARATOR . $controllerSubNs;
+                        $module .= self::TEMPLATE_SEPARATOR . $controllerSubNs;
                     } else {
                         $module = $controllerSubNs;
                     }
@@ -200,28 +200,28 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
             }
             
             $controller = $this->deriveControllerClass($controller);
-            $actionHandle = $this->inflectName($module);
+            $template = $this->inflectName($module);
             
-            if (!empty($actionHandle)) {
-                $actionHandle .= self::HANDLE_SEPARATOR;
+            if (!empty($template)) {
+                $template .= self::TEMPLATE_SEPARATOR;
             }
-            $actionHandle .= $this->inflectName($controller);
+            $template .= $this->inflectName($controller);
         }
         
         $action = $routeMatch->getParam('action');
         if (null !== $action) {
-            $actionHandle .= self::HANDLE_SEPARATOR . $this->inflectName($action);
+            $template .= self::TEMPLATE_SEPARATOR . $this->inflectName($action);
         }
         
-        $priority = 10;
+        $priority = 0;
         $actionHandles = [];
         $previousHandle = '';
-        $handleParts = explode(self::HANDLE_SEPARATOR, $actionHandle);
+        $templateParts = explode(self::TEMPLATE_SEPARATOR, $template);
         
-        foreach ($handleParts as $index => $name) {
+        foreach ($templateParts as $index => $name) {
             $actionHandles[] = new Handle($previousHandle.$name, $priority);
             $priority += 10;
-            $previousHandle .= $name.self::HANDLE_SEPARATOR;
+            $previousHandle .= $name.self::TEMPLATE_SEPARATOR;
         }
         
         return $actionHandles;
@@ -249,7 +249,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
             $map = '';
             
             if (is_string($replacement)) {
-                $map = rtrim($replacement, self::HANDLE_SEPARATOR) . self::HANDLE_SEPARATOR;
+                $map = rtrim($replacement, self::TEMPLATE_SEPARATOR) . self::TEMPLATE_SEPARATOR;
                 $controller = substr($controller, strlen($namespace) + 1) ?: '';
             }
             
@@ -257,10 +257,10 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
             array_pop($parts);
             $parts = array_diff($parts, array('Controller'));
             $parts[] = $this->deriveControllerClass($controller);
-            $controller = implode(self::HANDLE_SEPARATOR, $parts);
-            $actionHandle = trim($map . $controller, self::HANDLE_SEPARATOR);
+            $controller = implode(self::TEMPLATE_SEPARATOR, $parts);
+            $template = trim($map . $controller, self::TEMPLATE_SEPARATOR);
             
-            return $this->inflectName($actionHandle);
+            return $this->inflectName($template);
         }
         return false;
     }
@@ -313,7 +313,7 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
         if (empty($subNsArray)) {
             return '';
         }
-        return implode(self::HANDLE_SEPARATOR, $subNsArray);
+        return implode(self::TEMPLATE_SEPARATOR, $subNsArray);
     }
     
     /**

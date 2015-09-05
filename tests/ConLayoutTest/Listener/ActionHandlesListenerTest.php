@@ -38,7 +38,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->assertEquals([
             'default',
             'foo',
-            'foo-somewhat'
+            'foo/somewhat'
         ], $this->updater->getHandles());
     }
     
@@ -60,9 +60,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->assertEquals([
             'default',
             'somewhat.derived',
-            'somewhat.derived-some',
-            'somewhat.derived-some-uber',
-            'somewhat.derived-some-uber-cool'
+            'somewhat.derived/some-uber-cool'
         ], $this->updater->getHandles());
     }
     
@@ -77,15 +75,10 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->assertEquals([
             'default',
             'aj',
-            'aj-sweet',
-            'aj-sweet-apple',
-            'aj-sweet-apple-acres',
-            'aj-sweet-apple-acres-reports',
-            'aj-sweet-apple-acres-reports-cider',
-            'aj-sweet-apple-acres-reports-cider-sales',
-            'aj-sweet-apple-acres-reports-cider-sales-pinkie',
-            'aj-sweet-apple-acres-reports-cider-sales-pinkie-pie',
-            'aj-sweet-apple-acres-reports-cider-sales-pinkie-pie-revenue'
+            'aj/sweet-apple-acres',
+            'aj/sweet-apple-acres/reports',
+            'aj/sweet-apple-acres/reports/cider-sales',
+            'aj/sweet-apple-acres/reports/cider-sales/pinkie-pie-revenue'
         ], $this->updater->getHandles());
     }
     
@@ -100,15 +93,10 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->assertEquals([
             'default',
             'aj',
-            'aj-sweet',
-            'aj-sweet-apple',
-            'aj-sweet-apple-acres',
-            'aj-sweet-apple-acres-reports',
-            'aj-sweet-apple-acres-reports-cider',
-            'aj-sweet-apple-acres-reports-cider-sales',
-            'aj-sweet-apple-acres-reports-cider-sales-pinkie',
-            'aj-sweet-apple-acres-reports-cider-sales-pinkie-pie', 
-            'aj-sweet-apple-acres-reports-cider-sales-pinkie-pie-revenue'
+            'aj/sweet-apple-acres',
+            'aj/sweet-apple-acres/reports',
+            'aj/sweet-apple-acres/reports/cider-sales',
+            'aj/sweet-apple-acres/reports/cider-sales/pinkie-pie-revenue'
         ], $this->updater->getHandles());
     }
     
@@ -123,13 +111,10 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'con',
-            'con-layout',
             'con-layout-test',
-            'con-layout-test-test',
-            'con-layout-test-test-asset',
-            'con-layout-test-test-asset-sample',
-            'con-layout-test-test-asset-sample-test'
+            'con-layout-test/test-asset',
+            'con-layout-test/test-asset/sample',
+            'con-layout-test/test-asset/sample/test'
         ], $this->updater->getHandles());
     }
     
@@ -158,11 +143,9 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'mapped',
             'mapped-ns',
-            'mapped-ns-sub',
-            'mapped-ns-sub-ns',
-            'mapped-ns-sub-ns-sample'
+            'mapped-ns/sub-ns',
+            'mapped-ns/sub-ns/sample'
         ], $this->updater->getHandles());
     
         $this->updater = new LayoutUpdater;
@@ -175,10 +158,8 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'con',
-            'con-layout',
             'con-layout-test',
-            'con-layout-test-sample'
+            'con-layout-test/sample'
         ], $this->updater->getHandles());
     }
     
@@ -190,11 +171,9 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'con',
-            'con-layout',
             'con-layout-test',
-            'con-layout-test-sample',
-            'con-layout-test-sample-test'
+            'con-layout-test/sample',
+            'con-layout-test/sample/test',
         ], $this->updater->getHandles());
     }
     
@@ -204,13 +183,12 @@ class ActionHandlesListenerTest extends AbstractTest
             'Foo\Bar\Controller\IndexController' => 'string-value',
         ]);
         $controller = 'Foo\Bar\Controller\IndexController';
-        $actionHandle = $this->listener->mapController('Foo\Bar\Controller\IndexController');
-        $this->assertEquals('string-value', $actionHandle);
+        $template = $this->listener->mapController($controller);
+        $this->assertEquals('string-value', $template);
         $this->routeMatch->setParam('controller', $controller);
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'string',
             'string-value'
         ], $this->updater->getHandles());
     }
@@ -222,34 +200,32 @@ class ActionHandlesListenerTest extends AbstractTest
             'Foo\Bar' => 'foo-bar-matched',
         ]);
         $controller = 'Foo\BarBaz\Controller\IndexController';
-        $actionHandle = $this->listener->mapController($controller);
-        $this->assertEquals('foo-matched-bar-baz-index', $actionHandle);
+        $template = $this->listener->mapController($controller);
+        $this->assertEquals('foo-matched/bar-baz/index', $template);
         $this->routeMatch->setParam('controller', $controller);
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'foo',
             'foo-matched',
-            'foo-matched-bar',
-            'foo-matched-bar-baz',
-            'foo-matched-bar-baz-index'
+            'foo-matched/bar-baz',
+            'foo-matched/bar-baz/index'
         ], $this->updater->getHandles());
     }
     
     public function testControllerMapMatchedPrefixReplacedByStringValue()
     {
         $this->listener->setControllerMap([
-            'Foo\Bar' => 'string_value',
+            'FooBar' => 'custom-handle',
         ]);
-        $controller = 'Foo\Bar\Controller\IndexController';
-        $actionHandle = $this->listener->mapController($controller);
-        $this->assertEquals('string_value-index', $actionHandle);
+        $controller = 'FooBar\Controller\IndexController';
+        $template = $this->listener->mapController($controller);
+        $this->assertEquals('custom-handle/index', $template);
         $this->routeMatch->setParam('controller', $controller);
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'string_value',
-            'string_value-index'
+            'custom-handle',
+            'custom-handle/index'
         ], $this->updater->getHandles());
     }
     
@@ -278,19 +254,17 @@ class ActionHandlesListenerTest extends AbstractTest
             'Foo\Bar' => 'foo-bar-matched',
         ]);
         $controller = 'Foo\BarBaz\Controller\IndexController';
-        $actionHandle = $this->listener->mapController($controller);
-        $this->assertEquals('foo-matched-bar-baz-index', $actionHandle);
+        $template = $this->listener->mapController($controller);
+        $this->assertEquals('foo-matched/bar-baz/index', $template);
         $this->routeMatch->setParam('controller', $controller);
         $this->routeMatch->setParam('action', 'test');
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'foo',
             'foo-matched',
-            'foo-matched-bar',
-            'foo-matched-bar-baz',
-            'foo-matched-bar-baz-index',
-            'foo-matched-bar-baz-index-test'
+            'foo-matched/bar-baz',
+            'foo-matched/bar-baz/index',
+            'foo-matched/bar-baz/index/test'
         ], $this->updater->getHandles());
     }
     
@@ -301,18 +275,17 @@ class ActionHandlesListenerTest extends AbstractTest
             'Foo\Bar' => false,
         ]);
         $controller = 'Foo\Bar\Controller\IndexController';
-        $actionHandle = $this->listener->mapController($controller);
-        $this->assertEquals('foo-matched-bar-index', $actionHandle);
+        $template = $this->listener->mapController($controller);
+        $this->assertEquals('foo-matched/bar/index', $template);
         $this->routeMatch->setParam('controller', $controller);
         $this->routeMatch->setParam('action', 'test');
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
-            'foo',
             'foo-matched',
-            'foo-matched-bar',
-            'foo-matched-bar-index',
-            'foo-matched-bar-index-test'
+            'foo-matched/bar',
+            'foo-matched/bar/index',
+            'foo-matched/bar/index/test'
         ], $this->updater->getHandles());
     }
     
@@ -322,14 +295,14 @@ class ActionHandlesListenerTest extends AbstractTest
             'Foo'     => true,
             'Foo\Bar' => 'bar-baz',
         ]);
-        $actionHandle = $this->listener->mapController('Foo\Bar\Controller\IndexController');
-        $this->assertEquals('bar-baz-index', $actionHandle);
+        $template = $this->listener->mapController('Foo\Bar\Controller\IndexController');
+        $this->assertEquals('bar-baz/index', $template);
         $this->listener->setControllerMap([
             'Foo\Bar' => 'bar-baz',
             'Foo'     => true,
         ]);
-        $actionHandle = $this->listener->mapController('Foo\Bar\Controller\IndexController');
-        $this->assertEquals('bar-baz-index', $actionHandle);
+        $template = $this->listener->mapController('Foo\Bar\Controller\IndexController');
+        $this->assertEquals('bar-baz/index', $template);
     }
     
     public function testPrefersRouteMatchController()
@@ -343,7 +316,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->assertEquals([
             'default',
             'some',
-            'some-sample'
+            'some/sample'
         ], $this->updater->getHandles());
     }
     
