@@ -135,28 +135,49 @@ Syntax:
 // of the default method of the helper
 // @see con-layout.global.php.dist for default methods
 $headTitle = [
+    // where 'key' is a unique identifier of the 'asset'
+    // and 'value' either an array of the helper arguments or a string 
+    // (first argument)
     'key' => 'value'
 ];
+// result:
+$headTitle->append('value');
+
 
 // value = array, call default method
-$headLink = [
+$headScript = [
     'html5shiv' => [
         '//html5shiv.googlecode.com/svn/trunk/html5.js',
         'text/javascript',
         ['conditional' => 'lt IE 9']
     ]
 ];
+// result:
+$headScript->appendFile(
+    '//html5shiv.googlecode.com/svn/trunk/html5.js',
+    'text/javascript',
+    ['conditional' => 'lt IE 9']
+);
+
+
 
 // value = array, call specific method
-$headLink = [
+$headScript = [
     'html5shiv' => [
-        'prependFile' => [
+        'method' => 'prependFile',
+        'args' => [
             '//html5shiv.googlecode.com/svn/trunk/html5.js',
             'text/javascript',
             ['conditional' => 'lt IE 9']
         ]
     ]
 ];
+// result:
+$headScript->prependFile(
+    '//html5shiv.googlecode.com/svn/trunk/html5.js',
+    'text/javascript',
+    ['conditional' => 'lt IE 9']
+);
 
 ````
 
@@ -169,7 +190,10 @@ return [
          * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.head-title.html
          */
         'headTitle' => [
-            'separator' => ['setSeparator' => ' - '],
+            'separator' => [
+                'method' => 'setSeparator'
+                'args' => [' - '],
+            ],
             'default' => 'Default Title'
         ],
         /**
@@ -180,7 +204,10 @@ return [
             'twbs' => '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css',
             'main-css' => '/css/main.css',
             // prepend
-            'some-lib' => ['prependStylesheet' => '/css/lib/some-lib.css']
+            'some-lib' => [
+                'method' => 'prependStylesheet',
+                'args' => ['/css/lib/some-lib.css']
+            ]
         ],
         /**
          * add js
@@ -188,7 +215,10 @@ return [
          */
         'headScript' => [
             'twbs' => '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js',
-            'jquery' => ['prependFile' => 'https://code.jquery.com/jquery-2.1.4.min.js']
+            'jquery' => [
+                'method' => 'prependFile',
+                'args' => ['https://code.jquery.com/jquery-2.1.4.min.js']
+            ]
         ]
         /**
          * @see headScript
