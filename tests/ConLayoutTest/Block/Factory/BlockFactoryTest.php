@@ -126,9 +126,9 @@ class BlockFactoryTest extends AbstractTest
         $specs = [
             'template' => 'my/tpl',
             'wrapper' => [
-                'template'   => 'my/wrapper',
-                'html_class' => 'my-wrapper-class',
-                'html_tag'   => 'div'
+                'template' => 'my/wrapper',
+                'class' => 'my-wrapper-class',
+                'tag'   => 'p'
             ]
         ];
 
@@ -136,8 +136,8 @@ class BlockFactoryTest extends AbstractTest
 
         $this->assertEquals('my/wrapper', $block->getTemplate());
 
-        $this->assertEquals('my-wrapper-class', $block->getVariable('htmlWrapperClass'));
-        $this->assertEquals('div', $block->getVariable('htmlWrapperTag'));
+        $this->assertEquals(['class' => 'my-wrapper-class'], $block->getVariable('wrapperAttributes'));
+        $this->assertEquals('p', $block->getVariable('wrapperTag'));
     }
 
     public function testWrapBlockArrayWithoutTemplate()
@@ -148,7 +148,7 @@ class BlockFactoryTest extends AbstractTest
         $specs = [
             'template' => 'my/tpl',
             'wrapper' => [
-                'html_tag'   => 'div'
+                'tag'   => 'div'
             ]
         ];
 

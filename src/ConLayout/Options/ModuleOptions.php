@@ -2,7 +2,7 @@
 
 namespace ConLayout\Options;
 
-use ConLayout\Listener\LayoutUpdateListener;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Stdlib\AbstractOptions;
 
 /**
@@ -60,30 +60,62 @@ class ModuleOptions extends AbstractOptions
     protected $defaultArea;
 
     /**
+     * Array of controller namespace -> action handle mappings.
      *
      * @var array
      */
-    protected $excludeActionHandleSegments = [
-        'Controller'
-    ];
+    protected $controllerMap = [];
 
     /**
+     * Flag to force the use of the route match controller param.
+     *
+     * @var boolean
+     */
+    protected $preferRouteMatchController = false;
+
+    /**
+     * Retrieve an array of controller namespace -> action handle mappings.
      *
      * @return array
      */
-    public function getExcludeActionHandleSegments()
+    public function getControllerMap()
     {
-        return $this->excludeActionHandleSegments;
+        return $this->controllerMap;
     }
 
     /**
+     * Set an array of controller namespace -> action handle mappings.
      *
-     * @param array $excludeActionHandleSegments
+     * @param array $controllerMap
      * @return ModuleOptions
      */
-    public function setExcludeActionHandleSegments(array $excludeActionHandleSegments)
+    public function setControllerMap(array $controllerMap)
     {
-        $this->excludeActionHandleSegments = $excludeActionHandleSegments;
+        $this->controllerMap = $controllerMap;
+
+        return $this;
+    }
+
+    /**
+     * Whether to force the use of the route match controller param.
+     *
+     * @return boolean
+     */
+    public function isPreferRouteMatchController()
+    {
+        return $this->preferRouteMatchController;
+    }
+
+    /**
+     * Set whether to force the use of the route match controller param.
+     *
+     * @param boolean $preferRouteMatchController
+     * @return ModuleOptions
+     */
+    public function setPreferRouteMatchController($preferRouteMatchController)
+    {
+        $this->preferRouteMatchController = (boolean) $preferRouteMatchController;
+
         return $this;
     }
 
@@ -94,7 +126,7 @@ class ModuleOptions extends AbstractOptions
     public function getDefaultArea()
     {
         if (!$this->defaultArea) {
-            $this->defaultArea = LayoutUpdateListener::AREA_DEFAULT;
+            $this->defaultArea = LayoutUpdaterInterface::AREA_DEFAULT;
         }
         return $this->defaultArea;
     }
@@ -108,15 +140,6 @@ class ModuleOptions extends AbstractOptions
     {
         $this->defaultArea = $defaultArea;
         return $this;
-    }
-
-    /**
-     *
-     * @return bool
-     */
-    public function getEnableDebug()
-    {
-        return $this->enableDebug;
     }
 
     /**
@@ -138,11 +161,13 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
+     * just here for bc
      *
+     * @codeCoverageIgnore
      * @param bool $enableDebug
      * @return ModuleOptions
      */
-    public function setEnableDebug($enableDebug)
+    public function setEnableDebug($enableDebug = false)
     {
         $this->enableDebug = $enableDebug;
         return $this;

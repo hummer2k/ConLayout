@@ -9,6 +9,7 @@ use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
 
 /**
@@ -18,6 +19,7 @@ use Zend\ModuleManager\ModuleManagerInterface;
 class Module implements
     ConfigProviderInterface,
     ServiceProviderInterface,
+    ViewHelperProviderInterface,
     BootstrapListenerInterface,
     AutoloaderProviderInterface,
     InitProviderInterface
@@ -33,6 +35,16 @@ class Module implements
             include __DIR__ . '/../../config/module.config.php',
             include __DIR__ . '/../../config/con-layout.global.php.dist'
         );
+    }
+
+    /**
+     * retrieve view helpers
+     *
+     * @return array
+     */
+    public function getViewHelperConfig()
+    {
+        return include __DIR__ . '/../../config/viewhelper.config.php';
     }
 
     /**
@@ -60,7 +72,7 @@ class Module implements
             'getBlockConfig'
         );
     }
-    
+
     /**
      *
      * @param EventInterface $e

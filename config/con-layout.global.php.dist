@@ -1,5 +1,5 @@
 <?php
-use ConLayout\Listener\LayoutUpdateListener;
+use \ConLayout\Updater\LayoutUpdaterInterface;
 return [
     'con-layout' => [
         /**
@@ -21,7 +21,7 @@ return [
          *  ]
          */
         'layout_update_paths' => [
-            LayoutUpdateListener::AREA_GLOBAL => []
+            LayoutUpdaterInterface::AREA_GLOBAL => []
         ],
         /**
          * allowed config types
@@ -39,23 +39,37 @@ return [
         'layout_update_extensions' => [
             'php'
         ],
-        'default_area' => LayoutUpdateListener::AREA_DEFAULT,
+        'default_area' => LayoutUpdaterInterface::AREA_DEFAULT,
         /**
-         * exclude segments of controller namespace
+         * Array of controller namespace -> action handle mappings. Assuming that the setting
+         * 'prefer_route_match_controller' is set to 'false' and the controller fully qualified
+         * class name is 'FooBar\Controller\IndexController::test'.
+         *
+         *  'controller_map' => [
+         *      'FooBar' => 'custom-handle'
+         *  ]
+         *
+         * The action handles injected would be:
+         *
+         *  'default'
+         *  'custom-handle'
+         *  'custom-handle/index'
+         *  'custom-handle/index/test'
+         *
+         * Instead of:
+         *
+         *  'default'
+         *  'foo-bar'
+         *  'foo-bar/index'
+         *  'foo-bar/index/test'
          */
-        'exclude_action_handle_segments' => [
-            'Controller'
+        'controller_map' => [
+
         ],
         /**
-         * shows block hints
-         *
-         * debug css is automatically inserted by rwoverdijk/assetmanager
-         * if this module is installed
-         *
-         * if you are not using this module, you can copy con-layout.css
-         * from conlayout/public/assets/css to your public/css directory
+         * Whether to force the use of the route match controller param.
          */
-        'enable_debug' => false,
+        'prefer_route_match_controller' => true,
         /**
          * base dir to assets
          *

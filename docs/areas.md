@@ -1,9 +1,9 @@
 # Areas
 
-With areas you can tell the layout update listener which layout updates to fetch.
+With areas you can tell the layout updater which layout updates to fetch.
 E.g. frontend, backend etc.
 
-Before you can use this feature, you have to tell the layout update listener
+Before you can use this feature, you have to tell the layout updater
 in which area we are currently in.
 
 
@@ -11,9 +11,9 @@ in which area we are currently in.
 <?php
 $area = 'frontend'; // or 'backend' or 'admin' ...
 
-/* @var $layoutUpdateListener \ConLayout\Listener\LayoutUpdateListener */
-$layoutUpdateListener = $sm->get('ConLayout\Listener\LayoutUpdateListener');
-$layoutUpdateListener->setArea($area);
+/* @var $layoutUpdater \ConLayout\Updater\LayoutUpdaterInterface */
+$layoutUpdater = $sm->get('ConLayout\Updater\LayoutUpdaterInterface');
+$layoutUpdater->setArea($area);
 
 ````
 
@@ -49,7 +49,7 @@ and determine the area by the matched route name:
 
 namespace Application\Listener;
 
-use ConLayout\Listener\LayoutUpdateListener;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -59,18 +59,16 @@ class AreaListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
 
-    const AREA_FRONTEND = 'frontend';
     const AREA_BACKEND  = 'backend';
-    const AREA_DEFAULT  = self::AREA_FRONTEND;
 
     /**
-     * @var LayoutUpdateListener
+     * @var LayoutUpdaterInterface
      */
-    protected $layoutUpdateListener;
+    protected $layoutUpdater;
 
-    public function __construct(LayoutUpdateListener $layoutUpdateListener)
+    public function __construct(LayoutUpdaterInterface $layoutUpdateListener)
     {
-        $this->layoutUpdateListener = $layoutUpdateListener;
+        $this->layoutUpdater = $layoutUpdater;
     }
 
     public function attach(EventManagerInterface $events)
@@ -80,7 +78,7 @@ class AreaListener implements ListenerAggregateInterface
 
     public function onDispatch(MvcEvent $e)
     {
-        $area = self::AREA_DEFAULT;
+        $area = LayoutUpdaterInterface::AREA_DEFAULT;
 
         $routeMatch = $e->getRouteMatch();
         $matchedRouteName = $routeMatch->getMatchedRouteName();
@@ -90,7 +88,7 @@ class AreaListener implements ListenerAggregateInterface
             $area = self::AREA_BACKEND;
         }
 
-        $this->layoutUpdateListener->setArea($area);
+        $this->layoutUpdater->setArea($area);
     }
 }
 ````

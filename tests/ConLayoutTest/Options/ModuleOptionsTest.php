@@ -14,13 +14,13 @@ class ModuleOptionsTest extends AbstractTest
     public function testDefaults()
     {
         $moduleOptions = new ModuleOptions();
-        $this->assertInternalType('array', $moduleOptions->getExcludeActionHandleSegments());
+        $this->assertInternalType('array', $moduleOptions->getControllerMap());
+        $this->assertInternalType('boolean', $moduleOptions->isPreferRouteMatchController());
         $this->assertInternalType('array', $moduleOptions->getAssetPreparers());
         $this->assertInternalType('array', $moduleOptions->getViewHelpers());
         $this->assertInternalType('string', $moduleOptions->getCacheBusterInternalBaseDir());
         $this->assertInternalType('array', $moduleOptions->getLayoutUpdatePaths());
         $this->assertInternalType('array', $moduleOptions->getLayoutUpdateExtensions());
-        $this->assertFalse($moduleOptions->getEnableDebug());
         $this->assertInternalType('array', $moduleOptions->getBlockDefaults());
         $this->assertInternalType('string', $moduleOptions->getDefaultArea());
     }
@@ -37,9 +37,6 @@ class ModuleOptionsTest extends AbstractTest
         $moduleOptions->setCacheBusterInternalBaseDir('./my/path');
         $this->assertEquals('./my/path', $moduleOptions->getCacheBusterInternalBaseDir());
 
-        $moduleOptions->setEnableDebug(true);
-        $this->assertTrue($moduleOptions->getEnableDebug());
-
         $moduleOptions->setBlockDefaults(['class' => 'MyBlock']);
 
         $moduleOptions->setDefaultArea('default_area');
@@ -49,15 +46,17 @@ class ModuleOptionsTest extends AbstractTest
             'class' => 'MyBlock'
         ], $moduleOptions->getBlockDefaults());
 
-        $excludeActionHandleSegments = [
-            'Controller',
-            'Backend'
+        $controllerMap = [
+            'MappedNs' => true,
+            'ZendTest\MappedNs' => true
         ];
-        $moduleOptions->setExcludeActionHandleSegments($excludeActionHandleSegments);
+        $moduleOptions->setControllerMap($controllerMap);
         $this->assertEquals(
-            $excludeActionHandleSegments,
-            $moduleOptions->getExcludeActionHandleSegments()
+            $controllerMap,
+            $moduleOptions->getControllerMap()
         );
+    
+        $this->assertEquals(false, $moduleOptions->isPreferRouteMatchController());
     }
 
     public function testSetLayoutUpdateExtensions()

@@ -3,14 +3,13 @@
 namespace ConLayoutTest\Layout;
 
 use ConLayout\Block\Factory\BlockFactory;
-use ConLayout\Debug\Debugger;
 use ConLayout\Layout\Layout;
-use ConLayoutTest\Layout\Layout as TestLayout;
 use ConLayout\Layout\LayoutFactory;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
+use ConLayoutTest\Layout\Layout as TestLayout;
 use Zend\Config\Config;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
@@ -65,23 +64,6 @@ class LayoutTest extends AbstractTest
 
 
         $this->assertInstanceOf('ConLayout\Layout\LayoutInterface', $instance);
-
-        $serviceManager->setService(
-            'ConLayout\Options\ModuleOptions',
-            new ModuleOptions(['enable_debug' => true])
-        );
-
-        $debugger = new Debugger();
-        $serviceManager->setService(
-            'ConLayout\Debug\Debugger',
-            $debugger
-        );
-
-        $factory = new LayoutFactory();
-        $instance = $factory->createService($serviceManager);
-
-        $this->assertInstanceOf('ConLayout\Layout\LayoutInterface', $instance);
-        $this->assertSame($debugger, $instance->getDebugger());
     }
 
     public function testAddAndGetBlock()
@@ -93,6 +75,38 @@ class LayoutTest extends AbstractTest
         $block = new ViewModel();
         $layout->addBlock('my-block', $block);
         $this->assertSame($block, $layout->getBlock('my-block'));
+    }
+
+    public function testAddSortBlockWithBeforeAndAfter()
+    {
+        $layout = new Layout(
+            $this->blockFactory,
+            new LayoutUpdater()
+        );
+        $block1 = new ViewModel([], ['after' => 'block2']);
+        $block2 = new Viewmodel();
+        $block3 = new ViewModel([], ['before' => 'block2']);
+        $block4 = new ViewModel([], ['before' => 'block3']);
+        $block5 = new ViewModel([], ['after' => 'block1']);
+
+        $expectedOrder = [
+            'block4',
+            'block3',
+            'block2',
+            'block1',
+            'block5'
+        ];
+
+        $layout->addBlock('block1', $block1);
+        $layout->addBlock('block2', $block2);
+        $layout->addBlock('block3', $block3);
+        $layout->addBlock('block4', $block4);
+        $layout->addBlock('block5', $block5);
+
+        $layout->load();
+
+        $this->assertSame($expectedOrder, array_keys($layout->getBlocks()));
+
     }
 
     public function testAddBlockWithChildren()
@@ -317,23 +331,6 @@ class LayoutTest extends AbstractTest
             'anonymous.content.1',
             $child->getVariable(LayoutInterface::BLOCK_ID_VAR)
         );
-    }
-
-    public function testDebugger()
-    {
-        $debugger = new Debugger();
-        $this->layout->setDebugger($debugger);
-        $block = new ViewModel();
-        $this->layout->addBlock('test.block', $block);
-        $this->layout->load();
-
-        $wrappedBlock = $this->layout->getBlock('test.block');
-
-        $this->assertSame(
-            $block,
-            $wrappedBlock->getVariable(Debugger::VAR_BLOCK_ORIGINAL)
-        );
-
     }
 
     public function testParentBlock()

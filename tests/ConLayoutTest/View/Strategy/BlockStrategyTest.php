@@ -9,9 +9,10 @@ use ConLayoutTest\Bootstrap;
 use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\View\Model\ViewModel;
+use Zend\View\ViewEvent;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BlockStrategyTest extends AbstractTest
@@ -43,12 +44,12 @@ class BlockStrategyTest extends AbstractTest
 
         $this->assertCount(
             1,
-            $this->em->getListeners(\Zend\View\ViewEvent::EVENT_RENDERER)
+            $this->em->getListeners(ViewEvent::EVENT_RENDERER)
         );
 
         $this->assertCount(
             1,
-            $this->em->getListeners(\Zend\View\ViewEvent::EVENT_RESPONSE)
+            $this->em->getListeners(ViewEvent::EVENT_RESPONSE)
         );
 
     }
@@ -58,7 +59,7 @@ class BlockStrategyTest extends AbstractTest
         $renderer = new BlockRenderer();
         $strategy = new BlockRendererStrategy($renderer);
 
-        $viewEvent = new \Zend\View\ViewEvent();
+        $viewEvent = new ViewEvent();
         $viewEvent->setModel(new ViewModel());
 
         $this->assertNull($strategy->selectRenderer($viewEvent));
@@ -70,7 +71,7 @@ class BlockStrategyTest extends AbstractTest
             $renderer,
             $strategy->selectRenderer($viewEvent)
         );
-        
+
         $this->assertNull($strategy->injectResponse($viewEvent));
 
         $response = new Response();
