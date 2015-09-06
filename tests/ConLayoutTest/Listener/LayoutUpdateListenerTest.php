@@ -4,6 +4,7 @@ namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\LayoutUpdateListener;
 use ConLayout\Updater\Event\UpdateEvent;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
 use Zend\EventManager\EventManager;
@@ -22,7 +23,7 @@ class LayoutUpdateListenerTest extends AbstractTest
     {
         parent::setUp();
         $this->listener = new LayoutUpdateListener([
-            LayoutUpdateListener::AREA_GLOBAL => [
+            LayoutUpdaterInterface::AREA_GLOBAL => [
                 __DIR__ . '/_files/module1',
                 __DIR__ . '/_files/module2'
             ],
