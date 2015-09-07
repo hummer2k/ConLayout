@@ -219,8 +219,8 @@ class ActionHandlesListener implements ListenerAggregateInterface, ServiceLocato
         $templateParts = explode(self::TEMPLATE_SEPARATOR, $template);
         
         foreach ($templateParts as $index => $name) {
-            $actionHandles[] = new Handle($previousHandle.$name, $priority);
             $priority += 10;
+            $actionHandles[] = new Handle($previousHandle.$name, $priority);
             $previousHandle .= $name.self::TEMPLATE_SEPARATOR;
         }
         
