@@ -2,7 +2,7 @@
 
 Install via composer:
 
-`$ composer require hummer2k/conlayout:~1.1`
+`$ composer require hummer2k/conlayout:~2.0`
 
 Enable module in your application.config.php
 
