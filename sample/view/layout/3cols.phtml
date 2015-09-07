@@ -1,25 +1,21 @@
 <?= $this->doctype() ?>
 <html>
     <head>
-        <?= $this->headTitle() ?>
-        <?= $this->headMeta() ?>
-        <?= $this->headLink() ?>
-        <?= $this->headScript() ?>
+        <?= $this->head ?>
     </head>
     <body class="layout-3cols">
         <?= $this->header ?>
         <div class="container">
             <div class="row">
-                <aside class="sidebar primary col-sm-3">
-                    <?= $this->sidebarLeft ?>
-                </aside>
-                <section class="content col-sm-6">
-                    <?= $this->breadcrumbs ?>
+                <section class="content col-sm-push-3 col-sm-6">
                     <?= $this->flashMessenger()->render() ?>
                     <?= $this->content ?>
                 </section>
+                <aside class="sidebar primary col-sm-pull-6 col-sm-3">
+                    <?= $this->sidebarPrimary ?>
+                </aside>
                 <aside class="sidebar secondary col-sm-3">
-                    <?= $this->sidebarRight ?>
+                    <?= $this->sidebarSecondary ?>
                 </aside>
             </div>
             <?= $this->footer ?>
