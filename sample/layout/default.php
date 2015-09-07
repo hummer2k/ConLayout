@@ -12,8 +12,11 @@ return [
      */
     'view_helpers' => [
         'headTitle' => [
-            ['setSeparator' => ' - '],
-            'Default Title'
+            'separator' => [
+                'method' => 'setSeparator',
+                'args' => [' - '],
+            ],
+            'default' => 'Default Title'
         ],
         'headLink' => [
             'twbs' => '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css',
@@ -23,16 +26,37 @@ return [
             'twbs'   => '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'
         ],
         'headMeta' => [
-            ['setCharset' => 'utf8']
+            'charset' => [
+                'method' => 'setCharset',
+                'args' => ['utf8']
+            ]
         ]
     ],
     /**
      * add blocks to layout
      */
     'blocks' => [
+        'head' => [
+            'capture_to' => 'head',
+            'template' => 'layout/partials/head',
+            'options' => [
+                'order' => 10000
+            ]
+        ],
         'header' => [
             'capture_to' => 'header',
             'template' => 'layout/partials/header'
+        ],
+        'navbar.brand' => [
+            'capture_to' => 'header::navbar',
+            'template'   => 'layout/partials/navbar/brand',
+            'options' => [
+                'after' => 'navbar.toggle'
+            ]
+        ],
+        'navbar.toggle' => [
+            'capture_to' => 'header::navbar',
+            'template' => 'layout/partials/navbar/toggle',
         ],
         'navigation' => [
             'capture_to' => 'header::navigation',
@@ -41,10 +65,6 @@ return [
         'footer' => [
             'capture_to' => 'footer',
             'template' => 'layout/partials/footer'
-        ],
-        'widget.current.time' => [
-            'capture_to' => 'sidebarRight',
-            'template' => 'widgets/current-time'
         ]
     ]
 ];

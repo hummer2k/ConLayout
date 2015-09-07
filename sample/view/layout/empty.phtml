@@ -1,16 +1,12 @@
 <?= $this->doctype() ?>
 <html>
     <head>
-        <?= $this->headTitle() ?>
-        <?= $this->headMeta() ?>
-        <?= $this->headLink() ?>
-        <?= $this->headScript() ?>
+        <?= $this->head ?>
     </head>
-    <body class="layout-1col">
+    <body class="layout-empty">
         <div class="container">
             <div class="row">
                 <section class="content col-sm-12">
-                    <?= $this->breadcrumbs ?>
                     <?= $this->flashMessenger()->render() ?>
                     <?= $this->content ?>
                 </section>
