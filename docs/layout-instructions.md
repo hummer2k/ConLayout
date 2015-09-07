@@ -115,7 +115,7 @@ remove blocks from the layout structure:
 
 ````php
 <?php
-// layout update file e.g. application-index.php
+// layout update file e.g. application/index.php
 return [
     'remove_blocks' => [
         'footer' => true // remove block with id 'footer'
@@ -236,7 +236,7 @@ With include you can include another handle.
 
 ````php
 <?php
-// layout update file application-index-index.php
+// layout update file application/index/index.php
 return [
     'layout' => '3cols',
     'blocks' => [
@@ -253,16 +253,16 @@ return [
 ];
 ````
 
-If you want to use the same layout structure as `application-index-index` in 
-`product-index-view`:
+If you want to use the same layout structure as `application/index/index` in 
+`product/index/view`:
 
 
 ````php
 <?php
-// layout update file product-index-view.php
+// layout update file product/index/view.php
 return [
     'include' => [
-        'application-index-index'
+        'application/index/index'
     ]
 ];
 ````
