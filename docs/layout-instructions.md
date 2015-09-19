@@ -232,7 +232,7 @@ return [
 
 ## 5. `include`
 
-With include you can include another handle.
+Includes another handles
 
 ````php
 <?php
@@ -262,7 +262,49 @@ If you want to use the same layout structure as `application/index/index` in
 // layout update file product/index/view.php
 return [
     'include' => [
-        'application/index/index'
+        'application/index/index' => true
     ]
 ];
+````
+
+You can disable the include within another handle:
+
+````php
+<?php
+// layout update file product/index/view.php
+return [
+    'include' => [
+        'application/index/index' => false
+    ]
+];
+````
+
+Tipp: Define a "virtual handle" for reuse:
+
+````php
+<?php
+// virtual handle file default/widgets.php
+return [
+    'blocks' => [
+        'widget.forecast' => [
+            'template' => 'widgets/forecast',
+            'capture_to' => 'sidebar'
+        ],
+        'widget.calendar' => [
+            'template' => 'widgets/calendar',
+            'capture_to' => 'sidebar'
+        ]
+    ]
+];
+````
+
+````php
+<?php
+// layout update file application/index/index.php
+return [
+    // ...
+    'include' => [
+        'default/widgets' => true
+    ]
+]
 ````

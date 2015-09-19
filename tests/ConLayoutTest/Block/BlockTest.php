@@ -28,10 +28,10 @@ class BlockTest extends AbstractTest
         ];
 
         $this->assertEquals($expectedCacheKeyInfo, $block->getCacheKeyInfo());
-        
+
         $expectedCacheKey = AbstractBlock::CACHE_KEY_PREFIX .
             md5(implode('|', $expectedCacheKeyInfo));
-        
+
         $this->assertEquals($expectedCacheKey, $block->getCacheKey());
 
     }
@@ -98,8 +98,9 @@ class BlockTest extends AbstractTest
         $this->assertInstanceOf('Zend\Stdlib\RequestInterface', $block->getRequest());
     }
 }
-
+// @codingStandardsIgnoreStart
 class BlockDummy extends AbstractBlock
 {
-    
+
 }
+// @codingStandardsIgnoreEnd

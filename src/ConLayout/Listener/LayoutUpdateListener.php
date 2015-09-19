@@ -100,16 +100,34 @@ class LayoutUpdateListener implements ListenerAggregateInterface
             try {
                 $configFiles = Glob::glob($globPath, Glob::GLOB_BRACE);
             } catch (RuntimeException $e) {
+                // @codeCoverageIgnoreStart
                 continue;
+                // @codeCoverageIgnoreEnd
             }
             foreach ($configFiles as $configFile) {
                 $config = ConfigFactory::fromFile($configFile, true);
                 if ($includeHandles = $config->get(LayoutUpdaterInterface::INSTRUCTION_INCLUDE)) {
-                    foreach ($includeHandles as $includeHandle) {
-                        $this->fetchHandle($includeHandle);
-                    }
+                    $this->fetchIncludes($includeHandles);
                 }
                 $this->layoutStructure->merge($config);
+            }
+        }
+    }
+
+    /**
+     * fetches includes recursively
+     *
+     * @param Config $includeHandles
+     */
+    protected function fetchIncludes(Config $includeHandles)
+    {
+        foreach ($includeHandles as $includeHandle => $isEnabled) {
+            if (is_int($includeHandle) && is_string($isEnabled)) {
+                $includeHandle = $isEnabled;
+                $isEnabled = true;
+            }
+            if ($isEnabled) {
+                $this->fetchHandle($includeHandle);
             }
         }
     }

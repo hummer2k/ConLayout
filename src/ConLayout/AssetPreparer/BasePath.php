@@ -32,8 +32,8 @@ class BasePath implements AssetPreparerInterface
      */
     public function prepare($value)
     {
-        $value = trim($value);
-        if (!preg_match('#^(https?://|//)#', $value)) {
+        $urlHost = parse_url($value, PHP_URL_HOST);
+        if (empty($urlHost)) {
             return call_user_func($this->basePathHelper, $value);
         }
         return $value;

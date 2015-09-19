@@ -31,7 +31,7 @@ class LayoutTemplateListenerTest extends AbstractTest
         $this->assertEquals('2cols-left', $layout->getTemplate());
     }
 
-     public function testAlreadySetLayoutTemplate()
+    public function testAlreadySetLayoutTemplate()
     {
         $listener = new LayoutTemplateListener(
             $this->layoutUpdater

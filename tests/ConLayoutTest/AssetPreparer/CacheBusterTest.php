@@ -4,6 +4,7 @@ namespace ConLayoutTest\AssetPreparer;
 
 use ConLayout\AssetPreparer\CacheBuster;
 use ConLayout\AssetPreparer\CacheBusterFactory;
+use ConLayout\Options\ModuleOptions;
 use ConLayoutTest\AbstractTest;
 use Zend\ServiceManager\ServiceManager;
 
@@ -19,7 +20,7 @@ class CacheBusterTest extends AbstractTest
 
         $serviceManager = new ServiceManager();
 
-        $options = new \ConLayout\Options\ModuleOptions();
+        $options = new ModuleOptions();
         $options->setCacheBusterInternalBaseDir(__DIR__ . '/_files');
 
         $serviceManager->setService('ConLayout\Options\ModuleOptions', $options);
@@ -49,9 +50,17 @@ class CacheBusterTest extends AbstractTest
     public function testFileDoesNotExist()
     {
         $cacheBuster = new CacheBuster(
-                'DOES_NOT_EXIST_____'
+            'DOES_NOT_EXIST_____'
         );
         $value = $cacheBuster->prepare('styles.css', 'styles.css');
         $this->assertEquals('styles.css', $value);
+    }
+
+    public function testOriginalValue()
+    {
+        $cacheBuster = new CacheBuster(__DIR__ . '/_files');
+        $cacheBuster->setOriginalValue('original.css');
+        $value = $cacheBuster->prepare('test.css');
+        $this->assertEquals('test.css?a1aa7a967ebd144a0f1a757df767c84b', $value);
     }
 }

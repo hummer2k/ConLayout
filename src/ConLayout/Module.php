@@ -1,6 +1,7 @@
 <?php
 namespace ConLayout;
 
+use ConLayout\Options\ModuleOptions;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventInterface as Event;
 use Zend\Http\PhpEnvironment\Request;
@@ -88,17 +89,14 @@ class Module implements
             return;
         }
 
-        $listeners = [
-            'ConLayout\Listener\ActionHandlesListener',
-            'ConLayout\Listener\LayoutUpdateListener',
-            'ConLayout\Listener\LoadLayoutListener',
-            'ConLayout\Listener\LayoutTemplateListener',
-            'ConLayout\Listener\ViewHelperListener',
-            'ConLayout\Listener\PrepareActionViewModelListener'
-        ];
+        /* @var $options ModuleOptions */
+        $options = $serviceManager->get('ConLayout\Options\ModuleOptions');
+        $listeners = $options->getListeners();
 
-        foreach ($listeners as $listener) {
-            $eventManager->attach($serviceManager->get($listener));
+        foreach ($listeners as $listener => $isEnabled) {
+            if ($isEnabled) {
+                 $eventManager->attach($serviceManager->get($listener));
+            }
         }
     }
 

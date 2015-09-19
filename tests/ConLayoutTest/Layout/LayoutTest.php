@@ -302,7 +302,7 @@ class LayoutTest extends AbstractTest
         );
 
         $layout->getEventManager()->getSharedManager()
-            ->attach('ConLayout\Layout\Layout', 'isAllowed', function($e) {
+            ->attach('ConLayout\Layout\Layout', 'isAllowed', function ($e) {
                 $blockId = $e->getParam('block_id');
                 if ($blockId === 'widget.1') {
                     return false;

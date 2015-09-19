@@ -140,6 +140,18 @@ return [
                 'basePath' => 'ConLayout\AssetPreparer\BasePath',
                 'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
             ]
-        ]
+        ],
+        /**
+         * enable/disable particular listeners
+         */
+        /*
+        'listeners' => [
+            'ConLayout\Listener\ActionHandlesListener'  => true,
+            'ConLayout\Listener\LayoutUpdateListener'   => true,
+            'ConLayout\Listener\LoadLayoutListener'     => true,
+            'ConLayout\Listener\LayoutTemplateListener' => true,
+            'ConLayout\Listener\ViewHelperListener'     => true,
+            'ConLayout\Listener\PrepareActionViewModelListener' => true
+        ]*/
     ]
 ];

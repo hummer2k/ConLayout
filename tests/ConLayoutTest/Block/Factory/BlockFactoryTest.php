@@ -234,7 +234,7 @@ class BlockFactoryTest extends AbstractTest
         $this->assertSame($renderer, $block->getView());
     }
 }
-
+// @codingStandardsIgnoreStart
 class TplBlock extends ViewModel
 {
     protected $template = 'already/set/template';
@@ -259,3 +259,4 @@ class BlockImpl extends AbstractBlock
 {
 
 }
+// @codingStandardsIgnoreEnd

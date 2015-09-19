@@ -96,7 +96,7 @@ class BlockRendererTest extends AbstractTest
         $em->getSharedManager()->attach(
             'ConLayout\View\Renderer\BlockRenderer',
             'render.pre',
-            function($e) {
+            function ($e) {
                 return 'cached';
             }
         );
@@ -112,13 +112,13 @@ class BlockRendererTest extends AbstractTest
 
         $em->getSharedManager()
             ->attach(
-            'ConLayout\View\Renderer\BlockRenderer',
-            'render.post',
-            function($e) {
-                $result = $e->getParam('__RESULT__');
-                $this->assertEquals($result, $this->getRenderedHtml());
-            }
-        );
+                'ConLayout\View\Renderer\BlockRenderer',
+                'render.post',
+                function ($e) {
+                    $result = $e->getParam('__RESULT__');
+                    $this->assertEquals($result, $this->getRenderedHtml());
+                }
+            );
 
         $renderer->render($this->getViewModel());
 
@@ -189,12 +189,12 @@ class BlockRendererTest extends AbstractTest
         $rendered = $this->blockRenderer->render($parent);
 
         $this->assertEquals(
-            file_get_contents( __DIR__ . '/../../_files/children-append.html'),
+            file_get_contents(__DIR__ . '/../../_files/children-append.html'),
             $rendered
         );
     }
 }
-
+// @codingStandardsIgnoreStart
 class TestBlock extends AbstractBlock
 {
     public function getSomeStuff()
@@ -207,3 +207,4 @@ class TestBlock extends AbstractBlock
         return 60;
     }
 }
+// @codingStandardsIgnoreEnd

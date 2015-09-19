@@ -8,6 +8,7 @@ use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\HelperPluginManager;
 
@@ -32,7 +33,7 @@ class ModuleTest extends AbstractTest
 
         $services = $module->getServiceConfig();
 
-        foreach(['invokables', 'factories'] as $type) {
+        foreach (['invokables', 'factories'] as $type) {
             foreach (array_keys($services[$type]) as $name) {
                 $instance = $sm->get($name);
                 $this->assertInstanceOf(
@@ -58,18 +59,18 @@ class ModuleTest extends AbstractTest
             $sm->setFactory($key, $value);
         }
 
-        $event = new \Zend\Mvc\MvcEvent();
+        $event = new MvcEvent();
         $event->setApplication($application);
         $em = $application->getEventManager();
 
         $em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
 
-        $this->assertCount(0, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
-        $this->assertCount(0, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_RENDER));
+        $this->assertCount(0, $em->getListeners(MvcEvent::EVENT_DISPATCH));
+        $this->assertCount(0, $em->getListeners(MvcEvent::EVENT_RENDER));
 
         $module->onBootstrap($event);
 
-        $this->assertCount(2, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
+        $this->assertCount(2, $em->getListeners(MvcEvent::EVENT_DISPATCH));
 
         $layoutUpdater = $sm->get('ConLayout\Updater\LayoutUpdaterInterface');
 
@@ -77,9 +78,9 @@ class ModuleTest extends AbstractTest
             'default'
         ], $layoutUpdater->getHandles());
 
-        $mvcEvent = new \Zend\Mvc\MvcEvent();
+        $mvcEvent = new MvcEvent();
         $mvcEvent->setApplication($application);
-        $mvcEvent->setName(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR);
+        $mvcEvent->setName(MvcEvent::EVENT_DISPATCH_ERROR);
         $mvcEvent->setError('test-error');
 
         $em->trigger($mvcEvent);
@@ -103,14 +104,14 @@ class ModuleTest extends AbstractTest
 
         $em = $application->getEventManager();
 
-        $event = new \Zend\Mvc\MvcEvent();
+        $event = new MvcEvent();
         $event->setApplication($application);
 
-        $this->assertCount(0, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
+        $this->assertCount(0, $em->getListeners(MvcEvent::EVENT_DISPATCH));
 
         $module->onBootstrap($event);
 
-        $this->assertCount(0, $em->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH));
+        $this->assertCount(0, $em->getListeners(MvcEvent::EVENT_DISPATCH));
 
     }
 
@@ -131,5 +132,11 @@ class ModuleTest extends AbstractTest
         $module = new Module();
         $manager = Bootstrap::getServiceManager()->get('ModuleManager');
         $module->init($manager);
+    }
+
+    public function testViewHelperConfig()
+    {
+        $module = new Module();
+        $this->assertInternalType('array', $module->getViewHelperConfig());
     }
 }

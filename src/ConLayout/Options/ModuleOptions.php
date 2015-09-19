@@ -74,6 +74,20 @@ class ModuleOptions extends AbstractOptions
     protected $preferRouteMatchController = false;
 
     /**
+     * Listeners to attach to EVM
+     *
+     * @var array
+     */
+    protected $listeners = [
+        'ConLayout\Listener\ActionHandlesListener'  => true,
+        'ConLayout\Listener\LayoutUpdateListener'   => true,
+        'ConLayout\Listener\LoadLayoutListener'     => true,
+        'ConLayout\Listener\LayoutTemplateListener' => true,
+        'ConLayout\Listener\ViewHelperListener'     => true,
+        'ConLayout\Listener\PrepareActionViewModelListener' => true
+    ];
+
+    /**
      * Retrieve an array of controller namespace -> action handle mappings.
      *
      * @return array
@@ -280,6 +294,26 @@ class ModuleOptions extends AbstractOptions
     public function setBlockDefaults(array $blockDefaults)
     {
         $this->blockDefaults = $blockDefaults;
+        return $this;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getListeners()
+    {
+        return $this->listeners;
+    }
+
+    /**
+     *
+     * @param array $listeners
+     * @return ModuleOptions
+     */
+    public function setListeners(array $listeners)
+    {
+        $this->listeners = $listeners;
         return $this;
     }
 }

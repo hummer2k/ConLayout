@@ -15,7 +15,8 @@ class LayoutCollectorFactory implements FactoryInterface
     {
         $layoutCollector = new LayoutCollector(
             $serviceLocator->get('ConLayout\Layout\LayoutInterface'),
-            $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface')
+            $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface'),
+            $serviceLocator->get('ViewResolver')
         );
         return $layoutCollector;
     }

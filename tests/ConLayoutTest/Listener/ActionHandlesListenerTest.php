@@ -3,25 +3,39 @@ namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\ActionHandlesListener;
 use ConLayout\Updater\LayoutUpdater;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Controller\TestAsset\SampleController;
 use Zend\EventManager\EventManager;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\RouteMatch;
+
 /**
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class ActionHandlesListenerTest extends AbstractTest
 {
+    /**
+     *
+     * @var ActionHandlesListener
+     */
+    protected $listener;
+
+    /**
+     *
+     * @var LayoutUpdaterInterface
+     */
+    protected $updater;
+
     public function setUp()
     {
         $controllerMap = [
             'MappedNs' => true,
             'ZendTest\MappedNs' => true,
         ];
-        
+
         $this->updater = new LayoutUpdater;
         $this->listener = new ActionHandlesListener;
         $this->listener->setUpdater($this->updater);
@@ -30,7 +44,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->routeMatch = new RouteMatch([]);
         $this->event->setRouteMatch($this->routeMatch);
     }
-    
+
     public function testUsesModuleAndControllerOnlyIfNoActionInRouteMatch()
     {
         $this->routeMatch->setParam('controller', 'Foo\Controller\SomewhatController');
@@ -41,7 +55,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'foo/somewhat'
         ], $this->updater->getHandles());
     }
-    
+
     public function testNormalizesLiteralControllerNameIfNoNamespaceSeparatorPresent()
     {
         $this->routeMatch->setParam('controller', 'SomewhatController');
@@ -51,7 +65,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'somewhat'
         ], $this->updater->getHandles());
     }
-    
+
     public function testNormalizesNamesToLowercase()
     {
         $this->routeMatch->setParam('controller', 'Somewhat.DerivedController');
@@ -63,7 +77,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'somewhat.derived/some-uber-cool'
         ], $this->updater->getHandles());
     }
-    
+
     public function testMapsSubNamespaceToSubDirectoryWithControllerFromRouteMatch()
     {
         $this->routeMatch->setParam(ModuleRouteListener::MODULE_NAMESPACE, 'Aj\Controller\SweetAppleAcres\Reports');
@@ -81,7 +95,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'aj/sweet-apple-acres/reports/cider-sales/pinkie-pie-revenue'
         ], $this->updater->getHandles());
     }
-    
+
     public function testMapsSubNamespaceToSubDirectoryWithControllerFromRouteMatchHavingSubNamespace()
     {
         $this->routeMatch->setParam(ModuleRouteListener::MODULE_NAMESPACE, 'Aj\Controller\SweetAppleAcres\Reports');
@@ -99,7 +113,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'aj/sweet-apple-acres/reports/cider-sales/pinkie-pie-revenue'
         ], $this->updater->getHandles());
     }
-    
+
     public function testMapsSubNamespaceToSubDirectoryWithControllerFromEventTarget()
     {
         $this->routeMatch->setParam(ModuleRouteListener::MODULE_NAMESPACE, 'ConLayoutTest\Controller\TestAsset');
@@ -107,7 +121,8 @@ class ActionHandlesListenerTest extends AbstractTest
         $moduleRouteListener = new ModuleRouteListener;
         $moduleRouteListener->onRoute($this->event);
         $myController = new SampleController();
-        $this->event->setTarget($myController);;
+        $this->event->setTarget($myController);
+        ;
         $this->listener->injectActionHandles($this->event);
         $this->assertEquals([
             'default',
@@ -117,7 +132,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'con-layout-test/test-asset/sample/test'
         ], $this->updater->getHandles());
     }
-    
+
     public function testMapsSubNamespaceToSubDirectoryWithControllerFromEventTargetShouldMatchControllerFromRouteParam()
     {
         $this->routeMatch->setParam(ModuleRouteListener::MODULE_NAMESPACE, 'ConLayoutTest\Controller');
@@ -127,15 +142,15 @@ class ActionHandlesListenerTest extends AbstractTest
         $moduleRouteListener->onRoute($this->event);
         $this->listener->injectActionHandles($this->event);
         $handles1 = $this->updater->getHandles();
-        
+
         $myController = new SampleController();
         $this->event->setTarget($myController);
         $this->listener->injectActionHandles($this->event);
         $handles2 = $this->updater->getHandles();
-        
+
         $this->assertEquals($handles1, $handles2);
     }
-    
+
     public function testControllerMatchedByMapIsInflected1()
     {
         $controller = 'MappedNs\SubNs\Controller\Sample';
@@ -147,11 +162,11 @@ class ActionHandlesListenerTest extends AbstractTest
             'mapped-ns/sub-ns',
             'mapped-ns/sub-ns/sample'
         ], $this->updater->getHandles());
-    
+
         $this->updater = new LayoutUpdater;
         $this->listener = new ActionHandlesListener;
         $this->listener->setUpdater($this->updater);
-    
+
         $this->listener->setControllerMap(['ZendTest' => true]);
         $myController = new SampleController();
         $this->event->setTarget($myController);
@@ -162,7 +177,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'con-layout-test/sample'
         ], $this->updater->getHandles());
     }
-    
+
     public function testControllerNotMatchedByMapIsNotAffected()
     {
         $this->routeMatch->setParam('action', 'test');
@@ -176,7 +191,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'con-layout-test/sample/test',
         ], $this->updater->getHandles());
     }
-    
+
     public function testFullControllerNameMatchIsMapped()
     {
         $this->listener->setControllerMap([
@@ -192,7 +207,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'string-value'
         ], $this->updater->getHandles());
     }
-    
+
     public function testOnlyFullNamespaceMatchIsMapped()
     {
         $this->listener->setControllerMap([
@@ -211,7 +226,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'foo-matched/bar-baz/index'
         ], $this->updater->getHandles());
     }
-    
+
     public function testControllerMapMatchedPrefixReplacedByStringValue()
     {
         $this->listener->setControllerMap([
@@ -228,14 +243,14 @@ class ActionHandlesListenerTest extends AbstractTest
             'custom-handle/index'
         ], $this->updater->getHandles());
     }
-    
+
     public function testUsingNamespaceRouteParameterGivesSameResultAsFullControllerParameter()
     {
         $controller1 = 'MappedNs\Foo\Controller\Bar\Baz\Sample';
         $this->routeMatch->setParam('controller', $controller1);
         $this->listener->injectActionHandles($this->event);
         $handles1 = $this->updater->getHandles();
-    
+
         $controller2 = 'MappedNs\Foo\Controller\Bar';
         $this->routeMatch->setParam(ModuleRouteListener::MODULE_NAMESPACE, $controller2);
         $this->routeMatch->setParam('controller', 'Baz\Sample');
@@ -243,10 +258,10 @@ class ActionHandlesListenerTest extends AbstractTest
         $moduleRouteListener->onRoute($this->event);
         $this->listener->injectActionHandles($this->event);
         $handles2 = $this->updater->getHandles();
-        
+
         $this->assertEquals($handles1, $handles2);
     }
-    
+
     public function testControllerMapOnlyFullNamespaceMatches()
     {
         $this->listener->setControllerMap([
@@ -267,7 +282,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'foo-matched/bar-baz/index/test'
         ], $this->updater->getHandles());
     }
-    
+
     public function testControllerMapRuleSetToFalseIsIgnored()
     {
         $this->listener->setControllerMap([
@@ -288,7 +303,7 @@ class ActionHandlesListenerTest extends AbstractTest
             'foo-matched/bar/index/test'
         ], $this->updater->getHandles());
     }
-    
+
     public function testControllerMapMoreSpecificRuleMatchesFirst()
     {
         $this->listener->setControllerMap([
@@ -304,7 +319,7 @@ class ActionHandlesListenerTest extends AbstractTest
         $template = $this->listener->mapController('Foo\Bar\Controller\IndexController');
         $this->assertEquals('bar-baz/index', $template);
     }
-    
+
     public function testPrefersRouteMatchController()
     {
         $this->assertFalse($this->listener->isPreferRouteMatchController());
@@ -319,12 +334,12 @@ class ActionHandlesListenerTest extends AbstractTest
             'some/sample'
         ], $this->updater->getHandles());
     }
-    
+
     public function testLayoutUpdaterContainsOnlyDefaultHandle()
     {
         $this->assertEquals(['default'], $this->updater->getHandles());
     }
-    
+
     public function testListenerAttachesDispatchErrorEventAtExpectedPriority()
     {
         $events = new EventManager();
@@ -344,7 +359,7 @@ class ActionHandlesListenerTest extends AbstractTest
         }
         $this->assertTrue($found, 'Listener not found');
     }
-    
+
     public function testListenerAttachesDispatchEventAtExpectedPriority()
     {
         $events = new EventManager();
@@ -364,22 +379,27 @@ class ActionHandlesListenerTest extends AbstractTest
         }
         $this->assertTrue($found, 'Listener not found');
     }
-    
+
     public function testGetterAndSetters()
     {
         $updater = new LayoutUpdater;
         $this->listener->setUpdater($updater);
         $this->assertEquals($updater, $this->listener->getUpdater());
-    
+
         $controllerMap = [
             'Some/Name' => true,
             'Other/Name' => 'string'
         ];
         $this->listener->setControllerMap($controllerMap);
         $this->assertEquals($controllerMap, $this->listener->getControllerMap());
-    
+
         $preferRouteMatchController = true;
         $this->listener->setPreferRouteMatchController($preferRouteMatchController);
         $this->assertEquals($preferRouteMatchController, $this->listener->isPreferRouteMatchController());
+    }
+
+    public function testMapControllerReturnsFalseWhenNoStringGiven()
+    {
+        $this->assertFalse($this->listener->mapController(1));
     }
 }

@@ -567,7 +567,7 @@ Create a new layout update file for the handle
 <?php
 return [
     'include' => [
-        'application/index/view'
+        'application/index/view' => true
     ]
 ];
 ````
@@ -585,7 +585,7 @@ As an example, we edit our layout update file for the handle
 ````php
 return [
     'include' => [
-        'application/index/view'
+        'application/index/view' => true
     ],
     'remove_blocks' => [
         'latest.articles' => true

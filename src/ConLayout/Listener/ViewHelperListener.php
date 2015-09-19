@@ -11,6 +11,7 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Mvc\MvcEvent;
+use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
 
 /**
@@ -117,15 +118,36 @@ class ViewHelperListener implements ListenerAggregateInterface
         return $this;
     }
 
-    private function getHelperMethod($value, $defaultMethod, $viewHelper)
+    /**
+     * find helper method
+     *
+     * @param array $value
+     * @param string $defaultMethod
+     * @param AbstractHelper $viewHelper
+     * @return string
+     */
+    private function getHelperMethod(array $value, $defaultMethod, $viewHelper)
     {
         if (isset($value['method']) && is_callable([$viewHelper, $value['method']])) {
             return $value['method'];
         } else {
+            // @codeCoverageIgnoreStart
             $method = current(array_keys($value));
-            if (is_string($method)) {
+            if (is_string($method) && is_callable([$viewHelper, $method])) {
+                $val = current($value);
+                trigger_error(sprintf(
+                    '%s::%s Calling method via key in layout instruction is deprecated.'
+                    . ' ["%s" => "%s"] should be ["id" => ["method" => "%s", "args" => ["%s"]]',
+                    get_class($viewHelper),
+                    $method,
+                    $method,
+                    $val,
+                    $method,
+                    $val
+                ), E_USER_DEPRECATED);
                 return $method;
             }
+            // @codeCoverageIgnoreEnd
         }
         return $defaultMethod;
     }

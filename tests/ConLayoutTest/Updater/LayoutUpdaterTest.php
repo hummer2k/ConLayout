@@ -36,26 +36,26 @@ class LayoutUpdaterTest extends AbstractTest
                     'widget1' => []
                 ]
             ]
-        ];
-        $this->em->getSharedManager()->clearListeners(
-            'ConLayout\Updater\LayoutUpdater'
-        );
-        $this->em->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'getLayoutStructure.pre',
-            function (UpdateEvent $e) use ($instructions) {
-                $handles = $e->getHandles();
-                $this->layoutStructure = $e->getLayoutStructure();
-                foreach ($handles as $handle) {
-                    if (isset($instructions[$handle])) {
-                        $instructionsConfig = new Config(
-                            $instructions[$handle]
-                        );
-                        $this->layoutStructure->merge($instructionsConfig);
+                ];
+                $this->em->getSharedManager()->clearListeners(
+                    'ConLayout\Updater\LayoutUpdater'
+                );
+                $this->em->getSharedManager()->attach(
+                    'ConLayout\Updater\LayoutUpdater',
+                    'getLayoutStructure.pre',
+                    function (UpdateEvent $e) use ($instructions) {
+                        $handles = $e->getHandles();
+                        $this->layoutStructure = $e->getLayoutStructure();
+                        foreach ($handles as $handle) {
+                            if (isset($instructions[$handle])) {
+                                $instructionsConfig = new Config(
+                                    $instructions[$handle]
+                                );
+                                $this->layoutStructure->merge($instructionsConfig);
+                            }
+                        }
                     }
-                }
-            }
-        );
+                );
     }
 
     public function testDefaultHandle()
@@ -132,5 +132,12 @@ class LayoutUpdaterTest extends AbstractTest
             'handle-3',
             'handle-1'
         ], $this->layoutUpdater->getHandles());
+    }
+
+    public function testSetAndGetArea()
+    {
+        $area = 'some-area';
+        $this->layoutUpdater->setArea($area);
+        $this->assertSame($area, $this->layoutUpdater->getArea());
     }
 }

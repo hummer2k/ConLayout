@@ -61,13 +61,16 @@ class LayoutManagerTest extends AbstractTest
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'ConLayout\Layout\LayoutInterface', $this->layout
+            'ConLayout\Layout\LayoutInterface',
+            $this->layout
         );
         $serviceManager->setService(
-            'ConLayout\Updater\LayoutUpdaterInterface', $this->updater
+            'ConLayout\Updater\LayoutUpdaterInterface',
+            $this->updater
         );
         $serviceManager->setService(
-            'ConLayout\View\Renderer\BlockRenderer', $this->renderer
+            'ConLayout\View\Renderer\BlockRenderer',
+            $this->renderer
         );
 
         $controllerPluginManager = new PluginManager();

@@ -9,7 +9,7 @@ use Zend\EventManager\EventManager;
 use Zend\Mvc\Router\Http\RouteMatch;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BodyClassListenerTest extends AbstractTest

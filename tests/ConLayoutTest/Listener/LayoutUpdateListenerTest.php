@@ -99,7 +99,7 @@ class LayoutUpdateListenerTest extends AbstractTest
     public function testFetchArea1()
     {
         $event = $this->getEvent();
-        $this->listener->setArea('area1');
+        $event->setArea('area1');
         $this->listener->fetch($event);
 
         $layoutStructure = $event->getLayoutStructure()->toArray();
@@ -119,7 +119,7 @@ class LayoutUpdateListenerTest extends AbstractTest
     public function testFetchArea2()
     {
         $event = $this->getEvent();
-        $this->listener->setArea('area2');
+        $event->setArea('area2');
         $this->listener->fetch($event);
 
         $layoutStructure = $event->getLayoutStructure()->toArray();

@@ -10,7 +10,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ModelInterface;
 
 /**
- * Listener to set action results' block name
+ * Listener to prepare action result view model
  *
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>

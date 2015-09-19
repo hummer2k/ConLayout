@@ -98,6 +98,7 @@ class Layout implements
      */
     public function setRoot(ModelInterface $root)
     {
+        $root->setVariable(self::BLOCK_ID_VAR, self::BLOCK_ID_ROOT);
         $this->addBlock(self::BLOCK_ID_ROOT, $root);
     }
 

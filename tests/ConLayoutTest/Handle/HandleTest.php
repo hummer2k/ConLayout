@@ -6,7 +6,7 @@ use ConLayout\Handle\Handle;
 use ConLayoutTest\AbstractTest;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class HandleTest extends AbstractTest
@@ -18,5 +18,4 @@ class HandleTest extends AbstractTest
         $this->assertEquals(10, $handle->getPriority());
         $this->assertEquals('my-handle', (string) $handle);
     }
-
 }

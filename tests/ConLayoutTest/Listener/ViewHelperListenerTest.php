@@ -3,12 +3,13 @@
 namespace ConLayoutTest\Listener;
 
 use ConLayout\AssetPreparer\BasePath;
+use ConLayout\AssetPreparer\CacheBuster;
 use ConLayout\Listener\ViewHelperListener;
-use ConLayout\Updater\LayoutUpdater;
 use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Bootstrap;
 use Zend\Config\Config;
-use Zend\EventManager\EventManager;
+use Zend\Mvc\MvcEvent;
+use Zend\View\Helper\Doctype;
 use Zend\View\Helper\HeadLink;
 use Zend\View\Helper\HeadMeta;
 use Zend\View\Helper\HeadScript;
@@ -29,6 +30,7 @@ class ViewHelperListenerTest extends AbstractTest
                 'doctype' => 'HTML5',
                 'headLink' => [
                     'main'   => '/css/main.css',
+                    'busted' => 'busted.css',
                     'test'   => [
                         'method' => 'prependStylesheet',
                         'args' => '/css/test.css'
@@ -86,7 +88,7 @@ class ViewHelperListenerTest extends AbstractTest
             $config['con-layout']['view_helpers']
         );
 
-        $mvcEvent = new \Zend\Mvc\MvcEvent();
+        $mvcEvent = new MvcEvent();
 
         $renderer = new PhpRenderer();
         $renderer->setHelperPluginManager($helperPluginManager);
@@ -97,11 +99,14 @@ class ViewHelperListenerTest extends AbstractTest
         $basePathAssetPreparer = new BasePath($basePath);
         $listener->addAssetPreparer('headLink', $basePathAssetPreparer);
 
+        $cacheBusterAssetPreparer = new CacheBuster(__DIR__ . '/_files');
+        $listener->addAssetPreparer('headLink', $cacheBusterAssetPreparer);
+
         /* @var $headLink HeadLink */
         $headLink = $helperPluginManager->get('headLink');
         /* @var $headScript HeadScript */
         $headScript = $helperPluginManager->get('headScript');
-        /* @var $doctype \Zend\View\Helper\Doctype */
+        /* @var $doctype Doctype */
         $doctype = $helperPluginManager->get('doctype');
         /* @var $headTitle HeadTitle */
         $headTitle = $helperPluginManager->get('headTitle');
@@ -114,13 +119,16 @@ class ViewHelperListenerTest extends AbstractTest
 
 
         $expected = '<link href="/assets/css/test.css" media="screen" rel="stylesheet" type="text/css">' . PHP_EOL
-                  . '<link href="/assets/css/main.css" media="screen" rel="stylesheet" type="text/css">';
+                  . '<link href="/assets/css/main.css" media="screen" rel="stylesheet" type="text/css">' . PHP_EOL
+                  . '<link href="/assets/busted.css?9222f23a3b009428d59c29aa4283b18d" media="screen" rel="stylesheet" '
+                  . 'type="text/css">';
 
         $this->assertEquals($expected, $headLink->toString());
 
         $expected = '<script type="text/javascript" src="/js/jquery.min.js"></script>' . PHP_EOL
                   . '<script type="text/javascript" src="/js/jquery-ui.min.js"></script>' . PHP_EOL
-                  . '<!--[if lt IE 9]><script type="text/javascript" src="/js/modernizr.js"></script><![endif]-->' . PHP_EOL
+                  . '<!--[if lt IE 9]><script type="text/javascript" src="/js/modernizr.js"></script>'
+                  . '<![endif]-->' . PHP_EOL
                   . '<script type="text/javascript" src="/js/functions.js"></script>';
 
         $this->assertEquals($expected, $headScript->toString());
