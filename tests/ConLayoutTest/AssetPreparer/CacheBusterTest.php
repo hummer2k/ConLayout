@@ -44,7 +44,7 @@ class CacheBusterTest extends AbstractTest
         );
 
         $value = $cacheBuster->prepare('styles.css', 'styles.css');
-        $this->assertEquals('styles.css?1688c8210b6509d702b1adb96bc4d0f3', $value);
+        $this->assertEquals('styles.css?v=1688c821', $value);
     }
 
     public function testFileDoesNotExist()
@@ -61,6 +61,6 @@ class CacheBusterTest extends AbstractTest
         $cacheBuster = new CacheBuster(__DIR__ . '/_files');
         $cacheBuster->setOriginalValue('original.css');
         $value = $cacheBuster->prepare('test.css');
-        $this->assertEquals('test.css?a1aa7a967ebd144a0f1a757df767c84b', $value);
+        $this->assertEquals('test.css?v=a1aa7a96', $value);
     }
 }

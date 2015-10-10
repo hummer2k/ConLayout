@@ -120,7 +120,7 @@ class ViewHelperListenerTest extends AbstractTest
 
         $expected = '<link href="/assets/css/test.css" media="screen" rel="stylesheet" type="text/css">' . PHP_EOL
                   . '<link href="/assets/css/main.css" media="screen" rel="stylesheet" type="text/css">' . PHP_EOL
-                  . '<link href="/assets/busted.css?9222f23a3b009428d59c29aa4283b18d" media="screen" rel="stylesheet" '
+                  . '<link href="/assets/busted.css?v=9222f23a" media="screen" rel="stylesheet" '
                   . 'type="text/css">';
 
         $this->assertEquals($expected, $headLink->toString());
