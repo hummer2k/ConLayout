@@ -40,7 +40,7 @@ class CacheBuster implements
     {
         $file = $this->getFilePath($value);
         if (is_file($file) && is_readable($file)) {
-            return $value . '?' . md5_file($file);
+            return $value . '?v=' . substr(md5_file($file), 0, 8);
         }
         return $value;
     }
