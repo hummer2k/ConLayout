@@ -40,5 +40,8 @@ return [
         'ConLayout\Listener\ViewHelperListener' => [
             'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
         ]
+    ],
+    'abstract_factories' => [
+        'ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory'
     ]
 ];

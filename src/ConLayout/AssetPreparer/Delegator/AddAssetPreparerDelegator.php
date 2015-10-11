@@ -26,13 +26,14 @@ class AddAssetPreparerDelegator implements DelegatorFactoryInterface
         $moduleOptions = $serviceLocator->get('ConLayout\Options\ModuleOptions');
         $assetPreparersConfig = $moduleOptions->getAssetPreparers();
         foreach ($assetPreparersConfig as $helper => $assetPreparers) {
-            foreach ((array) $assetPreparers as $assetPreparer) {
+            foreach ((array) $assetPreparers as $assetPreparerName => $assetPreparer) {
                 if (!$assetPreparer) {
                     continue;
                 }
                 $viewHelperListener->addAssetPreparer(
                     $helper,
-                    $serviceLocator->get($assetPreparer)
+                    $serviceLocator->get($assetPreparer),
+                    $assetPreparerName
                 );
             }
         }

@@ -5,14 +5,14 @@ namespace ConLayout\Listener;
 use ConLayout\AssetPreparer\AssetPreparerInterface;
 use ConLayout\AssetPreparer\OriginalValueAwareInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
+use ConLayout\NamedParametersTrait;
 use Zend\Config\Config;
-use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
-use Zend\Mvc\MvcEvent;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
+
 
 /**
  * Listener to apply view helpers from layout structure
@@ -23,6 +23,7 @@ use Zend\View\HelperPluginManager;
 class ViewHelperListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
+    use NamedParametersTrait;
 
     /**
      *
@@ -85,11 +86,9 @@ class ViewHelperListener implements ListenerAggregateInterface
     /**
      * applies view helpers
      *
-     * @todo refactor
-     * @param MvcEvent $e
      * @return LayoutModifierListener
      */
-    public function applyViewHelpers(EventInterface $e)
+    public function applyViewHelpers()
     {
         $viewHelperInstructions = $this->updater->getLayoutStructure()->get(
             LayoutUpdaterInterface::INSTRUCTION_VIEW_HELPERS
@@ -97,81 +96,74 @@ class ViewHelperListener implements ListenerAggregateInterface
         if ($viewHelperInstructions instanceof Config) {
             $viewHelperInstructions = $viewHelperInstructions->toArray();
         }
+        $mainServiceLocator = $this->viewHelperManager->getServiceLocator();
         foreach ($this->helperConfig as $helper => $config) {
             if (!isset($viewHelperInstructions[$helper])) {
                 continue;
             }
             $defaultMethod = isset($config['default_method']) ? $config['default_method'] : '__invoke';
+            $proxyHelper = false;
+            if (isset($config['proxy']) && $mainServiceLocator->has($config['proxy'])) {
+                $proxyHelper = $mainServiceLocator->get($config['proxy']);
+            }
             $viewHelper = $this->viewHelperManager->get($helper);
             $viewHelperInstructions[$helper] = (array) $viewHelperInstructions[$helper];
             foreach ($viewHelperInstructions[$helper] as $value) {
                 if (!$value) {
                     continue;
                 }
-                $value = (array) $value;
-                $method = $this->getHelperMethod($value, $defaultMethod, $viewHelper);
-                $args   = isset($value['args']) ? (array) $value['args'] : array_values($value);
-                $args[0] = $this->prepareHelperValue($args[0], $helper);
-                call_user_func_array([$viewHelper, $method], $args);
+                if (is_string($value)) {
+                    $method = $defaultMethod;
+                    $defaultParamName = isset($config['default_param_name']) ? $config['default_param_name'] : 0;
+                    $args = [$defaultParamName => $value];
+                } else {
+                    $method = isset($value['method']) ? $value['method'] : $defaultMethod;
+                    $args   = isset($value['args']) ? $value['args'] : $value;
+                }
+                $args = $this->prepareArgs($helper, $args, $value, $config);
+                if (method_exists($viewHelper, $method)) {
+                    $this->invokeArgs($viewHelper, $method, $args);
+                } elseif (false !== $proxyHelper && method_exists($proxyHelper, $method)) {
+                    $this->invokeArgs($proxyHelper, $method, $args);
+                } elseif (is_callable([$viewHelper, $method])) {
+                    call_user_func_array([$viewHelper, $method], array_values($args));
+                }
             }
         }
         return $this;
     }
 
     /**
-     * find helper method
      *
-     * @param array $value
-     * @param string $defaultMethod
-     * @param AbstractHelper $viewHelper
-     * @return string
+     * @param string $helper
+     * @param array $args
+     * @param mixed $value
+     * @param array $config
+     * @return array
      */
-    private function getHelperMethod(array $value, $defaultMethod, $viewHelper)
-    {
-        if (isset($value['method']) && is_callable([$viewHelper, $value['method']])) {
-            return $value['method'];
-        } else {
-            // @codeCoverageIgnoreStart
-            $method = current(array_keys($value));
-            if (is_string($method) && is_callable([$viewHelper, $method])) {
-                $val = current($value);
-                trigger_error(sprintf(
-                    '%s::%s Calling method via key in layout instruction is deprecated.'
-                    . ' ["%s" => "%s"] should be ["id" => ["method" => "%s", "args" => ["%s"]]',
-                    get_class($viewHelper),
-                    $method,
-                    $method,
-                    $val,
-                    $method,
-                    $val
-                ), E_USER_DEPRECATED);
-                return $method;
-            }
-            // @codeCoverageIgnoreEnd
-        }
-        return $defaultMethod;
-    }
-
-    /**
-     *
-     * @param mixed $value value to prepare
-     * @param string $helper view helper name
-     * @return mixed
-     */
-    protected function prepareHelperValue($value, $helper)
+    private function prepareArgs($helper, array $args, $value, array $config)
     {
         if (!isset($this->assetPreparers[$helper])) {
-            return $value;
+            return $args;
         }
-        $originalValue = $value;
-        /* @var $assetPreparer AssetPreparerInterface */
-        foreach ($this->assetPreparers[$helper] as $assetPreparer) {
-            if ($assetPreparer instanceof OriginalValueAwareInterface) {
-                $assetPreparer->setOriginalValue($originalValue);
+        foreach ($config['prepare_params'] as $param => $isEnabled) {
+            if (!$isEnabled || !isset($args[$param])) {
+                continue;
             }
-            $value = $assetPreparer->prepare($value);
+            $originalValue = $args[$param];
+            /* @var $assetPreparer AssetPreparerInterface */
+            foreach ($this->assetPreparers[$helper] as $name => $assetPreparer) {
+                if (isset($value['prepare'][$name]) && !$value['prepare'][$name]) {
+                    continue;
+                }
+                if ($assetPreparer instanceof OriginalValueAwareInterface) {
+                    $assetPreparer->setOriginalValue($originalValue);
+                }
+                $args[$param] = $assetPreparer->prepare($args[$param]);
+            }
         }
-        return $value;
+
+        return $args;
     }
 
     /**
@@ -179,11 +171,14 @@ class ViewHelperListener implements ListenerAggregateInterface
      * @param string $helper
      * @param AssetPreparerInterface $assetPreparer
      */
-    public function addAssetPreparer($helper, AssetPreparerInterface $assetPreparer)
-    {
+    public function addAssetPreparer(
+        $helper,
+        AssetPreparerInterface $assetPreparer,
+        $name = null
+    ) {
         if (!isset($this->assetPreparers[$helper])) {
             $this->assetPreparers[$helper] = [];
         }
-        $this->assetPreparers[$helper][] = $assetPreparer;
+        $this->assetPreparers[$helper][$name] = $assetPreparer;
     }
 }

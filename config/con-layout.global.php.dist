@@ -97,21 +97,40 @@ return [
             'doctype' => [],
             'headLink' => [
                 'default_method' => 'appendStylesheet',
+                'default_param_name' => 'href',
+                'prepare_params' => [
+                    'href' => true
+                ],
+                'proxy' => 'ConLayout\View\Helper\Proxy\HeadLinkProxy'
             ],
             'headScript' => [
                 'default_method' => 'appendFile',
+                'default_param_name' => 'src',
+                'prepare_params' => [
+                    'src' => true
+                ],
+                'proxy' => 'ConLayout\View\Helper\Proxy\HeadScriptProxy'
             ],
             'inlineScript' => [
                 'default_method' => 'appendFile',
+                'default_param_name' => 'src',
+                'prepare_params' => [
+                    'src' => true
+                ],
+                'proxy' => 'ConLayout\View\Helper\Proxy\InlineScriptProxy'
             ],
             'headTitle' => [
-                'default_method' => 'append'
+                'default_method' => 'append',
+                'default_param_name' => 'value',
+                'proxy' => 'ConLayout\View\Helper\Proxy\HeadTitleProxy'
             ],
             'headMeta' => [
-                'default_method' => 'appendName'
+                'default_method' => 'appendName',
+                'proxy' => 'ConLayout\View\Helper\Proxy\HeadMetaProxy'
             ],
             'bodyClass' => [
-                'default_method' => 'addClass'
+                'default_method' => 'addClass',
+                'default_param_name' => 'class'
             ]
         ],
         /**
