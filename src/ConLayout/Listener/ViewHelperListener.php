@@ -107,7 +107,10 @@ class ViewHelperListener implements ListenerAggregateInterface
                 $proxyHelper = $mainServiceLocator->get($config['proxy']);
             }
             $viewHelper = $this->viewHelperManager->get($helper);
-            $viewHelperInstructions[$helper] = (array) $viewHelperInstructions[$helper];
+            $viewHelperInstructions[$helper] = $this->sort(
+                (array) $viewHelperInstructions[$helper]
+            );
+
             foreach ($viewHelperInstructions[$helper] as $value) {
                 if (!$value) {
                     continue;
@@ -131,6 +134,29 @@ class ViewHelperListener implements ListenerAggregateInterface
             }
         }
         return $this;
+    }
+
+    protected function sort(array $array)
+    {
+        $tmp = [];
+        foreach (array_keys($array) as $i) {
+            $tmp[] = $this->getNodeLevel($array, $i);
+        }
+        array_multisort($tmp, SORT_ASC, $array);
+        return $array;
+    }
+
+    private function getNodeLevel($array, $key, $references = [])
+    {
+        if (!isset($array[$key]['depends'])) {
+            return 0;
+        }
+        if (in_array($key, $references)) {
+            return -1;
+        }
+        $references[] = $key;
+        $level = $this->getNodeLevel($array, $array[$key]['depends'], $references);
+        return ($level == -1 ? -1 : $level + 1);
     }
 
     /**
