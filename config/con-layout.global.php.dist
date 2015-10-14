@@ -98,6 +98,10 @@ return [
             'headLink' => [
                 'default_method' => 'appendStylesheet',
                 'default_param_name' => 'href',
+                'asset_preparers' => [
+                    'basePath' => true,
+                    'cacheBuster' => true
+                ],
                 'prepare_params' => [
                     'href' => true
                 ],
@@ -106,6 +110,10 @@ return [
             'headScript' => [
                 'default_method' => 'appendFile',
                 'default_param_name' => 'src',
+                'asset_preparers' => [
+                    'basePath' => true,
+                    'cacheBuster' => true
+                ],
                 'prepare_params' => [
                     'src' => true
                 ],
@@ -114,6 +122,10 @@ return [
             'inlineScript' => [
                 'default_method' => 'appendFile',
                 'default_param_name' => 'src',
+                'asset_preparers' => [
+                    'basePath' => true,
+                    'cacheBuster' => true
+                ],
                 'prepare_params' => [
                     'src' => true
                 ],
@@ -134,31 +146,11 @@ return [
             ]
         ],
         /**
-         * values of view_helpers instructions are prepared before they are
-         * passed to the helper.
-         *
-         * You can create your own preparer by implementing
-         * ConLayout\AssetPreparer\AssetPreparerInterface or disable with
-         * value false:
-         *
-         * 'headLink' => [
-         *      'basePath' => false,
-         *      'myPreparer' => 'Acme\AssetPreparer\MyPreparer'
-         *  ]
+         * available preparers as short names
          */
         'asset_preparers' => [
-            'headLink' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
-            ],
-            'headScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
-            ],
-            'inlineScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
-            ]
+            'basePath' => 'ConLayout\AssetPreparer\BasePath',
+            'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster'
         ],
         /**
          * enable/disable particular listeners

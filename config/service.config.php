@@ -36,11 +36,6 @@ return [
         'ConLayout\Listener\PrepareActionViewModelListener'
             => 'ConLayout\Listener\PrepareActionViewModelListener'
     ],
-    'delegators' => [
-        'ConLayout\Listener\ViewHelperListener' => [
-            'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
-        ]
-    ],
     'abstract_factories' => [
         'ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory'
     ]

@@ -45,9 +45,8 @@ class ViewHelperListener implements ListenerAggregateInterface
 
     /**
      * asset preparers for view helpers in format:
-     * 'helperName' => [
-     *     AssetPreparerInterface,
-     *     AssetPreparerInterface
+     * [
+     *     'name' => AssetPreparerInterface
      * ]
      *
      * @var AssetPreparerInterface[]
@@ -59,15 +58,18 @@ class ViewHelperListener implements ListenerAggregateInterface
      * @param LayoutUpdaterInterface $updater
      * @param HelperPluginManager $viewHelperManager
      * @param array $helperConfig
+     * @param array $assetPreparers
      */
     public function __construct(
         LayoutUpdaterInterface $updater,
         HelperPluginManager $viewHelperManager,
-        array $helperConfig
+        array $helperConfig,
+        array $assetPreparers = []
     ) {
         $this->updater           = $updater;
         $this->viewHelperManager = $viewHelperManager;
         $this->helperConfig      = $helperConfig;
+        $this->assetPreparers    = $assetPreparers;
     }
 
     /**
@@ -123,7 +125,7 @@ class ViewHelperListener implements ListenerAggregateInterface
                     $method = isset($value['method']) ? $value['method'] : $defaultMethod;
                     $args   = isset($value['args']) ? $value['args'] : $value;
                 }
-                $args = $this->prepareArgs($helper, $args, $value, $config);
+                $args = $this->prepareArgs((array) $args, $value, $config);
                 if (method_exists($viewHelper, $method)) {
                     $this->invokeArgs($viewHelper, $method, $args);
                 } elseif (false !== $proxyHelper && method_exists($proxyHelper, $method)) {
@@ -167,10 +169,17 @@ class ViewHelperListener implements ListenerAggregateInterface
      * @param array $config
      * @return array
      */
-    private function prepareArgs($helper, array $args, $value, array $config)
+    private function prepareArgs(array $args, $value, array $config)
     {
-        if (!isset($this->assetPreparers[$helper])) {
+        if (!isset($config['prepare_params'])) {
             return $args;
+        }
+        $prepare = [];
+        if (isset($config['asset_preparers'])) {
+            $prepare = array_merge($prepare, (array) $config['asset_preparers']);
+        }
+        if (isset($value['prepare'])) {
+            $prepare = array_merge($prepare, (array) $value['prepare']);
         }
         foreach ($config['prepare_params'] as $param => $isEnabled) {
             if (!$isEnabled || !isset($args[$param])) {
@@ -178,8 +187,8 @@ class ViewHelperListener implements ListenerAggregateInterface
             }
             $originalValue = $args[$param];
             /* @var $assetPreparer AssetPreparerInterface */
-            foreach ($this->assetPreparers[$helper] as $name => $assetPreparer) {
-                if (isset($value['prepare'][$name]) && !$value['prepare'][$name]) {
+            foreach ($prepare as $name => $isEnabled) {
+                if (!$isEnabled || !($assetPreparer = $this->getAssetPreparer($name))) {
                     continue;
                 }
                 if ($assetPreparer instanceof OriginalValueAwareInterface) {
@@ -194,17 +203,13 @@ class ViewHelperListener implements ListenerAggregateInterface
 
     /**
      *
-     * @param string $helper
-     * @param AssetPreparerInterface $assetPreparer
+     * @param string $name
+     * @return AssetPreparerInterface
      */
-    public function addAssetPreparer(
-        $helper,
-        AssetPreparerInterface $assetPreparer,
-        $name = null
-    ) {
-        if (!isset($this->assetPreparers[$helper])) {
-            $this->assetPreparers[$helper] = [];
-        }
-        $this->assetPreparers[$helper][$name] = $assetPreparer;
+    protected function getAssetPreparer($name)
+    {
+        return isset($this->assetPreparers[$name])
+            ? $this->assetPreparers[$name]
+            : false;
     }
 }

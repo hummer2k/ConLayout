@@ -23,10 +23,15 @@ class ViewHelperListenerFactory implements FactoryInterface
         /* @var $options ModuleOptions */
         $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
         $viewHelperConfig = $options->getViewHelpers();
+        $assetPreparers = [];
+        foreach ($options->getAssetPreparers() as $alias => $fqcn) {
+            $assetPreparers[$alias] = $serviceLocator->get($fqcn);
+        }
         $viewHelperListener = new ViewHelperListener(
             $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface'),
             $serviceLocator->get('ViewHelperManager'),
-            $viewHelperConfig
+            $viewHelperConfig,
+            $assetPreparers
         );
         return $viewHelperListener;
     }

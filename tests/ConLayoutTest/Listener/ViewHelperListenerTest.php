@@ -9,6 +9,7 @@ use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Bootstrap;
 use Zend\Config\Config;
 use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\Doctype;
 use Zend\View\Helper\HeadLink;
 use Zend\View\Helper\HeadMeta;
@@ -81,26 +82,28 @@ class ViewHelperListenerTest extends AbstractTest
         $config = Bootstrap::getServiceManager()->get('Config');
 
         $helperPluginManager = new HelperPluginManager();
+        $helperPluginManager->setServiceLocator(new ServiceManager);
+
+        $basePath = $helperPluginManager->get('basePath');
+        $basePath->setBasePath('/assets');
+
+        $basePathAssetPreparer = new BasePath($basePath);
+        $cacheBusterAssetPreparer = new CacheBuster(__DIR__ . '/_files');
 
         $listener = new ViewHelperListener(
             $this->layoutUpdater,
             $helperPluginManager,
-            $config['con-layout']['view_helpers']
+            $config['con-layout']['view_helpers'],
+            [
+                'cacheBuster' => $cacheBusterAssetPreparer,
+                'basePath' => $basePathAssetPreparer
+            ]
         );
 
         $mvcEvent = new MvcEvent();
 
         $renderer = new PhpRenderer();
         $renderer->setHelperPluginManager($helperPluginManager);
-
-        $basePath = $helperPluginManager->get('basePath');
-        $basePath->setBasePath('/assets');
-
-        $basePathAssetPreparer = new BasePath($basePath);
-        $listener->addAssetPreparer('headLink', $basePathAssetPreparer);
-
-        $cacheBusterAssetPreparer = new CacheBuster(__DIR__ . '/_files');
-        $listener->addAssetPreparer('headLink', $cacheBusterAssetPreparer);
 
         /* @var $headLink HeadLink */
         $headLink = $helperPluginManager->get('headLink');
