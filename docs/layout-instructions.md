@@ -127,107 +127,50 @@ return [
 
 Call view helpers. Add CSS or JavaScript assets, set page title etc.
 
-Syntax:
-
 ````php
 <?php
-// if 'value' is a string, it will be the first parameter
-// of the default method of the helper
-// @see con-layout.global.php.dist for default methods
-$headTitle = [
-    // where 'key' is a unique identifier of the 'asset'
-    // and 'value' either an array of the helper arguments or a string 
-    // (first argument)
-    'key' => 'value'
-];
-// result:
-$headTitle->append('value');
+// - support for named arguments.
+// - __call() methods are implemented by a proxy (ConLayout\View\Helper\Proxy)
+// Examples:
 
-
-// value = array, call default method
-$headScript = [
-    'html5shiv' => [
-        '//html5shiv.googlecode.com/svn/trunk/html5.js',
-        'text/javascript',
-        ['conditional' => 'lt IE 9']
-    ]
-];
-// result:
-$headScript->appendFile(
-    '//html5shiv.googlecode.com/svn/trunk/html5.js',
-    'text/javascript',
-    ['conditional' => 'lt IE 9']
-);
-
-
-
-// value = array, call specific method
-$headScript = [
-    'html5shiv' => [
-        'method' => 'prependFile',
-        'args' => [
-            '//html5shiv.googlecode.com/svn/trunk/html5.js',
-            'text/javascript',
-            ['conditional' => 'lt IE 9']
+return [
+    'view_helpers' => [
+        'headScript' => [
+            'jquery' => '/js/jquery.js'
         ]
     ]
 ];
-// result:
-$headScript->prependFile(
-    '//html5shiv.googlecode.com/svn/trunk/html5.js',
-    'text/javascript',
-    ['conditional' => 'lt IE 9']
-);
+// result: $headScript->appendFile('/js/jquery.js');
+
+return [
+    'view_helpers' => [
+        'headScript' => [
+            'main' => [
+                'src' => '/js/main.js', // src = argument name of method signature
+                'depends' => 'jquery'   // append after jquery
+                'attrs' => [            // attrs = argument name of method signature
+                    'conditional' => 'lt IE 9'
+                ]
+            ]
+        ]
+    ]
+];
 
 ````
 
-````php
-<?php
-return [
-    'view_helpers' => [
-        /**
-         * set/append/prepend head title
-         * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.head-title.html
-         */
-        'headTitle' => [
-            'separator' => [
-                'method' => 'setSeparator'
-                'args' => [' - '],
-            ],
-            'default' => 'Default Title'
-        ],
-        /**
-         * add css
-         * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.head-link.html
-         */
-        'headLink' => [
-            'twbs' => '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css',
-            'main-css' => '/css/main.css',
-            // prepend
-            'some-lib' => [
-                'method' => 'prependStylesheet',
-                'args' => ['/css/lib/some-lib.css']
-            ]
-        ],
-        /**
-         * add js
-         * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.head-script.html
-         */
-        'headScript' => [
-            'twbs' => '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js',
-            'jquery' => [
-                'method' => 'prependFile',
-                'args' => ['https://code.jquery.com/jquery-2.1.4.min.js']
-            ]
-        ]
-        /**
-         * @see headScript
-         * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.inline-script.html
-         */
-        'inlineScript' => [
-        ]
-    ]
-];
+or via XML:
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <view_helpers>
+        <headScript>
+            <main src="/js/main.js" depends="jquery" /> <!-- will be placed after jquery -->
+            <jquery src="/js/jquery.js" />
+        </headScript>
+    </view_helpers>
+</layout>
+
 ````
 
 ## 5. `include`

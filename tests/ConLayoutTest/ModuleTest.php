@@ -5,6 +5,7 @@ namespace ConLayoutTest;
 use ConLayout\Module;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\EventManager\EventManager;
+use Zend\Filter\FilterPluginManager;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Application;
@@ -51,6 +52,7 @@ class ModuleTest extends AbstractTest
         $application = $this->createApplication();
 
         $sm = $application->getServiceManager();
+        $sm->setService('FilterManager', new FilterPluginManager);
 
         foreach ($module->getServiceConfig()['invokables'] as $key => $value) {
             $sm->setInvokableClass($key, $value);

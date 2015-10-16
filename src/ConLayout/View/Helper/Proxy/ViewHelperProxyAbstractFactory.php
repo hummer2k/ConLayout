@@ -29,7 +29,8 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         /* @var $moduleOptions ModuleOptions */
-        $moduleOptions = $serviceLocator->get('ConLayout\Options\ModuleOptions');
+        $moduleOptions = $serviceLocator->getServiceLocator()
+            ->get('ConLayout\Options\ModuleOptions');
 
         foreach ($moduleOptions->getViewHelpers() as $helperAlias => $helperConfig) {
             if (isset($helperConfig['proxy']) &&
@@ -43,11 +44,10 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
         return false;
     }
 
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function createServiceWithName(ServiceLocatorInterface $viewHelperManager, $name, $requestedName)
     {
-        $proxyClass = $this->proxyClass;
-        return new $proxyClass(
-            $serviceLocator->get('ViewHelperManager')->get($this->helperAlias)
-        );
+        $helper = $viewHelperManager->get($this->helperAlias);
+        $proxy  =  new $this->proxyClass($helper);
+        return $proxy;
     }
 }

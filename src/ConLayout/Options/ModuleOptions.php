@@ -25,12 +25,6 @@ class ModuleOptions extends AbstractOptions
 
     /**
      *
-     * @var array
-     */
-    protected $assetPreparers = [];
-
-    /**
-     *
      * @var string
      */
     protected $cacheBusterInternalBaseDir = './public';
@@ -166,15 +160,6 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
-     *
-     * @return array
-     */
-    public function getAssetPreparers()
-    {
-        return $this->assetPreparers;
-    }
-
-    /**
      * just here for bc
      *
      * @codeCoverageIgnore
@@ -195,17 +180,6 @@ class ModuleOptions extends AbstractOptions
     public function setViewHelpers(array $viewHelpers)
     {
         $this->viewHelpers = $viewHelpers;
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $assetPreparers
-     * @return ModuleOptions
-     */
-    public function setAssetPreparers(array $assetPreparers)
-    {
-        $this->assetPreparers = $assetPreparers;
         return $this;
     }
 
