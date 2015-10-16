@@ -15,7 +15,6 @@ use Zend\Filter\FilterPluginManager;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\HelperPluginManager;
 
-
 /**
  * Listener to apply view helpers from layout structure
  *

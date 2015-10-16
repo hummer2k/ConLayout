@@ -39,7 +39,7 @@ trait NamedParametersTrait
             /* @var $param ReflectionParameter */
             if (isset($args[$param->getName()])) {
                 $pass[] = $args[$param->getName()];
-            } elseif($param->isDefaultValueAvailable()) {
+            } elseif ($param->isDefaultValueAvailable()) {
                 $pass[] = $param->getDefaultValue();
             } else {
                 $pass[] = current($args);
