@@ -5,10 +5,12 @@ namespace ConLayoutTest\Block\Factory;
 use ConLayout\Block\AbstractBlock;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
+use ConLayout\BlockManager;
 use ConLayout\Layout\LayoutInterface;
 use ConLayoutTest\AbstractTest;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Stdlib\RequestInterface;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -18,7 +20,7 @@ use Zend\View\Renderer\PhpRenderer;
  */
 class BlockFactoryTest extends AbstractTest
 {
-        /**
+    /**
      *
      * @var BlockFactoryInterface
      */
@@ -163,7 +165,7 @@ class BlockFactoryTest extends AbstractTest
         $factory->setServiceLocator(new ServiceManager());
 
         $specs = [
-            'class' => __NAMESPACE__ . '\MyBlock'
+            'class' => MyBlock::class
         ];
 
         $block = $factory->createBlock('test-block', $specs);
@@ -196,8 +198,8 @@ class BlockFactoryTest extends AbstractTest
 
     public function testBlockFromBlockManager()
     {
-        $blockManager = new \ConLayout\BlockManager();
-        $class = 'ConLayoutTest\Block\Factory\MyBlock';
+        $blockManager = new BlockManager();
+        $class = MyBlock::class;
         $blockManager->setInvokableClass(
             'MyBlock',
             $class
@@ -212,7 +214,7 @@ class BlockFactoryTest extends AbstractTest
     public function testCreateBlockWithTemplate()
     {
         $block = $this->factory->createBlock('block.id', [
-            'class' => 'ConLayoutTest\Block\Factory\TplBlock'
+            'class' => TplBlock::class
         ]);
         $this->assertEquals('already/set/template', $block->getTemplate());
     }
@@ -224,10 +226,10 @@ class BlockFactoryTest extends AbstractTest
         $this->sm->setService('Request', $request);
         $this->sm->setService('ViewRenderer', $renderer);
         $block = $this->factory->createBlock('test.block.impl', [
-            'class' => 'ConLayoutTest\Block\Factory\BlockImpl'
+            'class' => BlockImpl::class
         ]);
         $this->assertInstanceof(
-            'Zend\Stdlib\RequestInterface',
+            RequestInterface::class,
             $block->getRequest()
         );
         $this->assertSame($request, $block->getRequest());

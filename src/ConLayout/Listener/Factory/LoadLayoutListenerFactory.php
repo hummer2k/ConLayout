@@ -2,6 +2,7 @@
 
 namespace ConLayout\Listener\Factory;
 
+use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\LoadLayoutListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -20,7 +21,7 @@ class LoadLayoutListenerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $injectBlocksListener = new LoadLayoutListener(
-            $serviceLocator->get('ConLayout\Layout\LayoutInterface')
+            $serviceLocator->get(LayoutInterface::class)
         );
         return $injectBlocksListener;
     }

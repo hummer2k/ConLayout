@@ -1,6 +1,9 @@
 <?php
 namespace ConLayout\Controller\Plugin;
 
+use ConLayout\Layout\LayoutInterface;
+use ConLayout\Updater\LayoutUpdaterInterface;
+use ConLayout\View\Renderer\BlockRenderer;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,9 +22,9 @@ class LayoutManagerFactory implements FactoryInterface
     {
         $sl = $serviceLocator->getServiceLocator();
         return new LayoutManager(
-            $sl->get('ConLayout\Layout\LayoutInterface'),
-            $sl->get('ConLayout\Updater\LayoutUpdaterInterface'),
-            $sl->get('ConLayout\View\Renderer\BlockRenderer')
+            $sl->get(LayoutInterface::class),
+            $sl->get(LayoutUpdaterInterface::class),
+            $sl->get(BlockRenderer::class)
         );
     }
 }

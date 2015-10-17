@@ -9,10 +9,12 @@ use ConLayout\Handle\Handle;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdater;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Renderer\BlockRenderer;
 use ConLayoutTest\AbstractTest;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
+use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -61,15 +63,15 @@ class LayoutManagerTest extends AbstractTest
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'ConLayout\Layout\LayoutInterface',
+            LayoutInterface::class,
             $this->layout
         );
         $serviceManager->setService(
-            'ConLayout\Updater\LayoutUpdaterInterface',
+            LayoutUpdaterInterface::class,
             $this->updater
         );
         $serviceManager->setService(
-            'ConLayout\View\Renderer\BlockRenderer',
+            BlockRenderer::class,
             $this->renderer
         );
 
@@ -80,7 +82,7 @@ class LayoutManagerTest extends AbstractTest
         $instance = $factory->createService($controllerPluginManager);
 
         $this->assertInstanceOf(
-            'ConLayout\Controller\Plugin\LayoutManager',
+            LayoutManager::class,
             $instance
         );
     }
@@ -94,7 +96,7 @@ class LayoutManagerTest extends AbstractTest
     public function testGetBlock()
     {
         $block = $this->layoutManager->getBlock('test-block');
-        $this->assertInstanceOf('Zend\View\Model\ModelInterface', $block);
+        $this->assertInstanceOf(ModelInterface::class, $block);
 
         $this->assertFalse($this->layoutManager->getBlock('___NOT_EXISTS___'));
     }
@@ -136,7 +138,7 @@ class LayoutManagerTest extends AbstractTest
     public function testRemoveBlock()
     {
         $testBlock = $this->layoutManager->getBlock('test-block');
-        $this->assertInstanceOf('Zend\View\Model\ModelInterface', $testBlock);
+        $this->assertInstanceOf(ModelInterface::class, $testBlock);
         $this->layoutManager->removeBlock('test-block');
         $this->assertFalse($this->layoutManager->getBlock('test-block'));
     }

@@ -3,11 +3,13 @@
 namespace ConLayoutTest\Layout;
 
 use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutFactory;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdater;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Layout\Layout as TestLayout;
 use Zend\Config\Config;
@@ -31,7 +33,7 @@ class LayoutTest extends AbstractTest
         parent::setUp();
         $this->layoutStructure = include __DIR__ . '/_files/layout-structure.php';
         $this->updaterMock = $this->getMockBuilder(
-            'ConLayout\Updater\LayoutUpdaterInterface'
+            LayoutUpdaterInterface::class
         )->getMock();
         $this->updaterMock->method('getLayoutStructure')
             ->willReturn(new Config($this->layoutStructure));
@@ -45,17 +47,17 @@ class LayoutTest extends AbstractTest
         $serviceManager = new ServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
-            'ConLayout\Block\Factory\BlockFactoryInterface',
+            BlockFactoryInterface::class,
             new BlockFactory()
         );
 
         $serviceManager->setService(
-            'ConLayout\Updater\LayoutUpdaterInterface',
+            LayoutUpdaterInterface::class,
             new LayoutUpdater()
         );
 
         $serviceManager->setService(
-            'ConLayout\Options\ModuleOptions',
+            ModuleOptions::class,
             new ModuleOptions()
         );
 
@@ -63,7 +65,7 @@ class LayoutTest extends AbstractTest
         $instance = $factory->createService($serviceManager);
 
 
-        $this->assertInstanceOf('ConLayout\Layout\LayoutInterface', $instance);
+        $this->assertInstanceOf(LayoutInterface::class, $instance);
     }
 
     public function testAddAndGetBlock()
@@ -215,7 +217,7 @@ class LayoutTest extends AbstractTest
 
     public function testSortBlocks()
     {
-        $updaterMock = $this->getMockBuilder('ConLayout\Updater\LayoutUpdaterInterface')
+        $updaterMock = $this->getMockBuilder(LayoutUpdaterInterface::class)
             ->getMock();
         $updaterMock
             ->method('getLayoutStructure')
@@ -302,7 +304,7 @@ class LayoutTest extends AbstractTest
         );
 
         $layout->getEventManager()->getSharedManager()
-            ->attach('ConLayout\Layout\Layout', 'isAllowed', function ($e) {
+            ->attach(Layout::class, 'isAllowed', function ($e) {
                 $blockId = $e->getParam('block_id');
                 if ($blockId === 'widget.1') {
                     return false;

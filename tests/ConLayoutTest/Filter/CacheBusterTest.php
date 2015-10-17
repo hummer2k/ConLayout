@@ -6,6 +6,8 @@ use ConLayout\Filter\CacheBusterFilter;
 use ConLayout\Filter\CacheBusterFilterFactory;
 use ConLayout\Options\ModuleOptions;
 use ConLayoutTest\AbstractTest;
+use Zend\Filter\FilterInterface;
+use Zend\Filter\FilterPluginManager;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -23,19 +25,19 @@ class CacheBusterTest extends AbstractTest
         $options = new ModuleOptions();
         $options->setCacheBusterInternalBaseDir(__DIR__ . '/_files');
 
-        $serviceManager->setService('ConLayout\Options\ModuleOptions', $options);
+        $serviceManager->setService(ModuleOptions::class, $options);
 
-        $filterManager = new \Zend\Filter\FilterPluginManager();
+        $filterManager = new FilterPluginManager();
         $filterManager->setServiceLocator($serviceManager);
 
         $instance = $factory->createService($filterManager);
 
         $this->assertInstanceOf(
-            'ConLayout\Filter\CacheBusterFilter',
+            CacheBusterFilter::class,
             $instance
         );
         $this->assertInstanceOf(
-            'Zend\Filter\FilterInterface',
+            FilterInterface::class,
             $instance
         );
     }

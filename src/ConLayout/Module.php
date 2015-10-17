@@ -1,10 +1,12 @@
 <?php
 namespace ConLayout;
 
+use ConLayout\ModuleManager\Feature\BlockProviderInterface;
 use ConLayout\Options\ModuleOptions;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventInterface as Event;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -81,7 +83,7 @@ class Module implements
         $serviceListener->addServiceManager(
             'BlockManager',
             'blocks',
-            'ConLayout\ModuleManager\Feature\BlockProviderInterface',
+            BlockProviderInterface::class,
             'getBlockConfig'
         );
     }
@@ -102,7 +104,7 @@ class Module implements
         }
 
         /* @var $options ModuleOptions */
-        $options = $serviceManager->get('ConLayout\Options\ModuleOptions');
+        $options = $serviceManager->get(ModuleOptions::class);
         $listeners = $options->getListeners();
 
         foreach ($listeners as $listener => $isEnabled) {
@@ -119,7 +121,7 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return [
-            'Zend\Loader\StandardAutoloader' => [
+            StandardAutoloader::class => [
                 'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__
                 ]

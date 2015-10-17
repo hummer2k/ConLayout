@@ -3,6 +3,7 @@
 namespace ConLayoutTest\Zdt\Collector;
 
 use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdater;
@@ -44,11 +45,11 @@ class LayoutCollectorTest extends AbstractTest
         $layoutCollectorFactory = new LayoutCollectorFactory();
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'ConLayout\Updater\LayoutUpdaterInterface',
+            LayoutUpdaterInterface::class,
             new LayoutUpdater()
         );
         $serviceManager->setService(
-            'ConLayout\Layout\LayoutInterface',
+            LayoutInterface::class,
             new Layout(
                 new BlockFactory(),
                 new LayoutUpdater()
@@ -61,7 +62,7 @@ class LayoutCollectorTest extends AbstractTest
 
         $instance = $layoutCollectorFactory->createService($serviceManager);
         $this->assertInstanceOf(
-            'ConLayout\Zdt\Collector\LayoutCollector',
+            LayoutCollector::class,
             $instance
         );
     }
@@ -111,7 +112,7 @@ class LayoutCollectorTest extends AbstractTest
         );
 
         $this->assertContainsOnlyInstancesOf(
-            'ConLayout\Handle\HandleInterface',
+            HandleInterface::class,
             $this->collector->getHandles()
         );
 
@@ -140,7 +141,7 @@ class LayoutCollectorTest extends AbstractTest
         );
 
         $this->assertEquals(
-            'Zend\View\Model\ViewModel',
+            ViewModel::class,
             $testBlockArray['class']
         );
 

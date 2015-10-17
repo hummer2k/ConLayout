@@ -4,6 +4,7 @@ namespace ConLayout\Listener;
 
 use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Filter\RawValueAwareInterface;
+use ConLayout\Layout\Layout;
 use ConLayout\NamedParametersTrait;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
@@ -76,7 +77,7 @@ class ViewHelperListener implements ListenerAggregateInterface
     {
         $this->listeners[] = $events->getSharedManager()
             ->attach(
-                'ConLayout\Layout\Layout',
+                Layout::class,
                 'load.pre',
                 [$this, 'applyViewHelpers']
             );

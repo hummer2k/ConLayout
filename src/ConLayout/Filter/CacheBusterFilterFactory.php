@@ -16,7 +16,7 @@ class CacheBusterFilterFactory implements FactoryInterface
     {
         $serviceManager = $serviceLocator->getServiceLocator();
         /* @var $options ModuleOptions */
-        $options = $serviceManager->get('ConLayout\Options\ModuleOptions');
+        $options = $serviceManager->get(ModuleOptions::class);
         $internalBaseDir = $options->getCacheBusterInternalBaseDir();
         $cacheBuster = new CacheBusterFilter($internalBaseDir);
         return $cacheBuster;

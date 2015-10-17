@@ -3,6 +3,7 @@ namespace ConLayout\View\Renderer;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Resolver\AggregateResolver;
 
 /**
  * @package ConLayout
@@ -22,7 +23,7 @@ class BlockRendererFactory implements FactoryInterface
             $serviceLocator->get('ViewHelperManager')
         );
         $blockRenderer->setResolver(
-            $serviceLocator->get('Zend\View\Resolver\AggregateResolver')
+            $serviceLocator->get(AggregateResolver::class)
         );
         return $blockRenderer;
     }

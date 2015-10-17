@@ -1,18 +1,25 @@
 <?php
+
+use ConLayout\View\Helper\Block;
+use ConLayout\View\Helper\BlockFactory;
+use ConLayout\View\Helper\BodyClass;
+use ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory;
+use ConLayout\View\Helper\Wrapper;
+
 return [
     'invokables' => [
-        'ConLayout\View\Helper\Wrapper' => 'ConLayout\View\Helper\Wrapper',
-        'ConLayout\View\Helper\BodyClass' => 'ConLayout\View\Helper\BodyClass',
+        Wrapper::class   => Wrapper::class,
+        BodyClass::class => BodyClass::class
     ],
     'factories' => [
-        'ConLayout\View\Helper\Block' => 'ConLayout\View\Helper\BlockFactory'
+        Block::class => BlockFactory::class
     ],
     'aliases' => [
-        'bodyClass' => 'ConLayout\View\Helper\BodyClass',
-        'block' => 'ConLayout\View\Helper\Block',
-        'wrapper' => 'ConLayout\View\Helper\Wrapper'
+        'bodyClass' => BodyClass::class,
+        'block'     => Block::class,
+        'wrapper'   => Wrapper::class
     ],
     'abstract_factories' => [
-        'ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory'
+        ViewHelperProxyAbstractFactory::class
     ]
 ];
