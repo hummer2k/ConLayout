@@ -13,6 +13,7 @@ use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\Filter\FilterInterface;
 use Zend\Filter\FilterPluginManager;
+use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\HelperPluginManager;
 
@@ -31,13 +32,13 @@ class ViewHelperListener implements ListenerAggregateInterface
      *
      * @var LayoutUpdaterInterface
      */
-    protected $updater;
+    private $updater;
 
     /**
      *
      * @var HelperPluginManager
      */
-    protected $viewHelperManager;
+    private $viewHelperManager;
 
     /**
      *
@@ -49,7 +50,13 @@ class ViewHelperListener implements ListenerAggregateInterface
      *
      * @var array
      */
-    protected $helperConfig = [];
+    private $helperConfig = [];
+
+    /**
+     *
+     * @var boolean
+     */
+    private $isLoaded = false;
 
     /**
      *
@@ -75,21 +82,26 @@ class ViewHelperListener implements ListenerAggregateInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->getSharedManager()
-            ->attach(
-                Layout::class,
-                'load.pre',
-                [$this, 'applyViewHelpers']
-            );
+        $this->listeners[] = $events->attach(
+            MvcEvent::EVENT_DISPATCH,
+            [$this, 'applyViewHelpers'],
+            100
+        );
+        $this->listeners[] = $events->getSharedManager()->attach(
+            Layout::class,
+            'load.pre',
+            [$this, 'applyViewHelpers']
+        );
     }
 
     /**
-     * applies view helpers
-     *
-     * @return LayoutModifierListener
+     * applies view helper instructions
      */
-    public function applyViewHelpers()
+    public function applyViewHelpers($e)
     {
+        if ($this->isLoaded) {
+            return;
+        }
         $viewHelperInstructions = $this->updater->getLayoutStructure()->get(
             LayoutUpdaterInterface::INSTRUCTION_VIEW_HELPERS
         );
@@ -137,7 +149,7 @@ class ViewHelperListener implements ListenerAggregateInterface
                 }
             }
         }
-        return $this;
+        $this->isLoaded = true;
     }
 
     /**

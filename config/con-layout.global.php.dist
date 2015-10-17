@@ -144,7 +144,7 @@ return [
                 'proxy' => HeadTitleProxy::class
             ],
             'headMeta' => [
-                'method' => 'appendName',
+                'method' => 'setName',
                 'default_param' => 'name',
                 'proxy' => HeadMetaProxy::class
             ],

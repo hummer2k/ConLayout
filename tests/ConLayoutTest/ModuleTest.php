@@ -74,7 +74,7 @@ class ModuleTest extends AbstractTest
 
         $module->onBootstrap($event);
 
-        $this->assertCount(2, $em->getListeners(MvcEvent::EVENT_DISPATCH));
+        $this->assertCount(3, $em->getListeners(MvcEvent::EVENT_DISPATCH));
 
         $layoutUpdater = $sm->get(LayoutUpdaterInterface::class);
 
