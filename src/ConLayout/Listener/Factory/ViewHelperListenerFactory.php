@@ -26,6 +26,7 @@ class ViewHelperListenerFactory implements FactoryInterface
         $viewHelperListener = new ViewHelperListener(
             $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface'),
             $serviceLocator->get('ViewHelperManager'),
+            $serviceLocator->get('FilterManager'),
             $viewHelperConfig
         );
         return $viewHelperListener;

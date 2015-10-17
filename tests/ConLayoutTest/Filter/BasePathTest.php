@@ -1,9 +1,9 @@
 <?php
 
-namespace ConLayoutTest\AssetPreparer;
+namespace ConLayoutTest\Filter;
 
-use ConLayout\AssetPreparer\BasePath as BasePathPreparer;
-use ConLayout\AssetPreparer\BasePathFactory;
+use ConLayout\Filter\BasePathFilter as BasePathFilter;
+use ConLayout\Filter\BasePathFilterFactory;
 use ConLayoutTest\AbstractTest;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\BasePath;
@@ -15,36 +15,39 @@ use Zend\View\HelperPluginManager;
  */
 class BasePathTest extends AbstractTest
 {
-    protected $basePathPreparer;
+    private $basePathFilter;
 
     public function setUp()
     {
         $basePathHelper = new BasePath();
         $basePathHelper->setBasePath('/my/base/');
 
-        $this->basePathPreparer = new BasePathPreparer(
+        $this->basePathFilter = new BasePathFilter(
             $basePathHelper
         );
     }
 
     public function testFactory()
     {
-        $factory = new BasePathFactory();
+        $factory = new BasePathFilterFactory();
         $viewHelperManager = new HelperPluginManager();
         $viewHelperManager->setService('basePath', new BasePath());
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('viewHelperManager', $viewHelperManager);
 
-        $instance = $factory->createService($serviceManager);
+        $filterManager = new \Zend\Filter\FilterPluginManager();
+        $filterManager->setServiceLocator($serviceManager);
+
+        $instance = $factory->createService($filterManager);
 
         $this->assertInstanceOf(
-            'ConLayout\AssetPreparer\BasePath',
+            'ConLayout\Filter\BasePathFilter',
             $instance
         );
 
         $this->assertInstanceOf(
-            'ConLayout\AssetPreparer\AssetPreparerInterface',
+            'Zend\Filter\FilterInterface',
             $instance
         );
     }
@@ -52,7 +55,7 @@ class BasePathTest extends AbstractTest
     public function testBasePathLocal()
     {
         $value  = '/css/styles.css';
-        $result = $this->basePathPreparer->prepare($value, $value);
+        $result = $this->basePathFilter->filter($value, $value);
 
         $this->assertEquals('/my/base/css/styles.css', $result);
     }
@@ -60,7 +63,7 @@ class BasePathTest extends AbstractTest
     public function testBasePathRemote()
     {
         $value  = '//cdn.example.com/css/styles.css';
-        $result = $this->basePathPreparer->prepare($value, $value);
+        $result = $this->basePathFilter->filter($value, $value);
 
         $this->assertEquals($value, $result);
     }
@@ -68,7 +71,7 @@ class BasePathTest extends AbstractTest
     public function testBasePathHttp()
     {
         $value  = 'http://cdn.example.com/css/styles.css';
-        $result = $this->basePathPreparer->prepare($value, $value);
+        $result = $this->basePathFilter->filter($value, $value);
 
         $this->assertEquals($value, $result);
     }
@@ -76,7 +79,7 @@ class BasePathTest extends AbstractTest
     public function testBasePathHttps()
     {
         $value  = 'https://cdn.example.com/css/styles.css';
-        $result = $this->basePathPreparer->prepare($value, $value);
+        $result = $this->basePathFilter->filter($value, $value);
 
         $this->assertEquals($value, $result);
     }

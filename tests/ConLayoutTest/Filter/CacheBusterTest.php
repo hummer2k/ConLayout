@@ -1,9 +1,9 @@
 <?php
 
-namespace ConLayoutTest\AssetPreparer;
+namespace ConLayoutTest\Filter;
 
-use ConLayout\AssetPreparer\CacheBuster;
-use ConLayout\AssetPreparer\CacheBusterFactory;
+use ConLayout\Filter\CacheBusterFilter;
+use ConLayout\Filter\CacheBusterFilterFactory;
 use ConLayout\Options\ModuleOptions;
 use ConLayoutTest\AbstractTest;
 use Zend\ServiceManager\ServiceManager;
@@ -16,7 +16,7 @@ class CacheBusterTest extends AbstractTest
 {
     public function testFactory()
     {
-        $factory = new CacheBusterFactory();
+        $factory = new CacheBusterFilterFactory();
 
         $serviceManager = new ServiceManager();
 
@@ -25,42 +25,45 @@ class CacheBusterTest extends AbstractTest
 
         $serviceManager->setService('ConLayout\Options\ModuleOptions', $options);
 
-        $instance = $factory->createService($serviceManager);
+        $filterManager = new \Zend\Filter\FilterPluginManager();
+        $filterManager->setServiceLocator($serviceManager);
+
+        $instance = $factory->createService($filterManager);
 
         $this->assertInstanceOf(
-            'ConLayout\AssetPreparer\CacheBuster',
+            'ConLayout\Filter\CacheBusterFilter',
             $instance
         );
         $this->assertInstanceOf(
-            'ConLayout\AssetPreparer\AssetPreparerInterface',
+            'Zend\Filter\FilterInterface',
             $instance
         );
     }
 
     public function testMd5File()
     {
-        $cacheBuster = new CacheBuster(
+        $cacheBuster = new CacheBusterFilter(
             __DIR__ . '/_files'
         );
 
-        $value = $cacheBuster->prepare('styles.css', 'styles.css');
+        $value = $cacheBuster->filter('styles.css', 'styles.css');
         $this->assertEquals('styles.css?v=1688c821', $value);
     }
 
     public function testFileDoesNotExist()
     {
-        $cacheBuster = new CacheBuster(
+        $cacheBuster = new CacheBusterFilter(
             'DOES_NOT_EXIST_____'
         );
-        $value = $cacheBuster->prepare('styles.css', 'styles.css');
+        $value = $cacheBuster->filter('styles.css', 'styles.css');
         $this->assertEquals('styles.css', $value);
     }
 
     public function testOriginalValue()
     {
-        $cacheBuster = new CacheBuster(__DIR__ . '/_files');
-        $cacheBuster->setOriginalValue('original.css');
-        $value = $cacheBuster->prepare('test.css');
+        $cacheBuster = new CacheBusterFilter(__DIR__ . '/_files');
+        $cacheBuster->setRawValue('original.css');
+        $value = $cacheBuster->filter('test.css');
         $this->assertEquals('test.css?v=a1aa7a96', $value);
     }
 }

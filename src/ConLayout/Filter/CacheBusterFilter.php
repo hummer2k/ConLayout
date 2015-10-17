@@ -1,14 +1,14 @@
 <?php
 
-namespace ConLayout\AssetPreparer;
+namespace ConLayout\Filter;
+
+use Zend\Filter\FilterInterface;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class CacheBuster implements
-    AssetPreparerInterface,
-    OriginalValueAwareInterface
+class CacheBusterFilter implements FilterInterface, RawValueAwareInterface
 {
     /**
      *
@@ -20,7 +20,7 @@ class CacheBuster implements
      *
      * @var string
      */
-    protected $originalValue;
+    protected $rawValue;
 
     /**
      *
@@ -36,7 +36,7 @@ class CacheBuster implements
      * @param string $value
      * @return string
      */
-    public function prepare($value)
+    public function filter($value)
     {
         $file = $this->getFilePath($value);
         if (is_file($file) && is_readable($file)) {
@@ -47,11 +47,11 @@ class CacheBuster implements
 
     /**
      *
-     * @param mixed $originalValue
+     * @param mixed $value
      */
-    public function setOriginalValue($originalValue)
+    public function setRawValue($value)
     {
-        $this->originalValue = $originalValue;
+        $this->rawValue = $value;
     }
 
     /**
@@ -61,8 +61,8 @@ class CacheBuster implements
      */
     protected function getFilePath($value)
     {
-        if (null !== $this->originalValue) {
-            $value = $this->originalValue;
+        if (null !== $this->rawValue) {
+            $value = $this->rawValue;
         }
         return $this->internalBasePath . '/' . ltrim($value, '/');
     }

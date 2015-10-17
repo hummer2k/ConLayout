@@ -73,7 +73,7 @@ return [
         /**
          * base dir to assets
          *
-         * is used by ConLayout\AssetPreparer\CacheBuster to read the file
+         * is used by ConLayout\Filter\CacheBuster to read the file
          * and appends an md5 query string so that browsers always pull the
          * latest asset from the server
          */
@@ -91,54 +91,58 @@ return [
             'actions'    => []
         ],
         /**
-         * available view helpers for view_helpers-instructions
+         * defaults for view_helpers-instructions
          */
         'view_helpers' => [
-            'doctype' => [],
+            'doctype' => [
+                'default_param' => 'doctype'
+            ],
             'headLink' => [
-                'default_method' => 'appendStylesheet',
+                'method' => 'appendStylesheet',
+                'default_param' => 'href',
+                'filter' => [
+                    'href' => [
+                        'basePath' => 5,
+                        'cacheBuster' => 10
+                    ]
+                ],
+                'proxy' => 'ConLayout\View\Helper\Proxy\HeadLinkProxy'
             ],
             'headScript' => [
-                'default_method' => 'appendFile',
+                'method' => 'appendFile',
+                'default_param' => 'src',
+                'filter' => [
+                    'src' => [
+                        'basePath' => 5,
+                        'cacheBuster' => 10
+                    ]
+                ],
+                'proxy' => 'ConLayout\View\Helper\Proxy\HeadScriptProxy'
             ],
             'inlineScript' => [
-                'default_method' => 'appendFile',
+                'method' => 'appendFile',
+                'default_param' => 'src',
+                'filter' => [
+                    'src' => [
+                        'basePath' => 5,
+                        'cacheBuster' => 10
+                    ]
+                ],
+                'proxy' => 'ConLayout\View\Helper\Proxy\InlineScriptProxy'
             ],
             'headTitle' => [
-                'default_method' => 'append'
+                'method' => 'append',
+                'default_param' => 'value',
+                'proxy' => 'ConLayout\View\Helper\Proxy\HeadTitleProxy'
             ],
             'headMeta' => [
-                'default_method' => 'appendName'
+                'method' => 'appendName',
+                'default_param' => 'name',
+                'proxy' => 'ConLayout\View\Helper\Proxy\HeadMetaProxy'
             ],
             'bodyClass' => [
-                'default_method' => 'addClass'
-            ]
-        ],
-        /**
-         * values of view_helpers instructions are prepared before they are
-         * passed to the helper.
-         *
-         * You can create your own preparer by implementing
-         * ConLayout\AssetPreparer\AssetPreparerInterface or disable with
-         * value false:
-         *
-         * 'headLink' => [
-         *      'basePath' => false,
-         *      'myPreparer' => 'Acme\AssetPreparer\MyPreparer'
-         *  ]
-         */
-        'asset_preparers' => [
-            'headLink' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
-            ],
-            'headScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
-            ],
-            'inlineScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
+                'method' => 'addClass',
+                'default_param' => 'class'
             ]
         ],
         /**

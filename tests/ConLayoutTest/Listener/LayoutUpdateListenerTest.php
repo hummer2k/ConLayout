@@ -90,8 +90,8 @@ class LayoutUpdateListenerTest extends AbstractTest
                 'another.handle.block' => []
             ],
             'include' => [
-                'included-handle',
-                'another-handle'
+                'included-handle' => true,
+                'another-handle' => true
             ]
         ], $layoutStructure);
     }

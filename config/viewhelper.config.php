@@ -11,5 +11,8 @@ return [
         'bodyClass' => 'ConLayout\View\Helper\BodyClass',
         'block' => 'ConLayout\View\Helper\Block',
         'wrapper' => 'ConLayout\View\Helper\Wrapper'
+    ],
+    'abstract_factories' => [
+        'ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory'
     ]
 ];

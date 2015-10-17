@@ -8,6 +8,7 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\FilterProviderInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
@@ -23,7 +24,8 @@ class Module implements
     ViewHelperProviderInterface,
     BootstrapListenerInterface,
     AutoloaderProviderInterface,
-    InitProviderInterface
+    InitProviderInterface,
+    FilterProviderInterface
 {
     /**
      * retrieve module config
@@ -46,6 +48,16 @@ class Module implements
     public function getViewHelperConfig()
     {
         return include __DIR__ . '/../../config/viewhelper.config.php';
+    }
+
+    /**
+     * retrieve filters
+     *
+     * @return array
+     */
+    public function getFilterConfig()
+    {
+        return include __DIR__ . '/../../config/filter.config.php';
     }
 
     /**

@@ -3,9 +3,6 @@ return [
     'factories' => [
         'ConLayout\BlockManager' => 'ConLayout\BlockManagerFactory',
 
-        'ConLayout\AssetPreparer\BasePath' => 'ConLayout\AssetPreparer\BasePathFactory',
-        'ConLayout\AssetPreparer\CacheBuster' => 'ConLayout\AssetPreparer\CacheBusterFactory',
-
         'ConLayout\Block\Factory\BlockFactoryInterface' => 'ConLayout\Block\Factory\BlockFactoryFactory',
 
         'ConLayout\Listener\ActionHandlesListener' => 'ConLayout\Listener\Factory\ActionHandlesListenerFactory',
@@ -31,14 +28,7 @@ return [
         'BlockManager' => 'ConLayout\BlockManager'
     ],
     'invokables' => [
-        'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
-            => 'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator',
         'ConLayout\Listener\PrepareActionViewModelListener'
             => 'ConLayout\Listener\PrepareActionViewModelListener'
-    ],
-    'delegators' => [
-        'ConLayout\Listener\ViewHelperListener' => [
-            'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
-        ]
     ]
 ];
