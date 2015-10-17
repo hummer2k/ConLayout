@@ -4,6 +4,7 @@ namespace ConLayout\Listener\Factory;
 
 use ConLayout\Listener\ViewHelperListener;
 use ConLayout\Options\ModuleOptions;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,10 +22,10 @@ class ViewHelperListenerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $options ModuleOptions */
-        $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
+        $options = $serviceLocator->get(ModuleOptions::class);
         $viewHelperConfig = $options->getViewHelpers();
         $viewHelperListener = new ViewHelperListener(
-            $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface'),
+            $serviceLocator->get(LayoutUpdaterInterface::class),
             $serviceLocator->get('ViewHelperManager'),
             $serviceLocator->get('FilterManager'),
             $viewHelperConfig

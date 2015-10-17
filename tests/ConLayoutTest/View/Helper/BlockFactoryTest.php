@@ -2,9 +2,12 @@
 
 namespace ConLayoutTest\View\Helper;
 
+use ConLayout\Layout\LayoutInterface;
+use ConLayout\View\Helper\Block;
 use ConLayout\View\Helper\BlockFactory;
 use ConLayoutTest\AbstractTest;
 use Zend\ServiceManager\ServiceManager;
+use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
 
 /**
@@ -16,14 +19,14 @@ class BlockFactoryTest extends AbstractTest
     public function testFactory()
     {
         $sm = new ServiceManager();
-        $sm->setService('ConLayout\Layout\LayoutInterface', $this->layout);
+        $sm->setService(LayoutInterface::class, $this->layout);
         $helperManager = new HelperPluginManager();
         $helperManager->setServiceLocator($sm);
 
         $factory = new BlockFactory();
         $helper = $factory->createService($helperManager);
 
-        $this->assertInstanceOf('ConLayout\View\Helper\Block', $helper);
-        $this->assertInstanceOf('Zend\View\Helper\AbstractHelper', $helper);
+        $this->assertInstanceOf(Block::class, $helper);
+        $this->assertInstanceOf(AbstractHelper::class, $helper);
     }
 }

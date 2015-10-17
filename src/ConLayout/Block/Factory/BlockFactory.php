@@ -11,6 +11,7 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ModelInterface;
+use Zend\View\Model\ViewModel;
 
 /**
  * @package ConLayout
@@ -33,7 +34,7 @@ class BlockFactory implements
     protected $blockDefaults = [
         'capture_to' => 'content',
         'append'     => true,
-        'class'      => 'Zend\View\Model\ViewModel',
+        'class'      => ViewModel::class,
         'options'    => [],
         'variables'  => [],
         'template'   => '',

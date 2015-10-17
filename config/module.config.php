@@ -1,4 +1,7 @@
 <?php
+
+use ConLayout\Controller\Plugin\LayoutManagerFactory;
+use ConLayout\Zdt\Collector\LayoutCollector;
 return [
     'view_manager' => [
         'template_path_stack' => [
@@ -16,13 +19,13 @@ return [
     ],
     'controller_plugins' => [
         'factories' => [
-            'layoutManager' => 'ConLayout\Controller\Plugin\LayoutManagerFactory'
+            'layoutManager' => LayoutManagerFactory::class
         ]
     ],
     'zenddevelopertools' => [
         'profiler' => [
             'collectors' => [
-                'con-layout' => 'ConLayout\Zdt\Collector\LayoutCollector',
+                'con-layout' => LayoutCollector::class,
             ],
         ],
         'toolbar' => [

@@ -6,8 +6,8 @@ use ConLayout\Block\AbstractBlock;
 use ConLayout\View\Renderer\BlockRenderer;
 use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Bootstrap;
+use Zend\View\Helper\HelperInterface;
 use Zend\View\Helper\ViewModel as ViewModelHelper;
-use Zend\View\HelperPluginManager;
 use Zend\View\Model\ViewModel;
 use Zend\View\Resolver\TemplatePathStack;
 
@@ -29,7 +29,7 @@ class BlockRendererTest extends AbstractTest
     {
         parent::setUp();
         $this->blockRenderer = Bootstrap::getServiceManager()
-            ->create('ConLayout\View\Renderer\BlockRenderer');
+            ->create(BlockRenderer::class);
 
         $this->blockRenderer = new BlockRenderer();
 
@@ -64,7 +64,7 @@ class BlockRendererTest extends AbstractTest
         $this->assertEquals('some_stuff', $renderer->getSomeStuff());
 
         $this->assertInstanceOf(
-            'Zend\View\Helper\HelperInterface',
+            HelperInterface::class,
             $renderer->headLink()
         );
     }
@@ -94,9 +94,9 @@ class BlockRendererTest extends AbstractTest
             ->get('EventManager');
         $renderer->setEventManager($em);
         $em->getSharedManager()->attach(
-            'ConLayout\View\Renderer\BlockRenderer',
+            BlockRenderer::class,
             'render.pre',
-            function ($e) {
+            function () {
                 return 'cached';
             }
         );

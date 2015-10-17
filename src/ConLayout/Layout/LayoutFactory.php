@@ -2,7 +2,8 @@
 
 namespace ConLayout\Layout;
 
-use ConLayout\Options\ModuleOptions;
+use ConLayout\Block\Factory\BlockFactoryInterface;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,11 +20,9 @@ class LayoutFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var $moduleOptions ModuleOptions */
-        $moduleOptions = $serviceLocator->get('ConLayout\Options\ModuleOptions');
         $layout = new Layout(
-            $serviceLocator->get('ConLayout\Block\Factory\BlockFactoryInterface'),
-            $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface')
+            $serviceLocator->get(BlockFactoryInterface::class),
+            $serviceLocator->get(LayoutUpdaterInterface::class)
         );
         return $layout;
     }

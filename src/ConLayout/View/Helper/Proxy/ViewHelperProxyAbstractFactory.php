@@ -30,7 +30,7 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
     {
         /* @var $moduleOptions ModuleOptions */
         $moduleOptions = $serviceLocator->getServiceLocator()
-            ->get('ConLayout\Options\ModuleOptions');
+            ->get(ModuleOptions::class);
 
         foreach ($moduleOptions->getViewHelpers() as $helperAlias => $helperConfig) {
             if (isset($helperConfig['proxy']) &&

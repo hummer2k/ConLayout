@@ -3,8 +3,11 @@
 namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\BasePathFilter as BasePathFilter;
+use ConLayout\Filter\BasePathFilter as BasePathFilter2;
 use ConLayout\Filter\BasePathFilterFactory;
 use ConLayoutTest\AbstractTest;
+use Zend\Filter\FilterInterface;
+use Zend\Filter\FilterPluginManager;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\BasePath;
 use Zend\View\HelperPluginManager;
@@ -36,18 +39,18 @@ class BasePathTest extends AbstractTest
         $serviceManager = new ServiceManager();
         $serviceManager->setService('viewHelperManager', $viewHelperManager);
 
-        $filterManager = new \Zend\Filter\FilterPluginManager();
+        $filterManager = new FilterPluginManager();
         $filterManager->setServiceLocator($serviceManager);
 
         $instance = $factory->createService($filterManager);
 
         $this->assertInstanceOf(
-            'ConLayout\Filter\BasePathFilter',
+            BasePathFilter2::class,
             $instance
         );
 
         $this->assertInstanceOf(
-            'Zend\Filter\FilterInterface',
+            FilterInterface::class,
             $instance
         );
     }

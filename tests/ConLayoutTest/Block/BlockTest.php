@@ -4,6 +4,8 @@ namespace ConLayoutTest\Block;
 
 use ConLayout\Block\AbstractBlock;
 use ConLayoutTest\AbstractTest;
+use Zend\Http\PhpEnvironment\Request;
+use Zend\Stdlib\RequestInterface;
 
 /**
  * @package ConLayout
@@ -85,7 +87,7 @@ class BlockTest extends AbstractTest
     public function testSetRequest()
     {
         $block = new BlockDummy();
-        $request = new \Zend\Http\PhpEnvironment\Request();
+        $request = new Request();
 
         $block->setRequest($request);
 
@@ -95,7 +97,7 @@ class BlockTest extends AbstractTest
     public function testGetRequestFromNull()
     {
         $block = new BlockDummy();
-        $this->assertInstanceOf('Zend\Stdlib\RequestInterface', $block->getRequest());
+        $this->assertInstanceOf(RequestInterface::class, $block->getRequest());
     }
 }
 // @codingStandardsIgnoreStart

@@ -38,10 +38,10 @@ class LayoutUpdaterTest extends AbstractTest
             ]
                 ];
                 $this->em->getSharedManager()->clearListeners(
-                    'ConLayout\Updater\LayoutUpdater'
+                    LayoutUpdater::class
                 );
                 $this->em->getSharedManager()->attach(
-                    'ConLayout\Updater\LayoutUpdater',
+                    LayoutUpdater::class,
                     'getLayoutStructure.pre',
                     function (UpdateEvent $e) use ($instructions) {
                         $handles = $e->getHandles();
@@ -84,7 +84,7 @@ class LayoutUpdaterTest extends AbstractTest
     public function testShortCircuiting()
     {
         $this->em->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
+            LayoutUpdater::class,
             'getLayoutStructure.pre',
             function (UpdateEvent $e) {
                 return new Config(['cached' => true]);
@@ -100,9 +100,9 @@ class LayoutUpdaterTest extends AbstractTest
 
     public function testUpdateEvent()
     {
-        $this->em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
+        $this->em->getSharedManager()->clearListeners(LayoutUpdater::class);
         $this->em->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
+            LayoutUpdater::class,
             'getLayoutStructure.pre',
             function (UpdateEvent $e) {
                 $this->assertEquals([

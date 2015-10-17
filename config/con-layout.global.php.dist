@@ -1,5 +1,13 @@
 <?php
-use \ConLayout\Updater\LayoutUpdaterInterface;
+
+use ConLayout\Updater\LayoutUpdaterInterface;
+use ConLayout\View\Helper\Proxy\HeadLinkProxy;
+use ConLayout\View\Helper\Proxy\HeadMetaProxy;
+use ConLayout\View\Helper\Proxy\HeadScriptProxy;
+use ConLayout\View\Helper\Proxy\HeadTitleProxy;
+use ConLayout\View\Helper\Proxy\InlineScriptProxy;
+use Zend\View\Model\ViewModel;
+
 return [
     'con-layout' => [
         /**
@@ -84,7 +92,7 @@ return [
         'block_defaults' => [
             'capture_to' => 'content',
             'append'     => true,
-            'class'      => 'Zend\View\Model\ViewModel',
+            'class'      => ViewModel::class,
             'options'    => [],
             'variables'  => [],
             'template'   => '',
@@ -106,7 +114,7 @@ return [
                         'cacheBuster' => 10
                     ]
                 ],
-                'proxy' => 'ConLayout\View\Helper\Proxy\HeadLinkProxy'
+                'proxy' => HeadLinkProxy::class
             ],
             'headScript' => [
                 'method' => 'appendFile',
@@ -117,7 +125,7 @@ return [
                         'cacheBuster' => 10
                     ]
                 ],
-                'proxy' => 'ConLayout\View\Helper\Proxy\HeadScriptProxy'
+                'proxy' => HeadScriptProxy::class
             ],
             'inlineScript' => [
                 'method' => 'appendFile',
@@ -128,17 +136,17 @@ return [
                         'cacheBuster' => 10
                     ]
                 ],
-                'proxy' => 'ConLayout\View\Helper\Proxy\InlineScriptProxy'
+                'proxy' => InlineScriptProxy::class
             ],
             'headTitle' => [
                 'method' => 'append',
                 'default_param' => 'value',
-                'proxy' => 'ConLayout\View\Helper\Proxy\HeadTitleProxy'
+                'proxy' => HeadTitleProxy::class
             ],
             'headMeta' => [
                 'method' => 'appendName',
                 'default_param' => 'name',
-                'proxy' => 'ConLayout\View\Helper\Proxy\HeadMetaProxy'
+                'proxy' => HeadMetaProxy::class
             ],
             'bodyClass' => [
                 'method' => 'addClass',

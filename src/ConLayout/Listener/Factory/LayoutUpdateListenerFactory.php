@@ -16,7 +16,7 @@ class LayoutUpdateListenerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $options ModuleOptions */
-        $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
+        $options = $serviceLocator->get(ModuleOptions::class);
         $paths = $options->getLayoutUpdatePaths();
         $extensions = $options->getLayoutUpdateExtensions();
         $defaultArea = $options->getDefaultArea();

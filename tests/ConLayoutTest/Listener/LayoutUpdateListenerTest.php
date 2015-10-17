@@ -4,6 +4,7 @@ namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\LayoutUpdateListener;
 use ConLayout\Updater\Event\UpdateEvent;
+use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
@@ -48,12 +49,12 @@ class LayoutUpdateListenerTest extends AbstractTest
     public function testAttach()
     {
         $eventManager = new EventManager();
-        $eventManager->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
+        $eventManager->getSharedManager()->clearListeners(LayoutUpdater::class);
 
         $this->listener->attach($eventManager);
 
         $listeners = $eventManager->getSharedManager()->getListeners(
-            'ConLayout\Updater\LayoutUpdater',
+            LayoutUpdater::class,
             'getLayoutStructure.pre'
         );
 
