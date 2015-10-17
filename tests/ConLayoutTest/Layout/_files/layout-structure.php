@@ -16,9 +16,8 @@ return [
         'widget.1.child' => [
             'capture_to' => 'widget.1::childHtml'
         ],
-        'some.removed.block' => []
-    ],
-    LayoutUpdaterInterface::INSTRUCTION_REMOVE_BLOCKS => [
-         'some.removed.block' => true
+        'some.removed.block' => [
+            'remove' => true
+        ]
     ]
 ];
