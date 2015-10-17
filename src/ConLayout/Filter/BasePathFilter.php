@@ -1,14 +1,14 @@
 <?php
-namespace ConLayout\AssetPreparer;
+namespace ConLayout\Filter;
 
-use ConLayout\AssetPreparer\AssetPreparerInterface;
+use Zend\Filter\FilterInterface;
 use Zend\View\Helper\BasePath as BasePathHelper;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BasePath implements AssetPreparerInterface
+class BasePathFilter implements FilterInterface
 {
     /**
      *
@@ -30,7 +30,7 @@ class BasePath implements AssetPreparerInterface
      * @param string $value asset url to prepare
      * @return string prepared asset url
      */
-    public function prepare($value)
+    public function filter($value)
     {
         $urlHost = parse_url($value, PHP_URL_HOST);
         if (empty($urlHost)) {

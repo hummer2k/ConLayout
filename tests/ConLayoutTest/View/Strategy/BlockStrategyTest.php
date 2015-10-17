@@ -33,7 +33,7 @@ class BlockStrategyTest extends AbstractTest
     {
         parent::setUp();
         $this->strategy = Bootstrap::getServiceManager()
-            ->create('ConLayout\View\Strategy\BlockRendererStrategy');
+            ->create(BlockRendererStrategy::class);
         $this->em = Bootstrap::getServiceManager()
             ->create('EventManager');
     }

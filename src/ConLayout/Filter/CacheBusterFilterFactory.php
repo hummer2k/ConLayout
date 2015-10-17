@@ -1,23 +1,24 @@
 <?php
 
-namespace ConLayout\AssetPreparer;
+namespace ConLayout\Filter;
 
 use ConLayout\Options\ModuleOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @package
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class CacheBusterFactory implements FactoryInterface
+class CacheBusterFilterFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $serviceManager = $serviceLocator->getServiceLocator();
         /* @var $options ModuleOptions */
-        $options = $serviceLocator->get('ConLayout\Options\ModuleOptions');
+        $options = $serviceManager->get(ModuleOptions::class);
         $internalBaseDir = $options->getCacheBusterInternalBaseDir();
-        $cacheBuster = new CacheBuster($internalBaseDir);
+        $cacheBuster = new CacheBusterFilter($internalBaseDir);
         return $cacheBuster;
     }
 }

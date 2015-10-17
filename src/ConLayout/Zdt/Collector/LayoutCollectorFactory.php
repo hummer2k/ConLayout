@@ -2,6 +2,8 @@
 
 namespace ConLayout\Zdt\Collector;
 
+use ConLayout\Layout\LayoutInterface;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -14,8 +16,8 @@ class LayoutCollectorFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $layoutCollector = new LayoutCollector(
-            $serviceLocator->get('ConLayout\Layout\LayoutInterface'),
-            $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface'),
+            $serviceLocator->get(LayoutInterface::class),
+            $serviceLocator->get(LayoutUpdaterInterface::class),
             $serviceLocator->get('ViewResolver')
         );
         return $layoutCollector;

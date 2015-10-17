@@ -3,6 +3,7 @@ namespace ConLayout\Listener\Factory;
 
 use ConLayout\Listener\ActionHandlesListener;
 use ConLayout\Options\ModuleOptions;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -20,13 +21,13 @@ class ActionHandlesListenerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $moduleOptions ModuleOptions */
-        $moduleOptions = $serviceLocator->get('ConLayout\Options\ModuleOptions');
-        $updater = $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface');
+        $moduleOptions = $serviceLocator->get(ModuleOptions::class);
+        $updater = $serviceLocator->get(LayoutUpdaterInterface::class);
         $actionHandlesListener = new ActionHandlesListener();
         $actionHandlesListener->setUpdater($updater);
         $actionHandlesListener->setControllerMap($moduleOptions->getControllerMap());
         $actionHandlesListener->setPreferRouteMatchController($moduleOptions->isPreferRouteMatchController());
-        
+
         return $actionHandlesListener;
     }
 }

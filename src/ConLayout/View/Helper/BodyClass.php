@@ -9,17 +9,21 @@ use Zend\View\Helper\AbstractHelper;
  */
 class BodyClass extends AbstractHelper
 {
-    protected $classes = [];
-    
     /**
      *
-     * @param type $classname
+     * @var array
+     */
+    protected $classes = [];
+
+    /**
+     *
+     * @param type $class
      * @return BodyClass
      */
-    public function __invoke($classname = null)
+    public function __invoke($class = null)
     {
-        if (null !== $classname) {
-            $this->addClass($classname);
+        if (null !== $class) {
+            $this->addClass($class);
         }
         return $this;
     }
@@ -33,18 +37,18 @@ class BodyClass extends AbstractHelper
         $this->classes = array_diff($this->classes, [$class]);
         return $this;
     }
-    
+
     /**
      *
-     * @param string $classname
+     * @param string $class
      * @return BodyClass
      */
-    public function addClass($classname)
+    public function addClass($class)
     {
-        $this->classes[] = $classname;
+        $this->classes[] = $class;
         return $this;
     }
-    
+
     /**
      *
      * @return string class names space separated

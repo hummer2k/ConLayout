@@ -1,13 +1,16 @@
 <?php
 namespace ConLayout;
 
+use ConLayout\ModuleManager\Feature\BlockProviderInterface;
 use ConLayout\Options\ModuleOptions;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventInterface as Event;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\FilterProviderInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
@@ -23,7 +26,8 @@ class Module implements
     ViewHelperProviderInterface,
     BootstrapListenerInterface,
     AutoloaderProviderInterface,
-    InitProviderInterface
+    InitProviderInterface,
+    FilterProviderInterface
 {
     /**
      * retrieve module config
@@ -49,6 +53,16 @@ class Module implements
     }
 
     /**
+     * retrieve filters
+     *
+     * @return array
+     */
+    public function getFilterConfig()
+    {
+        return include __DIR__ . '/../../config/filter.config.php';
+    }
+
+    /**
      * retrieve services
      *
      * @return array
@@ -69,7 +83,7 @@ class Module implements
         $serviceListener->addServiceManager(
             'BlockManager',
             'blocks',
-            'ConLayout\ModuleManager\Feature\BlockProviderInterface',
+            BlockProviderInterface::class,
             'getBlockConfig'
         );
     }
@@ -90,7 +104,7 @@ class Module implements
         }
 
         /* @var $options ModuleOptions */
-        $options = $serviceManager->get('ConLayout\Options\ModuleOptions');
+        $options = $serviceManager->get(ModuleOptions::class);
         $listeners = $options->getListeners();
 
         foreach ($listeners as $listener => $isEnabled) {
@@ -107,7 +121,7 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return [
-            'Zend\Loader\StandardAutoloader' => [
+            StandardAutoloader::class => [
                 'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__
                 ]

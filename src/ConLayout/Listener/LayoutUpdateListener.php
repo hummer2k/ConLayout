@@ -3,6 +3,7 @@
 namespace ConLayout\Listener;
 
 use ConLayout\Updater\Event\UpdateEvent;
+use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
 use Zend\Config\Factory as ConfigFactory;
@@ -67,7 +68,7 @@ class LayoutUpdateListener implements ListenerAggregateInterface
     public function attach(EventManagerInterface $events)
     {
         $events->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
+            LayoutUpdater::class,
             'getLayoutStructure.pre',
             [$this, 'fetch']
         );

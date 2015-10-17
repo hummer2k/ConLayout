@@ -40,13 +40,6 @@ class Layout implements
     protected $blocksGenerated = false;
 
     /**
-     * flag if blocks have already been removed from layout structure
-     *
-     * @var bool
-     */
-    protected $blocksRemoved = false;
-
-    /**
      *
      * @var LayoutUpdaterInterface
      */
@@ -116,7 +109,7 @@ class Layout implements
                 $blocks = $blocks->toArray();
             }
             foreach ($blocks as $blockId => $specs) {
-                if ($this->isBlockRemoved($blockId)) {
+                if ($this->isBlockRemoved($blockId, $specs)) {
                     continue;
                 }
                 $block = $this->blockFactory->createBlock($blockId, $specs);
@@ -127,35 +120,20 @@ class Layout implements
     }
 
     /**
-     * removes blocks defined in layout instructions
-     */
-    protected function removeBlocksByInstructions()
-    {
-        if (!$this->blocksRemoved) {
-            $removedBlocks = $this->updater->getLayoutStructure()
-                ->get(LayoutUpdaterInterface::INSTRUCTION_REMOVE_BLOCKS, []);
-            if ($removedBlocks instanceof Config) {
-                $removedBlocks = $removedBlocks->toArray();
-                foreach ($removedBlocks as $removedBlockId => $value) {
-                    if ($value) {
-                        $this->removeBlock($removedBlockId);
-                    }
-                }
-            }
-            $this->blocksRemoved = true;
-        }
-    }
-
-    /**
      * check if block has been removed
      *
-     * @param   string  $blockId
+     * @param   string $blockId
+     * @param   array  $specs
      * @return  boolean
      */
-    protected function isBlockRemoved($blockId)
+    protected function isBlockRemoved($blockId, array $specs)
     {
-        $this->removeBlocksByInstructions();
-        return isset($this->removedBlocks[$blockId]);
+        if ((isset($specs['remove']) && $specs['remove']) ||
+            isset($this->removedBlocks[$blockId])
+        ) {
+            return true;
+        }
+        return false;
     }
 
     /**

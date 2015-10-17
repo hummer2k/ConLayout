@@ -1,27 +1,24 @@
 <?php
+namespace ConLayout\Filter;
 
-namespace ConLayout\View\Helper;
-
-use ConLayout\Layout\LayoutInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @package ConLayout
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockFactory implements FactoryInterface
+class BasePathFilterFactory implements FactoryInterface
 {
     /**
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return Block
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        return new Block(
-            $serviceManager->get(LayoutInterface::class)
-        );
+        $basePathHelper = $serviceLocator->getServiceLocator()
+            ->get('viewHelperManager')
+            ->get('basePath');
+        return new BasePathFilter($basePathHelper);
     }
 }

@@ -1,44 +1,59 @@
 <?php
+
+use ConLayout\Block\Factory\BlockFactoryFactory;
+use ConLayout\Block\Factory\BlockFactoryInterface;
+use ConLayout\BlockManager;
+use ConLayout\BlockManagerFactory;
+use ConLayout\Layout\LayoutFactory;
+use ConLayout\Layout\LayoutInterface;
+use ConLayout\Listener\ActionHandlesListener;
+use ConLayout\Listener\BodyClassListener;
+use ConLayout\Listener\Factory\ActionHandlesListenerFactory;
+use ConLayout\Listener\Factory\BodyClassListenerFactory;
+use ConLayout\Listener\Factory\LayoutTemplateListenerFactory;
+use ConLayout\Listener\Factory\LayoutUpdateListenerFactory;
+use ConLayout\Listener\Factory\LoadLayoutListenerFactory;
+use ConLayout\Listener\Factory\ViewHelperListenerFactory;
+use ConLayout\Listener\LayoutTemplateListener;
+use ConLayout\Listener\LayoutUpdateListener;
+use ConLayout\Listener\LoadLayoutListener;
+use ConLayout\Listener\PrepareActionViewModelListener;
+use ConLayout\Listener\ViewHelperListener;
+use ConLayout\Options\ModuleOptions;
+use ConLayout\Options\ModuleOptionsFactory;
+use ConLayout\Updater\LayoutUpdaterFactory;
+use ConLayout\Updater\LayoutUpdaterInterface;
+use ConLayout\View\Renderer\BlockRenderer;
+use ConLayout\View\Renderer\BlockRendererFactory;
+use ConLayout\View\Strategy\BlockRendererStrategy;
+use ConLayout\View\Strategy\BlockRendererStrategyFactory;
+use ConLayout\Zdt\Collector\LayoutCollector;
+use ConLayout\Zdt\Collector\LayoutCollectorFactory;
+
 return [
     'factories' => [
-        'ConLayout\BlockManager' => 'ConLayout\BlockManagerFactory',
-
-        'ConLayout\AssetPreparer\BasePath' => 'ConLayout\AssetPreparer\BasePathFactory',
-        'ConLayout\AssetPreparer\CacheBuster' => 'ConLayout\AssetPreparer\CacheBusterFactory',
-
-        'ConLayout\Block\Factory\BlockFactoryInterface' => 'ConLayout\Block\Factory\BlockFactoryFactory',
-
-        'ConLayout\Listener\ActionHandlesListener' => 'ConLayout\Listener\Factory\ActionHandlesListenerFactory',
-        'ConLayout\Listener\BodyClassListener' => 'ConLayout\Listener\Factory\BodyClassListenerFactory',
-        'ConLayout\Listener\LoadLayoutListener' => 'ConLayout\Listener\Factory\LoadLayoutListenerFactory',
-        'ConLayout\Listener\LayoutTemplateListener' => 'ConLayout\Listener\Factory\LayoutTemplateListenerFactory',
-        'ConLayout\Listener\ViewHelperListener' => 'ConLayout\Listener\Factory\ViewHelperListenerFactory',
-        'ConLayout\Listener\LayoutUpdateListener' => 'ConLayout\Listener\Factory\LayoutUpdateListenerFactory',
-
-        'ConLayout\Layout\LayoutInterface' => 'ConLayout\Layout\LayoutFactory',
-        'ConLayout\Updater\LayoutUpdaterInterface' => 'ConLayout\Updater\LayoutUpdaterFactory',
-        'ConLayout\View\Renderer\BlockRenderer' => 'ConLayout\View\Renderer\BlockRendererFactory',
-        'ConLayout\View\Strategy\BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategyFactory',
-
-        'ConLayout\Zdt\Collector\LayoutCollector' => 'ConLayout\Zdt\Collector\LayoutCollectorFactory',
-
-        'ConLayout\Options\ModuleOptions' => 'ConLayout\Options\ModuleOptionsFactory',
+        BlockManager::class             => BlockManagerFactory::class,
+        BlockFactoryInterface::class    => BlockFactoryFactory::class,
+        ActionHandlesListener::class    => ActionHandlesListenerFactory::class,
+        BodyClassListener::class        => BodyClassListenerFactory::class,
+        LoadLayoutListener::class       => LoadLayoutListenerFactory::class,
+        LayoutTemplateListener::class   => LayoutTemplateListenerFactory::class,
+        ViewHelperListener::class       => ViewHelperListenerFactory::class,
+        LayoutUpdateListener::class     => LayoutUpdateListenerFactory::class,
+        LayoutInterface::class          => LayoutFactory::class,
+        LayoutUpdaterInterface::class   => LayoutUpdaterFactory::class,
+        BlockRenderer::class            => BlockRendererFactory::class,
+        BlockRendererStrategy::class    => BlockRendererStrategyFactory::class,
+        LayoutCollector::class          => LayoutCollectorFactory::class,
+        ModuleOptions::class            => ModuleOptionsFactory::class,
     ],
     'aliases' => [
-        'Layout' => 'ConLayout\Layout\LayoutInterface',
-        'BlockRendererStrategy' => 'ConLayout\View\Strategy\BlockRendererStrategy',
-        'BlockRenderer' => 'ConLayout\View\Renderer\BlockRenderer',
-        'BlockManager' => 'ConLayout\BlockManager'
+        'Layout'                => LayoutInterface::class,
+        'BlockRendererStrategy' => BlockRendererStrategy::class,
+        'BlockRenderer'         => BlockRenderer::class,
+        'BlockManager'          => BlockManager::class
     ],
     'invokables' => [
-        'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
-            => 'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator',
-        'ConLayout\Listener\PrepareActionViewModelListener'
-            => 'ConLayout\Listener\PrepareActionViewModelListener'
-    ],
-    'delegators' => [
-        'ConLayout\Listener\ViewHelperListener' => [
-            'ConLayout\AssetPreparer\Delegator\AddAssetPreparerDelegator'
-        ]
+        PrepareActionViewModelListener::class => PrepareActionViewModelListener::class
     ]
 ];

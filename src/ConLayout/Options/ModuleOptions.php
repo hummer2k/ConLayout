@@ -2,6 +2,12 @@
 
 namespace ConLayout\Options;
 
+use ConLayout\Listener\ActionHandlesListener;
+use ConLayout\Listener\LayoutTemplateListener;
+use ConLayout\Listener\LayoutUpdateListener;
+use ConLayout\Listener\LoadLayoutListener;
+use ConLayout\Listener\PrepareActionViewModelListener;
+use ConLayout\Listener\ViewHelperListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Stdlib\AbstractOptions;
 
@@ -22,12 +28,6 @@ class ModuleOptions extends AbstractOptions
      * @var array
      */
     protected $viewHelpers = [];
-
-    /**
-     *
-     * @var array
-     */
-    protected $assetPreparers = [];
 
     /**
      *
@@ -79,12 +79,12 @@ class ModuleOptions extends AbstractOptions
      * @var array
      */
     protected $listeners = [
-        'ConLayout\Listener\ActionHandlesListener'  => true,
-        'ConLayout\Listener\LayoutUpdateListener'   => true,
-        'ConLayout\Listener\LoadLayoutListener'     => true,
-        'ConLayout\Listener\LayoutTemplateListener' => true,
-        'ConLayout\Listener\ViewHelperListener'     => true,
-        'ConLayout\Listener\PrepareActionViewModelListener' => true
+        ActionHandlesListener::class  => true,
+        LayoutUpdateListener::class   => true,
+        LoadLayoutListener::class     => true,
+        LayoutTemplateListener::class => true,
+        ViewHelperListener::class     => true,
+        PrepareActionViewModelListener::class => true
     ];
 
     /**
@@ -166,15 +166,6 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
-     *
-     * @return array
-     */
-    public function getAssetPreparers()
-    {
-        return $this->assetPreparers;
-    }
-
-    /**
      * just here for bc
      *
      * @codeCoverageIgnore
@@ -195,17 +186,6 @@ class ModuleOptions extends AbstractOptions
     public function setViewHelpers(array $viewHelpers)
     {
         $this->viewHelpers = $viewHelpers;
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $assetPreparers
-     * @return ModuleOptions
-     */
-    public function setAssetPreparers(array $assetPreparers)
-    {
-        $this->assetPreparers = $assetPreparers;
         return $this;
     }
 

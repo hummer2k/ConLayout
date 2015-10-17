@@ -3,8 +3,11 @@
 namespace ConLayoutTest;
 
 use ConLayout\Module;
+use ConLayout\Updater\LayoutUpdater;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\EventManager\EventManager;
+use Zend\Filter\FilterPluginManager;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Application;
@@ -51,6 +54,7 @@ class ModuleTest extends AbstractTest
         $application = $this->createApplication();
 
         $sm = $application->getServiceManager();
+        $sm->setService('FilterManager', new FilterPluginManager);
 
         foreach ($module->getServiceConfig()['invokables'] as $key => $value) {
             $sm->setInvokableClass($key, $value);
@@ -63,16 +67,16 @@ class ModuleTest extends AbstractTest
         $event->setApplication($application);
         $em = $application->getEventManager();
 
-        $em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
+        $em->getSharedManager()->clearListeners(LayoutUpdater::class);
 
         $this->assertCount(0, $em->getListeners(MvcEvent::EVENT_DISPATCH));
         $this->assertCount(0, $em->getListeners(MvcEvent::EVENT_RENDER));
 
         $module->onBootstrap($event);
 
-        $this->assertCount(2, $em->getListeners(MvcEvent::EVENT_DISPATCH));
+        $this->assertCount(3, $em->getListeners(MvcEvent::EVENT_DISPATCH));
 
-        $layoutUpdater = $sm->get('ConLayout\Updater\LayoutUpdaterInterface');
+        $layoutUpdater = $sm->get(LayoutUpdaterInterface::class);
 
         $this->assertEquals([
             'default'

@@ -6,8 +6,7 @@ It is assumed that you already have set up a
 [ZendDeveloperTools](https://github.com/zendframework/ZendDeveloperTools) and
 installed the ConLayout module.
 We will cover basic configuration on module-basis and you will get to know the 
-layout instructions `layout`, `blocks`, `remove_blocks` and 
-`include`.
+layout instructions `layout`, `blocks` and `include`.
 
 ## Table of contents
 
@@ -577,7 +576,7 @@ view action.
 
 ## 9. Remove blocks from a specific page
 
-We can remove blocks with the instruction `remove_blocks`
+We can remove blocks with the property `remove`
 
 As an example, we edit our layout update file for the handle 
 `application/index/include`:
@@ -587,8 +586,10 @@ return [
     'include' => [
         'application/index/view' => true
     ],
-    'remove_blocks' => [
-        'latest.articles' => true
+    'blocks' => [
+        'latest.articles' => [
+            'remove' => true
+        ]
     ]
 ];
 ````

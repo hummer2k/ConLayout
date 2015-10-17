@@ -1,7 +1,9 @@
 <?php
 namespace ConLayout\View\Strategy;
 
+use ConLayout\View\Renderer\BlockRenderer;
 use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @package ConLayout
@@ -11,12 +13,12 @@ class BlockRendererStrategyFactory implements FactoryInterface
 {
     /**
      *
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \ConLayout\View\Strategy\BlockRendererStrategy
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return BlockRendererStrategy
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $blockRenderer =  $serviceLocator->get('ConLayout\View\Renderer\BlockRenderer');
+        $blockRenderer =  $serviceLocator->get(BlockRenderer::class);
         $blockRendererStrategy = new BlockRendererStrategy(
             $blockRenderer
         );

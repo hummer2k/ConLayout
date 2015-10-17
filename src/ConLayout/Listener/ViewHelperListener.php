@@ -2,16 +2,19 @@
 
 namespace ConLayout\Listener;
 
-use ConLayout\AssetPreparer\AssetPreparerInterface;
-use ConLayout\AssetPreparer\OriginalValueAwareInterface;
+use ConLayout\Exception\BadMethodCallException;
+use ConLayout\Filter\RawValueAwareInterface;
+use ConLayout\Layout\Layout;
+use ConLayout\NamedParametersTrait;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
-use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
+use Zend\Filter\FilterInterface;
+use Zend\Filter\FilterPluginManager;
 use Zend\Mvc\MvcEvent;
-use Zend\View\Helper\AbstractHelper;
+use Zend\Stdlib\ArrayUtils;
 use Zend\View\HelperPluginManager;
 
 /**
@@ -23,49 +26,54 @@ use Zend\View\HelperPluginManager;
 class ViewHelperListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
+    use NamedParametersTrait;
 
     /**
      *
      * @var LayoutUpdaterInterface
      */
-    protected $updater;
+    private $updater;
 
     /**
      *
      * @var HelperPluginManager
      */
-    protected $viewHelperManager;
+    private $viewHelperManager;
+
+    /**
+     *
+     * @var FilterPluginManager
+     */
+    private $filterManager;
 
     /**
      *
      * @var array
      */
-    protected $helperConfig = [];
+    private $helperConfig = [];
 
     /**
-     * asset preparers for view helpers in format:
-     * 'helperName' => [
-     *     AssetPreparerInterface,
-     *     AssetPreparerInterface
-     * ]
      *
-     * @var AssetPreparerInterface[]
+     * @var boolean
      */
-    protected $assetPreparers = [];
+    private $isLoaded = false;
 
     /**
      *
      * @param LayoutUpdaterInterface $updater
      * @param HelperPluginManager $viewHelperManager
+     * @param FilterPluginManager $filterManager
      * @param array $helperConfig
      */
     public function __construct(
         LayoutUpdaterInterface $updater,
         HelperPluginManager $viewHelperManager,
+        FilterPluginManager $filterManager,
         array $helperConfig
     ) {
         $this->updater           = $updater;
         $this->viewHelperManager = $viewHelperManager;
+        $this->filterManager     = $filterManager;
         $this->helperConfig      = $helperConfig;
     }
 
@@ -74,23 +82,26 @@ class ViewHelperListener implements ListenerAggregateInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->getSharedManager()
-            ->attach(
-                'ConLayout\Layout\Layout',
-                'load.pre',
-                [$this, 'applyViewHelpers']
-            );
+        $this->listeners[] = $events->attach(
+            MvcEvent::EVENT_DISPATCH,
+            [$this, 'applyViewHelpers'],
+            100
+        );
+        $this->listeners[] = $events->getSharedManager()->attach(
+            Layout::class,
+            'load.pre',
+            [$this, 'applyViewHelpers']
+        );
     }
 
     /**
-     * applies view helpers
-     *
-     * @todo refactor
-     * @param MvcEvent $e
-     * @return LayoutModifierListener
+     * applies view helper instructions
      */
-    public function applyViewHelpers(EventInterface $e)
+    public function applyViewHelpers($e)
     {
+        if ($this->isLoaded) {
+            return;
+        }
         $viewHelperInstructions = $this->updater->getLayoutStructure()->get(
             LayoutUpdaterInterface::INSTRUCTION_VIEW_HELPERS
         );
@@ -101,89 +112,108 @@ class ViewHelperListener implements ListenerAggregateInterface
             if (!isset($viewHelperInstructions[$helper])) {
                 continue;
             }
-            $defaultMethod = isset($config['default_method']) ? $config['default_method'] : '__invoke';
+            $helperProxy = false;
+            if (isset($config['proxy']) && $this->viewHelperManager->has($config['proxy'])) {
+                $helperProxy = $this->viewHelperManager->get($config['proxy']);
+            }
             $viewHelper = $this->viewHelperManager->get($helper);
-            $viewHelperInstructions[$helper] = (array) $viewHelperInstructions[$helper];
-            foreach ($viewHelperInstructions[$helper] as $value) {
-                if (!$value) {
+            $sortedInstructions = $this->sort(
+                (array) $viewHelperInstructions[$helper]
+            );
+            foreach ($sortedInstructions as $instruction) {
+                if (!$instruction) {
                     continue;
                 }
-                $value = (array) $value;
-                $method = $this->getHelperMethod($value, $defaultMethod, $viewHelper);
-                $args   = isset($value['args']) ? (array) $value['args'] : array_values($value);
-                $args[0] = $this->prepareHelperValue($args[0], $helper);
-                call_user_func_array([$viewHelper, $method], $args);
-            }
-        }
-        return $this;
-    }
+                if (is_string($instruction) && isset($config['default_param'])) {
+                    $instruction = [$config['default_param'] => $instruction];
+                }
+                $mergedInstruction = [];
+                $mergedInstruction = ArrayUtils::merge($config, (array) $instruction);
+                $method = isset($mergedInstruction['method']) ? $mergedInstruction['method'] : '__invoke';
+                $args = $this->filterArgs($mergedInstruction);
 
-    /**
-     * find helper method
-     *
-     * @param array $value
-     * @param string $defaultMethod
-     * @param AbstractHelper $viewHelper
-     * @return string
-     */
-    private function getHelperMethod(array $value, $defaultMethod, $viewHelper)
-    {
-        if (isset($value['method']) && is_callable([$viewHelper, $value['method']])) {
-            return $value['method'];
-        } else {
-            // @codeCoverageIgnoreStart
-            $method = current(array_keys($value));
-            if (is_string($method) && is_callable([$viewHelper, $method])) {
-                $val = current($value);
-                trigger_error(sprintf(
-                    '%s::%s Calling method via key in layout instruction is deprecated.'
-                    . ' ["%s" => "%s"] should be ["id" => ["method" => "%s", "args" => ["%s"]]',
-                    get_class($viewHelper),
-                    $method,
-                    $method,
-                    $val,
-                    $method,
-                    $val
-                ), E_USER_DEPRECATED);
-                return $method;
+                if (method_exists($viewHelper, $method)) {
+                    $this->invokeArgs($viewHelper, $method, $args);
+                } elseif (false !== $helperProxy && method_exists($helperProxy, $method)) {
+                    $this->invokeArgs($helperProxy, $method, $args);
+                } elseif (is_callable([$viewHelper, $method])) {
+                    call_user_func_array([$viewHelper, $method], array_values($args));
+                } else {
+                    throw new BadMethodCallException(sprintf(
+                        'Call to undefined helper method %s::%s() in %s on line %d',
+                        get_class($viewHelper),
+                        $method,
+                        __FILE__,
+                        __LINE__
+                    ));
+                }
             }
-            // @codeCoverageIgnoreEnd
         }
-        return $defaultMethod;
+        $this->isLoaded = true;
     }
 
     /**
      *
-     * @param mixed $value value to prepare
-     * @param string $helper view helper name
-     * @return mixed
+     * @param array $array
+     * @return array
      */
-    protected function prepareHelperValue($value, $helper)
+    protected function sort(array $array)
     {
-        if (!isset($this->assetPreparers[$helper])) {
-            return $value;
+        $tmp = [];
+        foreach (array_keys($array) as $key) {
+            $tmp[] = $this->getNodeLevel($array, $key);
         }
-        $originalValue = $value;
-        /* @var $assetPreparer AssetPreparerInterface */
-        foreach ($this->assetPreparers[$helper] as $assetPreparer) {
-            if ($assetPreparer instanceof OriginalValueAwareInterface) {
-                $assetPreparer->setOriginalValue($originalValue);
-            }
-            $value = $assetPreparer->prepare($value);
-        }
-        return $value;
+        array_multisort($tmp, SORT_ASC, $array);
+        return $array;
     }
 
     /**
      *
-     * @param string $helper
-     * @param AssetPreparerInterface $assetPreparer
+     * @param array $array
+     * @param string $key
+     * @param array $references
+     * @return int
      */
-    public function addAssetPreparer($helper, AssetPreparerInterface $assetPreparer)
+    private function getNodeLevel(array $array, $key, array $references = [])
     {
-        if (!isset($this->assetPreparers[$helper])) {
-            $this->assetPreparers[$helper] = [];
+        if (!isset($array[$key]['depends'])) {
+            return 0;
         }
-        $this->assetPreparers[$helper][] = $assetPreparer;
+        if (in_array($key, $references)) {
+            return -1;
+        }
+        $references[] = $key;
+        $level = $this->getNodeLevel($array, $array[$key]['depends'], $references);
+        return ($level == -1 ? -1 : $level + 1);
+    }
+
+    /**
+     * @param array $instruction
+     * @return array
+     */
+    private function filterArgs(array $instruction)
+    {
+        if (!isset($instruction['filter']) || !$instruction['filter']) {
+            return $instruction;
+        }
+        foreach ((array) $instruction['filter'] as $param => $filters) {
+            if (!$filters || !isset($instruction[$param])) {
+                continue;
+            }
+            $rawValue = $instruction[$param];
+            /* @var $filter FilterInterface */
+            asort($filters);
+            foreach ($filters as $filterName => $isEnabled) {
+                if (floatval($isEnabled) <= 0 || !$this->filterManager->has($filterName)) {
+                    continue;
+                }
+                $filter = $this->filterManager->get($filterName);
+                if ($filter instanceof RawValueAwareInterface) {
+                    $filter->setRawValue($rawValue);
+                }
+                $instruction[$param] = $filter->filter($instruction[$param]);
+            }
+        }
+        return $instruction;
     }
 }

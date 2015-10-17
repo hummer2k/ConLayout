@@ -1,7 +1,7 @@
 <?php
 return [
     'include' => [
-        'included-handle',
-        'another-handle'
+        'included-handle' => true,
+        'another-handle' => true
     ]
 ];
