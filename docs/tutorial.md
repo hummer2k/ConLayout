@@ -6,8 +6,7 @@ It is assumed that you already have set up a
 [ZendDeveloperTools](https://github.com/zendframework/ZendDeveloperTools) and
 installed the ConLayout module.
 We will cover basic configuration on module-basis and you will get to know the 
-layout instructions `layout`, `blocks`, `remove_blocks` and 
-`include`.
+layout instructions `layout`, `blocks` and `include`.
 
 ## Table of contents
 
