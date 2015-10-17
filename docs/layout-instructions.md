@@ -1,12 +1,11 @@
 # Layout instructions
 
-Currently there are 5 layout instructions:
+Currently there are 4 layout instructions:
 
 1. [`layout`](#1-layout)
 2. [`blocks`](#2-blocks)
-3. [`remove_blocks`](#3-remove_blocks)
-4. [`view_helpers`](#4-view_helpers)
-5. [`include`](#5-include)
+3. [`view_helpers`](#4-view_helpers)
+4. [`include`](#5-include)
 
 ## 1. `layout`
 
@@ -83,12 +82,16 @@ return [
              * if false, wrapper will be disabled: 'wrapper' => false,
              *
              * defaults: tag: 'div', 'template: 'blocks/wrapper'
-             */
+             */             
             'wrapper' => [
                 'template' => 'blocks/wrapper',
                 'class' => 'col-xs-12',
                 'tag' => 'div'
             ],
+            /**
+             * remove this block
+             */
+            'remove' => true,
             // just set a custom template
             'wrapper' => 'my/wrapper',
             // or add more attributes for the wrapper tag

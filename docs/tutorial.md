@@ -577,7 +577,7 @@ view action.
 
 ## 9. Remove blocks from a specific page
 
-We can remove blocks with the instruction `remove_blocks`
+We can remove blocks with the property `remove`
 
 As an example, we edit our layout update file for the handle 
 `application/index/include`:
@@ -587,8 +587,10 @@ return [
     'include' => [
         'application/index/view' => true
     ],
-    'remove_blocks' => [
-        'latest.articles' => true
+    'blocks' => [
+        'latest.articles' => [
+            'remove' => true
+        ]
     ]
 ];
 ````
