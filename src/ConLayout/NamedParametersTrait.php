@@ -15,7 +15,7 @@ trait NamedParametersTrait
      *
      * @var array
      */
-    protected $reflectionCache = [];
+    protected static $reflectionCache = [];
 
     /**
      *
@@ -26,12 +26,12 @@ trait NamedParametersTrait
      */
     protected function invokeArgs($instance, $method, array $args = [])
     {
-        $hash = spl_object_hash($instance);
-        if (isset($this->reflectionCache[$hash][$method])) {
-            $reflection = $this->reflectionCache[$hash][$method];
+        $class = get_class($instance);
+        if (isset(self::$reflectionCache[$class][$method])) {
+            $reflection = self::$reflectionCache[$class][$method];
         } else {
             $reflection = new ReflectionMethod($instance, $method);
-            $this->reflectionCache[$hash][$method] = $reflection;
+            self::$reflectionCache[$class][$method] = $reflection;
         }
 
         $pass = [];
