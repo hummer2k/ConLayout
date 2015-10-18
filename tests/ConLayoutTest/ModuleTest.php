@@ -5,6 +5,7 @@ namespace ConLayoutTest;
 use ConLayout\Module;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
+use ConLayout\View\Helper\BodyClass;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\EventManager\EventManager;
 use Zend\Filter\FilterPluginManager;
@@ -64,6 +65,11 @@ class ModuleTest extends AbstractTest
             $sm->setFactory($key, $value);
         }
 
+        $sm->get('ViewHelperManager')->setService(
+            'bodyClass',
+            $this->getMock(BodyClass::class)
+        );
+
         $event = new MvcEvent();
         $event->setApplication($application);
         $em = $application->getEventManager();
@@ -75,7 +81,7 @@ class ModuleTest extends AbstractTest
 
         $module->onBootstrap($event);
 
-        $this->assertCount(3, $em->getListeners(MvcEvent::EVENT_DISPATCH));
+        $this->assertCount(4, $em->getListeners(MvcEvent::EVENT_DISPATCH));
 
         $layoutUpdater = $sm->get(LayoutUpdaterInterface::class);
 
