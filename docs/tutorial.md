@@ -333,9 +333,8 @@ return [
     'blocks' => [
         // unique block id
         'head' => [
-            'template' => 'layout/partials/head',
-            /* <?= $this->head ?> in layout */
-            'capture_to' => 'head',
+            'template' => 'layout/partials/head',            
+            'capture_to' => 'head', // <?= $this->head ?> in layout
             'options' => [
                 'order' => 10000
             ]
@@ -343,14 +342,12 @@ return [
         // unique block id
         'header' => [
             'template' => 'layout/partials/header',
-            /* <?= $this->header ?> in layout */
-            'capture_to' => 'header'
+            'capture_to' => 'header' // <?= $this->header ?> in layout
         ],
         // unique block id
         'footer' => [
-            'template' => 'layout/partials/footer',
-            /* <?= $this->footer ?> in layout */
-            'capture_to' => 'footer'
+            'template' => 'layout/partials/footer',            
+            'capture_to' => 'footer' // <?= $this->footer ?> in layout
         ]
     ]
 ];
