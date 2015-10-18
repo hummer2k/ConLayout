@@ -128,10 +128,11 @@ class Layout implements
      */
     protected function isBlockRemoved($blockId, array $specs)
     {
-        if ((isset($specs['remove']) && $specs['remove']) ||
-            isset($this->removedBlocks[$blockId])
-        ) {
+        if (isset($this->removedBlocks[$blockId])) {
             return true;
+        } elseif (isset($specs['remove'])) {
+            $isRemoved = filter_var($specs['remove'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            return (false !== $isRemoved);
         }
         return false;
     }
