@@ -122,14 +122,8 @@ class LayoutUpdateListener implements ListenerAggregateInterface
      */
     protected function fetchIncludes(Config $includeHandles)
     {
-        foreach ($includeHandles as $includeHandle => $isEnabled) {
-            if (is_int($includeHandle) && is_string($isEnabled)) {
-                $includeHandle = $isEnabled;
-                $isEnabled = true;
-            }
-            if ($isEnabled) {
-                $this->fetchHandle($includeHandle);
-            }
+        foreach ($includeHandles as $includeHandle) {
+            $this->fetchHandle($includeHandle);
         }
     }
 
