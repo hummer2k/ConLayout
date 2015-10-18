@@ -203,8 +203,9 @@ class ViewHelperListener implements ListenerAggregateInterface
             $rawValue = $instruction[$param];
             /* @var $filter FilterInterface */
             asort($filters);
-            foreach ($filters as $filterName => $isEnabled) {
-                if (floatval($isEnabled) <= 0 || !$this->filterManager->has($filterName)) {
+            foreach ($filters as $filterName => $sortOrder) {
+                $isEnabled = filter_var($sortOrder, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                if (false === $isEnabled || !$this->filterManager->has($filterName)) {
                     continue;
                 }
                 $filter = $this->filterManager->get($filterName);
