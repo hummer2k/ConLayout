@@ -323,21 +323,16 @@ If you want to use the same layout structure as `application/index/index` in
 // layout update file product/index/view.php
 return [
     'include' => [
-        'application/index/index' => true
+        'application/index/index'
     ]
 ];
 ````
 
-You can disable the include within another handle:
-
-````php
-<?php
-// layout update file product/index/view.php
-return [
-    'include' => [
-        'application/index/index' => false
-    ]
-];
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <include handle="application/index/index" />
+</page>
 ````
 
 Tip: Define a "virtual handle" for reuse:
@@ -359,13 +354,30 @@ return [
 ];
 ````
 
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <blocks>
+        <widget.forecast template="widgets/forecast" capture_to="sidebar" />
+        <widget.calendar template="widgets/calendar" capture_to="sidebar" />
+    </blocks>
+</page>
+````
+
 ````php
 <?php
 // layout update file application/index/index.php
 return [
     // ...
     'include' => [
-        'default/widgets' => true
+        'default/widgets'
     ]
 ]
+````
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <include handle="default/widgets" />
+</page>
 ````
