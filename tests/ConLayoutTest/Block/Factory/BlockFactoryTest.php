@@ -56,8 +56,10 @@ class BlockFactoryTest extends AbstractTest
             'append' => false,
             'capture_to' => 'sidebarLeft',
             'actions' => [
-                'setOption' => [
-                    'my-option', 'value_my-option'
+                'my-option' => [
+                    'method' => 'setOption',
+                    'name'   => 'my-option',
+                    'value'  => 'value_my-option'
                 ]
             ]
         ];
@@ -70,38 +72,6 @@ class BlockFactoryTest extends AbstractTest
         $this->assertEquals('value_var1', $block->getVariable('var1'));
         $this->assertEquals('sidebarLeft', $block->captureTo());
         $this->assertEquals('value_my-option', $block->getOptions()['my-option']);
-    }
-
-    public function testMultipleActions()
-    {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
-
-        $specs = [
-            'actions' => [
-                'set_some_option' => [
-                    'setOption' => ['my-option', 'value_my-option']
-                ],
-                'set_another_option' => [
-                    'setOption' => ['some-other-option', 'some-option-value']
-                ],
-                'setVariable' => ['testVar', 'valueTestVar'],
-                'set_some_var' => [
-                    'setVariable' => ['testVar2', 'SOME_VAR']
-                ],
-                'set_another_var' => [
-                    'setVariable' => ['testVar3', 'ANOTHER_VAR']
-                ]
-            ]
-        ];
-
-        $block = $factory->createBlock('block.id', $specs);
-
-        $this->assertEquals('value_my-option', $block->getOption('my-option'));
-        $this->assertEquals('some-option-value', $block->getOption('some-other-option'));
-        $this->assertEquals('valueTestVar', $block->getVariable('testVar'));
-        $this->assertEquals('SOME_VAR', $block->getVariable('testVar2'));
-        $this->assertEquals('ANOTHER_VAR', $block->getVariable('testVar3'));
     }
 
     public function testWrapBlockString()
@@ -118,6 +88,25 @@ class BlockFactoryTest extends AbstractTest
 
         $this->assertEquals('my/wrapper', $block->getTemplate());
 
+    }
+
+    /**
+     * @expectedException ConLayout\Exception\BadMethodCallException
+     */
+    public function testThrowsExceptionOnMissingMethod()
+    {
+        $factory = new BlockFactory();
+        $factory->setServiceLocator(new ServiceManager());
+
+        $specs = [
+            'actions' => [
+                'not-exists' => [
+                    'method' => 'notExists___'
+                ]
+            ]
+        ];
+
+        $factory->createBlock('my-block', $specs);
     }
 
     public function testWrapBlockArray()

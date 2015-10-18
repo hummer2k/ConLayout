@@ -3,7 +3,9 @@
 namespace ConLayout\Block\Factory;
 
 use ConLayout\Block\BlockInterface;
+use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Layout\LayoutInterface;
+use ConLayout\NamedParametersTrait;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -26,6 +28,7 @@ class BlockFactory implements
 
     use ServiceLocatorAwareTrait;
     use EventManagerAwareTrait;
+    use NamedParametersTrait;
 
     /**
      *
@@ -96,14 +99,17 @@ class BlockFactory implements
         foreach ($this->getOption('variables', $specs) as $name => $variable) {
             $block->setVariable($name, $variable);
         }
-        foreach ($this->getOption('actions', $specs) as $method => $params) {
-            $params = (array) $params;
-            if (is_callable([$block, $method])) {
-                call_user_func_array([$block, $method], $params);
-            } else {
-                $method = key($params);
-                if (is_callable([$block, $method])) {
-                    call_user_func_array([$block, $method], (array) current($params));
+        foreach ($this->getOption('actions', $specs) as $params) {
+            if (isset($params['method'])) {
+                $method = (string) $params['method'];
+                if (method_exists($block, $method)) {
+                    $this->invokeArgs($block, $method, $params);
+                } else {
+                    throw new BadMethodCallException(sprintf(
+                        'Call to undefined block method %s::%s()',
+                        get_class($block),
+                        $method
+                    ));
                 }
             }
         }
