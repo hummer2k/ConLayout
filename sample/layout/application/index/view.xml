@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <layout>layout/3cols</layout>
+    <blocks>
+        <navbar.brand>
+            <variables brand="Application/Index/View" />
+        </navbar.brand>
+        <widget.current.time capture_to="sidebarSecondary" template="widgets/current-time" />
+    </blocks>
+</page>

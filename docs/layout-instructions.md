@@ -19,6 +19,13 @@ return [
 ];
 ````
 
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <layout>layout/2cols-left</layout>
+</page>
+````
+
 ## 2. `blocks`
 
 add blocks to layout:
@@ -104,7 +111,10 @@ return [
              */
             'actions'   => [
                 'my-action' => [
-                    'method' => ['param1', 'param2', 'param3'] // $block->method('param1', 'param2', 'param3');
+                    'method' => 'someMethod',
+                    'param1' => 'Value param1',
+                    'param3' => 'Value param3',
+                    'param2' => 'Value param2'
                 ]
             ]
         ]
@@ -112,21 +122,113 @@ return [
 ];
 ````
 
-## 3. `remove_blocks`
-
-remove blocks from the layout structure:
-
-````php
-<?php
-// layout update file e.g. application/index.php
-return [
-    'remove_blocks' => [
-        'footer' => true // remove block with id 'footer'
-    ]
-];
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <blocks>
+        <!--
+         * unique block id
+         * can be referenced within the layout model by
+         * ConLayout\Layout\Layout::getBlock('my.unique.block.id');
+         -->
+        <my.unique.block.id>
+            <!--
+             * Can extend from ConLayout\Block\AbstractBlock
+             * Should implement ConLayout\Block\BlockInterface
+             * optional, defaults to Zend\View\ViewModel
+            -->
+            <class>Application\Block\SomeWidget</class>
+            <!--
+             * template only optional when already declared in block class
+            -->
+            <template>path/to/template</template>
+            <!--
+             * where should this block be displayed?
+             * syntax: <block-id>::<capture_to>
+             * if no "::"-delimiter found it will be added as a child of root
+             *
+             * In this case the block will be added as a child of the block with
+             * id 'footer' and captured to the 'content' variable in the footer 
+             * template
+            -->
+            <capture_to>footer::content</capture_to>
+            <!--
+             * default: true
+            -->
+            <append>0</append>
+            <!--
+             * set variables for this block that can be accessed with $this->var1,
+             * $this->var2 in the template
+            -->
+            <variables>
+                <var1>Hello</var1>
+                <var2>World</var2>
+            </variables>
+            <!--
+             * add options, for example to define the sort order
+            -->
+            <options>
+                <order>-10</order>
+                <!-- insert this block-->
+                <before>some.other.block</before>
+                <!-- or -->
+                <after>some.other.block</after>
+            </options>
+            <!--
+             * wraps a block with another template
+             *
+             * if false, wrapper will be disabled: 'wrapper' => false,
+             *
+             * defaults: tag: 'div', 'template: 'blocks/wrapper'
+            -->          
+            <wrapper>
+                <template>blocks/wrapper</template>
+                <class>col-xs-12</class>
+                <tag>div</tag>
+            </wrapper>
+            <!--
+             * remove this block
+            -->
+            <remove>1</remove>
+            <!--just set a custom template -->
+            <wrapper>my/wrapper</wrapper>
+            <!-- or add more attributes for the wrapper tag -->
+            <wrapper>
+                <id>some-id</id>
+                <title>Wrapper Title</title>
+            </wrapper>
+            <!--
+             * perform some actions on the block class/method calls
+            -->
+            <actions>
+                <my-action>
+                    <method>someMethod</method>
+                    <param1>Value param1</param1>
+                    <param3>Value param3</param3>
+                    <param2>Value param2</param2>
+                </my-action>
+            </actions>
+       </my.unique.block.id>
+    </blocks>
+</page>
 ````
 
-## 4. `view_helpers`
+Note: Use XML attributes when possible to reduce overhead:
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <blocks>
+        <my.unique.block.id class="Application\Block\SomeWidget" template="path/to/template">
+            <actions>
+                <my-action method="someMethod" param1="Value param1" param3="Value param3" param2="Value param2" />
+            </actions>
+        </my.unique.block.id>
+    </blocks>
+</page>
+````
+
+## 3. `view_helpers`
 
 Call view helpers. Add CSS or JavaScript assets, set page title etc.
 
@@ -158,6 +260,7 @@ return [
         ]
     ]
 ];
+// result: $headScript->appendFile('/js/main.js', 'text/javascript', ['conditional' => 'lt IE 9']);
 
 ````
 
@@ -199,6 +302,18 @@ return [
 ];
 ````
 
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <layout>3cols</layout>
+    <blocks>
+        <header />
+        <footer />
+        <widget1 />
+    </blocks>
+</page>
+````
+
 If you want to use the same layout structure as `application/index/index` in 
 `product/index/view`:
 
@@ -225,7 +340,7 @@ return [
 ];
 ````
 
-Tipp: Define a "virtual handle" for reuse:
+Tip: Define a "virtual handle" for reuse:
 
 ````php
 <?php

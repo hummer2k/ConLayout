@@ -14,8 +14,7 @@ return [
             ]
         ],
         'layout_update_extensions' => [
-            'xml',
-            'php'
+            'xml'
         ]
     ]
 ];
