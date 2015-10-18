@@ -36,7 +36,9 @@ class ViewHelperProxyAbstractFactoryTest extends PHPUnit_Framework_TestCase
     }
 }
 
+// @codingStandardsIgnoreStart
 class TestProxy extends AbstractHelper
 {
 
 }
+// @codingStandardsIgnoreEnd
