@@ -21,6 +21,7 @@ class ModuleOptionsTest extends AbstractTest
         $this->assertInternalType('array', $moduleOptions->getLayoutUpdatePaths());
         $this->assertInternalType('array', $moduleOptions->getLayoutUpdateExtensions());
         $this->assertInternalType('array', $moduleOptions->getBlockDefaults());
+        $this->assertInternalType('array', $moduleOptions->getListeners());
         $this->assertInternalType('string', $moduleOptions->getDefaultArea());
     }
 
@@ -38,6 +39,10 @@ class ModuleOptionsTest extends AbstractTest
 
         $moduleOptions->setDefaultArea('default_area');
         $this->assertEquals('default_area', $moduleOptions->getDefaultArea());
+
+        $listeners = ['listener' => true];
+        $moduleOptions->setListeners($listeners);
+        $this->assertSame($listeners, $moduleOptions->getListeners());
 
         $this->assertSame([
             'class' => 'MyBlock'

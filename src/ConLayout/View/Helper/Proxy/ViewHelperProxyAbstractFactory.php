@@ -12,8 +12,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
 {
-    protected $viewHelperConfig;
-
     /**
      *
      * @var string

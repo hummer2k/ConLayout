@@ -136,15 +136,11 @@ class ViewHelperListener implements ListenerAggregateInterface
                     $this->invokeArgs($viewHelper, $method, $args);
                 } elseif (false !== $helperProxy && method_exists($helperProxy, $method)) {
                     $this->invokeArgs($helperProxy, $method, $args);
-                } elseif (is_callable([$viewHelper, $method])) {
-                    call_user_func_array([$viewHelper, $method], array_values($args));
                 } else {
                     throw new BadMethodCallException(sprintf(
-                        'Call to undefined helper method %s::%s() in %s on line %d',
+                        'Call to undefined helper method %s::%s()',
                         get_class($viewHelper),
-                        $method,
-                        __FILE__,
-                        __LINE__
+                        $method
                     ));
                 }
             }

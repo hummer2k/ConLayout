@@ -8,6 +8,7 @@ use ConLayout\Listener\ViewHelperListener;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\Helper\Proxy\HeadMetaProxy;
 use ConLayout\View\Helper\Proxy\HeadScriptProxy;
+use ConLayout\View\Helper\Proxy\HeadTitleProxy;
 use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Bootstrap;
 use Zend\Config\Config;
@@ -125,7 +126,7 @@ class ViewHelperListenerTest extends AbstractTest
         $doctype = $helperPluginManager->get('doctype');
         /* @var $headTitle HeadTitle */
         $headTitle = $helperPluginManager->get('headTitle');
-        $headTitleProxy = new \ConLayout\View\Helper\Proxy\HeadTitleProxy($headTitle);
+        $headTitleProxy = new HeadTitleProxy($headTitle);
         $helperPluginManager->setService(get_class($headTitleProxy), $headTitleProxy);
         /* @var $headMeta HeadMeta */
         $headMeta = $helperPluginManager->get('headMeta');

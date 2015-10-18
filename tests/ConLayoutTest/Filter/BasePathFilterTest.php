@@ -13,10 +13,10 @@ use Zend\View\Helper\BasePath;
 use Zend\View\HelperPluginManager;
 
 /**
- * @package
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BasePathTest extends AbstractTest
+class BasePathFilterTest extends AbstractTest
 {
     private $basePathFilter;
 

@@ -14,7 +14,7 @@ use Zend\ServiceManager\ServiceManager;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class CacheBusterTest extends AbstractTest
+class CacheBusterFilterTest extends AbstractTest
 {
     public function testFactory()
     {
