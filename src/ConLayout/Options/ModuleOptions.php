@@ -3,6 +3,7 @@
 namespace ConLayout\Options;
 
 use ConLayout\Listener\ActionHandlesListener;
+use ConLayout\Listener\BodyClassListener;
 use ConLayout\Listener\LayoutTemplateListener;
 use ConLayout\Listener\LayoutUpdateListener;
 use ConLayout\Listener\LoadLayoutListener;
@@ -80,6 +81,7 @@ class ModuleOptions extends AbstractOptions
      */
     protected $listeners = [
         ActionHandlesListener::class  => true,
+        BodyClassListener::class      => true,
         LayoutUpdateListener::class   => true,
         LoadLayoutListener::class     => true,
         LayoutTemplateListener::class => true,
