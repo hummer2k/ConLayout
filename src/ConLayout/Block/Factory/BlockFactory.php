@@ -4,6 +4,7 @@ namespace ConLayout\Block\Factory;
 
 use ConLayout\Block\BlockInterface;
 use ConLayout\Exception\BadMethodCallException;
+use ConLayout\Exception\InvalidBlockException;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\NamedParametersTrait;
 use Zend\EventManager\EventManagerAwareInterface;
@@ -87,10 +88,13 @@ class BlockFactory implements
         $class = $this->getOption('class', $specs);
         if (null !== $this->blockManager && $this->blockManager->has($class)) {
             $block = $this->blockManager->get($class);
-        } elseif ($this->serviceLocator->has($class)) {
-            $block = $this->serviceLocator->get($class);
-        } else {
+        } elseif (class_exists($class)) {
             $block = new $class();
+        } else {
+            throw new InvalidBlockException(sprintf(
+                'Block "%s" could not be instantiated. Class does not exist.',
+                $class
+            ));
         }
         $block->setVariable(LayoutInterface::BLOCK_ID_VAR, $blockId);
         foreach ($this->getOption('options', $specs) as $name => $option) {

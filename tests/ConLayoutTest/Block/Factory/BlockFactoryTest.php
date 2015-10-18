@@ -166,23 +166,14 @@ class BlockFactoryTest extends AbstractTest
         );
     }
 
+    /**
+     * @expectedException \ConLayout\Exception\InvalidBlockException
+     */
     public function testBlockFromSm()
     {
-        $serviceManager = new ServiceManager();
-        $block = new ViewModel();
-        $serviceManager->setService('Test\Block', $block);
-
         $factory = new BlockFactory();
-        $factory->setServiceLocator($serviceManager);
-
-        $specs = [
-            'class' => 'Test\Block'
-        ];
-        $this->assertSame(
-            $block,
-            $factory->createBlock('test', $specs)
-        );
-
+        $factory->setServiceLocator(new ServiceManager());
+        $factory->createBlock('test', ['class' => 'NotExists___']);
     }
 
     public function testBlockFromBlockManager()
