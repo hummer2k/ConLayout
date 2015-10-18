@@ -85,7 +85,7 @@ class ViewHelperListener implements ListenerAggregateInterface
         $this->listeners[] = $events->attach(
             MvcEvent::EVENT_DISPATCH,
             [$this, 'applyViewHelpers'],
-            100
+            -40
         );
         $this->listeners[] = $events->getSharedManager()->attach(
             Layout::class,

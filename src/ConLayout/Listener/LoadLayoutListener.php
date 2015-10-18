@@ -15,13 +15,13 @@ use Zend\View\Model\ModelInterface;
 class LoadLayoutListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
-            
+
     /**
      *
      * @var LayoutInterface
      */
     protected $layout;
-    
+
     /**
      *
      * @param LayoutInterface $layout
@@ -39,7 +39,7 @@ class LoadLayoutListener implements ListenerAggregateInterface
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, [$this, 'loadLayout']);
     }
-    
+
     /**
      * set layout root and load layout
      *
