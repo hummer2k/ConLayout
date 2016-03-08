@@ -22,12 +22,10 @@ use Zend\View\Model\ViewModel;
  */
 class BlockFactory implements
     BlockFactoryInterface,
-    ServiceLocatorAwareInterface,
     EventManagerAwareInterface
 {
     const WRAPPER_DEFAULT = 'blocks/wrapper';
 
-    use ServiceLocatorAwareTrait;
     use EventManagerAwareTrait;
     use NamedParametersTrait;
 
@@ -53,19 +51,27 @@ class BlockFactory implements
     protected $blockManager;
 
     /**
+     * @var ServiceLocatorInterface
+     */
+    protected $serviceLocator;
+
+    /**
      *
      * @param array $blockDefaults
      * @param ServiceLocatorInterface $blockManager
+     * @param ServiceLocatorInterface $serviceLocator
      */
     public function __construct(
         array $blockDefaults = [],
-        ServiceLocatorInterface $blockManager = null
+        ServiceLocatorInterface $blockManager = null,
+        ServiceLocatorInterface $serviceLocator = null
     ) {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
             $blockDefaults
         );
         $this->blockManager = $blockManager;
+        $this->serviceLocator = $serviceLocator;
     }
 
     /**

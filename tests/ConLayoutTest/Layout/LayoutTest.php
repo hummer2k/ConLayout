@@ -15,6 +15,7 @@ use ConLayoutTest\Layout\Layout as TestLayout;
 use Zend\Config\Config;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\ModelInterface;
 
 /**
  * @package
@@ -38,8 +39,7 @@ class LayoutTest extends AbstractTest
         $this->updaterMock->method('getLayoutStructure')
             ->willReturn(new Config($this->layoutStructure));
 
-        $this->blockFactory = new BlockFactory();
-        $this->blockFactory->setServiceLocator(new ServiceManager());
+        $this->blockFactory = new BlockFactory([], null, new ServiceManager());
     }
 
     public function testFactory()
@@ -212,7 +212,7 @@ class LayoutTest extends AbstractTest
         $blocks = $layout->getBlocks();
 
         $this->assertInternalType('array', $blocks);
-        $this->assertCount(3, $blocks);
+        $this->assertCount(6, $blocks);
     }
 
     public function testSortBlocks()
@@ -262,7 +262,12 @@ class LayoutTest extends AbstractTest
         $layoutModel = new ViewModel();
         $layout->setRoot($layoutModel);
         $layout->load();
-        $this->assertCount(2, $layoutModel->getChildren());
+
+        $parent1 = $layout->getBlock('parent1');
+        $this->assertCount(1, $parent1->getChildren());
+        $widget2ChildChild = $layout->getBlock('widget.2.child.child');
+        $this->assertInstanceOf(ModelInterface::class, $widget2ChildChild);
+        $this->assertCount(3, $layoutModel->getChildren());
         $this->assertCount(1, $layout->getBlock('widget.1')->getChildren());
     }
 
@@ -278,7 +283,7 @@ class LayoutTest extends AbstractTest
         $layout->load();
 
         $this->assertFalse($layout->getBlock('widget.1'));
-        $this->assertCount(1, $layoutModel->getChildren());
+        $this->assertCount(2, $layoutModel->getChildren());
     }
 
     public function testRemoveAddedBlock()
@@ -318,7 +323,7 @@ class LayoutTest extends AbstractTest
         $layout->setRoot($root);
         $layout->load();
 
-        $this->assertCount(2, $root->getChildren());
+        $this->assertCount(3, $root->getChildren());
 
     }
 

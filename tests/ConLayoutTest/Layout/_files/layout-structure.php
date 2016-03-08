@@ -18,6 +18,18 @@ return [
         ],
         'some.removed.block' => [
             'remove' => true
+        ],
+        'parent1' => [
+            'blocks' => [
+                'widget.2.child' => [
+                    'capture_to' => 'childHtml',
+                    'blocks' => [
+                        'widget.2.child.child' => [
+                            'template' => 'child/child'
+                        ]
+                    ]
+                ]
+            ]
         ]
     ]
 ];

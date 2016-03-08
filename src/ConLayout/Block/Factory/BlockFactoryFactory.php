@@ -19,7 +19,8 @@ class BlockFactoryFactory implements FactoryInterface
         $options = $serviceLocator->get(ModuleOptions::class);
         $blockFactory = new BlockFactory(
             $options->getBlockDefaults(),
-            $serviceLocator->get(BlockManager::class)
+            $serviceLocator->get(BlockManager::class),
+            $serviceLocator
         );
         return $blockFactory;
     }

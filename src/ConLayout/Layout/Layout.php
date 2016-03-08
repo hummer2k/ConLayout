@@ -97,25 +97,39 @@ class Layout implements
 
     /**
      * generate blocks from array configuration
-     *
-     * @param array $blockConfig
      */
     protected function generateBlocks()
     {
         if (false === $this->blocksGenerated) {
             $blocks = $this->updater->getLayoutStructure()
-                ->get(LayoutUpdaterInterface::INSTRUCTION_BLOCKS, []);
-            if ($blocks instanceof Config) {
-                $blocks = $blocks->toArray();
-            }
-            foreach ($blocks as $blockId => $specs) {
-                if ($this->isBlockRemoved($blockId, $specs)) {
-                    continue;
-                }
-                $block = $this->blockFactory->createBlock($blockId, $specs);
-                $this->addBlock($blockId, $block);
-            }
+                ->get(LayoutUpdaterInterface::INSTRUCTION_BLOCKS, new Config([]));
+            $this->doGenerateBlocks($blocks);
             $this->blocksGenerated = true;
+        }
+    }
+
+    /**
+     * @param Config $blocks
+     * @param null|string $parentId
+     */
+    private function doGenerateBlocks(Config $blocks, $parentId = null)
+    {
+        foreach ($blocks as $blockId => $specs) {
+            $aSpecs = $specs->toArray();
+            if ($this->isBlockRemoved($blockId, $aSpecs)) {
+                continue;
+            }
+            if ($children = $specs->get(LayoutUpdaterInterface::INSTRUCTION_BLOCKS)) {
+                $this->doGenerateBlocks($children, $blockId);
+            }
+            $block = $this->blockFactory->createBlock($blockId, $aSpecs);
+            if (null !== $parentId) {
+                $block->setOption('has_parent', true);
+                if (!$block->getOption('parent')) {
+                    $block->setOption('parent', $parentId);
+                }
+            }
+            $this->addBlock($blockId, $block);
         }
     }
 

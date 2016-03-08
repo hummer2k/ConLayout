@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 namespace ConLayoutTest;
 
 use Zend\Loader\AutoloaderFactory;

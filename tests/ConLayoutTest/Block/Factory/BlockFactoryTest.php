@@ -35,15 +35,13 @@ class BlockFactoryTest extends AbstractTest
     public function setUp()
     {
         parent::setUp();
-        $this->factory = new BlockFactory();
         $this->sm = new ServiceManager();
-        $this->factory->setServiceLocator($this->sm);
+        $this->factory = new BlockFactory([], null, $this->sm);
     }
 
     public function testCreateBlock()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
+        $factory = new BlockFactory([], null, new ServiceManager());
         $blockSpecs = [
             'options' => [
                 'option1' => 'value_option1',
@@ -76,8 +74,7 @@ class BlockFactoryTest extends AbstractTest
 
     public function testWrapBlockString()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
+        $factory = new BlockFactory([], null, new ServiceManager());
 
         $specs = [
             'template' => 'my/tpl',
@@ -95,8 +92,7 @@ class BlockFactoryTest extends AbstractTest
      */
     public function testThrowsExceptionOnMissingMethod()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
+        $factory = new BlockFactory([], null, new ServiceManager());
 
         $specs = [
             'actions' => [
@@ -111,8 +107,7 @@ class BlockFactoryTest extends AbstractTest
 
     public function testWrapBlockArray()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
+        $factory = new BlockFactory([], null, new ServiceManager());
 
         $specs = [
             'template' => 'my/tpl',
@@ -133,8 +128,7 @@ class BlockFactoryTest extends AbstractTest
 
     public function testWrapBlockArrayWithoutTemplate()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
+        $factory = new BlockFactory([], null, new ServiceManager());
 
         $specs = [
             'template' => 'my/tpl',
@@ -150,8 +144,7 @@ class BlockFactoryTest extends AbstractTest
 
     public function testClass()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
+        $factory = new BlockFactory([], null, new ServiceManager());
 
         $specs = [
             'class' => MyBlock::class
@@ -171,8 +164,7 @@ class BlockFactoryTest extends AbstractTest
      */
     public function testBlockFromSm()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
+        $factory = new BlockFactory([], null, new ServiceManager());
         $factory->createBlock('test', ['class' => 'NotExists___']);
     }
 
@@ -184,7 +176,7 @@ class BlockFactoryTest extends AbstractTest
             'MyBlock',
             $class
         );
-        $blockFactory = new BlockFactory([], $blockManager);
+        $blockFactory = new BlockFactory([], $blockManager, new ServiceManager());
         $block = $blockFactory->createBlock('my.block', [
             'class' => 'MyBlock'
         ]);
