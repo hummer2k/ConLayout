@@ -271,6 +271,28 @@ class LayoutTest extends AbstractTest
         $this->assertCount(1, $layout->getBlock('widget.1')->getChildren());
     }
 
+    public function testReferences()
+    {
+        $layout = new Layout(
+            $this->blockFactory,
+            $this->updaterMock
+        );
+        $layoutModel = new ViewModel();
+        $layout->setRoot($layoutModel);
+        $layout->load();
+
+        $this->assertEquals(
+            'set/via/reference',
+            $layout->getBlock('widget.1.child')->getTemplate()
+        );
+
+        $this->assertEquals(
+            'set_via_reference',
+            $layout->getBlock('widget.2.child.child')->getOption('some_option')
+        );
+
+    }
+
     public function testRemoveBlock()
     {
         $layout = new Layout(

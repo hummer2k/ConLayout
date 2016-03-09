@@ -34,7 +34,6 @@ interface LayoutInterface
      *
      * @param string $blockId
      * @param ModelInterface $block
-     * @param string $parentId
      */
     public function addBlock($blockId, ModelInterface $block);
 

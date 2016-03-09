@@ -101,26 +101,32 @@ class Layout implements
     protected function generateBlocks()
     {
         if (false === $this->blocksGenerated) {
-            $blocks = $this->updater->getLayoutStructure()
-                ->get(LayoutUpdaterInterface::INSTRUCTION_BLOCKS, new Config([]));
-            $this->doGenerateBlocks($blocks);
+            $layoutStructure = $this->updater->getLayoutStructure();
+            $blocks    = $layoutStructure->get(LayoutUpdaterInterface::INSTRUCTION_BLOCKS, new Config([]));
+            $reference = $layoutStructure->get(LayoutUpdaterInterface::INSTRUCTION_REFERENCE, new Config([]));
+            $this->doGenerateBlocks($blocks, $reference);
             $this->blocksGenerated = true;
         }
     }
 
     /**
      * @param Config $blocks
+     * @param Config $references
      * @param null|string $parentId
      */
-    private function doGenerateBlocks(Config $blocks, $parentId = null)
+    private function doGenerateBlocks(Config $blocks, Config $references, $parentId = null)
     {
+        /** @var $specs Config */
         foreach ($blocks as $blockId => $specs) {
+            if ($blockReference = $references->get($blockId)) {
+                $specs->merge($blockReference);
+            }
             $aSpecs = $specs->toArray();
             if ($this->isBlockRemoved($blockId, $aSpecs)) {
                 continue;
             }
             if ($children = $specs->get(LayoutUpdaterInterface::INSTRUCTION_BLOCKS)) {
-                $this->doGenerateBlocks($children, $blockId);
+                $this->doGenerateBlocks($children, $references, $blockId);
             }
             $block = $this->blockFactory->createBlock($blockId, $aSpecs);
             if (null !== $parentId) {

@@ -5,6 +5,7 @@ namespace ConLayoutTest\Listener;
 use ConLayout\Filter\BasePathFilter;
 use ConLayout\Filter\CacheBusterFilter;
 use ConLayout\Listener\ViewHelperListener;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\Helper\Proxy\HeadMetaProxy;
 use ConLayout\View\Helper\Proxy\HeadScriptProxy;
@@ -32,7 +33,7 @@ class ViewHelperListenerTest extends AbstractTest
     protected function getLayoutStructure()
     {
         return new Config([
-            'view_helpers' => [
+            LayoutUpdaterInterface::INSTRUCTION_VIEW_HELPERS => [
                 'doctype' => 'HTML5',
                 'headLink' => [
                     'main'   => '/css/main.css',
@@ -62,7 +63,7 @@ class ViewHelperListenerTest extends AbstractTest
                         'name' => 'description',
                         'content' => 'My description'
                     ],
-                    'keywods' => [
+                    'keywords' => [
                         'name' => 'keywords',
                         'content' => 'keyword1, keyword2, keyword3'
                     ]
@@ -136,32 +137,28 @@ class ViewHelperListenerTest extends AbstractTest
 
         $listener->applyViewHelpers($mvcEvent);
 
-        $expected = '<link href="/assets/css/test.css" media="screen" rel="stylesheet" type="text/css">' . PHP_EOL
-                  . '<link href="/assets/css/main.css" media="screen" rel="stylesheet" type="text/css">' . PHP_EOL
-                  . '<link href="/assets/busted.css?v=9222f23a" media="screen" rel="stylesheet" '
-                  . 'type="text/css">';
+        foreach (['test.css', 'main.css', 'busted.css?v='] as $expected) {
+            $this->assertContains($expected, $headLink->toString());
+        }
 
-        $this->assertEquals($expected, $headLink->toString());
-
-        $expected = '<script type="text/javascript" src="/assets/js/jquery.min.js"></script>' . PHP_EOL
-                  . '<script type="text/javascript" src="/assets/js/jquery-ui.min.js"></script>' . PHP_EOL
-                  . '<!--[if lt IE 9]><script type="text/javascript" src="/assets/js/modernizr.js"></script>'
-                  . '<![endif]-->';
-
-        $this->assertEquals($expected, $headScript->toString());
+        foreach (['jquery.min.js', 'jquery-ui.min.js'] as $expected) {
+            $this->assertContains($expected, $headScript->toString());
+        }
 
         $this->assertEquals('<!DOCTYPE html>', (string) $doctype);
 
         $headTitle->setSeparator(' | ');
-        $expected = '<title>First | My Title | Another Title</title>';
+        $expected = 'First | My Title | Another Title';
+        $this->assertContains($expected, $headTitle->toString());
 
-        $this->assertEquals($expected, $headTitle->toString());
+        $contains = [
+            'charset="utf8"',
+            'name="description" content="My description"',
+            'name="keywords" content="keyword1, keyword2, keyword3"',
+        ];
 
-        $expected = '<meta charset="utf8">' . PHP_EOL
-                  . '<meta name="description" content="My description">' . PHP_EOL
-                  . '<meta name="keywords" content="keyword1, keyword2, keyword3">';
-
-        $this->assertEquals($expected, $headMeta->toString());
-
+        foreach ($contains as $expected) {
+            $this->assertContains($expected, $headMeta->toString());
+        }
     }
 }

@@ -31,5 +31,15 @@ return [
                 ]
             ]
         ]
+    ],
+    'reference' => [
+        'widget.1.child' => [
+            'template' => 'set/via/reference'
+        ],
+        'widget.2.child.child' => [
+            'options' => [
+                'some_option' => 'set_via_reference'
+            ]
+        ]
     ]
 ];

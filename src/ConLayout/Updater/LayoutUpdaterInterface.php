@@ -13,8 +13,9 @@ interface LayoutUpdaterInterface
 {
     const INSTRUCTION_LAYOUT_TEMPLATE = 'layout';
     const INSTRUCTION_BLOCKS          = 'blocks';
-    const INSTRUCTION_VIEW_HELPERS    = 'view_helpers';
+    const INSTRUCTION_VIEW_HELPERS    = 'helpers';
     const INSTRUCTION_INCLUDE         = 'include';
+    const INSTRUCTION_REFERENCE       = 'reference';
 
     const AREA_GLOBAL   = 'global';
     const AREA_DEFAULT  = 'frontend';
