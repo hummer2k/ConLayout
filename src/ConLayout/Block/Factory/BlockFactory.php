@@ -7,11 +7,9 @@ use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Exception\InvalidBlockException;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\NamedParametersTrait;
+use Interop\Container\ContainerInterface;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
@@ -20,12 +18,10 @@ use Zend\View\Model\ViewModel;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockFactory implements
+final class BlockFactory implements
     BlockFactoryInterface,
     EventManagerAwareInterface
 {
-    const WRAPPER_DEFAULT = 'blocks/wrapper';
-
     use EventManagerAwareTrait;
     use NamedParametersTrait;
 
@@ -33,7 +29,7 @@ class BlockFactory implements
      *
      * @var array
      */
-    protected $blockDefaults = [
+    private $blockDefaults = [
         'capture_to' => 'content',
         'append'     => true,
         'class'      => ViewModel::class,
@@ -41,37 +37,37 @@ class BlockFactory implements
         'variables'  => [],
         'template'   => '',
         'actions'    => [],
-        'wrapper'    => false
+        'blocks'     => []
     ];
 
     /**
      *
-     * @var ServiceLocatorInterface
+     * @var ContainerInterface
      */
-    protected $blockManager;
+    private $container;
 
     /**
-     * @var ServiceLocatorInterface
+     * @var ContainerInterface
      */
-    protected $serviceLocator;
+    private $blockManager;
 
     /**
-     *
+     * BlockFactory constructor.
      * @param array $blockDefaults
-     * @param ServiceLocatorInterface $blockManager
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $blockManager
+     * @param ContainerInterface $container
      */
     public function __construct(
         array $blockDefaults = [],
-        ServiceLocatorInterface $blockManager = null,
-        ServiceLocatorInterface $serviceLocator = null
+        ContainerInterface $blockManager = null,
+        ContainerInterface $container = null
     ) {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
             $blockDefaults
         );
+        $this->container = $container;
         $this->blockManager = $blockManager;
-        $this->serviceLocator = $serviceLocator;
     }
 
     /**
@@ -82,17 +78,9 @@ class BlockFactory implements
      */
     public function createBlock($blockId, array $specs)
     {
-        $this->getEventManager()->trigger(
-            __METHOD__ . '.pre',
-            $this,
-            [
-                'block_id' => $blockId,
-                'specs' => $specs
-            ]
-        );
         /* @var $block ModelInterface */
         $class = $this->getOption('class', $specs);
-        if (null !== $this->blockManager && $this->blockManager->has($class)) {
+        if ($this->blockManager->has($class)) {
             $block = $this->blockManager->get($class);
         } elseif (class_exists($class)) {
             $block = new $class();
@@ -103,6 +91,23 @@ class BlockFactory implements
             ));
         }
         $block->setVariable(LayoutInterface::BLOCK_ID_VAR, $blockId);
+
+        return $this->configure($block, $specs);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configure(ModelInterface $block, array $specs)
+    {
+        foreach ($specs as $key => $value) {
+            if (!isset($this->blockDefaults[$key])
+                && !isset($specs['options'][$key])
+            ) {
+                $specs['options'][$key] = $value;
+            }
+        }
+
         foreach ($this->getOption('options', $specs) as $name => $option) {
             $block->setOption($name, $option);
         }
@@ -123,30 +128,24 @@ class BlockFactory implements
                 }
             }
         }
-        if ($template = $this->getOption('template', $specs)) {
+        if (!$block->getTemplate() && $template = $this->getOption('template', $specs)) {
             $block->setTemplate($template);
-        }
-        if (false !== ($wrapperOptions = $this->getOption('wrapper', $specs))) {
-            $this->wrapBlock($block, $wrapperOptions);
         }
         $block->setCaptureTo($this->getOption('capture_to', $specs));
         $block->setAppend($this->getOption('append', $specs));
+        $block->setVariable('block', $block);
 
         if ($block instanceof BlockInterface) {
-            $block->setRequest($this->serviceLocator->get('Request'));
-            $block->setView($this->serviceLocator->get('ViewRenderer'));
+            $block->setView($this->container->get('ViewRenderer'));
+            $block->setRequest($this->container->get('Request'));
         }
 
-        if (method_exists($block, 'init')) {
-            $block->init();
-        }
         $results = $this->getEventManager()->trigger(
-            'createBlock.post',
+            __FUNCTION__ . '.post',
             $this,
             [
                 'block' => $block,
-                'specs' => $specs,
-                'block_id' => $blockId
+                'specs' => $specs
             ],
             function ($result) {
                 return $result instanceof ModelInterface;
@@ -159,41 +158,12 @@ class BlockFactory implements
     }
 
     /**
-     * assign wrapper template to block
-     *
-     * @param ModelInterface $block
-     * @param array|string $options
-     */
-    protected function wrapBlock(ModelInterface $block, $options)
-    {
-        $attributes = $options;
-        if (is_string($options)) {
-            $wrapperTemplate = $options;
-            $attributes = [];
-        } elseif (is_array($options) && (!isset($options['template']))) {
-            $wrapperTemplate = self::WRAPPER_DEFAULT;
-        } else {
-            $wrapperTemplate = $options['template'];
-            unset($attributes['template']);
-        }
-        if (isset($options['tag'])) {
-            $block->setVariable('wrapperTag', $options['tag']);
-            unset($attributes['tag']);
-        }
-        $originalTemplate = $block->getTemplate();
-        $block->setOption('is_wrapped', true);
-        $block->setTemplate($wrapperTemplate);
-        $block->setVariable('wrapperAttributes', $attributes);
-        $block->setVariable('originalTemplate', $originalTemplate);
-    }
-
-    /**
      *
      * @param string $name
      * @param array $specs
      * @return mixed
      */
-    protected function getOption($name, array $specs)
+    private function getOption($name, array $specs)
     {
         return isset($specs[$name])
             ? $specs[$name]

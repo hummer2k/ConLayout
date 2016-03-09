@@ -1,5 +1,7 @@
 <?php
 
+use ConLayout\Generator\BlocksGenerator;
+use ConLayout\Generator\ViewHelperGenerator;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\Helper\Proxy\HeadMetaProxy;
@@ -151,6 +153,16 @@ return [
             'bodyClass' => [
                 'method' => 'addClass',
                 'default_param' => 'class'
+            ]
+        ],
+        'generators' => [
+            BlocksGenerator::NAME => [
+                'class' => BlocksGenerator::class,
+                'priority' => 1
+            ],
+            ViewHelperGenerator::NAME => [
+                'class' => ViewHelperGenerator::class,
+                'priority' => 1
             ]
         ],
         /**

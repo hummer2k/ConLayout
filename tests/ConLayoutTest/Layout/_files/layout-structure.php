@@ -1,9 +1,11 @@
 <?php
-
-use ConLayout\Updater\LayoutUpdaterInterface;
+use ConLayout\Generator\BlocksGenerator;
 
 return [
-    LayoutUpdaterInterface::INSTRUCTION_BLOCKS => [
+    BlocksGenerator::INSTRUCTION_BLOCKS => [
+        'root' => [
+            'template' => 'new/layout'
+        ],
         'widget.1' => [
             'capture_to' => 'sidebarLeft',
             'options' => [

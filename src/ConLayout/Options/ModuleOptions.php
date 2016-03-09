@@ -8,7 +8,6 @@ use ConLayout\Listener\LayoutTemplateListener;
 use ConLayout\Listener\LayoutUpdateListener;
 use ConLayout\Listener\LoadLayoutListener;
 use ConLayout\Listener\PrepareActionViewModelListener;
-use ConLayout\Listener\ViewHelperListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Stdlib\AbstractOptions;
 
@@ -75,6 +74,11 @@ class ModuleOptions extends AbstractOptions
     protected $preferRouteMatchController = false;
 
     /**
+     * @var array
+     */
+    protected $generators = [];
+
+    /**
      * Listeners to attach to EVM
      *
      * @var array
@@ -84,8 +88,6 @@ class ModuleOptions extends AbstractOptions
         BodyClassListener::class      => true,
         LayoutUpdateListener::class   => true,
         LoadLayoutListener::class     => true,
-        LayoutTemplateListener::class => true,
-        ViewHelperListener::class     => true,
         PrepareActionViewModelListener::class => true
     ];
 
@@ -276,6 +278,24 @@ class ModuleOptions extends AbstractOptions
     public function setBlockDefaults(array $blockDefaults)
     {
         $this->blockDefaults = $blockDefaults;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGenerators()
+    {
+        return $this->generators;
+    }
+
+    /**
+     * @param array $generators
+     * @return ModuleOptions
+     */
+    public function setGenerators(array $generators)
+    {
+        $this->generators = $generators;
         return $this;
     }
 

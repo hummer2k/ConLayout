@@ -1,9 +1,10 @@
 <?php
 
-namespace ConLayoutTest\Listener;
+namespace ConLayoutTest\Generator;
 
 use ConLayout\Filter\BasePathFilter;
 use ConLayout\Filter\CacheBusterFilter;
+use ConLayout\Generator\ViewHelperGenerator;
 use ConLayout\Listener\ViewHelperListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
@@ -28,26 +29,29 @@ use Zend\View\Renderer\PhpRenderer;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ViewHelperListenerTest extends AbstractTest
+class ViewHelperGeneratorTest extends AbstractTest
 {
     protected function getLayoutStructure()
     {
         return new Config([
             LayoutUpdaterInterface::INSTRUCTION_VIEW_HELPERS => [
-                'doctype' => 'HTML5',
                 'headLink' => [
-                    'main'   => '/css/main.css',
-                    'busted' => 'busted.css',
+                    'main'   => [
+                        'href' => '/css/main.css',
+                    ],
+                    'busted' => [
+                        'href' => 'busted.css',
+                    ],
                     'test'   => [
                         'method' => 'prependStylesheet',
                         'href' => '/css/test.css'
                     ]
                 ],
                 'headTitle' => [
-                    'default' => 'My Title',
+                    'default' => ['value' => 'My Title'],
                     'another' => [
                         'value' => 'Another Title',
-                        'depends' => 'default'
+                        'after' => 'default'
                     ],
                     'first' => [
                         'method' => 'prepend',
@@ -69,7 +73,9 @@ class ViewHelperListenerTest extends AbstractTest
                     ]
                 ],
                 'headScript' => [
-                    'jquery-ui' => '/js/jquery-ui.min.js',
+                    'jquery-ui' => [
+                        'src' => '/js/jquery-ui.min.js',
+                    ],
                     'jquery' => [
                         'method' => 'prependFile',
                         'src' => '/js/jquery.min.js'
@@ -86,7 +92,7 @@ class ViewHelperListenerTest extends AbstractTest
         ]);
     }
 
-    public function testApplyViewHelpers()
+    public function testGenerateViewHelpers()
     {
         $config = Bootstrap::getServiceManager()->get('Config');
 
@@ -103,14 +109,11 @@ class ViewHelperListenerTest extends AbstractTest
         $cacheBusterFilter = new CacheBusterFilter(__DIR__ . '/_files');
         $filterManager->setService('cacheBuster', $cacheBusterFilter);
 
-        $listener = new ViewHelperListener(
-            $this->layoutUpdater,
-            $helperPluginManager,
+        $generator = new ViewHelperGenerator(
             $filterManager,
+            $helperPluginManager,
             $config['con-layout']['view_helpers']
         );
-
-        $mvcEvent = new MvcEvent();
 
         $renderer = new PhpRenderer();
         $renderer->setHelperPluginManager($helperPluginManager);
@@ -125,6 +128,7 @@ class ViewHelperListenerTest extends AbstractTest
         $helperPluginManager->setService(get_class($headScriptProxy), $headScriptProxy);
         /* @var $doctype Doctype */
         $doctype = $helperPluginManager->get('doctype');
+        $doctype('HTML5');
         /* @var $headTitle HeadTitle */
         $headTitle = $helperPluginManager->get('headTitle');
         $headTitleProxy = new HeadTitleProxy($headTitle);
@@ -135,9 +139,9 @@ class ViewHelperListenerTest extends AbstractTest
         $helperPluginManager->setService(get_class($headMetaProxy), $headMetaProxy);
         $headMeta->setView($renderer);
 
-        $listener->applyViewHelpers($mvcEvent);
+        $generator->generate($this->getLayoutStructure());
 
-        foreach (['test.css', 'main.css', 'busted.css?v='] as $expected) {
+        foreach (['/assets/css/test.css', '/assets/css/main.css', '/assets/busted.css?v='] as $expected) {
             $this->assertContains($expected, $headLink->toString());
         }
 

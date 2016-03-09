@@ -2,6 +2,7 @@
 
 namespace ConLayout\Layout;
 
+use ConLayout\Generator\GeneratorInterface;
 use Zend\View\Model\ModelInterface;
 
 /**
@@ -13,6 +14,8 @@ interface LayoutInterface
     const BLOCK_ID_ROOT = 'root';
     const BLOCK_ID_ACTION_RESULT = 'action.result';
     const BLOCK_ID_VAR  = '__BLOCK_ID__';
+
+    const CAPTURE_TO_DELIMITER = '::';
 
     /**
      * retrieve single block by block id
@@ -55,4 +58,20 @@ interface LayoutInterface
      * @param ModelInterface $root
      */
     public function setRoot(ModelInterface $root);
+
+    /**
+     * @param string $name
+     * @param GeneratorInterface $generator
+     * @param int $priority
+     * @return mixed
+     */
+    public function addGenerator($name, GeneratorInterface $generator, $priority = 1);
+
+    /**
+     * removes a generator
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function removeGenerator($name);
 }

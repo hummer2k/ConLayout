@@ -36,12 +36,11 @@ class BlockFactoryTest extends AbstractTest
     {
         parent::setUp();
         $this->sm = new ServiceManager();
-        $this->factory = new BlockFactory([], null, $this->sm);
+        $this->factory = new BlockFactory([], new BlockManager(), $this->sm);
     }
 
     public function testCreateBlock()
     {
-        $factory = new BlockFactory([], null, new ServiceManager());
         $blockSpecs = [
             'options' => [
                 'option1' => 'value_option1',
@@ -61,7 +60,7 @@ class BlockFactoryTest extends AbstractTest
                 ]
             ]
         ];
-        $block = $factory->createBlock('block1', $blockSpecs);
+        $block = $this->factory->createBlock('block1', $blockSpecs);
 
         $this->assertEquals('path/to/template', $block->getTemplate());
         $this->assertEquals(false, $block->isAppend());
@@ -72,28 +71,11 @@ class BlockFactoryTest extends AbstractTest
         $this->assertEquals('value_my-option', $block->getOptions()['my-option']);
     }
 
-    public function testWrapBlockString()
-    {
-        $factory = new BlockFactory([], null, new ServiceManager());
-
-        $specs = [
-            'template' => 'my/tpl',
-            'wrapper' => 'my/wrapper'
-        ];
-
-        $block = $factory->createBlock('my-block', $specs);
-
-        $this->assertEquals('my/wrapper', $block->getTemplate());
-
-    }
-
     /**
      * @expectedException ConLayout\Exception\BadMethodCallException
      */
     public function testThrowsExceptionOnMissingMethod()
     {
-        $factory = new BlockFactory([], null, new ServiceManager());
-
         $specs = [
             'actions' => [
                 'not-exists' => [
@@ -102,56 +84,16 @@ class BlockFactoryTest extends AbstractTest
             ]
         ];
 
-        $factory->createBlock('my-block', $specs);
-    }
-
-    public function testWrapBlockArray()
-    {
-        $factory = new BlockFactory([], null, new ServiceManager());
-
-        $specs = [
-            'template' => 'my/tpl',
-            'wrapper' => [
-                'template' => 'my/wrapper',
-                'class' => 'my-wrapper-class',
-                'tag'   => 'p'
-            ]
-        ];
-
-        $block = $factory->createBlock('my-block', $specs);
-
-        $this->assertEquals('my/wrapper', $block->getTemplate());
-
-        $this->assertEquals(['class' => 'my-wrapper-class'], $block->getVariable('wrapperAttributes'));
-        $this->assertEquals('p', $block->getVariable('wrapperTag'));
-    }
-
-    public function testWrapBlockArrayWithoutTemplate()
-    {
-        $factory = new BlockFactory([], null, new ServiceManager());
-
-        $specs = [
-            'template' => 'my/tpl',
-            'wrapper' => [
-                'tag'   => 'div'
-            ]
-        ];
-
-        $block = $factory->createBlock('my-block', $specs);
-
-        $this->assertEquals(BlockFactory::WRAPPER_DEFAULT, $block->getTemplate());
+        $this->factory->createBlock('my-block', $specs);
     }
 
     public function testClass()
     {
-        $factory = new BlockFactory([], null, new ServiceManager());
-
         $specs = [
             'class' => MyBlock::class
         ];
 
-        $block = $factory->createBlock('test-block', $specs);
-        $this->assertTrue($block->isInitialized());
+        $block = $this->factory->createBlock('test-block', $specs);
 
         $this->assertEquals(
             'test-block',
@@ -159,26 +101,17 @@ class BlockFactoryTest extends AbstractTest
         );
     }
 
-    /**
-     * @expectedException \ConLayout\Exception\InvalidBlockException
-     */
-    public function testBlockFromSm()
-    {
-        $factory = new BlockFactory([], null, new ServiceManager());
-        $factory->createBlock('test', ['class' => 'NotExists___']);
-    }
-
     public function testBlockFromBlockManager()
     {
         $blockManager = new BlockManager();
         $class = MyBlock::class;
         $blockManager->setInvokableClass(
-            'MyBlock',
+            MyBlock::class,
             $class
         );
         $blockFactory = new BlockFactory([], $blockManager, new ServiceManager());
         $block = $blockFactory->createBlock('my.block', [
-            'class' => 'MyBlock'
+            'class' => MyBlock::class
         ]);
         $this->assertInstanceOf($class, $block);
     }

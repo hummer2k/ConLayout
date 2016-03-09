@@ -51,8 +51,8 @@ class LayoutCollectorTest extends AbstractTest
         $serviceManager->setService(
             LayoutInterface::class,
             new Layout(
-                new BlockFactory(),
-                new LayoutUpdater()
+                $this->layoutUpdater,
+                $this->blockPool
             )
         );
         $serviceManager->setService(

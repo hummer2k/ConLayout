@@ -33,11 +33,10 @@ class LayoutManagerTest extends AbstractTest
 
     public function setUp()
     {
-        $updater = new LayoutUpdater();
-        $this->updater = $updater;
+        parent::setUp();
         $layout = new Layout(
-            new BlockFactory(),
-            $updater
+            $this->layoutUpdater,
+            $this->blockPool
         );
 
         $this->layout = $layout;
@@ -54,7 +53,7 @@ class LayoutManagerTest extends AbstractTest
 
         $this->layoutManager = new LayoutManager(
             $layout,
-            $updater,
+            $this->layoutUpdater,
             $renderer
         );
     }
@@ -68,7 +67,7 @@ class LayoutManagerTest extends AbstractTest
         );
         $serviceManager->setService(
             LayoutUpdaterInterface::class,
-            $this->updater
+            $this->layoutUpdater
         );
         $serviceManager->setService(
             BlockRenderer::class,
@@ -103,12 +102,12 @@ class LayoutManagerTest extends AbstractTest
 
     public function testAddHandle()
     {
-        $this->layoutManager->addHandle('my-test-handle');
+        $this->layoutManager->addHandle(new Handle('my-test-handle', 1));
 
         $this->assertSame([
             'default',
             'my-test-handle'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
 
         $this->layoutManager->addHandle(new Handle('test-handle-2', -10));
 
@@ -116,23 +115,23 @@ class LayoutManagerTest extends AbstractTest
             'test-handle-2',
             'default',
             'my-test-handle'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
     }
 
     public function testRemoveHandle()
     {
-        $this->layoutManager->addHandle('my-test-handle', 5);
+        $this->layoutManager->addHandle(new Handle('my-test-handle', 5));
 
         $this->assertSame([
             'default',
             'my-test-handle'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
 
         $this->layoutManager->removeHandle('my-test-handle');
 
         $this->assertSame([
             'default'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
     }
 
     public function testRemoveBlock()
@@ -197,7 +196,7 @@ class LayoutManagerTest extends AbstractTest
             'my-handle-2',
             'my-handle-1',
             'my-handle-3'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
     }
 
     public function testSetHandlesObject()
@@ -212,6 +211,6 @@ class LayoutManagerTest extends AbstractTest
             'my-handle-2',
             'my-handle-1',
             'my-handle-3'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
     }
 }

@@ -1,20 +1,21 @@
 <?php
 namespace ConLayout\Controller\Plugin;
 
+use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Handle\Handle;
 use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\ModelInterface;
-use Zend\View\Renderer\RendererInterface;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutManager extends AbstractPlugin implements
-    LayoutInterface
+    LayoutInterface,
+    LayoutUpdaterInterface
 {
     /**
      *
@@ -30,29 +31,19 @@ class LayoutManager extends AbstractPlugin implements
 
     /**
      *
-     * @var RendererInterface
-     */
-    protected $renderer;
-
-    /**
-     *
      * @param LayoutInterface $layout
      * @param LayoutUpdaterInterface $updater
-     * @param RendererInterface $renderer
      */
     public function __construct(
         LayoutInterface $layout,
-        LayoutUpdaterInterface $updater,
-        RendererInterface $renderer
+        LayoutUpdaterInterface $updater
     ) {
         $this->layout = $layout;
         $this->updater = $updater;
-        $this->renderer = $renderer;
     }
 
     /**
      *
-     * @param string|null $blockId
      * @return mixed
      */
     public function __invoke()
@@ -94,19 +85,37 @@ class LayoutManager extends AbstractPlugin implements
     }
 
     /**
-     * add a handle. if $handle parameter implements HandleInterface, $priority
-     * will be ignored
-     *
-     * @param string|HandleInterface $handle
-     * @return LayoutManager
+     * @inheritDoc
      */
-    public function addHandle($handle, $priority = 1)
+    public function getLayoutStructure()
     {
-        if (is_string($handle)) {
-            $handle = new Handle($handle, $priority);
-        }
+        return $this->updater->getLayoutStructure();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addHandle(HandleInterface $handle)
+    {
         $this->updater->addHandle($handle);
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setArea($area)
+    {
+        $this->updater->setArea($area);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getArea()
+    {
+        return $this->updater->getArea();
     }
 
     /**
@@ -127,6 +136,11 @@ class LayoutManager extends AbstractPlugin implements
         }
         $this->updater->setHandles($newHandles);
         return $this;
+    }
+
+    public function getHandles($asObject = false)
+    {
+        return $this->updater->getHandles($asObject);
     }
 
     /**
@@ -160,13 +174,46 @@ class LayoutManager extends AbstractPlugin implements
     }
 
     /**
-     *
-     * @param ModelInterface $root
-     * @return LayoutManager
+     * {@inheritdoc}
+     */
+    public function getRoot()
+    {
+        return $this->layout->getRoot();
+    }
+
+    /**
+     * @inheritDoc
      */
     public function setRoot(ModelInterface $root)
     {
         $this->layout->setRoot($root);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addGenerator($name, GeneratorInterface $generator, $priority = 1)
+    {
+        $this->layout->addGenerator($name, $generator, $priority);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeGenerator($name)
+    {
+        $this->layout->removeGenerator($name);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function generate(array $generators = [])
+    {
+        $this->layout->generate($generators);
         return $this;
     }
 }

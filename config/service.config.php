@@ -1,5 +1,7 @@
 <?php
 
+use ConLayout\Block\BlockPool;
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactoryFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
@@ -25,10 +27,12 @@ use ConLayout\Updater\LayoutUpdaterFactory;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Renderer\BlockRenderer;
 use ConLayout\View\Renderer\BlockRendererFactory;
-use ConLayout\View\Strategy\BlockRendererStrategy;
-use ConLayout\View\Strategy\BlockRendererStrategyFactory;
 use ConLayout\Zdt\Collector\LayoutCollector;
 use ConLayout\Zdt\Collector\LayoutCollectorFactory;
+use ConLayout\Generator\BlocksGenerator;
+use ConLayout\Generator\BlocksGeneratorFactory;
+use ConLayout\Generator\ViewHelperGenerator;
+use ConLayout\Generator\ViewHelperGeneratorFactory;
 
 return [
     'factories' => [
@@ -38,22 +42,22 @@ return [
         BodyClassListener::class        => BodyClassListenerFactory::class,
         LoadLayoutListener::class       => LoadLayoutListenerFactory::class,
         LayoutTemplateListener::class   => LayoutTemplateListenerFactory::class,
-        ViewHelperListener::class       => ViewHelperListenerFactory::class,
         LayoutUpdateListener::class     => LayoutUpdateListenerFactory::class,
         LayoutInterface::class          => LayoutFactory::class,
         LayoutUpdaterInterface::class   => LayoutUpdaterFactory::class,
         BlockRenderer::class            => BlockRendererFactory::class,
-        BlockRendererStrategy::class    => BlockRendererStrategyFactory::class,
         LayoutCollector::class          => LayoutCollectorFactory::class,
         ModuleOptions::class            => ModuleOptionsFactory::class,
+        BlocksGenerator::class          => BlocksGeneratorFactory::class,
+        ViewHelperGenerator::class      => ViewHelperGeneratorFactory::class
     ],
     'aliases' => [
         'Layout'                => LayoutInterface::class,
-        'BlockRendererStrategy' => BlockRendererStrategy::class,
         'BlockRenderer'         => BlockRenderer::class,
         'BlockManager'          => BlockManager::class
     ],
     'invokables' => [
+        BlockPoolInterface::class => BlockPool::class,
         PrepareActionViewModelListener::class => PrepareActionViewModelListener::class
     ]
 ];

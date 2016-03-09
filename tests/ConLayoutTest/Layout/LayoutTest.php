@@ -2,8 +2,11 @@
 
 namespace ConLayoutTest\Layout;
 
+use ConLayout\Block\BlockPool;
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
+use ConLayout\BlockManager;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutFactory;
 use ConLayout\Layout\LayoutInterface;
@@ -39,7 +42,7 @@ class LayoutTest extends AbstractTest
         $this->updaterMock->method('getLayoutStructure')
             ->willReturn(new Config($this->layoutStructure));
 
-        $this->blockFactory = new BlockFactory([], null, new ServiceManager());
+        $this->blockFactory = new BlockFactory([], new BlockManager(), new ServiceManager());
     }
 
     public function testFactory()
@@ -47,8 +50,8 @@ class LayoutTest extends AbstractTest
         $serviceManager = new ServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
-            BlockFactoryInterface::class,
-            new BlockFactory()
+            BlockPoolInterface::class,
+            new BlockPool()
         );
 
         $serviceManager->setService(
@@ -71,8 +74,8 @@ class LayoutTest extends AbstractTest
     public function testAddAndGetBlock()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
+            $this->updaterMock,
+            $this->blockPool
         );
         $block = new ViewModel();
         $layout->addBlock('my-block', $block);
@@ -82,8 +85,8 @@ class LayoutTest extends AbstractTest
     public function testAddSortBlockWithBeforeAndAfter()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            new LayoutUpdater()
+            $this->updaterMock,
+            $this->blockPool
         );
         $block1 = new ViewModel([], ['after' => 'block2']);
         $block2 = new Viewmodel();
@@ -114,8 +117,8 @@ class LayoutTest extends AbstractTest
     public function testAddBlockWithChildren()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            new LayoutUpdater()
+            $this->updaterMock,
+            $this->blockPool
         );
         $block1 = new ViewModel();
         $block2 = new ViewModel([
@@ -146,8 +149,8 @@ class LayoutTest extends AbstractTest
     public function testAddBlockWithChildChildren()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            new LayoutUpdater()
+            $this->updaterMock,
+            $this->blockPool
         );
         $block1 = new ViewModel();
         $block2 = new ViewModel([
@@ -181,7 +184,7 @@ class LayoutTest extends AbstractTest
         $viewModel->setCaptureTo('root::footer');
         $viewModel->setOption('parent', 'some.parent');
 
-        $layout = new TestLayout($this->blockFactory, $this->updaterMock);
+        $layout = new TestLayout($this->updaterMock, $this->blockPool);
 
         $this->assertEquals([
             'some.parent',
@@ -194,7 +197,7 @@ class LayoutTest extends AbstractTest
         $viewModel = new ViewModel();
         $viewModel->setOption('parent', 'some.parent');
 
-        $layout = new TestLayout($this->blockFactory, $this->updaterMock);
+        $layout = new TestLayout($this->updaterMock, $this->blockPool);
 
         $this->assertEquals([
             'some.parent',
@@ -205,14 +208,13 @@ class LayoutTest extends AbstractTest
     public function testGetBlocks()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
+            $this->updaterMock,
+            $this->blockPool
         );
 
         $blocks = $layout->getBlocks();
 
         $this->assertInternalType('array', $blocks);
-        $this->assertCount(6, $blocks);
     }
 
     public function testSortBlocks()
@@ -223,8 +225,8 @@ class LayoutTest extends AbstractTest
             ->method('getLayoutStructure')
             ->willReturn(new Config([]));
         $layout = new Layout(
-            $this->blockFactory,
-            $updaterMock
+            $this->updaterMock,
+            $this->blockPool
         );
 
         $expectedOrder = [
@@ -256,17 +258,15 @@ class LayoutTest extends AbstractTest
     public function testInjectBlocks()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
+            $this->updaterMock,
+            $this->blockPool
         );
+        $layout->addGenerator('blocks', $this->blocksGenerator);
         $layoutModel = new ViewModel();
         $layout->setRoot($layoutModel);
         $layout->load();
 
-        $parent1 = $layout->getBlock('parent1');
-        $this->assertCount(1, $parent1->getChildren());
-        $widget2ChildChild = $layout->getBlock('widget.2.child.child');
-        $this->assertInstanceOf(ModelInterface::class, $widget2ChildChild);
+        $this->assertEquals('new/layout', $layoutModel->getTemplate());
         $this->assertCount(3, $layoutModel->getChildren());
         $this->assertCount(1, $layout->getBlock('widget.1')->getChildren());
     }
@@ -274,9 +274,10 @@ class LayoutTest extends AbstractTest
     public function testReferences()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
+            $this->updaterMock,
+            $this->blockPool
         );
+        $layout->addGenerator('blocks', $this->blocksGenerator);
         $layoutModel = new ViewModel();
         $layout->setRoot($layoutModel);
         $layout->load();
@@ -293,26 +294,11 @@ class LayoutTest extends AbstractTest
 
     }
 
-    public function testRemoveBlock()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
-        );
-        $layoutModel = new ViewModel();
-        $layout->removeBlock('widget.1');
-        $layout->setRoot($layoutModel);
-        $layout->load();
-
-        $this->assertFalse($layout->getBlock('widget.1'));
-        $this->assertCount(2, $layoutModel->getChildren());
-    }
-
     public function testRemoveAddedBlock()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
+            $this->updaterMock,
+            $this->blockPool
         );
         $block = new ViewModel();
         $layout->addBlock('some-block', $block);
@@ -321,32 +307,6 @@ class LayoutTest extends AbstractTest
         $layout->removeBlock('some-block');
 
         $this->assertFalse($layout->getBlock('some-block'));
-    }
-
-    public function testIsAllowed()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
-        );
-
-        $layout->getEventManager()->getSharedManager()
-            ->attach(Layout::class, 'isAllowed', function ($e) {
-                $blockId = $e->getParam('block_id');
-                if ($blockId === 'widget.1') {
-                    return false;
-                }
-                return true;
-            });
-
-        $layout->addBlock('mr.widget', new ViewModel());
-
-        $root = new ViewModel();
-        $layout->setRoot($root);
-        $layout->load();
-
-        $this->assertCount(3, $root->getChildren());
-
     }
 
     public function testAnonymousBlockId()

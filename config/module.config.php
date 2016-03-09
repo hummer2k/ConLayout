@@ -10,9 +10,6 @@ return [
         'template_map' => [
             'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',
         ],
-        'strategies' => [
-            'BlockRendererStrategy'
-        ],
         // important: set empty layout template, so we
         // are able to set the template via layout()-helper in controller
         'layout' => ''

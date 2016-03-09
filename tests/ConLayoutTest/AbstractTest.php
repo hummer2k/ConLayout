@@ -1,16 +1,24 @@
 <?php
 namespace ConLayoutTest;
 
+use ConLayout\Block\BlockPool;
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\Block\Factory\BlockFactoryInterface;
+use ConLayout\BlockManager;
+use ConLayout\Generator\BlocksGenerator;
+use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\Layout\Layout;
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase;
 use Zend\Config\Config;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
+use Zend\ServiceManager\ServiceManager;
 use Zend\View\Resolver\TemplateMapResolver;
 
 /**
@@ -32,6 +40,26 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
     protected $layout;
 
     /**
+     * @var BlockPoolInterface
+     */
+    protected $blockPool;
+
+    /**
+     * @var BlockFactoryInterface
+     */
+    protected $blockFactory;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $sm;
+
+    /**
+     * @var GeneratorInterface
+     */
+    protected $blocksGenerator;
+
+    /**
      *
      * @var EventManagerInterface
      */
@@ -42,6 +70,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         $eventManager = new EventManager();
         $this->layoutUpdater = new LayoutUpdater();
         $this->layoutUpdater->setEventManager($eventManager);
+        $this->sm = Bootstrap::getServiceManager();
 
         $this->em = $eventManager;
         $this->em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
@@ -54,9 +83,23 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
             }
         );
 
+
+        $this->blockPool = new BlockPool();
+        $this->blockFactory = new BlockFactory([], new BlockManager(), $this->sm);
+
+        $this->blocksGenerator = new BlocksGenerator(
+            $this->blockFactory,
+            $this->blockPool
+        );
+
         $this->layout = new Layout(
-            new BlockFactory(),
-            $this->layoutUpdater
+            $this->layoutUpdater,
+            $this->blockPool
+        );
+
+        $this->layout->addGenerator(
+            BlocksGenerator::NAME,
+            $this->blocksGenerator
         );
     }
 
