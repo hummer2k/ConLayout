@@ -41,18 +41,16 @@ class LoadLayoutListener implements ListenerAggregateInterface
     }
 
     /**
-     * set layout root and load layout
+     * load layout if result ist not terminated
      *
      * @param MvcEvent $e
      */
     public function loadLayout(MvcEvent $e)
     {
-        /* @var $root ModelInterface */
-        $root = $e->getViewModel();
-        if ($root->terminate()) {
-            return;
+        /* @var $result ModelInterface */
+        $result = $e->getViewModel();
+        if (!$result->terminate()) {
+            $this->layout->load();
         }
-        $this->layout->setRoot($root);
-        $this->layout->load();
     }
 }

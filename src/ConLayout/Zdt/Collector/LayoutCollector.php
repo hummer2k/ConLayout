@@ -78,8 +78,8 @@ class LayoutCollector extends AbstractCollector
         $layout = $mvcEvent->getViewModel();
         $blocks = [];
         foreach ($this->layout->getBlocks() as $blockId => $block) {
-            if ($parentBlock = $block->getOption('parent_block')) {
-                $captureTo = $parentBlock->getVariable(LayoutInterface::BLOCK_ID_VAR) . '::' . $block->captureTo();
+            if ($parentBlock = $block->getOption('parent')) {
+                $captureTo = $parentBlock . '::' . $block->captureTo();
             } else {
                 $captureTo = $block->captureTo();
             }

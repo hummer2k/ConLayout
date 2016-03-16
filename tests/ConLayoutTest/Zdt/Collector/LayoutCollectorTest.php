@@ -90,10 +90,9 @@ class LayoutCollectorTest extends AbstractTest
         $testBlock = new ViewModel();
         $testBlock->setTemplate('widget1');
         $testBlock->setCaptureTo('sidebarLeft');
-        $testBlock->setVariable(LayoutInterface::BLOCK_ID_VAR, 'test.block');
 
         $testBlock2 = new ViewModel();
-        $testBlock2->setOption('parent_block', $testBlock);
+        $testBlock2->setOption('parent', 'test.block');
         $testBlock2->setTemplate('widget1');
 
         $this->layout->addBlock('test.block', $testBlock);

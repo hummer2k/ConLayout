@@ -2,31 +2,13 @@
 
 Currently there are 4 layout instructions:
 
-1. [`layout`](#1-layout)
-2. [`blocks`](#2-blocks)
-3. [`view_helpers`](#4-view_helpers)
-4. [`include`](#5-include)
+1. [`blocks`](#1-blocks)
+2. [`helpers`](#2-helpers)
+3. [`include`](#3-include)
+4. [`reference`](#4-reference)
 
-## 1. `layout`
 
-sets the layout template:
-
-````php
-<?php
-// layout update file e.g. default.php
-return [
-    'layout' => 'layout/2cols-left'
-];
-````
-
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <layout>layout/2cols-left</layout>
-</page>
-````
-
-## 2. `blocks`
+## 1. `blocks`
 
 add blocks to layout:
 
@@ -82,18 +64,6 @@ return [
                 'before' => 'some.other.block',
                 // or
                 'after' => 'some.other.block'
-            ],
-            /**
-             * wraps a block with another template
-             *
-             * if false, wrapper will be disabled: 'wrapper' => false,
-             *
-             * defaults: tag: 'div', 'template: 'blocks/wrapper'
-             */             
-            'wrapper' => [
-                'template' => 'blocks/wrapper',
-                'class' => 'col-xs-12',
-                'tag' => 'div'
             ],
             /**
              * remove this block
@@ -190,13 +160,6 @@ return [
              * remove this block
             -->
             <remove>1</remove>
-            <!--just set a custom template -->
-            <wrapper>my/wrapper</wrapper>
-            <!-- or add more attributes for the wrapper tag -->
-            <wrapper>
-                <id>some-id</id>
-                <title>Wrapper Title</title>
-            </wrapper>
             <!--
              * perform some actions on the block class/method calls
             -->
@@ -228,7 +191,7 @@ Note: Use XML attributes when possible to reduce overhead:
 </page>
 ````
 
-## 3. `view_helpers`
+## 2. `helpers`
 
 Call view helpers. Add CSS or JavaScript assets, set page title etc.
 
@@ -239,7 +202,7 @@ Call view helpers. Add CSS or JavaScript assets, set page title etc.
 // Examples:
 
 return [
-    'view_helpers' => [
+    'helpers' => [
         'headScript' => [
             'jquery' => '/js/jquery.js'
         ]
@@ -248,7 +211,7 @@ return [
 // result: $headScript->appendFile('/js/jquery.js');
 
 return [
-    'view_helpers' => [
+    'helpers' => [
         'headScript' => [
             'main' => [
                 'src' => '/js/main.js', // src = argument name of method signature
@@ -279,7 +242,7 @@ or via XML:
 
 ````
 
-## 4. `include`
+## 3. `include`
 
 Includes another handles
 
@@ -287,7 +250,6 @@ Includes another handles
 <?php
 // layout update file application/index/index.php
 return [
-    'layout' => '3cols',
     'blocks' => [
         'header' => [
             // ...
@@ -305,7 +267,6 @@ return [
 ````xml
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <layout>3cols</layout>
     <blocks>
         <header />
         <footer />
@@ -381,3 +342,4 @@ return [
     <include handle="default/widgets" />
 </page>
 ````
+

@@ -340,46 +340,6 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->assertEquals(['default'], $this->updater->getHandles());
     }
 
-    public function testListenerAttachesDispatchErrorEventAtExpectedPriority()
-    {
-        $events = new EventManager();
-        $events->attachAggregate($this->listener);
-        $listeners = $events->getListeners(MvcEvent::EVENT_DISPATCH_ERROR);
-        $expectedCallback = [$this->listener, 'injectErrorHandle'];
-        $expectedPriority = 100;
-        $found            = false;
-        foreach ($listeners as $listener) {
-            $callback = $listener->getCallback();
-            if ($callback === $expectedCallback) {
-                if ($listener->getMetadatum('priority') == $expectedPriority) {
-                    $found = true;
-                    break;
-                }
-            }
-        }
-        $this->assertTrue($found, 'Listener not found');
-    }
-
-    public function testListenerAttachesDispatchEventAtExpectedPriority()
-    {
-        $events = new EventManager();
-        $events->attachAggregate($this->listener);
-        $listeners = $events->getListeners(MvcEvent::EVENT_DISPATCH);
-        $expectedCallback = [$this->listener, 'injectActionHandles'];
-        $expectedPriority = 1000;
-        $found            = false;
-        foreach ($listeners as $listener) {
-            $callback = $listener->getCallback();
-            if ($callback === $expectedCallback) {
-                if ($listener->getMetadatum('priority') == $expectedPriority) {
-                    $found = true;
-                    break;
-                }
-            }
-        }
-        $this->assertTrue($found, 'Listener not found');
-    }
-
     public function testGetterAndSetters()
     {
         $updater = new LayoutUpdater;

@@ -29,19 +29,4 @@ class BodyClassListenerTest extends AbstractTest
 
         $this->assertEquals('my-some-route', (string) $bodyClassHelper);
     }
-
-    public function testAttach()
-    {
-        $eventManager = new EventManager();
-        $listener = new BodyClassListener(new BodyClass());
-
-        $before = $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH);
-        $this->assertCount(0, $before);
-
-        $eventManager->attach($listener);
-
-        $after = $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH);
-        $this->assertCount(1, $after);
-
-    }
 }

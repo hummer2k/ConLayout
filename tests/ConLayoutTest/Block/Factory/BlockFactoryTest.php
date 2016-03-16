@@ -6,7 +6,6 @@ use ConLayout\Block\AbstractBlock;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
-use ConLayout\Layout\LayoutInterface;
 use ConLayoutTest\AbstractTest;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceManager;
@@ -72,7 +71,7 @@ class BlockFactoryTest extends AbstractTest
     }
 
     /**
-     * @expectedException ConLayout\Exception\BadMethodCallException
+     * @expectedException \ConLayout\Exception\BadMethodCallException
      */
     public function testThrowsExceptionOnMissingMethod()
     {
@@ -97,7 +96,7 @@ class BlockFactoryTest extends AbstractTest
 
         $this->assertEquals(
             'test-block',
-            $block->getVariable(LayoutInterface::BLOCK_ID_VAR)
+            $block->getOption('block_id')
         );
     }
 

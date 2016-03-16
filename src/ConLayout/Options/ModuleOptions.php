@@ -79,6 +79,11 @@ class ModuleOptions extends AbstractOptions
     protected $generators = [];
 
     /**
+     * @var array
+     */
+    protected $collectors = [];
+
+    /**
      * Listeners to attach to EVM
      *
      * @var array
@@ -86,7 +91,6 @@ class ModuleOptions extends AbstractOptions
     protected $listeners = [
         ActionHandlesListener::class  => true,
         BodyClassListener::class      => true,
-        LayoutUpdateListener::class   => true,
         LoadLayoutListener::class     => true,
         PrepareActionViewModelListener::class => true
     ];
@@ -296,6 +300,24 @@ class ModuleOptions extends AbstractOptions
     public function setGenerators(array $generators)
     {
         $this->generators = $generators;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCollectors()
+    {
+        return $this->collectors;
+    }
+
+    /**
+     * @param array $collectors
+     * @return ModuleOptions
+     */
+    public function setCollectors(array $collectors)
+    {
+        $this->collectors = $collectors;
         return $this;
     }
 

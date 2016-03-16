@@ -23,8 +23,7 @@ class LayoutManagerFactory implements FactoryInterface
         $sl = $serviceLocator->getServiceLocator();
         return new LayoutManager(
             $sl->get(LayoutInterface::class),
-            $sl->get(LayoutUpdaterInterface::class),
-            $sl->get(BlockRenderer::class)
+            $sl->get(LayoutUpdaterInterface::class)
         );
     }
 }

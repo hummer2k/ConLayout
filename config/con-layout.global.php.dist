@@ -9,6 +9,7 @@ use ConLayout\View\Helper\Proxy\HeadScriptProxy;
 use ConLayout\View\Helper\Proxy\HeadTitleProxy;
 use ConLayout\View\Helper\Proxy\InlineScriptProxy;
 use Zend\View\Model\ViewModel;
+use ConLayout\Updater\Collector\FilesystemCollector;
 
 return [
     'con-layout' => [
@@ -47,7 +48,7 @@ return [
          * @see http://framework.zend.com/manual/current/en/modules/zend.config.reader.html
          */
         'layout_update_extensions' => [
-            'php'
+            'xml'
         ],
         'default_area' => LayoutUpdaterInterface::AREA_DEFAULT,
         /**
@@ -109,7 +110,6 @@ return [
             ],
             'headLink' => [
                 'method' => 'appendStylesheet',
-                'default_param' => 'href',
                 'filter' => [
                     'href' => [
                         'basePath' => 5,
@@ -120,7 +120,6 @@ return [
             ],
             'headScript' => [
                 'method' => 'appendFile',
-                'default_param' => 'src',
                 'filter' => [
                     'src' => [
                         'basePath' => 5,
@@ -131,7 +130,6 @@ return [
             ],
             'inlineScript' => [
                 'method' => 'appendFile',
-                'default_param' => 'src',
                 'filter' => [
                     'src' => [
                         'basePath' => 5,
@@ -142,17 +140,14 @@ return [
             ],
             'headTitle' => [
                 'method' => 'append',
-                'default_param' => 'value',
                 'proxy' => HeadTitleProxy::class
             ],
             'headMeta' => [
                 'method' => 'setName',
-                'default_param' => 'name',
                 'proxy' => HeadMetaProxy::class
             ],
             'bodyClass' => [
-                'method' => 'addClass',
-                'default_param' => 'class'
+                'method' => 'addClass'
             ]
         ],
         'generators' => [
@@ -165,6 +160,12 @@ return [
                 'priority' => 1
             ]
         ],
+        'collectors' => [
+            FilesystemCollector::NAME => [
+                'class' => FilesystemCollector::class,
+                'priority' => 10
+            ]
+        ]
         /**
          * enable/disable particular listeners
          */
@@ -173,7 +174,6 @@ return [
             'ConLayout\Listener\ActionHandlesListener'  => true,
             'ConLayout\Listener\LayoutUpdateListener'   => true,
             'ConLayout\Listener\LoadLayoutListener'     => true,
-            'ConLayout\Listener\LayoutTemplateListener' => true,
             'ConLayout\Listener\ViewHelperListener'     => true,
             'ConLayout\Listener\PrepareActionViewModelListener' => true
         ]*/

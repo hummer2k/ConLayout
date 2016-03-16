@@ -50,6 +50,12 @@ final class BeforeAfterComparison implements SorterInterface
         return $configArray;
     }
 
+    /**
+     * prepare array for sorting
+     *
+     * @param array $data
+     * @return mixed
+     */
     private function prepare($data)
     {
         foreach ($data as $code => &$item) {
@@ -59,8 +65,6 @@ final class BeforeAfterComparison implements SorterInterface
     }
 
     /**
-     * Prepare configuration array for total model
-     *
      * @param   string $code
      * @param   $item
      * @return  array
@@ -82,8 +86,6 @@ final class BeforeAfterComparison implements SorterInterface
     }
 
     /**
-     * Callback that uses after/before for comparison
-     *
      * @param   array $a
      * @param   array $b
      * @return  int

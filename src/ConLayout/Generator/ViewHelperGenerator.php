@@ -64,8 +64,9 @@ final class ViewHelperGenerator implements GeneratorInterface
      */
     public function generate(Config $layoutStructure)
     {
-        $helpers = $layoutStructure->get(self::INSTRUCTION);
-        $this->generateViewHelpers($helpers);
+        if ($helpers = $layoutStructure->get(self::INSTRUCTION)) {
+            $this->generateViewHelpers($helpers);
+        }
     }
 
     /**
@@ -86,7 +87,7 @@ final class ViewHelperGenerator implements GeneratorInterface
             $instructions = $helpers[$helper]->toArray();
             $sortedInstructions = $this->sort($instructions);
             foreach ($sortedInstructions as $id => $instruction) {
-                if (!$instruction || $this->isRemoved($instruction)) {
+                if ($this->isRemoved($instruction)) {
                     continue;
                 }
                 $mergedInstruction = ArrayUtils::merge($config, (array) $instruction);
@@ -151,6 +152,9 @@ final class ViewHelperGenerator implements GeneratorInterface
 
     private function isRemoved($item)
     {
+        if (!$item) {
+            return true;
+        }
         if (!isset($item['remove'])) {
             return false;
         }

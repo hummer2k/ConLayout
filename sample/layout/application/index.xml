@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <view_helpers>
-        <headTitle>
-            <app-index method="prepend" value="Application Index" />
-        </headTitle>
-    </view_helpers>
-</page>

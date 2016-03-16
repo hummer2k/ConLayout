@@ -90,15 +90,12 @@ final class BlockFactory implements
                 $class
             ));
         }
-        $block->setVariable(LayoutInterface::BLOCK_ID_VAR, $blockId);
+        $block->setOption('block_id', $blockId);
 
         return $this->configure($block, $specs);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function configure(ModelInterface $block, array $specs)
+    private function prepareOptions(array $specs)
     {
         foreach ($specs as $key => $value) {
             if (!isset($this->blockDefaults[$key])
@@ -107,6 +104,15 @@ final class BlockFactory implements
                 $specs['options'][$key] = $value;
             }
         }
+        return $specs;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configure(ModelInterface $block, array $specs)
+    {
+        $specs = $this->prepareOptions($specs);
 
         foreach ($this->getOption('options', $specs) as $name => $option) {
             $block->setOption($name, $option);

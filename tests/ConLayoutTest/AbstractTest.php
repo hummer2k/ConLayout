@@ -18,7 +18,6 @@ use PHPUnit_Framework_TestCase;
 use Zend\Config\Config;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
-use Zend\ServiceManager\ServiceManager;
 use Zend\View\Resolver\TemplateMapResolver;
 
 /**
@@ -75,8 +74,8 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         $this->em = $eventManager;
         $this->em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
         $this->em->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'getLayoutStructure.pre',
+            LayoutUpdater::class,
+            UpdateEvent::EVENT_COLLECT,
             function (UpdateEvent $e) {
                 $layoutStructure = $e->getLayoutStructure();
                 $layoutStructure->merge($this->getLayoutStructure());
@@ -97,7 +96,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
             $this->blockPool
         );
 
-        $this->layout->addGenerator(
+        $this->layout->attachGenerator(
             BlocksGenerator::NAME,
             $this->blocksGenerator
         );

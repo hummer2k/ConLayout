@@ -50,6 +50,7 @@ final class BlockPool implements BlockPoolInterface
      */
     public function add($blockId, ModelInterface $block)
     {
+        $block->setOption('block_id', $blockId);
         if ($block->hasChildren()) {
             foreach ($block->getChildren() as $childBlock) {
                 $childBlockId = $this->determineAnonymousBlockId($childBlock);
@@ -113,14 +114,14 @@ final class BlockPool implements BlockPoolInterface
      */
     private function determineAnonymousBlockId(ModelInterface $block)
     {
-        $blockId = $block->getVariable(LayoutInterface::BLOCK_ID_VAR);
+        $blockId = $block->getOption('block_id');
         if (!$blockId) {
             $blockId = sprintf(
                 self::ANONYMOUS_ID_PATTERN,
                 $block->captureTo(),
                 self::$anonymousSuffix++
             );
-            $block->setVariable(LayoutInterface::BLOCK_ID_VAR, $blockId);
+            $block->setOption('block_id', $blockId);
         }
         return $blockId;
     }

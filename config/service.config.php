@@ -6,6 +6,10 @@ use ConLayout\Block\Factory\BlockFactoryFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
 use ConLayout\BlockManagerFactory;
+use ConLayout\Generator\BlocksGenerator;
+use ConLayout\Generator\BlocksGeneratorFactory;
+use ConLayout\Generator\ViewHelperGenerator;
+use ConLayout\Generator\ViewHelperGeneratorFactory;
 use ConLayout\Layout\LayoutFactory;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\ActionHandlesListener;
@@ -25,27 +29,23 @@ use ConLayout\Options\ModuleOptions;
 use ConLayout\Options\ModuleOptionsFactory;
 use ConLayout\Updater\LayoutUpdaterFactory;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayout\View\Renderer\BlockRenderer;
-use ConLayout\View\Renderer\BlockRendererFactory;
 use ConLayout\Zdt\Collector\LayoutCollector;
 use ConLayout\Zdt\Collector\LayoutCollectorFactory;
-use ConLayout\Generator\BlocksGenerator;
-use ConLayout\Generator\BlocksGeneratorFactory;
-use ConLayout\Generator\ViewHelperGenerator;
-use ConLayout\Generator\ViewHelperGeneratorFactory;
+use ConLayout\Listener\Factory\PrepareActionViewModelListenerFactory;
+use ConLayout\Updater\Collector\FilesystemCollector;
+use ConLayout\Updater\Collector\FilesystemCollectorFactory;
 
 return [
     'factories' => [
+        FilesystemCollector::class      => FilesystemCollectorFactory::class,
         BlockManager::class             => BlockManagerFactory::class,
         BlockFactoryInterface::class    => BlockFactoryFactory::class,
         ActionHandlesListener::class    => ActionHandlesListenerFactory::class,
         BodyClassListener::class        => BodyClassListenerFactory::class,
         LoadLayoutListener::class       => LoadLayoutListenerFactory::class,
-        LayoutTemplateListener::class   => LayoutTemplateListenerFactory::class,
-        LayoutUpdateListener::class     => LayoutUpdateListenerFactory::class,
+        PrepareActionViewModelListener::class => PrepareActionViewModelListenerFactory::class,
         LayoutInterface::class          => LayoutFactory::class,
         LayoutUpdaterInterface::class   => LayoutUpdaterFactory::class,
-        BlockRenderer::class            => BlockRendererFactory::class,
         LayoutCollector::class          => LayoutCollectorFactory::class,
         ModuleOptions::class            => ModuleOptionsFactory::class,
         BlocksGenerator::class          => BlocksGeneratorFactory::class,
@@ -53,11 +53,9 @@ return [
     ],
     'aliases' => [
         'Layout'                => LayoutInterface::class,
-        'BlockRenderer'         => BlockRenderer::class,
         'BlockManager'          => BlockManager::class
     ],
     'invokables' => [
         BlockPoolInterface::class => BlockPool::class,
-        PrepareActionViewModelListener::class => PrepareActionViewModelListener::class
     ]
 ];

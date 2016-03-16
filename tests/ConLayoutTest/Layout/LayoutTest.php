@@ -121,11 +121,11 @@ class LayoutTest extends AbstractTest
             $this->blockPool
         );
         $block1 = new ViewModel();
-        $block2 = new ViewModel([
-            LayoutInterface::BLOCK_ID_VAR => 'child1'
+        $block2 = new ViewModel([], [
+            'block_id' => 'child1'
         ]);
-        $block3 = new ViewModel([
-            LayoutInterface::BLOCK_ID_VAR => 'child2'
+        $block3 = new ViewModel([], [
+            'block_id' => 'child2'
         ]);
         $block1->addChild($block2);
         $block1->addChild($block3);
@@ -153,11 +153,11 @@ class LayoutTest extends AbstractTest
             $this->blockPool
         );
         $block1 = new ViewModel();
-        $block2 = new ViewModel([
-            LayoutInterface::BLOCK_ID_VAR => 'child1'
+        $block2 = new ViewModel([], [
+            'block_id' => 'child1'
         ]);
-        $block3 = new ViewModel([
-            LayoutInterface::BLOCK_ID_VAR => 'child2'
+        $block3 = new ViewModel([], [
+            'block_id' => 'child2'
         ]);
         $block1->addChild($block2);
         $block2->addChild($block3);
@@ -261,7 +261,7 @@ class LayoutTest extends AbstractTest
             $this->updaterMock,
             $this->blockPool
         );
-        $layout->addGenerator('blocks', $this->blocksGenerator);
+        $layout->attachGenerator('blocks', $this->blocksGenerator);
         $layoutModel = new ViewModel();
         $layout->setRoot($layoutModel);
         $layout->load();
@@ -277,7 +277,7 @@ class LayoutTest extends AbstractTest
             $this->updaterMock,
             $this->blockPool
         );
-        $layout->addGenerator('blocks', $this->blocksGenerator);
+        $layout->attachGenerator('blocks', $this->blocksGenerator);
         $layoutModel = new ViewModel();
         $layout->setRoot($layoutModel);
         $layout->load();
@@ -318,7 +318,7 @@ class LayoutTest extends AbstractTest
 
         $this->assertEquals(
             'anonymous.content.1',
-            $child->getVariable(LayoutInterface::BLOCK_ID_VAR)
+            $child->getOption('block_id')
         );
     }
 
@@ -326,10 +326,10 @@ class LayoutTest extends AbstractTest
     {
         $parent = new ViewModel();
         $child  = new ViewModel();
-        $child->setVariable(LayoutInterface::BLOCK_ID_VAR, 'child');
+        $child->setOption('block_id', 'child');
 
         $child2 = new ViewModel();
-        $child2->setVariable(LayoutInterface::BLOCK_ID_VAR, 'child2');
+        $child2->setOption('block_id', 'child2');
         $child->addChild($child2);
 
         $parent->addChild($child);

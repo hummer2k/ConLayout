@@ -2,6 +2,8 @@
 
 use ConLayout\Controller\Plugin\LayoutManagerFactory;
 use ConLayout\Zdt\Collector\LayoutCollector;
+use ConLayout\Block\Container;
+
 return [
     'view_manager' => [
         'template_path_stack' => [
@@ -10,8 +12,6 @@ return [
         'template_map' => [
             'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',
         ],
-        // important: set empty layout template, so we
-        // are able to set the template via layout()-helper in controller
         'layout' => ''
     ],
     'controller_plugins' => [
@@ -31,4 +31,12 @@ return [
             ],
         ],
     ],
+    'blocks' => [
+        'invokables' => [
+            'container' => Container::class
+        ],
+        'shared' => [
+            'container' => false
+        ]
+    ]
 ];

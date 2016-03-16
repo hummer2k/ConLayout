@@ -69,9 +69,7 @@ final class BlocksGenerator implements GeneratorInterface
                 $this->generateBlocks($children, $references, $blockId);
             }
             if ($block = $this->blockPool->get($blockId)) {
-                if (!$block->getOption('read_only')) {
-                    $this->blockFactory->configure($block, $specs->toArray());
-                }
+                $this->blockFactory->configure($block, $specs->toArray());
             } else {
                 $block = $this->blockFactory->createBlock($blockId, $specs->toArray());
             }

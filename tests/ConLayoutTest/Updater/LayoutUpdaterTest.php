@@ -42,7 +42,7 @@ class LayoutUpdaterTest extends AbstractTest
                 );
                 $this->em->getSharedManager()->attach(
                     LayoutUpdater::class,
-                    'getLayoutStructure.pre',
+                    UpdateEvent::EVENT_COLLECT,
                     function (UpdateEvent $e) use ($instructions) {
                         $handles = $e->getHandles();
                         $this->layoutStructure = $e->getLayoutStructure();
@@ -85,7 +85,7 @@ class LayoutUpdaterTest extends AbstractTest
     {
         $this->em->getSharedManager()->attach(
             LayoutUpdater::class,
-            'getLayoutStructure.pre',
+            UpdateEvent::EVENT_COLLECT,
             function (UpdateEvent $e) {
                 return new Config(['cached' => true]);
             }
@@ -103,7 +103,7 @@ class LayoutUpdaterTest extends AbstractTest
         $this->em->getSharedManager()->clearListeners(LayoutUpdater::class);
         $this->em->getSharedManager()->attach(
             LayoutUpdater::class,
-            'getLayoutStructure.pre',
+            UpdateEvent::EVENT_COLLECT,
             function (UpdateEvent $e) {
                 $this->assertEquals([
                     'default'

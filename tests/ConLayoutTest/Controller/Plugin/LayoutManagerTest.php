@@ -46,15 +46,9 @@ class LayoutManagerTest extends AbstractTest
             (new ViewModel())->setTemplate('widget1')
         );
 
-        $renderer = new BlockRenderer();
-        $renderer->setResolver($this->getResolver());
-
-        $this->renderer = $renderer;
-
         $this->layoutManager = new LayoutManager(
             $layout,
-            $this->layoutUpdater,
-            $renderer
+            $this->layoutUpdater
         );
     }
 
@@ -68,10 +62,6 @@ class LayoutManagerTest extends AbstractTest
         $serviceManager->setService(
             LayoutUpdaterInterface::class,
             $this->layoutUpdater
-        );
-        $serviceManager->setService(
-            BlockRenderer::class,
-            $this->renderer
         );
 
         $controllerPluginManager = new PluginManager();

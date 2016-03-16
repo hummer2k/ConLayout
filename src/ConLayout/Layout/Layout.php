@@ -169,6 +169,17 @@ class Layout implements
         if ($blockId === self::BLOCK_ID_ROOT) {
             return false;
         }
+        $result = $this->getEventManager()->trigger(
+            __FUNCTION__,
+            $this,
+            [
+                'block_id' => $blockId,
+                'block' => $block
+            ]
+        );
+        if ($result->stopped()) {
+            return $result->last();
+        }
         return true;
     }
 
@@ -251,7 +262,7 @@ class Layout implements
     /**
      * @inheritDoc
      */
-    public function addGenerator($name, GeneratorInterface $generator, $priority = 1)
+    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1)
     {
         $this->generators->insert($name, $generator, $priority);
         return $this;
@@ -260,7 +271,7 @@ class Layout implements
     /**
      * @inheritDoc
      */
-    public function removeGenerator($name)
+    public function detachGenerator($name)
     {
         $this->generators->remove($name);
         return $this;

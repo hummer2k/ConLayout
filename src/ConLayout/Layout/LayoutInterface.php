@@ -13,7 +13,6 @@ interface LayoutInterface
 {
     const BLOCK_ID_ROOT = 'root';
     const BLOCK_ID_ACTION_RESULT = 'action.result';
-    const BLOCK_ID_VAR  = '__BLOCK_ID__';
 
     const CAPTURE_TO_DELIMITER = '::';
 
@@ -65,7 +64,7 @@ interface LayoutInterface
      * @param int $priority
      * @return mixed
      */
-    public function addGenerator($name, GeneratorInterface $generator, $priority = 1);
+    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1);
 
     /**
      * removes a generator
@@ -73,5 +72,5 @@ interface LayoutInterface
      * @param string $name
      * @return mixed
      */
-    public function removeGenerator($name);
+    public function detachGenerator($name);
 }

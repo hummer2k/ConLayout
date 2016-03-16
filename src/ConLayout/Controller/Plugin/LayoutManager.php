@@ -193,18 +193,18 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function addGenerator($name, GeneratorInterface $generator, $priority = 1)
+    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1)
     {
-        $this->layout->addGenerator($name, $generator, $priority);
+        $this->layout->attachGenerator($name, $generator, $priority);
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function removeGenerator($name)
+    public function detachGenerator($name)
     {
-        $this->layout->removeGenerator($name);
+        $this->layout->detachGenerator($name);
         return $this;
     }
 

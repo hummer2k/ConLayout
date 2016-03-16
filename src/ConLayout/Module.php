@@ -1,10 +1,11 @@
 <?php
 namespace ConLayout;
 
+use ConLayout\Layout\LayoutInterface;
 use ConLayout\ModuleManager\Feature\BlockProviderInterface;
 use ConLayout\Options\ModuleOptions;
-use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventInterface as Event;
+use Zend\EventManager\EventInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
@@ -15,6 +16,7 @@ use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
+use Zend\Mvc\MvcEvent;
 
 /**
  * @package ConLayout
@@ -90,7 +92,8 @@ class Module implements
 
     /**
      *
-     * @param EventInterface $e
+     * @param MvcEvent|EventInterface $e
+     * @return array|void
      */
     public function onBootstrap(Event $e)
     {
@@ -109,9 +112,11 @@ class Module implements
 
         foreach ($listeners as $listener => $isEnabled) {
             if ($isEnabled) {
-                 $eventManager->attach($serviceManager->get($listener));
+                 $serviceManager->get($listener)->attach($eventManager);
             }
         }
+
+        $serviceManager->get(LayoutInterface::class)->setRoot($e->getViewModel());
     }
 
     /**

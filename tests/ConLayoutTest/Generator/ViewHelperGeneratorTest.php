@@ -34,7 +34,7 @@ class ViewHelperGeneratorTest extends AbstractTest
     protected function getLayoutStructure()
     {
         return new Config([
-            LayoutUpdaterInterface::INSTRUCTION_VIEW_HELPERS => [
+            ViewHelperGenerator::INSTRUCTION => [
                 'headLink' => [
                     'main'   => [
                         'href' => '/css/main.css',
