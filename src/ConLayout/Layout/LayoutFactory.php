@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package ConLayout
+ * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
+ */
 
 namespace ConLayout\Layout;
 
@@ -9,10 +13,6 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ConLayout\Options\ModuleOptions;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LayoutFactory implements FactoryInterface
 {
     /**

@@ -6,7 +6,6 @@
 
 namespace ConLayout\Updater\Collector;
 
-
 use ConLayout\Options\ModuleOptions;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

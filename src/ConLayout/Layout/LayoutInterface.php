@@ -11,40 +11,31 @@ use Zend\View\Model\ModelInterface;
  */
 interface LayoutInterface
 {
+    /**
+     * block id of root view model
+     */
     const BLOCK_ID_ROOT = 'root';
+
+    /**
+     * block id of view model returned by controller
+     */
     const BLOCK_ID_ACTION_RESULT = 'action.result';
 
+    /**
+     * delimiter block_id::cpature_to
+     */
     const CAPTURE_TO_DELIMITER = '::';
 
     /**
-     * retrieve single block by block id
-     *
-     * @param string $blockId
-     * @return ModelInterface
+     * @param array $generators load only given generators or all if empty
+     * @return mixed
      */
-    public function getBlock($blockId);
+    public function generate(array $generators = []);
 
     /**
-     * retrieve all blocks
-     *
-     * @return ModelInterface[]
+     * @return mixed
      */
-    public function getBlocks();
-
-    /**
-     * add a single block
-     *
-     * @param string $blockId
-     * @param ModelInterface $block
-     */
-    public function addBlock($blockId, ModelInterface $block);
-
-    /**
-     * removes a single block
-     *
-     * @param string $blockId
-     */
-    public function removeBlock($blockId);
+    public function buildTree();
 
     /**
      * load the layout

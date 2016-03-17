@@ -1,6 +1,7 @@
 <?php
 namespace ConLayout\Controller\Plugin;
 
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Handle\Handle;
 use ConLayout\Handle\HandleInterface;
@@ -30,16 +31,24 @@ class LayoutManager extends AbstractPlugin implements
     protected $updater;
 
     /**
+     * @var BlockPoolInterface
+     */
+    protected $blockPool;
+
+    /**
      *
      * @param LayoutInterface $layout
      * @param LayoutUpdaterInterface $updater
+     * @param BlockPoolInterface $blockPool
      */
     public function __construct(
         LayoutInterface $layout,
-        LayoutUpdaterInterface $updater
+        LayoutUpdaterInterface $updater,
+        BlockPoolInterface $blockPool
     ) {
         $this->layout = $layout;
         $this->updater = $updater;
+        $this->blockPool = $blockPool;
     }
 
     /**
@@ -58,7 +67,7 @@ class LayoutManager extends AbstractPlugin implements
      */
     public function getBlock($blockId)
     {
-        return $this->layout->getBlock($blockId);
+        return $this->blockPool->get($blockId);
     }
 
     /**
@@ -69,7 +78,7 @@ class LayoutManager extends AbstractPlugin implements
      */
     public function addBlock($blockId, ModelInterface $block)
     {
-        $this->layout->addBlock($blockId, $block);
+        $this->blockPool->add($blockId, $block);
         return $this;
     }
 
@@ -80,7 +89,7 @@ class LayoutManager extends AbstractPlugin implements
      */
     public function removeBlock($blockId)
     {
-        $this->layout->removeBlock($blockId);
+        $this->blockPool->remove($blockId);
         return $this;
     }
 
@@ -188,6 +197,14 @@ class LayoutManager extends AbstractPlugin implements
     {
         $this->layout->setRoot($root);
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function buildTree()
+    {
+        $this->layout->buildTree();
     }
 
     /**

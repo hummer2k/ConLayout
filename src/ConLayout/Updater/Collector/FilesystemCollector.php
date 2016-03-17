@@ -1,11 +1,10 @@
 <?php
 /**
- * @package
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 
 namespace ConLayout\Updater\Collector;
-
 
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
@@ -49,16 +48,6 @@ class FilesystemCollector implements CollectorInterface
         $this->extensions = $extensions;
     }
 
-
-    /**
-     * @inheritDoc
-     */
-    public function init(array $handles)
-    {
-        // no need to initialize
-        return;
-    }
-
     /**
      * @inheritDoc
      */
@@ -70,7 +59,7 @@ class FilesystemCollector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function fetchHandle($handle)
+    public function collect($handle)
     {
         $globPaths = $this->getGlobPaths($handle);
         $tempStructure = new Config([], true);

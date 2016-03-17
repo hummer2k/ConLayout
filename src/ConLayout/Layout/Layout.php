@@ -158,6 +158,14 @@ class Layout implements
     }
 
     /**
+     * @inheritDoc
+     */
+    public function buildTree()
+    {
+        $this->injectBlocks();
+    }
+
+    /**
      * Determines whether a block should be allowed given certain parameters
      *
      * @param   string          $blockId

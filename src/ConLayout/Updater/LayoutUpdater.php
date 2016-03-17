@@ -111,7 +111,6 @@ final class LayoutUpdater extends AbstractUpdater implements
     {
         foreach ($this->collectors as $collector) {
             $collector->setArea($this->getArea());
-            $collector->init($handles);
         }
     }
 
