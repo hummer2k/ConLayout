@@ -95,8 +95,8 @@ class LayoutCollectorTest extends AbstractTest
         $testBlock2->setOption('parent', 'test.block');
         $testBlock2->setTemplate('widget1');
 
-        $this->layout->addBlock('test.block', $testBlock);
-        $this->layout->addBlock('test.block2', $testBlock2);
+        $this->blockPool->add('test.block', $testBlock);
+        $this->blockPool->add('test.block2', $testBlock2);
 
         $this->collector->collect($event);
 

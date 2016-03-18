@@ -2,6 +2,7 @@
 
 namespace ConLayoutTest\Controller\Plugin;
 
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Controller\Plugin\LayoutManager;
 use ConLayout\Controller\Plugin\LayoutManagerFactory;
@@ -48,7 +49,8 @@ class LayoutManagerTest extends AbstractTest
 
         $this->layoutManager = new LayoutManager(
             $layout,
-            $this->layoutUpdater
+            $this->layoutUpdater,
+            $this->blockPool
         );
     }
 
@@ -62,6 +64,10 @@ class LayoutManagerTest extends AbstractTest
         $serviceManager->setService(
             LayoutUpdaterInterface::class,
             $this->layoutUpdater
+        );
+        $serviceManager->setService(
+            BlockPoolInterface::class,
+            $this->blockPool
         );
 
         $controllerPluginManager = new PluginManager();

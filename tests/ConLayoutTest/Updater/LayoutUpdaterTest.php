@@ -87,6 +87,7 @@ class LayoutUpdaterTest extends AbstractTest
             LayoutUpdater::class,
             UpdateEvent::EVENT_COLLECT,
             function (UpdateEvent $e) {
+                $e->stopPropagation();
                 return new Config(['cached' => true]);
             }
         );

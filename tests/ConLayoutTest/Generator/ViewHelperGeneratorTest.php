@@ -39,9 +39,6 @@ class ViewHelperGeneratorTest extends AbstractTest
                     'main'   => [
                         'href' => '/css/main.css',
                     ],
-                    'busted' => [
-                        'href' => 'busted.css',
-                    ],
                     'test'   => [
                         'method' => 'prependStylesheet',
                         'href' => '/css/test.css'
@@ -141,7 +138,7 @@ class ViewHelperGeneratorTest extends AbstractTest
 
         $generator->generate($this->getLayoutStructure());
 
-        foreach (['/assets/css/test.css', '/assets/css/main.css', '/assets/busted.css?v='] as $expected) {
+        foreach (['/assets/css/test.css', '/assets/css/main.css'] as $expected) {
             $this->assertContains($expected, $headLink->toString());
         }
 
