@@ -6,7 +6,6 @@
 
 namespace ConLayoutTest\Generator;
 
-
 use ConLayout\Generator\BlocksGenerator;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
@@ -134,5 +133,4 @@ class BlocksGeneratorTest extends AbstractTest
         $this->blocksGenerator->generate($specs);
         $this->assertSame($block, $this->blockPool->get('some.block'));
     }
-
 }
