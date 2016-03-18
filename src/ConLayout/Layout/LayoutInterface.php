@@ -27,20 +27,47 @@ interface LayoutInterface
     const CAPTURE_TO_DELIMITER = '::';
 
     /**
+     * retrieve single block by block id
+     *
+     * @param string $blockId
+     * @return ModelInterface
+     */
+    public function getBlock($blockId);
+
+    /**
+     * retrieve all blocks
+     *
+     * @return ModelInterface[]
+     */
+    public function getBlocks();
+
+    /**
+     * add a single block
+     *
+     * @param string $blockId
+     * @param ModelInterface $block
+     */
+    public function addBlock($blockId, ModelInterface $block);
+
+    /**
+     * removes a single block
+     *
+     * @param string $blockId
+     */
+    public function removeBlock($blockId);
+
+    /**
      * @param array $generators load only given generators or all if empty
      * @return mixed
      */
     public function generate(array $generators = []);
 
     /**
+     * inject blocks/build view model tree
+     *
      * @return mixed
      */
-    public function buildTree();
-
-    /**
-     * load the layout
-     */
-    public function load();
+    public function injectBlocks();
 
     /**
      * set root view model/layout

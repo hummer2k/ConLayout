@@ -2,6 +2,8 @@
 
 namespace ConLayout\View\Helper;
 
+use ConLayout\Block\BlockPool;
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Layout\LayoutInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Model\ModelInterface;
@@ -17,15 +19,15 @@ class Block extends AbstractHelper
      *
      * @var LayoutInterface
      */
-    protected $layout;
+    private $blockPool;
 
     /**
      *
-     * @param LayoutInterface $layout
+     * @param BlockPoolInterface $blockPool
      */
-    public function __construct(LayoutInterface $layout)
+    public function __construct(BlockPoolInterface $blockPool)
     {
-        $this->layout = $layout;
+        $this->blockPool = $blockPool;
     }
 
     /**
@@ -35,6 +37,6 @@ class Block extends AbstractHelper
      */
     public function __invoke($blockId)
     {
-        return $this->layout->getBlock($blockId);
+        return $this->blockPool->get($blockId);
     }
 }

@@ -169,7 +169,7 @@ class LayoutManager extends AbstractPlugin implements
      */
     public function getBlocks()
     {
-        return $this->layout->getBlocks();
+        return $this->blockPool->get();
     }
 
     /**
@@ -202,9 +202,9 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function buildTree()
+    public function injectBlocks()
     {
-        $this->layout->buildTree();
+        $this->layout->injectBlocks();
     }
 
     /**

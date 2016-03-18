@@ -3,15 +3,12 @@
 namespace ConLayoutTest\Controller\Plugin;
 
 use ConLayout\Block\BlockPoolInterface;
-use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Controller\Plugin\LayoutManager;
 use ConLayout\Controller\Plugin\LayoutManagerFactory;
 use ConLayout\Handle\Handle;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayout\View\Renderer\BlockRenderer;
 use ConLayoutTest\AbstractTest;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
@@ -35,20 +32,13 @@ class LayoutManagerTest extends AbstractTest
     public function setUp()
     {
         parent::setUp();
-        $layout = new Layout(
-            $this->layoutUpdater,
-            $this->blockPool
-        );
-
-        $this->layout = $layout;
-
-        $layout->addBlock(
+        $this->blockPool->add(
             'test-block',
             (new ViewModel())->setTemplate('widget1')
         );
 
         $this->layoutManager = new LayoutManager(
-            $layout,
+            $this->layout,
             $this->layoutUpdater,
             $this->blockPool
         );

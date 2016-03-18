@@ -2,6 +2,7 @@
 
 namespace ConLayoutTest\View\Helper;
 
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\View\Helper\Block;
 use ConLayout\View\Helper\BlockFactory;
@@ -19,7 +20,7 @@ class BlockFactoryTest extends AbstractTest
     public function testFactory()
     {
         $sm = new ServiceManager();
-        $sm->setService(LayoutInterface::class, $this->layout);
+        $sm->setService(BlockPoolInterface::class, $this->blockPool);
         $helperManager = new HelperPluginManager();
         $helperManager->setServiceLocator($sm);
 

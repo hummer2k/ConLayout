@@ -2,8 +2,8 @@
 
 namespace ConLayout\Listener;
 
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -23,15 +23,15 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
     /**
      * @var LayoutInterface
      */
-    private $layout;
+    private $blockPool;
 
     /**
      * PrepareActionViewModelListener constructor.
-     * @param LayoutInterface $layout
+     * @param BlockPoolInterface $blockPool
      */
-    public function __construct(LayoutInterface $layout)
+    public function __construct(BlockPoolInterface $blockPool)
     {
-        $this->layout = $layout;
+        $this->blockPool = $blockPool;
     }
 
     /**
@@ -49,10 +49,10 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
      */
     public function prepareActionViewModel(MvcEvent $e)
     {
-        /* @var $layout ModelInterface */
+        /* @var $result ModelInterface */
         $result = $e->getResult();
         if ($result instanceof ModelInterface && !$result->terminate()) {
-            $this->layout->addBlock(
+            $this->blockPool->add(
                 LayoutInterface::BLOCK_ID_ACTION_RESULT,
                 $result
             );

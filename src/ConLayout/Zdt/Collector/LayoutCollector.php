@@ -38,6 +38,7 @@ class LayoutCollector extends AbstractCollector
      *
      * @param LayoutInterface $layout
      * @param LayoutUpdaterInterface $updater
+     * @param ResolverInterface $viewResolver
      */
     public function __construct(
         LayoutInterface $layout,
@@ -49,7 +50,7 @@ class LayoutCollector extends AbstractCollector
         $this->viewResolver = $viewResolver;
     }
 
-        /**
+    /**
      *
      * @return string
      */

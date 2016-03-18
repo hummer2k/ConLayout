@@ -5,6 +5,7 @@ namespace ConLayoutTest\Listener;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\PrepareActionViewModelListener;
 use ConLayoutTest\AbstractTest;
+use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -21,9 +22,9 @@ class PrepareActionViewModelListenerTest extends AbstractTest
     {
         parent::setUp();
         $this->prepareActionViewModelListener = new PrepareActionViewModelListener(
-            $this->layout
+            $this->blockPool
         );
-        $this->mvcEvent = new \Zend\Mvc\MvcEvent();
+        $this->mvcEvent = new MvcEvent();
     }
 
     public function testWithViewModel()

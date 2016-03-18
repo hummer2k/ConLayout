@@ -119,8 +119,8 @@ final class LayoutUpdater extends AbstractUpdater implements
      */
     private function fetchHandle($handle)
     {
-        foreach ($this->collectors as $collector) {
-            $tempStructure = $collector->fetchHandle($handle);
+        foreach ($this->collectors->getIterator() as $collector) {
+            $tempStructure = $collector->collect($handle);
             if ($includes = $tempStructure->get(self::INSTRUCTION_INCLUDE)) {
                 foreach ($includes as $include) {
                     $this->fetchHandle($include);

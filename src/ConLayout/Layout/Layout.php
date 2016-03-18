@@ -85,7 +85,7 @@ class Layout implements
      */
     public function setRoot(ModelInterface $root)
     {
-        $this->addBlock(self::BLOCK_ID_ROOT, $root);
+        $this->blockPool->add(self::BLOCK_ID_ROOT, $root);
         return $this;
     }
 
@@ -118,6 +118,7 @@ class Layout implements
 
     /**
      * @param array $generators
+     * @return mixed|void
      */
     public function generate(array $generators = [])
     {
@@ -141,28 +142,24 @@ class Layout implements
         return isset($this->loadedGenerators[$name]);
     }
 
-    private function injectBlocks()
-    {
-        $this->blockPool->sort();
-        $blocks = $this->getBlocks();
-        foreach ($blocks as $blockId => $block) {
-            if (!$this->isAllowed($blockId, $block)) {
-                continue;
-            }
-            list($parent, $captureTo) = $this->getCaptureTo($block);
-            if ($parentBlock = $this->getBlock($parent)) {
-                $parentBlock->addChild($block, $captureTo);
-                $block->setOption('parent_block', $parentBlock);
-            }
-        }
-    }
-
     /**
      * @inheritDoc
      */
-    public function buildTree()
+    public function injectBlocks()
     {
-        $this->injectBlocks();
+        $this->blockPool->sort();
+        $blocks = $this->blockPool->get();
+        foreach ($blocks as $blockId => $block) {
+            if ($this->isAllowed($blockId, $block) &&
+                $blockId !== self::BLOCK_ID_ROOT
+            ) {
+                list($parent, $captureTo) = $this->getCaptureTo($block);
+                if ($parentBlock = $this->getBlock($parent)) {
+                    $parentBlock->addChild($block, $captureTo);
+                    $block->setOption('parent_block', $parentBlock);
+                }
+            }
+        }
     }
 
     /**
@@ -172,11 +169,8 @@ class Layout implements
      * @param   ModelInterface  $block
      * @return  bool
      */
-    protected function isAllowed($blockId, ModelInterface $block)
+    private function isAllowed($blockId, ModelInterface $block)
     {
-        if ($blockId === self::BLOCK_ID_ROOT) {
-            return false;
-        }
         $result = $this->getEventManager()->trigger(
             __FUNCTION__,
             $this,
