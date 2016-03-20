@@ -1,20 +1,22 @@
 <?php
 namespace ConLayout\Controller\Plugin;
 
+use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Handle\Handle;
 use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\ModelInterface;
-use Zend\View\Renderer\RendererInterface;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutManager extends AbstractPlugin implements
-    LayoutInterface
+    LayoutInterface,
+    LayoutUpdaterInterface
 {
     /**
      *
@@ -29,30 +31,28 @@ class LayoutManager extends AbstractPlugin implements
     protected $updater;
 
     /**
-     *
-     * @var RendererInterface
+     * @var BlockPoolInterface
      */
-    protected $renderer;
+    protected $blockPool;
 
     /**
      *
      * @param LayoutInterface $layout
      * @param LayoutUpdaterInterface $updater
-     * @param RendererInterface $renderer
+     * @param BlockPoolInterface $blockPool
      */
     public function __construct(
         LayoutInterface $layout,
         LayoutUpdaterInterface $updater,
-        RendererInterface $renderer
+        BlockPoolInterface $blockPool
     ) {
         $this->layout = $layout;
         $this->updater = $updater;
-        $this->renderer = $renderer;
+        $this->blockPool = $blockPool;
     }
 
     /**
      *
-     * @param string|null $blockId
      * @return mixed
      */
     public function __invoke()
@@ -67,7 +67,7 @@ class LayoutManager extends AbstractPlugin implements
      */
     public function getBlock($blockId)
     {
-        return $this->layout->getBlock($blockId);
+        return $this->blockPool->get($blockId);
     }
 
     /**
@@ -78,7 +78,7 @@ class LayoutManager extends AbstractPlugin implements
      */
     public function addBlock($blockId, ModelInterface $block)
     {
-        $this->layout->addBlock($blockId, $block);
+        $this->blockPool->add($blockId, $block);
         return $this;
     }
 
@@ -89,24 +89,42 @@ class LayoutManager extends AbstractPlugin implements
      */
     public function removeBlock($blockId)
     {
-        $this->layout->removeBlock($blockId);
+        $this->blockPool->remove($blockId);
         return $this;
     }
 
     /**
-     * add a handle. if $handle parameter implements HandleInterface, $priority
-     * will be ignored
-     *
-     * @param string|HandleInterface $handle
-     * @return LayoutManager
+     * @inheritDoc
      */
-    public function addHandle($handle, $priority = 1)
+    public function getLayoutStructure()
     {
-        if (is_string($handle)) {
-            $handle = new Handle($handle, $priority);
-        }
+        return $this->updater->getLayoutStructure();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addHandle(HandleInterface $handle)
+    {
         $this->updater->addHandle($handle);
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setArea($area)
+    {
+        $this->updater->setArea($area);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getArea()
+    {
+        return $this->updater->getArea();
     }
 
     /**
@@ -129,6 +147,11 @@ class LayoutManager extends AbstractPlugin implements
         return $this;
     }
 
+    public function getHandles($asObject = false)
+    {
+        return $this->updater->getHandles($asObject);
+    }
+
     /**
      *
      * @param string $handle
@@ -146,7 +169,7 @@ class LayoutManager extends AbstractPlugin implements
      */
     public function getBlocks()
     {
-        return $this->layout->getBlocks();
+        return $this->blockPool->get();
     }
 
     /**
@@ -160,13 +183,54 @@ class LayoutManager extends AbstractPlugin implements
     }
 
     /**
-     *
-     * @param ModelInterface $root
-     * @return LayoutManager
+     * {@inheritdoc}
+     */
+    public function getRoot()
+    {
+        return $this->layout->getRoot();
+    }
+
+    /**
+     * @inheritDoc
      */
     public function setRoot(ModelInterface $root)
     {
         $this->layout->setRoot($root);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function injectBlocks()
+    {
+        $this->layout->injectBlocks();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1)
+    {
+        $this->layout->attachGenerator($name, $generator, $priority);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function detachGenerator($name)
+    {
+        $this->layout->detachGenerator($name);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function generate(array $generators = [])
+    {
+        $this->layout->generate($generators);
         return $this;
     }
 }

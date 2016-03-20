@@ -2,6 +2,12 @@
 
 namespace ConLayout\Options;
 
+use ConLayout\Listener\ActionHandlesListener;
+use ConLayout\Listener\BodyClassListener;
+use ConLayout\Listener\LayoutTemplateListener;
+use ConLayout\Listener\LayoutUpdateListener;
+use ConLayout\Listener\LoadLayoutListener;
+use ConLayout\Listener\PrepareActionViewModelListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Stdlib\AbstractOptions;
 
@@ -15,19 +21,13 @@ class ModuleOptions extends AbstractOptions
      *
      * @var boolean
      */
-    protected $enableDebug = false;
+    protected $debug = false;
 
     /**
      *
      * @var array
      */
     protected $viewHelpers = [];
-
-    /**
-     *
-     * @var array
-     */
-    protected $assetPreparers = [];
 
     /**
      *
@@ -72,6 +72,46 @@ class ModuleOptions extends AbstractOptions
      * @var boolean
      */
     protected $preferRouteMatchController = false;
+
+    /**
+     * @var array
+     */
+    protected $generators = [];
+
+    /**
+     * @var array
+     */
+    protected $collectors = [];
+
+    /**
+     * Listeners to attach to EVM
+     *
+     * @var array
+     */
+    protected $listeners = [
+        ActionHandlesListener::class  => true,
+        BodyClassListener::class      => true,
+        LoadLayoutListener::class     => true,
+        PrepareActionViewModelListener::class => true
+    ];
+
+    /**
+     * @return boolean
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param boolean $debug
+     * @return ModuleOptions
+     */
+    public function setDebug($debug)
+    {
+        $this->debug = (bool) $debug;
+        return $this;
+    }
 
     /**
      * Retrieve an array of controller namespace -> action handle mappings.
@@ -152,15 +192,6 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
-     *
-     * @return array
-     */
-    public function getAssetPreparers()
-    {
-        return $this->assetPreparers;
-    }
-
-    /**
      * just here for bc
      *
      * @codeCoverageIgnore
@@ -181,17 +212,6 @@ class ModuleOptions extends AbstractOptions
     public function setViewHelpers(array $viewHelpers)
     {
         $this->viewHelpers = $viewHelpers;
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $assetPreparers
-     * @return ModuleOptions
-     */
-    public function setAssetPreparers(array $assetPreparers)
-    {
-        $this->assetPreparers = $assetPreparers;
         return $this;
     }
 
@@ -280,6 +300,62 @@ class ModuleOptions extends AbstractOptions
     public function setBlockDefaults(array $blockDefaults)
     {
         $this->blockDefaults = $blockDefaults;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGenerators()
+    {
+        return $this->generators;
+    }
+
+    /**
+     * @param array $generators
+     * @return ModuleOptions
+     */
+    public function setGenerators(array $generators)
+    {
+        $this->generators = $generators;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCollectors()
+    {
+        return $this->collectors;
+    }
+
+    /**
+     * @param array $collectors
+     * @return ModuleOptions
+     */
+    public function setCollectors(array $collectors)
+    {
+        $this->collectors = $collectors;
+        return $this;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getListeners()
+    {
+        return $this->listeners;
+    }
+
+    /**
+     *
+     * @param array $listeners
+     * @return ModuleOptions
+     */
+    public function setListeners(array $listeners)
+    {
+        $this->listeners = $listeners;
         return $this;
     }
 }

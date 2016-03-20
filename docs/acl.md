@@ -19,9 +19,9 @@ public function onBootstrap(EventInterface $e)
     // get the authorization service
     $authService = $application->getServiceLocator('My\AuthService');
 
-    $eventManager->getSharedManager()
-        ->attach('ConLayout\Layout\Layout', 'isAllowed', function($e) use ($authService) {
+    $eventManager->getSharedManager()->attach('ConLayout\Layout\Layout', 'isAllowed', function($e) use ($authService) {
         $resource = $e->getParam('block_id');
+        $e->stopPropagation();
         return $authService->isGranted($resource);
     });
 }

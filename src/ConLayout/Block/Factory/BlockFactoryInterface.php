@@ -18,4 +18,11 @@ interface BlockFactoryInterface
      * @return ModelInterface|BlockInterface
      */
     public function createBlock($blockId, array $specs);
+
+    /**
+     * @param ModelInterface $block
+     * @param array $specs
+     * @return mixed
+     */
+    public function configure(ModelInterface $block, array $specs);
 }

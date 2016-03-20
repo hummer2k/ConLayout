@@ -1,16 +1,26 @@
 <?php
 namespace ConLayout;
 
-use Zend\EventManager\EventInterface;
+use ConLayout\Filter\DebugFilter;
+use ConLayout\Layout\LayoutInterface;
+use ConLayout\ModuleManager\Feature\BlockProviderInterface;
+use ConLayout\Options\ModuleOptions;
 use Zend\EventManager\EventInterface as Event;
+use Zend\EventManager\EventInterface;
+use Zend\Filter\FilterPluginManager;
 use Zend\Http\PhpEnvironment\Request;
+use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\FilterProviderInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
+use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout
@@ -22,7 +32,8 @@ class Module implements
     ViewHelperProviderInterface,
     BootstrapListenerInterface,
     AutoloaderProviderInterface,
-    InitProviderInterface
+    InitProviderInterface,
+    FilterProviderInterface
 {
     /**
      * retrieve module config
@@ -48,6 +59,16 @@ class Module implements
     }
 
     /**
+     * retrieve filters
+     *
+     * @return array
+     */
+    public function getFilterConfig()
+    {
+        return include __DIR__ . '/../../config/filter.config.php';
+    }
+
+    /**
      * retrieve services
      *
      * @return array
@@ -68,14 +89,15 @@ class Module implements
         $serviceListener->addServiceManager(
             'BlockManager',
             'blocks',
-            'ConLayout\ModuleManager\Feature\BlockProviderInterface',
+            BlockProviderInterface::class,
             'getBlockConfig'
         );
     }
 
     /**
      *
-     * @param EventInterface $e
+     * @param MvcEvent|EventInterface $e
+     * @return array|void
      */
     public function onBootstrap(Event $e)
     {
@@ -88,18 +110,32 @@ class Module implements
             return;
         }
 
-        $listeners = [
-            'ConLayout\Listener\ActionHandlesListener',
-            'ConLayout\Listener\LayoutUpdateListener',
-            'ConLayout\Listener\LoadLayoutListener',
-            'ConLayout\Listener\LayoutTemplateListener',
-            'ConLayout\Listener\ViewHelperListener',
-            'ConLayout\Listener\PrepareActionViewModelListener'
-        ];
+        /* @var $options ModuleOptions */
+        $options = $serviceManager->get(ModuleOptions::class);
+        $listeners = $options->getListeners();
 
-        foreach ($listeners as $listener) {
-            $eventManager->attach($serviceManager->get($listener));
+        foreach ($listeners as $listener => $isEnabled) {
+            if ($isEnabled) {
+                 $serviceManager->get($listener)->attach($eventManager);
+            }
         }
+
+        $serviceManager->get(LayoutInterface::class)->setRoot($e->getViewModel());
+
+        if ($options->isDebug()) {
+            $this->attachDebugger($serviceManager);
+        }
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceManager
+     */
+    private function attachDebugger(ServiceLocatorInterface $serviceManager)
+    {
+        /** @var PhpRenderer $renderer */
+        $renderer = $serviceManager->get(PhpRenderer::class);
+        $filterManager = $serviceManager->get('FilterManager');
+        $renderer->getFilterChain()->attach($filterManager->get(DebugFilter::class));
     }
 
     /**
@@ -109,9 +145,9 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return [
-            'Zend\Loader\StandardAutoloader' => [
+            StandardAutoloader::class => [
                 'namespaces' => [
-                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__
+                    __NAMESPACE__ => __DIR__
                 ]
             ]
         ];

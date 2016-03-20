@@ -22,6 +22,8 @@ class LoadLayoutListenerTest extends AbstractTest
         $event = new \Zend\Mvc\MvcEvent();
         $event->setViewModel($layoutModel);
 
+        $this->layout->setRoot($layoutModel);
+
         $this->assertFalse($this->layout->isLoaded());
 
         $listener->loadLayout($event);

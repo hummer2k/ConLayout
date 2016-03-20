@@ -2,6 +2,7 @@
 
 namespace ConLayout\View\Helper;
 
+use ConLayout\Block\BlockPoolInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -20,7 +21,7 @@ class BlockFactory implements FactoryInterface
     {
         $serviceManager = $serviceLocator->getServiceLocator();
         return new Block(
-            $serviceManager->get('ConLayout\Layout\LayoutInterface')
+            $serviceManager->get(BlockPoolInterface::class)
         );
     }
 }

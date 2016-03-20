@@ -1,9 +1,11 @@
 <?php
-
-use ConLayout\Updater\LayoutUpdaterInterface;
+use ConLayout\Generator\BlocksGenerator;
 
 return [
-    LayoutUpdaterInterface::INSTRUCTION_BLOCKS => [
+    BlocksGenerator::INSTRUCTION_BLOCKS => [
+        'root' => [
+            'template' => 'new/layout'
+        ],
         'widget.1' => [
             'capture_to' => 'sidebarLeft',
             'options' => [
@@ -16,9 +18,30 @@ return [
         'widget.1.child' => [
             'capture_to' => 'widget.1::childHtml'
         ],
-        'some.removed.block' => []
+        'some.removed.block' => [
+            'remove' => true
+        ],
+        'parent1' => [
+            'blocks' => [
+                'widget.2.child' => [
+                    'capture_to' => 'childHtml',
+                    'blocks' => [
+                        'widget.2.child.child' => [
+                            'template' => 'child/child'
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ],
-    LayoutUpdaterInterface::INSTRUCTION_REMOVE_BLOCKS => [
-         'some.removed.block' => true
+    'reference' => [
+        'widget.1.child' => [
+            'template' => 'set/via/reference'
+        ],
+        'widget.2.child.child' => [
+            'options' => [
+                'some_option' => 'set_via_reference'
+            ]
+        ]
     ]
 ];

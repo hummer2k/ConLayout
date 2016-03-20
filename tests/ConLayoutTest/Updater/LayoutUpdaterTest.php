@@ -3,8 +3,10 @@
 namespace ConLayoutTest\Updater;
 
 use ConLayout\Handle\Handle;
+use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
 use Zend\EventManager\EventManager;
@@ -19,43 +21,87 @@ class LayoutUpdaterTest extends AbstractTest
 
     protected $layoutStructure;
 
+    /**
+     * @var LayoutUpdaterInterface
+     */
+    protected $updater;
+
     public function setUp()
     {
         parent::setUp();
         $this->updater = new LayoutUpdater();
         $this->em = new EventManager();
-                $instructions = [
-            'default' => [
-                'blocks' => [
-                    'header' => [],
-                    'footer' => []
-                ]
+        $instructions = [
+            [
+                'default',
+                'frontend',
+                new Config([
+                    'blocks' => [
+                        'header' => [],
+                        'footer' => []
+                    ]
+                ], true)
             ],
-            'another-handle' => [
-                'blocks' => [
-                    'widget1' => []
-                ]
+            [
+                'another-handle',
+                'frontend',
+                new Config([
+                    'blocks' => [
+                        'widget1' => []
+                    ]
+                ], true)
+            ],
+            [
+                'handle/with-include',
+                'frontend',
+                new Config([
+                    'blocks' => [
+                        'do.not.override' => [
+                            'remove' => false
+                        ]
+                    ],
+                    LayoutUpdaterInterface::INSTRUCTION_INCLUDE => [
+                        'included/handle'
+                    ]
+                ], true)
+            ],
+            [
+                'included/handle',
+                'frontend',
+                new Config([
+                    'blocks' => [
+                        'some.included.block' => [
+                            'template' => 'some/tpl'
+                        ],
+                        'do.not.override' => [
+                            'remove' => true
+                        ]
+                    ],
+                    LayoutUpdaterInterface::INSTRUCTION_INCLUDE => [
+                        'included/handle/no2'
+                    ]
+                ], true)
+            ],
+            [
+                'included/handle/no2',
+                'frontend',
+                new Config([
+                    'blocks' => [
+                        'some.included.block.2' => []
+                    ]
+                ])
             ]
         ];
         $this->em->getSharedManager()->clearListeners(
-            'ConLayout\Updater\LayoutUpdater'
+            LayoutUpdater::class
         );
-        $this->em->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'getLayoutStructure.pre',
-            function (UpdateEvent $e) use ($instructions) {
-                $handles = $e->getHandles();
-                $this->layoutStructure = $e->getLayoutStructure();
-                foreach ($handles as $handle) {
-                    if (isset($instructions[$handle])) {
-                        $instructionsConfig = new Config(
-                            $instructions[$handle]
-                        );
-                        $this->layoutStructure->merge($instructionsConfig);
-                    }
-                }
-            }
-        );
+
+        $collectorMock = $this->getMockBuilder(CollectorInterface::class)->getMock();
+        $collectorMock
+            ->method('collect')
+            ->will($this->returnValueMap($instructions));
+
+        $this->updater->attachCollector('mock', $collectorMock);
     }
 
     public function testDefaultHandle()
@@ -84,9 +130,10 @@ class LayoutUpdaterTest extends AbstractTest
     public function testShortCircuiting()
     {
         $this->em->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'getLayoutStructure.pre',
+            LayoutUpdater::class,
+            UpdateEvent::EVENT_COLLECT,
             function (UpdateEvent $e) {
+                $e->stopPropagation();
                 return new Config(['cached' => true]);
             }
         );
@@ -98,30 +145,9 @@ class LayoutUpdaterTest extends AbstractTest
         ], $layoutStructure);
     }
 
-    public function testUpdateEvent()
-    {
-        $this->em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
-        $this->em->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
-            'getLayoutStructure.pre',
-            function (UpdateEvent $e) {
-                $this->assertEquals([
-                    'default'
-                ], $e->getHandles());
-                $testLayoutStructure = new Config(['test' => 'test']);
-                $e->getLayoutStructure()->merge($testLayoutStructure);
-            }
-        );
-        $layoutStructure = $this->updater->getLayoutStructure()->toArray();
-
-        $this->assertEquals([
-            'test' => 'test'
-        ], $layoutStructure);
-    }
-
     public function testSetHandles()
     {
-        $this->layoutUpdater->setHandles([
+        $this->updater->setHandles([
             new Handle('handle-1', 5),
             new Handle('handle-2', 0),
             new Handle('handle-3', 2)
@@ -131,6 +157,44 @@ class LayoutUpdaterTest extends AbstractTest
             'handle-2',
             'handle-3',
             'handle-1'
-        ], $this->layoutUpdater->getHandles());
+        ], $this->updater->getHandles());
+    }
+
+    public function testSetAndGetArea()
+    {
+        $area = 'some-area';
+        $this->layoutUpdater->setArea($area);
+        $this->assertSame($area, $this->layoutUpdater->getArea());
+    }
+
+    public function testIncludedHandleRecursivly()
+    {
+        $this->updater->setHandles([
+            new Handle('handle/with-include', 10)
+        ]);
+        $layoutStructure = $this->updater->getLayoutStructure();
+        $block = $layoutStructure->blocks->get('some.included.block');
+        $this->assertInstanceOf(Config::class, $block);
+        $this->assertEquals(
+            'some/tpl',
+            $block->get('template')
+        );
+        $block2 = $layoutStructure->blocks->get('some.included.block.2');
+        $this->assertInstanceOf(Config::class, $block2);
+    }
+
+    public function testIncludedHandleDoesNotOverride()
+    {
+        $this->updater->setHandles([
+            new Handle('handle/with-include', 10)
+        ]);
+        $layoutStructure = $this->updater->getLayoutStructure();
+        $block = $layoutStructure->blocks->get('do.not.override');
+        $includedBlock = $layoutStructure->blocks->get('some.included.block');
+        $this->assertEquals(
+            'some/tpl',
+            $includedBlock->get('template')
+        );
+        $this->assertFalse($block->remove);
     }
 }

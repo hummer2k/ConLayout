@@ -2,14 +2,13 @@
 
 namespace ConLayout\Layout;
 
-use ConLayout\Block\Factory\BlockFactoryInterface;
+use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Config\Config;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
-use Zend\View\Model\ClearableModelInterface;
+use Zend\Stdlib\PriorityList;
 use Zend\View\Model\ModelInterface;
-use Zend\View\Model\ViewModel;
 
 /**
  * @package ConLayout
@@ -21,30 +20,12 @@ class Layout implements
 {
     use EventManagerAwareTrait;
 
-    const CAPTURE_TO_DELIMITER = '::';
-    const ANONYMOUS_ID_PATTERN = 'anonymous.%s.%s';
-
     /**
-     * suffix for anonymous block names
-     * will be incremented on every addBlock call when block has no id
-     *
-     * @var int
-     */
-    protected static $anonymousSuffix = 1;
-
-    /**
-     * flag if blocks have already been generated
+     * flag if blocks have already been injected
      *
      * @var bool
      */
-    protected $blocksGenerated = false;
-
-    /**
-     * flag if blocks have already been removed from layout structure
-     *
-     * @var bool
-     */
-    protected $blocksRemoved = false;
+    protected $blocksInjected = false;
 
     /**
      *
@@ -55,21 +36,20 @@ class Layout implements
     /**
      * blocks registry
      *
-     * @var ModelInterface[]
+     * @var BlockPoolInterface
      */
-    protected $blocks = [];
+    protected $blockPool;
 
     /**
      *
+     * @var GeneratorInterface[]|PriorityList
+     */
+    protected $generators;
+
+    /**
      * @var array
      */
-    protected $removedBlocks = [];
-
-    /**
-     *
-     * @var BlockFactoryInterface
-     */
-    protected $blockFactory;
+    protected $loadedGenerators = [];
 
     /**
      * flag if layout has been loaded
@@ -80,120 +60,39 @@ class Layout implements
 
     /**
      *
-     * @param   BlockFactoryInterface   $blockFactory
-     * @param   LayoutUpdaterInterface  $updater
+     * @param LayoutUpdaterInterface $updater
+     * @param BlockPoolInterface $blockPool
      */
     public function __construct(
-        BlockFactoryInterface $blockFactory,
-        LayoutUpdaterInterface $updater
+        LayoutUpdaterInterface $updater,
+        BlockPoolInterface $blockPool
     ) {
-        $this->blockFactory = $blockFactory;
-        $this->updater = $updater;
+        $this->updater    = $updater;
+        $this->blockPool  = $blockPool;
+        $this->generators = new PriorityList();
     }
 
     /**
-     * set root view model/layout
-     *
-     * @param ModelInterface $root
+     * {@inheritdoc}
+     */
+    public function getRoot()
+    {
+        return $this->getBlock(self::BLOCK_ID_ROOT);
+    }
+
+    /**
+     * @inheritDoc
      */
     public function setRoot(ModelInterface $root)
     {
-        $this->addBlock(self::BLOCK_ID_ROOT, $root);
-    }
-
-    /**
-     * generate blocks from array configuration
-     *
-     * @param array $blockConfig
-     */
-    protected function generateBlocks()
-    {
-        if (false === $this->blocksGenerated) {
-            $blocks = $this->updater->getLayoutStructure()
-                ->get(LayoutUpdaterInterface::INSTRUCTION_BLOCKS, []);
-            if ($blocks instanceof Config) {
-                $blocks = $blocks->toArray();
-            }
-            foreach ($blocks as $blockId => $specs) {
-                if ($this->isBlockRemoved($blockId)) {
-                    continue;
-                }
-                $block = $this->blockFactory->createBlock($blockId, $specs);
-                $this->addBlock($blockId, $block);
-            }
-            $this->blocksGenerated = true;
-        }
-    }
-
-    /**
-     * removes blocks defined in layout instructions
-     */
-    protected function removeBlocksByInstructions()
-    {
-        if (!$this->blocksRemoved) {
-            $removedBlocks = $this->updater->getLayoutStructure()
-                ->get(LayoutUpdaterInterface::INSTRUCTION_REMOVE_BLOCKS, []);
-            if ($removedBlocks instanceof Config) {
-                $removedBlocks = $removedBlocks->toArray();
-                foreach ($removedBlocks as $removedBlockId => $value) {
-                    if ($value) {
-                        $this->removeBlock($removedBlockId);
-                    }
-                }
-            }
-            $this->blocksRemoved = true;
-        }
-    }
-
-    /**
-     * check if block has been removed
-     *
-     * @param   string  $blockId
-     * @return  boolean
-     */
-    protected function isBlockRemoved($blockId)
-    {
-        $this->removeBlocksByInstructions();
-        return isset($this->removedBlocks[$blockId]);
-    }
-
-    /**
-     * sort the blocks by order option ascendant
-     *
-     * @return LayoutManagerInterface
-     */
-    protected function sortBlocks()
-    {
-        foreach ($this->blocks as $block) {
-            if ($beforeBlockId = $block->getOption('before')) {
-                if ($beforeBlock = $this->getBlock($beforeBlockId)) {
-                    $block->setOption('order', $beforeBlock->getOption('order', 0) - 1);
-                }
-            }
-            if ($afterBlockId = $block->getOption('after')) {
-                if ($afterBlock = $this->getBlock($afterBlockId)) {
-                    $block->setOption('order', $afterBlock->getOption('order', 0) + 1);
-                }
-            }
-        }
-        uasort($this->blocks, function ($a, $b) {
-            /* @var $a ModelInterface */
-            /* @var $b ModelInterface */
-            $orderA = $a->getOption('order', 0);
-            $orderB = $b->getOption('order', 0);
-            if ($orderA == $orderB) {
-                return 0;
-            }
-            return ($orderA < $orderB) ? -1 : 1;
-        });
+        $this->blockPool->add(self::BLOCK_ID_ROOT, $root);
         return $this;
     }
 
     /**
      * inject blocks into the root view model
      *
-     * @param   ModelInterface  $root
-     * @return  LayoutInterface
+     * @return LayoutInterface
      */
     public function load()
     {
@@ -203,19 +102,11 @@ class Layout implements
                 $this,
                 []
             );
-            $this->generateBlocks();
-            $this->sortBlocks();
-            foreach ($this->getBlocks() as $blockId => $block) {
-                if (!$this->isAllowed($blockId, $block)) {
-                    continue;
-                }
-                list($parent, $captureTo) = $this->getCaptureTo($block);
-                if ($parentBlock = $this->getBlock($parent)) {
-                    $parentBlock->addChild($block, $captureTo);
-                    $block->setOption('parent_block', $parentBlock);
-                }
-            }
+
+            $this->generate();
+            $this->injectBlocks();
             $this->isLoaded = true;
+
             $this->getEventManager()->trigger(
                 __FUNCTION__ . '.post',
                 $this,
@@ -226,24 +117,75 @@ class Layout implements
     }
 
     /**
+     * @param array $generators
+     * @return mixed|void
+     */
+    public function generate(array $generators = [])
+    {
+        $layoutStructure = $this->updater->getLayoutStructure();
+        foreach ($this->generators as $name => $generator) {
+            if (!$this->isGeneratorLoaded($name)
+                && (empty($generators) || isset($generators[$name]))
+            ) {
+                $generator->generate($layoutStructure);
+                $this->loadedGenerators[$name] = true;
+            }
+        }
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    private function isGeneratorLoaded($name)
+    {
+        return isset($this->loadedGenerators[$name]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function injectBlocks()
+    {
+        if (false === $this->blocksInjected) {
+            $this->blockPool->sort();
+            $blocks = $this->blockPool->get();
+            foreach ($blocks as $blockId => $block) {
+                if ($this->isAllowed($blockId, $block) &&
+                    $blockId !== self::BLOCK_ID_ROOT
+                ) {
+                    list($parent, $captureTo) = $this->getCaptureTo($block);
+                    if ($parentBlock = $this->getBlock($parent)) {
+                        $parentBlock->addChild($block, $captureTo);
+                        $block->setOption('parent_block', $parentBlock);
+                    }
+                }
+            }
+            $this->blocksInjected = true;
+        }
+    }
+
+    /**
      * Determines whether a block should be allowed given certain parameters
      *
      * @param   string          $blockId
      * @param   ModelInterface  $block
      * @return  bool
      */
-    protected function isAllowed($blockId, ModelInterface $block)
+    private function isAllowed($blockId, ModelInterface $block)
     {
-        if ($blockId === self::BLOCK_ID_ROOT) {
-            return false;
-        }
-        $results = $this->getEventManager()->trigger(
+        $result = $this->getEventManager()->trigger(
             __FUNCTION__,
             $this,
-            ['block' => $block, 'block_id' => $blockId]
+            [
+                'block_id' => $blockId,
+                'block' => $block
+            ]
         );
-        $isAllowed = $results->last();
-        return $isAllowed;
+        if ($result->stopped()) {
+            return $result->last();
+        }
+        return true;
     }
 
     /**
@@ -255,19 +197,7 @@ class Layout implements
      */
     public function addBlock($blockId, ModelInterface $block)
     {
-        if ($block->hasChildren()) {
-            foreach ($block->getChildren() as $childBlock) {
-                $childBlockId = $this->determineAnonymousBlockId($childBlock);
-                $childBlock->setCaptureTo(
-                    $blockId . self::CAPTURE_TO_DELIMITER . $childBlock->captureTo()
-                );
-                $this->addBlock($childBlockId, $childBlock);
-            }
-            if ($block instanceof ClearableModelInterface) {
-                $block->clearChildren();
-            }
-        }
-        $this->blocks[$blockId] = $block;
+        $this->blockPool->add($blockId, $block);
         return $this;
     }
 
@@ -279,10 +209,7 @@ class Layout implements
      */
     public function removeBlock($blockId)
     {
-        if (isset($this->blocks[$blockId])) {
-            unset($this->blocks[$blockId]);
-        }
-        $this->removedBlocks[$blockId] = true;
+        $this->blockPool->remove($blockId);
         return $this;
     }
 
@@ -320,11 +247,7 @@ class Layout implements
      */
     public function getBlock($blockId)
     {
-        $this->generateBlocks();
-        if (isset($this->blocks[$blockId])) {
-            return $this->blocks[$blockId];
-        }
-        return false;
+        return $this->blockPool->get($blockId);
     }
 
     /**
@@ -338,43 +261,24 @@ class Layout implements
      */
     public function getBlocks()
     {
-        $this->generateBlocks();
-        return $this->blocks;
+        return $this->blockPool->get();
     }
 
     /**
-     *
-     * @param ViewModel $block
-     * @return string
+     * @inheritDoc
      */
-    protected function determineAnonymousBlockId(ModelInterface $block)
+    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1)
     {
-        $blockId = $block->getVariable(self::BLOCK_ID_VAR);
-        if (!$blockId) {
-            $blockId = sprintf(
-                self::ANONYMOUS_ID_PATTERN,
-                $block->captureTo(),
-                self::$anonymousSuffix++
-            );
-            $block->setVariable(self::BLOCK_ID_VAR, $blockId);
-        }
-        return $blockId;
+        $this->generators->insert($name, $generator, $priority);
+        return $this;
     }
 
     /**
-     * attach default listeners: allows all blocks by default
+     * @inheritDoc
      */
-    protected function attachDefaultListeners()
+    public function detachGenerator($name)
     {
-        $this->getEventManager()
-            ->getSharedManager()
-            ->attach(
-                __CLASS__,
-                'isAllowed',
-                function () {
-                    return true;
-                },
-                10000
-            );
+        $this->generators->remove($name);
+        return $this;
     }
 }

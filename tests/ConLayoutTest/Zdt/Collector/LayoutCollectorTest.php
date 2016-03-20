@@ -3,14 +3,18 @@
 namespace ConLayoutTest\Zdt\Collector;
 
 use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\Layout;
+use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdater;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\Zdt\Collector\LayoutCollector;
 use ConLayout\Zdt\Collector\LayoutCollectorFactory;
 use ConLayoutTest\AbstractTest;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel;
+use Zend\View\Resolver\AggregateResolver;
 
 /**
  * @package ConLayout
@@ -27,9 +31,12 @@ class LayoutCollectorTest extends AbstractTest
     public function setUp()
     {
         parent::setUp();
+        $resolver = new AggregateResolver();
+        $resolver->attach($this->getResolver());
         $this->collector = new LayoutCollector(
             $this->layout,
-            $this->layoutUpdater
+            $this->layoutUpdater,
+            $resolver
         );
     }
 
@@ -38,20 +45,24 @@ class LayoutCollectorTest extends AbstractTest
         $layoutCollectorFactory = new LayoutCollectorFactory();
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'ConLayout\Updater\LayoutUpdaterInterface',
+            LayoutUpdaterInterface::class,
             new LayoutUpdater()
         );
         $serviceManager->setService(
-            'ConLayout\Layout\LayoutInterface',
+            LayoutInterface::class,
             new Layout(
-                new BlockFactory(),
-                new LayoutUpdater()
+                $this->layoutUpdater,
+                $this->blockPool
             )
+        );
+        $serviceManager->setService(
+            'ViewResolver',
+            new AggregateResolver()
         );
 
         $instance = $layoutCollectorFactory->createService($serviceManager);
         $this->assertInstanceOf(
-            'ConLayout\Zdt\Collector\LayoutCollector',
+            LayoutCollector::class,
             $instance
         );
     }
@@ -77,10 +88,15 @@ class LayoutCollectorTest extends AbstractTest
         $event->setViewModel($layoutModel);
 
         $testBlock = new ViewModel();
-        $testBlock->setTemplate('test/block');
+        $testBlock->setTemplate('widget1');
         $testBlock->setCaptureTo('sidebarLeft');
 
-        $this->layout->addBlock('test.block', $testBlock);
+        $testBlock2 = new ViewModel();
+        $testBlock2->setOption('parent', 'test.block');
+        $testBlock2->setTemplate('widget1');
+
+        $this->blockPool->add('test.block', $testBlock);
+        $this->blockPool->add('test.block2', $testBlock2);
 
         $this->collector->collect($event);
 
@@ -95,7 +111,7 @@ class LayoutCollectorTest extends AbstractTest
         );
 
         $this->assertContainsOnlyInstancesOf(
-            'ConLayout\Handle\HandleInterface',
+            HandleInterface::class,
             $this->collector->getHandles()
         );
 
@@ -104,10 +120,17 @@ class LayoutCollectorTest extends AbstractTest
             $this->collector->getBlocks()
         );
 
-        $testBlockArray = current($this->collector->getBlocks());
+        $blocks = $this->collector->getBlocks();
+        $testBlockArray = current($blocks);
+        $testBlock2Array = array_pop($blocks);
 
         $this->assertEquals(
-            'test/block',
+            'test.block::content',
+            $testBlock2Array['capture_to']
+        );
+
+        $this->assertContains(
+            '_files/view/widget1.phtml',
             $testBlockArray['template']
         );
 
@@ -117,8 +140,13 @@ class LayoutCollectorTest extends AbstractTest
         );
 
         $this->assertEquals(
-            'Zend\View\Model\ViewModel',
+            ViewModel::class,
             $testBlockArray['class']
+        );
+
+        $this->assertEquals(
+            LayoutUpdaterInterface::AREA_DEFAULT,
+            $this->collector->getCurrentArea()
         );
 
         $this->assertInternalType(
@@ -127,5 +155,4 @@ class LayoutCollectorTest extends AbstractTest
         );
 
     }
-
 }
