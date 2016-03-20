@@ -24,6 +24,11 @@ final class ViewHelperGenerator implements GeneratorInterface
     const INSTRUCTION   = 'helpers';
 
     /**
+     * @var bool
+     */
+    private $debug = false;
+
+    /**
      * @var ContainerInterface
      */
     private $viewHelperManager;
@@ -91,6 +96,10 @@ final class ViewHelperGenerator implements GeneratorInterface
                     continue;
                 }
                 $mergedInstruction = ArrayUtils::merge($config, (array) $instruction);
+                if ($this->isDebug() && isset($mergedInstruction['debug'])) {
+                    $mergedInstruction[$mergedInstruction['debug']]['data-layout-id'] = $id;
+                }
+
                 $method = isset($mergedInstruction['method']) ? $mergedInstruction['method'] : '__invoke';
                 $args = $this->filterArgs($mergedInstruction);
 
@@ -179,6 +188,24 @@ final class ViewHelperGenerator implements GeneratorInterface
     public function setSorter(SorterInterface $sorter)
     {
         $this->sorter = $sorter;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param boolean $debug
+     * @return ViewHelperGenerator
+     */
+    public function setDebug($debug)
+    {
+        $this->debug = (bool) $debug;
         return $this;
     }
 }

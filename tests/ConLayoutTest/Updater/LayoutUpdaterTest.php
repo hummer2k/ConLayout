@@ -34,6 +34,7 @@ class LayoutUpdaterTest extends AbstractTest
         $instructions = [
             [
                 'default',
+                'frontend',
                 new Config([
                     'blocks' => [
                         'header' => [],
@@ -43,6 +44,7 @@ class LayoutUpdaterTest extends AbstractTest
             ],
             [
                 'another-handle',
+                'frontend',
                 new Config([
                     'blocks' => [
                         'widget1' => []
@@ -51,6 +53,7 @@ class LayoutUpdaterTest extends AbstractTest
             ],
             [
                 'handle/with-include',
+                'frontend',
                 new Config([
                     'blocks' => [
                         'do.not.override' => [
@@ -64,6 +67,7 @@ class LayoutUpdaterTest extends AbstractTest
             ],
             [
                 'included/handle',
+                'frontend',
                 new Config([
                     'blocks' => [
                         'some.included.block' => [
@@ -80,6 +84,7 @@ class LayoutUpdaterTest extends AbstractTest
             ],
             [
                 'included/handle/no2',
+                'frontend',
                 new Config([
                     'blocks' => [
                         'some.included.block.2' => []

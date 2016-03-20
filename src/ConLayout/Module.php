@@ -1,11 +1,13 @@
 <?php
 namespace ConLayout;
 
+use ConLayout\Filter\DebugFilter;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\ModuleManager\Feature\BlockProviderInterface;
 use ConLayout\Options\ModuleOptions;
 use Zend\EventManager\EventInterface as Event;
 use Zend\EventManager\EventInterface;
+use Zend\Filter\FilterPluginManager;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
@@ -17,6 +19,8 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout
@@ -117,6 +121,21 @@ class Module implements
         }
 
         $serviceManager->get(LayoutInterface::class)->setRoot($e->getViewModel());
+
+        if ($options->isDebug()) {
+            $this->attachDebugger($serviceManager);
+        }
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceManager
+     */
+    private function attachDebugger(ServiceLocatorInterface $serviceManager)
+    {
+        /** @var PhpRenderer $renderer */
+        $renderer = $serviceManager->get(PhpRenderer::class);
+        $filterManager = $serviceManager->get('FilterManager');
+        $renderer->getFilterChain()->attach($filterManager->get(DebugFilter::class));
     }
 
     /**
@@ -128,7 +147,7 @@ class Module implements
         return [
             StandardAutoloader::class => [
                 'namespaces' => [
-                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__
+                    __NAMESPACE__ => __DIR__
                 ]
             ]
         ];

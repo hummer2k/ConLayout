@@ -1,11 +1,10 @@
 <?php
 /**
- * @package
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 
 namespace ConLayout\Updater\Collector;
-
 
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
@@ -13,11 +12,6 @@ use Zend\Config\Config;
 class ConfigCollector implements CollectorInterface
 {
     const NAME = 'config';
-
-    /**
-     * @var string
-     */
-    private $area;
 
     /**
      * @var array
@@ -36,11 +30,11 @@ class ConfigCollector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function collect($handle)
+    public function collect($handle, $area = null)
     {
         $areas = [
             LayoutUpdaterInterface::AREA_GLOBAL,
-            $this->area
+            $area
         ];
         $structure = new Config([], true);
         foreach ($areas as $area) {
@@ -50,13 +44,5 @@ class ConfigCollector implements CollectorInterface
             $structure->merge(new Config($config, true));
         }
         return $structure;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setArea($area)
-    {
-        $this->area = $area;
     }
 }

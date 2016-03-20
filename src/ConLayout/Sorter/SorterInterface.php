@@ -9,8 +9,8 @@ namespace ConLayout\Sorter;
 interface SorterInterface
 {
     /**
-     * @param $data
+     * @param array $data
      * @return mixed
      */
-    public function sort($data);
+    public function sort(array $data);
 }

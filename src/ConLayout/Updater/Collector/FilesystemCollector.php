@@ -18,12 +18,6 @@ class FilesystemCollector implements CollectorInterface
 
     /**
      *
-     * @var string
-     */
-    private $area;
-
-    /**
-     *
      * @var array
      */
     private $paths = [];
@@ -51,17 +45,9 @@ class FilesystemCollector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function setArea($area)
+    public function collect($handle, $area = null)
     {
-        $this->area = $area;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function collect($handle)
-    {
-        $globPaths = $this->getGlobPaths($handle);
+        $globPaths = $this->getGlobPaths($handle, $area);
         $tempStructure = new Config([], true);
         foreach ($globPaths as $globPath) {
             try {
@@ -82,14 +68,15 @@ class FilesystemCollector implements CollectorInterface
     /**
      *
      * @param string $handle
+     * @param null|string $area
      * @return array
      */
-    private function getGlobPaths($handle)
+    private function getGlobPaths($handle, $area = null)
     {
         $globPaths = [];
         $areas = [
             LayoutUpdaterInterface::AREA_GLOBAL,
-            $this->area
+            $area
         ];
         $areas = array_unique($areas);
         foreach ($areas as $area) {

@@ -43,6 +43,7 @@ return [
              * template
              */
             'capture_to' => 'footer::content',
+            'parent' => 'footer',
             /**
              * default: true
              */
@@ -69,13 +70,6 @@ return [
              * remove this block
              */
             'remove' => true,
-            // just set a custom template
-            'wrapper' => 'my/wrapper',
-            // or add more attributes for the wrapper tag
-            'wrapper' => [
-                'id' => 'some-id',
-                'title' => 'Wrapper Title'
-            ],
             /**
              * perform some actions on the block class/method calls
              */
@@ -204,7 +198,7 @@ Call view helpers. Add CSS or JavaScript assets, set page title etc.
 return [
     'helpers' => [
         'headScript' => [
-            'jquery' => '/js/jquery.js'
+            'jquery' => ['src' => '/js/jquery.js']
         ]
     ]
 ];
@@ -215,7 +209,7 @@ return [
         'headScript' => [
             'main' => [
                 'src' => '/js/main.js', // src = argument name of method signature
-                'depends' => 'jquery'   // append after jquery
+                'after' => 'jquery'   // append after jquery
                 'attrs' => [            // attrs = argument name of method signature
                     'conditional' => 'lt IE 9'
                 ]
@@ -232,19 +226,19 @@ or via XML:
 ````xml
 <?xml version="1.0" encoding="UTF-8"?>
 <layout>
-    <view_helpers>
+    <helpers>
         <headScript>
             <main src="/js/main.js" depends="jquery" /> <!-- will be placed after jquery -->
             <jquery src="/js/jquery.js" />
         </headScript>
-    </view_helpers>
+    </helpers>
 </layout>
 
 ````
 
 ## 3. `include`
 
-Includes another handles
+Includes another handle
 
 ````php
 <?php
@@ -305,11 +299,11 @@ return [
     'blocks' => [
         'widget.forecast' => [
             'template' => 'widgets/forecast',
-            'capture_to' => 'sidebar'
+            'parent' => 'sidebar'
         ],
         'widget.calendar' => [
             'template' => 'widgets/calendar',
-            'capture_to' => 'sidebar'
+            'parent' => 'sidebar'
         ]
     ]
 ];
@@ -319,8 +313,8 @@ return [
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <blocks>
-        <widget.forecast template="widgets/forecast" capture_to="sidebar" />
-        <widget.calendar template="widgets/calendar" capture_to="sidebar" />
+        <widget.forecast template="widgets/forecast" parent="sidebar" />
+        <widget.calendar template="widgets/calendar" parent="sidebar" />
     </blocks>
 </page>
 ````
@@ -343,3 +337,42 @@ return [
 </page>
 ````
 
+## 4. `reference`
+
+Reference a block to change its properties.
+
+````php
+<?php
+// default.php
+return [
+    'blocks' => [
+        'root' => [
+            'blocks' => [
+                'sidebar' => [
+                    'class' => 'container',
+                    'blocks' => [
+                        'widget.to.change' => [
+                            'template' => 'my/widget'
+                        ]                        
+                    ]
+                ]
+            ]
+        ]
+    ]
+];
+
+````
+
+Change the template of the widget without writing the nested structure again:
+
+````php
+<?php
+// application/index/index.php
+return [
+    'reference' => [
+        'widget.to.change' => [
+            'template' => 'widgets/new-template'
+        ]
+    ]
+];
+````

@@ -17,14 +17,17 @@ class ViewHelperGeneratorFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var ModuleOptions $options */
+        $options             = $serviceLocator->get(ModuleOptions::class);
         $filterPluginManager = $serviceLocator->get('FilterManager');
         $viewHelperManager   = $serviceLocator->get('ViewHelperManager');
-        $helperConfig        = $serviceLocator->get(ModuleOptions::class)->getViewHelpers();
+        $helperConfig        = $options->getViewHelpers();
         $viewHelperGenerator = new ViewHelperGenerator(
             $filterPluginManager,
             $viewHelperManager,
             $helperConfig
         );
+        $viewHelperGenerator->setDebug($options->isDebug());
         return $viewHelperGenerator;
     }
 }

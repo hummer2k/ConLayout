@@ -70,6 +70,11 @@ interface LayoutInterface
     public function injectBlocks();
 
     /**
+     * load the layout
+     */
+    public function load();
+
+    /**
      * set root view model/layout
      *
      * @param ModelInterface $root

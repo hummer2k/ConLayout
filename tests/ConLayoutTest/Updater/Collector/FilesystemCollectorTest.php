@@ -6,7 +6,6 @@
 
 namespace ConLayoutTest\Updater\Collector;
 
-
 use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
@@ -44,13 +43,11 @@ class FilesystemCollectorTest extends AbstractTest
 
     public function testAreaOverridesGlobal()
     {
-        $this->collector->setArea('frontend');
-        $result = $this->collector->collect('default');
+        $result = $this->collector->collect('default', 'frontend');
         $block = $result->blocks->get('some.block');
         $this->assertEquals(
             'tpl/for/frontend',
             $block->get('template')
         );
     }
-
 }

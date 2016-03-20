@@ -34,10 +34,13 @@ use ConLayout\Zdt\Collector\LayoutCollectorFactory;
 use ConLayout\Listener\Factory\PrepareActionViewModelListenerFactory;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\Collector\FilesystemCollectorFactory;
+use ConLayout\Updater\Collector\ConfigCollector;
+use ConLayout\Updater\Collector\ConfigCollectorFactory;
 
 return [
     'factories' => [
         FilesystemCollector::class      => FilesystemCollectorFactory::class,
+        ConfigCollector::class          => ConfigCollectorFactory::class,
         BlockManager::class             => BlockManagerFactory::class,
         BlockFactoryInterface::class    => BlockFactoryFactory::class,
         ActionHandlesListener::class    => ActionHandlesListenerFactory::class,

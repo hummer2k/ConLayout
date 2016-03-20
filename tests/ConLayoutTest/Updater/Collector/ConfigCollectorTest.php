@@ -56,16 +56,14 @@ class ConfigCollectorTest extends AbstractTest
 
     public function testCollectorCollectsHandle()
     {
-        $this->collector->setArea('frontend');
-        $result = $this->collector->collect('default');
+        $result = $this->collector->collect('default', 'frontend');
         $this->assertInstanceOf(Config::class, $result);
         $this->assertNotEmpty($result->get('blocks'));
     }
 
     public function testAreaOverridesGlobal()
     {
-        $this->collector->setArea('frontend');
-        $result = $this->collector->collect('default');
+        $result = $this->collector->collect('default', 'frontend');
 
         $globalBlock = $result->blocks->get('global.block');
         $this->assertInstanceOf(Config::class, $globalBlock);

@@ -11,7 +11,7 @@ class OrderComparison implements SorterInterface
     /**
      * @inheritDoc
      */
-    public function sort($data)
+    public function sort(array $data)
     {
         uasort($data, function ($a, $b) {
             $orderA = isset($a['order']) ? $a['order'] : 1;

@@ -21,11 +21,11 @@ class Layout implements
     use EventManagerAwareTrait;
 
     /**
-     * flag if blocks have already been generated
+     * flag if blocks have already been injected
      *
      * @var bool
      */
-    protected $blocksGenerated = false;
+    protected $blocksInjected = false;
 
     /**
      *
@@ -147,18 +147,21 @@ class Layout implements
      */
     public function injectBlocks()
     {
-        $this->blockPool->sort();
-        $blocks = $this->blockPool->get();
-        foreach ($blocks as $blockId => $block) {
-            if ($this->isAllowed($blockId, $block) &&
-                $blockId !== self::BLOCK_ID_ROOT
-            ) {
-                list($parent, $captureTo) = $this->getCaptureTo($block);
-                if ($parentBlock = $this->getBlock($parent)) {
-                    $parentBlock->addChild($block, $captureTo);
-                    $block->setOption('parent_block', $parentBlock);
+        if (false === $this->blocksInjected) {
+            $this->blockPool->sort();
+            $blocks = $this->blockPool->get();
+            foreach ($blocks as $blockId => $block) {
+                if ($this->isAllowed($blockId, $block) &&
+                    $blockId !== self::BLOCK_ID_ROOT
+                ) {
+                    list($parent, $captureTo) = $this->getCaptureTo($block);
+                    if ($parentBlock = $this->getBlock($parent)) {
+                        $parentBlock->addChild($block, $captureTo);
+                        $block->setOption('parent_block', $parentBlock);
+                    }
                 }
             }
+            $this->blocksInjected = true;
         }
     }
 

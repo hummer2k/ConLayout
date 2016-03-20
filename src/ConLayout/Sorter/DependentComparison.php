@@ -11,7 +11,7 @@ final class DependentComparison implements SorterInterface
     /**
      * @inheritDoc
      */
-    public function sort($data)
+    public function sort(array $data)
     {
         $tmp = [];
         foreach (array_keys($data) as $key) {

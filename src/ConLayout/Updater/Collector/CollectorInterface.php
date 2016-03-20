@@ -1,6 +1,6 @@
 <?php
 /**
- * @package
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 
@@ -12,13 +12,8 @@ interface CollectorInterface
 {
     /**
      * @param string $handle
-     * @return mixed
+     * @param null|string $area
+     * @return Config
      */
-    public function collect($handle);
-
-    /**
-     * @param string $area
-     * @return mixed
-     */
-    public function setArea($area);
+    public function collect($handle, $area = null);
 }

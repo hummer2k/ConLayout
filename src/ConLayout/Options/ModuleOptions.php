@@ -21,7 +21,7 @@ class ModuleOptions extends AbstractOptions
      *
      * @var boolean
      */
-    protected $enableDebug = false;
+    protected $debug = false;
 
     /**
      *
@@ -94,6 +94,24 @@ class ModuleOptions extends AbstractOptions
         LoadLayoutListener::class     => true,
         PrepareActionViewModelListener::class => true
     ];
+
+    /**
+     * @return boolean
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param boolean $debug
+     * @return ModuleOptions
+     */
+    public function setDebug($debug)
+    {
+        $this->debug = (bool) $debug;
+        return $this;
+    }
 
     /**
      * Retrieve an array of controller namespace -> action handle mappings.

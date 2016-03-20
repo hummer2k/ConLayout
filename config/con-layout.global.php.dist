@@ -2,6 +2,9 @@
 
 use ConLayout\Generator\BlocksGenerator;
 use ConLayout\Generator\ViewHelperGenerator;
+use ConLayout\Updater\Collector\FilesystemCollector;
+use ConLayout\Updater\Collector\ConfigCollectorFactory;
+use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\Helper\Proxy\HeadMetaProxy;
@@ -9,10 +12,10 @@ use ConLayout\View\Helper\Proxy\HeadScriptProxy;
 use ConLayout\View\Helper\Proxy\HeadTitleProxy;
 use ConLayout\View\Helper\Proxy\InlineScriptProxy;
 use Zend\View\Model\ViewModel;
-use ConLayout\Updater\Collector\FilesystemCollector;
 
 return [
     'con-layout' => [
+        'debug' => true,
         /**
          * paths where to search for layout updates
          *
@@ -110,6 +113,7 @@ return [
             ],
             'headLink' => [
                 'method' => 'appendStylesheet',
+                'debug'  => 'extras',
                 'filter' => [
                     'href' => [
                         'basePath' => 5,
@@ -120,6 +124,7 @@ return [
             ],
             'headScript' => [
                 'method' => 'appendFile',
+                'debug'  => 'attrs',
                 'filter' => [
                     'src' => [
                         'basePath' => 5,
@@ -130,6 +135,7 @@ return [
             ],
             'inlineScript' => [
                 'method' => 'appendFile',
+                'debug'  => 'attrs',
                 'filter' => [
                     'src' => [
                         'basePath' => 5,
@@ -144,6 +150,7 @@ return [
             ],
             'headMeta' => [
                 'method' => 'setName',
+                'debug' => 'modifiers',
                 'proxy' => HeadMetaProxy::class
             ],
             'bodyClass' => [
@@ -161,6 +168,10 @@ return [
             ]
         ],
         'collectors' => [
+            ConfigCollector::NAME => [
+                'class' => ConfigCollector::class,
+                'priority' => 20
+            ],
             FilesystemCollector::NAME => [
                 'class' => FilesystemCollector::class,
                 'priority' => 10
@@ -172,9 +183,7 @@ return [
         /*
         'listeners' => [
             'ConLayout\Listener\ActionHandlesListener'  => true,
-            'ConLayout\Listener\LayoutUpdateListener'   => true,
             'ConLayout\Listener\LoadLayoutListener'     => true,
-            'ConLayout\Listener\ViewHelperListener'     => true,
             'ConLayout\Listener\PrepareActionViewModelListener' => true
         ]*/
     ]
