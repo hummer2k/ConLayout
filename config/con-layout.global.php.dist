@@ -15,7 +15,7 @@ use Zend\View\Model\ViewModel;
 
 return [
     'con-layout' => [
-        'debug' => true,
+        'debug' => false,
         /**
          * paths where to search for layout updates
          *
