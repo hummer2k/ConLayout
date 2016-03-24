@@ -2,6 +2,7 @@
 namespace ConLayout\Listener\Factory;
 
 use ConLayout\Listener\BodyClassListener;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -18,7 +19,18 @@ class BodyClassListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $bodyClassHelper = $serviceLocator->get('viewHelperManager')->get('bodyClass');
+        return $this($serviceLocator, BodyClassListener::class);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array $options
+     * @return BodyClassListener
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $bodyClassHelper = $container->get('viewHelperManager')->get('bodyClass');
         return new BodyClassListener(
             $bodyClassHelper
         );

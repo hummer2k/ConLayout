@@ -8,6 +8,7 @@ namespace ConLayout\Listener\Factory;
 
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Listener\PrepareActionViewModelListener;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,8 +22,19 @@ class PrepareActionViewModelListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, PrepareActionViewModelListener::class);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array $options
+     * @return PrepareActionViewModelListener
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         return new PrepareActionViewModelListener(
-            $serviceLocator->get(BlockPoolInterface::class)
+            $container->get(BlockPoolInterface::class)
         );
     }
 }

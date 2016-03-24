@@ -1,11 +1,12 @@
 <?php
 /**
- * @package
+ * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 
 namespace ConLayout\Filter;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -16,8 +17,19 @@ class DebugFilterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
-        $viewHelperManager = $serviceManager->get('ViewHelperManager');
+        $container = $serviceLocator->getServiceLocator();
+        return $this($container, DebugFilter::class);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return DebugFilter
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $viewHelperManager = $container->get('ViewHelperManager');
         return new DebugFilter(
             $viewHelperManager->get('viewModel')
         );

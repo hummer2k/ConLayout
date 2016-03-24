@@ -4,6 +4,7 @@ namespace ConLayout\Updater;
 
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\Collector\FilesystemCollector;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -13,15 +14,30 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class LayoutUpdaterFactory implements FactoryInterface
 {
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return mixed
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator, LayoutUpdater::class);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array $options
+     * @return LayoutUpdater
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $updater = new LayoutUpdater();
         /** @var ModuleOptions $moduleOptions */
-        $moduleOptions = $serviceLocator->get(ModuleOptions::class);
+        $moduleOptions = $container->get(ModuleOptions::class);
         foreach ($moduleOptions->getCollectors() as $name => $collector) {
             $updater->attachCollector(
                 $name,
-                $serviceLocator->get($collector['class']),
+                $container->get($collector['class']),
                 $collector['priority']
             );
         }

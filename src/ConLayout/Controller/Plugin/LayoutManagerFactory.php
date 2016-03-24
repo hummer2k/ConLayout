@@ -3,6 +3,7 @@ namespace ConLayout\Controller\Plugin;
 
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ConLayout\Block\BlockPoolInterface;
@@ -20,11 +21,22 @@ class LayoutManagerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sl = $serviceLocator->getServiceLocator();
+        $container = $serviceLocator->getServiceLocator();
+        return $this($container, LayoutManager::class);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array $options
+     * @return LayoutManager
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         return new LayoutManager(
-            $sl->get(LayoutInterface::class),
-            $sl->get(LayoutUpdaterInterface::class),
-            $sl->get(BlockPoolInterface::class)
+            $container->get(LayoutInterface::class),
+            $container->get(LayoutUpdaterInterface::class),
+            $container->get(BlockPoolInterface::class)
         );
     }
 }

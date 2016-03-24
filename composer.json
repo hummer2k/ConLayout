@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.5.0",
         "zendframework/zend-mvc": "2.*",
-        "zendframework/zend-servicemanager": "2.*",
+        "zendframework/zend-servicemanager": "2.* || 3.*",
         "zendframework/zend-eventmanager": "2.*",
         "zendframework/zend-stdlib": "2.*",
         "zendframework/zend-serializer": "2.*",
