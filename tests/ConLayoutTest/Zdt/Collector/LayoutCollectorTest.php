@@ -30,6 +30,9 @@ class LayoutCollectorTest extends AbstractTest
 
     public function setUp()
     {
+        if (!class_exists('ZendDeveloperTools\Collector\AbstractCollector')) {
+            $this->markTestSkipped('ZDT not available');
+        }
         parent::setUp();
         $resolver = new AggregateResolver();
         $resolver->attach($this->getResolver());

@@ -75,11 +75,11 @@ final class LayoutUpdater extends AbstractUpdater implements
             $event->setName(UpdateEvent::EVENT_COLLECT);
             $event->setTarget($this);
 
-            $results = $this->getEventManager()->trigger(
-                $event,
+            $results = $this->getEventManager()->triggerEventUntil(
                 function ($result) {
                     return ($result instanceof Config);
-                }
+                },
+                $event
             );
 
             if ($results->stopped()) {
@@ -87,7 +87,7 @@ final class LayoutUpdater extends AbstractUpdater implements
             } else {
                 $this->fetchUpdates();
                 $event->setName(UpdateEvent::EVENT_COLLECT_POST);
-                $this->getEventManager()->trigger($event);
+                $this->getEventManager()->triggerEvent($event);
             }
 
             $this->layoutStructure->setReadOnly();

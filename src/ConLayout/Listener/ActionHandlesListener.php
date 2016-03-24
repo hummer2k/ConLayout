@@ -85,11 +85,11 @@ class ActionHandlesListener extends InjectTemplateListener
      * Attach event listeners for retrieving action handles.
      *
      * @param EventManagerInterface $events
-     * @return void
+     * @param int $priority
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1000)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'injectActionHandles'], 1000);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'injectActionHandles'], $priority);
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'injectErrorHandle'], 100);
     }
 

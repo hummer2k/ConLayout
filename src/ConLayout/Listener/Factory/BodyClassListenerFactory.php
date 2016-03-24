@@ -30,7 +30,7 @@ class BodyClassListenerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $bodyClassHelper = $container->get('viewHelperManager')->get('bodyClass');
+        $bodyClassHelper = $container->get('ViewHelperManager')->get('bodyClass');
         return new BodyClassListener(
             $bodyClassHelper
         );
