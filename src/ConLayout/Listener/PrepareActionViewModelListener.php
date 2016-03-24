@@ -52,11 +52,15 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
     {
         /* @var $result ModelInterface */
         $result = $e->getResult();
-        if ($result instanceof ModelInterface && !$result->terminate()) {
-            $this->blockPool->add(
-                LayoutInterface::BLOCK_ID_ACTION_RESULT,
-                $result
-            );
+        if ($result instanceof ModelInterface) {
+            if ($result->terminate()) {
+                $result->setOption('has_parent', null);
+            } else {
+                $this->blockPool->add(
+                    LayoutInterface::BLOCK_ID_ACTION_RESULT,
+                    $result
+                );
+            }
         }
     }
 }

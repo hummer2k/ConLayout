@@ -19,7 +19,7 @@ return [
         /**
          * paths where to search for layout updates
          *
-         * see README.md for adding new areas
+         * @see docs/areas.md
          *
          * format & examples: [
          *      'global' => [
