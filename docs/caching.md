@@ -2,7 +2,9 @@
 
 ## Caching layout structure
 
-Listen to the `getLayoutStructure.(pre|post)` events:
+Listen to the `UpdateEvent::EVENT_COLLECT` and `UpdateEvent::EVENT_COLLECT_POST` events:
+
+### Example with Zend\Cache:
 
 ````php
 <?php
@@ -39,27 +41,28 @@ class LayoutStructureCacheListener implements ListenerAggregateInterface
     {
         $events->getSharedManager()->attach(
             'ConLayout\Updater\LayoutUpdater',
-            'getLayoutStructure.pre',
+            UpdateEvent::EVENT_COLLECT,
             [$this, 'loadCache'],
             1000
         );
         $events->getSharedManager()->attach(
             'ConLayout\Updater\LayoutUpdater',
-            'getLayoutStructure.post',
+            UpdateEvent::EVENT_COLLECT_POST,
             [$this, 'saveCache']
         );
     }
 
-    protected function getCacheKey(array $handles)
+    protected function getCacheKey(array $handles, $area)
     {
-        return md5(implode('|', $handles));
+        return md5(implode('|', $handles) . $area);
     }
 
     public function loadCache(UpdateEvent $e)
     {
         $handles = $e->getHandles();
-        $cacheKey = $this->getCacheKey($handles);
+        $cacheKey = $this->getCacheKey($handles, $e->getArea());
         if ($this->cache->hasItem($cacheKey)) {
+            $e->stopPropagation();
             $layoutStructure = new Config(
                 $this->cache->getItem($cacheKey)
             );
@@ -70,10 +73,10 @@ class LayoutStructureCacheListener implements ListenerAggregateInterface
     public function saveCache(UpdateEvent $e)
     {
         $handles = $e->getHandles();
-        $cacheKey = $this->getCacheKey($handles);
+        $cacheKey = $this->getCacheKey($handles, $e->getArea());
         $layoutStructure = $e->getLayoutStructure()->toArray();
         $this->cache->setItem($cacheKey, $layoutStructure);
     }
-
 }
+
 ````

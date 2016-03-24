@@ -2,12 +2,16 @@
 
 namespace ConLayoutTest\Layout;
 
+use ConLayout\Block\BlockPool;
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\BlockManager;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutFactory;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdater;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Layout\Layout as TestLayout;
 use Zend\Config\Config;
@@ -31,13 +35,12 @@ class LayoutTest extends AbstractTest
         parent::setUp();
         $this->layoutStructure = include __DIR__ . '/_files/layout-structure.php';
         $this->updaterMock = $this->getMockBuilder(
-            'ConLayout\Updater\LayoutUpdaterInterface'
+            LayoutUpdaterInterface::class
         )->getMock();
         $this->updaterMock->method('getLayoutStructure')
             ->willReturn(new Config($this->layoutStructure));
 
-        $this->blockFactory = new BlockFactory();
-        $this->blockFactory->setServiceLocator(new ServiceManager());
+        $this->blockFactory = new BlockFactory([], new BlockManager(), new ServiceManager());
     }
 
     public function testFactory()
@@ -45,17 +48,17 @@ class LayoutTest extends AbstractTest
         $serviceManager = new ServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
-            'ConLayout\Block\Factory\BlockFactoryInterface',
-            new BlockFactory()
+            BlockPoolInterface::class,
+            new BlockPool()
         );
 
         $serviceManager->setService(
-            'ConLayout\Updater\LayoutUpdaterInterface',
+            LayoutUpdaterInterface::class,
             new LayoutUpdater()
         );
 
         $serviceManager->setService(
-            'ConLayout\Options\ModuleOptions',
+            ModuleOptions::class,
             new ModuleOptions()
         );
 
@@ -63,114 +66,7 @@ class LayoutTest extends AbstractTest
         $instance = $factory->createService($serviceManager);
 
 
-        $this->assertInstanceOf('ConLayout\Layout\LayoutInterface', $instance);
-    }
-
-    public function testAddAndGetBlock()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
-        );
-        $block = new ViewModel();
-        $layout->addBlock('my-block', $block);
-        $this->assertSame($block, $layout->getBlock('my-block'));
-    }
-
-    public function testAddSortBlockWithBeforeAndAfter()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            new LayoutUpdater()
-        );
-        $block1 = new ViewModel([], ['after' => 'block2']);
-        $block2 = new Viewmodel();
-        $block3 = new ViewModel([], ['before' => 'block2']);
-        $block4 = new ViewModel([], ['before' => 'block3']);
-        $block5 = new ViewModel([], ['after' => 'block1']);
-
-        $expectedOrder = [
-            'block4',
-            'block3',
-            'block2',
-            'block1',
-            'block5'
-        ];
-
-        $layout->addBlock('block1', $block1);
-        $layout->addBlock('block2', $block2);
-        $layout->addBlock('block3', $block3);
-        $layout->addBlock('block4', $block4);
-        $layout->addBlock('block5', $block5);
-
-        $layout->load();
-
-        $this->assertSame($expectedOrder, array_keys($layout->getBlocks()));
-
-    }
-
-    public function testAddBlockWithChildren()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            new LayoutUpdater()
-        );
-        $block1 = new ViewModel();
-        $block2 = new ViewModel([
-            LayoutInterface::BLOCK_ID_VAR => 'child1'
-        ]);
-        $block3 = new ViewModel([
-            LayoutInterface::BLOCK_ID_VAR => 'child2'
-        ]);
-        $block1->addChild($block2);
-        $block1->addChild($block3);
-
-        $layout->addBlock('my-block', $block1);
-
-        $this->assertCount(3, $layout->getBlocks());
-
-        $this->assertSame(
-            $block2,
-            $layout->getBlock('child1')
-        );
-
-        $this->assertSame(
-            $block3,
-            $layout->getBlock('child2')
-        );
-
-    }
-
-    public function testAddBlockWithChildChildren()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            new LayoutUpdater()
-        );
-        $block1 = new ViewModel();
-        $block2 = new ViewModel([
-            LayoutInterface::BLOCK_ID_VAR => 'child1'
-        ]);
-        $block3 = new ViewModel([
-            LayoutInterface::BLOCK_ID_VAR => 'child2'
-        ]);
-        $block1->addChild($block2);
-        $block2->addChild($block3);
-
-        $layout->addBlock('my-block', $block1);
-
-        $this->assertCount(3, $layout->getBlocks());
-
-        $this->assertSame(
-            $block2,
-            $layout->getBlock('child1')
-        );
-
-        $this->assertSame(
-            $block3,
-            $layout->getBlock('child2')
-        );
-
+        $this->assertInstanceOf(LayoutInterface::class, $instance);
     }
 
     public function testGetCaptureTo()
@@ -179,7 +75,7 @@ class LayoutTest extends AbstractTest
         $viewModel->setCaptureTo('root::footer');
         $viewModel->setOption('parent', 'some.parent');
 
-        $layout = new TestLayout($this->blockFactory, $this->updaterMock);
+        $layout = new TestLayout($this->updaterMock, $this->blockPool);
 
         $this->assertEquals([
             'some.parent',
@@ -192,7 +88,7 @@ class LayoutTest extends AbstractTest
         $viewModel = new ViewModel();
         $viewModel->setOption('parent', 'some.parent');
 
-        $layout = new TestLayout($this->blockFactory, $this->updaterMock);
+        $layout = new TestLayout($this->updaterMock, $this->blockPool);
 
         $this->assertEquals([
             'some.parent',
@@ -200,147 +96,30 @@ class LayoutTest extends AbstractTest
         ], $layout->getCaptureTo($viewModel));
     }
 
-    public function testGetBlocks()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
-        );
-
-        $blocks = $layout->getBlocks();
-
-        $this->assertInternalType('array', $blocks);
-        $this->assertCount(3, $blocks);
-    }
-
-    public function testSortBlocks()
-    {
-        $updaterMock = $this->getMockBuilder('ConLayout\Updater\LayoutUpdaterInterface')
-            ->getMock();
-        $updaterMock
-            ->method('getLayoutStructure')
-            ->willReturn(new Config([]));
-        $layout = new Layout(
-            $this->blockFactory,
-            $updaterMock
-        );
-
-        $expectedOrder = [
-            1 => 'block-2',
-            2 => 'block-4',
-            3 => 'block-1',
-            4 => 'block-3'
-        ];
-
-        $block1 = new ViewModel([], ['order' => 5]);
-        $block2 = new ViewModel([], ['order' => -10]);
-        $block3 = new ViewModel([], ['order' => 10]);
-        $block4 = new ViewModel();
-
-        $layout->addBlock('block-1', $block1);
-        $layout->addBlock('block-2', $block2);
-        $layout->addBlock('block-3', $block3);
-        $layout->addBlock('block-4', $block4);
-
-        $layout->load();
-
-        $i = 1;
-        foreach (array_keys($layout->getBlocks()) as $blockId) {
-            $this->assertEquals($expectedOrder[$i], $blockId);
-            $i++;
-        }
-    }
-
     public function testInjectBlocks()
     {
         $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
+            $this->updaterMock,
+            $this->blockPool
         );
+        $layout->attachGenerator('blocks', $this->blocksGenerator);
         $layoutModel = new ViewModel();
         $layout->setRoot($layoutModel);
         $layout->load();
-        $this->assertCount(2, $layoutModel->getChildren());
+
+        $this->assertEquals('new/layout', $layoutModel->getTemplate());
+        $this->assertCount(3, $layoutModel->getChildren());
         $this->assertCount(1, $layout->getBlock('widget.1')->getChildren());
     }
 
-    public function testRemoveBlock()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
-        );
-        $layoutModel = new ViewModel();
-        $layout->removeBlock('widget.1');
-        $layout->setRoot($layoutModel);
-        $layout->load();
-
-        $this->assertFalse($layout->getBlock('widget.1'));
-        $this->assertCount(1, $layoutModel->getChildren());
-    }
-
-    public function testRemoveAddedBlock()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
-        );
-        $block = new ViewModel();
-        $layout->addBlock('some-block', $block);
-        $this->assertSame($block, $layout->getBlock('some-block'));
-
-        $layout->removeBlock('some-block');
-
-        $this->assertFalse($layout->getBlock('some-block'));
-    }
-
-    public function testIsAllowed()
-    {
-        $layout = new Layout(
-            $this->blockFactory,
-            $this->updaterMock
-        );
-
-        $layout->getEventManager()->getSharedManager()
-            ->attach('ConLayout\Layout\Layout', 'isAllowed', function($e) {
-                $blockId = $e->getParam('block_id');
-                if ($blockId === 'widget.1') {
-                    return false;
-                }
-                return true;
-            });
-
-        $layout->addBlock('mr.widget', new ViewModel());
-
-        $root = new ViewModel();
-        $layout->setRoot($root);
-        $layout->load();
-
-        $this->assertCount(2, $root->getChildren());
-
-    }
-
-    public function testAnonymousBlockId()
-    {
-        $viewModel = new ViewModel();
-        $child = new ViewModel();
-        $viewModel->addChild($child);
-        $this->layout->addBlock('test.block', $viewModel);
-
-        $this->assertEquals(
-            'anonymous.content.1',
-            $child->getVariable(LayoutInterface::BLOCK_ID_VAR)
-        );
-    }
-
-    public function testParentBlock()
+    public function testParentBlockIsAddedAsOption()
     {
         $parent = new ViewModel();
         $child  = new ViewModel();
-        $child->setVariable(LayoutInterface::BLOCK_ID_VAR, 'child');
+        $child->setOption('block_id', 'child');
 
         $child2 = new ViewModel();
-        $child2->setVariable(LayoutInterface::BLOCK_ID_VAR, 'child2');
+        $child2->setOption('block_id', 'child2');
         $child->addChild($child2);
 
         $parent->addChild($child);

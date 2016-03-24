@@ -2,6 +2,7 @@
 
 namespace ConLayout\Layout;
 
+use ConLayout\Generator\GeneratorInterface;
 use Zend\View\Model\ModelInterface;
 
 /**
@@ -10,9 +11,20 @@ use Zend\View\Model\ModelInterface;
  */
 interface LayoutInterface
 {
+    /**
+     * block id of root view model
+     */
     const BLOCK_ID_ROOT = 'root';
+
+    /**
+     * block id of view model returned by controller
+     */
     const BLOCK_ID_ACTION_RESULT = 'action.result';
-    const BLOCK_ID_VAR  = '__BLOCK_ID__';
+
+    /**
+     * delimiter block_id::cpature_to
+     */
+    const CAPTURE_TO_DELIMITER = '::';
 
     /**
      * retrieve single block by block id
@@ -34,7 +46,6 @@ interface LayoutInterface
      *
      * @param string $blockId
      * @param ModelInterface $block
-     * @param string $parentId
      */
     public function addBlock($blockId, ModelInterface $block);
 
@@ -44,6 +55,19 @@ interface LayoutInterface
      * @param string $blockId
      */
     public function removeBlock($blockId);
+
+    /**
+     * @param array $generators load only given generators or all if empty
+     * @return mixed
+     */
+    public function generate(array $generators = []);
+
+    /**
+     * inject blocks/build view model tree
+     *
+     * @return mixed
+     */
+    public function injectBlocks();
 
     /**
      * load the layout
@@ -56,4 +80,20 @@ interface LayoutInterface
      * @param ModelInterface $root
      */
     public function setRoot(ModelInterface $root);
+
+    /**
+     * @param string $name
+     * @param GeneratorInterface $generator
+     * @param int $priority
+     * @return mixed
+     */
+    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1);
+
+    /**
+     * removes a generator
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function detachGenerator($name);
 }

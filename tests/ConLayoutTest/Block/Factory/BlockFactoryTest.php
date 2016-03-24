@@ -5,10 +5,11 @@ namespace ConLayoutTest\Block\Factory;
 use ConLayout\Block\AbstractBlock;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
-use ConLayout\Layout\LayoutInterface;
+use ConLayout\BlockManager;
 use ConLayoutTest\AbstractTest;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Stdlib\RequestInterface;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -18,7 +19,7 @@ use Zend\View\Renderer\PhpRenderer;
  */
 class BlockFactoryTest extends AbstractTest
 {
-        /**
+    /**
      *
      * @var BlockFactoryInterface
      */
@@ -33,15 +34,12 @@ class BlockFactoryTest extends AbstractTest
     public function setUp()
     {
         parent::setUp();
-        $this->factory = new BlockFactory();
         $this->sm = new ServiceManager();
-        $this->factory->setServiceLocator($this->sm);
+        $this->factory = new BlockFactory([], new BlockManager(), $this->sm);
     }
 
     public function testCreateBlock()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
         $blockSpecs = [
             'options' => [
                 'option1' => 'value_option1',
@@ -54,12 +52,14 @@ class BlockFactoryTest extends AbstractTest
             'append' => false,
             'capture_to' => 'sidebarLeft',
             'actions' => [
-                'setOption' => [
-                    'my-option', 'value_my-option'
+                'my-option' => [
+                    'method' => 'setOption',
+                    'name'   => 'my-option',
+                    'value'  => 'value_my-option'
                 ]
             ]
         ];
-        $block = $factory->createBlock('block1', $blockSpecs);
+        $block = $this->factory->createBlock('block1', $blockSpecs);
 
         $this->assertEquals('path/to/template', $block->getTemplate());
         $this->assertEquals(false, $block->isAppend());
@@ -70,141 +70,47 @@ class BlockFactoryTest extends AbstractTest
         $this->assertEquals('value_my-option', $block->getOptions()['my-option']);
     }
 
-    public function testMultipleActions()
+    /**
+     * @expectedException \ConLayout\Exception\BadMethodCallException
+     */
+    public function testThrowsExceptionOnMissingMethod()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
-
         $specs = [
             'actions' => [
-                'set_some_option' => [
-                    'setOption' => ['my-option', 'value_my-option']
-                ],
-                'set_another_option' => [
-                    'setOption' => ['some-other-option', 'some-option-value']
-                ],
-                'setVariable' => ['testVar', 'valueTestVar'],
-                'set_some_var' => [
-                    'setVariable' => ['testVar2', 'SOME_VAR']
-                ],
-                'set_another_var' => [
-                    'setVariable' => ['testVar3', 'ANOTHER_VAR']
+                'not-exists' => [
+                    'method' => 'notExists___'
                 ]
             ]
         ];
 
-        $block = $factory->createBlock('block.id', $specs);
-
-        $this->assertEquals('value_my-option', $block->getOption('my-option'));
-        $this->assertEquals('some-option-value', $block->getOption('some-other-option'));
-        $this->assertEquals('valueTestVar', $block->getVariable('testVar'));
-        $this->assertEquals('SOME_VAR', $block->getVariable('testVar2'));
-        $this->assertEquals('ANOTHER_VAR', $block->getVariable('testVar3'));
-    }
-
-    public function testWrapBlockString()
-    {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
-
-        $specs = [
-            'template' => 'my/tpl',
-            'wrapper' => 'my/wrapper'
-        ];
-
-        $block = $factory->createBlock('my-block', $specs);
-
-        $this->assertEquals('my/wrapper', $block->getTemplate());
-
-    }
-
-    public function testWrapBlockArray()
-    {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
-
-        $specs = [
-            'template' => 'my/tpl',
-            'wrapper' => [
-                'template' => 'my/wrapper',
-                'class' => 'my-wrapper-class',
-                'tag'   => 'p'
-            ]
-        ];
-
-        $block = $factory->createBlock('my-block', $specs);
-
-        $this->assertEquals('my/wrapper', $block->getTemplate());
-
-        $this->assertEquals(['class' => 'my-wrapper-class'], $block->getVariable('wrapperAttributes'));
-        $this->assertEquals('p', $block->getVariable('wrapperTag'));
-    }
-
-    public function testWrapBlockArrayWithoutTemplate()
-    {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
-
-        $specs = [
-            'template' => 'my/tpl',
-            'wrapper' => [
-                'tag'   => 'div'
-            ]
-        ];
-
-        $block = $factory->createBlock('my-block', $specs);
-
-        $this->assertEquals(BlockFactory::WRAPPER_DEFAULT, $block->getTemplate());
+        $this->factory->createBlock('my-block', $specs);
     }
 
     public function testClass()
     {
-        $factory = new BlockFactory();
-        $factory->setServiceLocator(new ServiceManager());
-
         $specs = [
-            'class' => __NAMESPACE__ . '\MyBlock'
+            'class' => MyBlock::class
         ];
 
-        $block = $factory->createBlock('test-block', $specs);
-        $this->assertTrue($block->isInitialized());
+        $block = $this->factory->createBlock('test-block', $specs);
 
         $this->assertEquals(
             'test-block',
-            $block->getVariable(LayoutInterface::BLOCK_ID_VAR)
+            $block->getOption('block_id')
         );
-    }
-
-    public function testBlockFromSm()
-    {
-        $serviceManager = new ServiceManager();
-        $block = new ViewModel();
-        $serviceManager->setService('Test\Block', $block);
-
-        $factory = new BlockFactory();
-        $factory->setServiceLocator($serviceManager);
-
-        $specs = [
-            'class' => 'Test\Block'
-        ];
-        $this->assertSame(
-            $block,
-            $factory->createBlock('test', $specs)
-        );
-
     }
 
     public function testBlockFromBlockManager()
     {
-        $blockManager = new \ConLayout\BlockManager();
-        $class = 'ConLayoutTest\Block\Factory\MyBlock';
+        $blockManager = new BlockManager();
+        $class = MyBlock::class;
         $blockManager->setInvokableClass(
-            'MyBlock',
+            MyBlock::class,
             $class
         );
-        $blockFactory = new BlockFactory([], $blockManager);
+        $blockFactory = new BlockFactory([], $blockManager, new ServiceManager());
         $block = $blockFactory->createBlock('my.block', [
-            'class' => 'MyBlock'
+            'class' => MyBlock::class
         ]);
         $this->assertInstanceOf($class, $block);
     }
@@ -212,7 +118,7 @@ class BlockFactoryTest extends AbstractTest
     public function testCreateBlockWithTemplate()
     {
         $block = $this->factory->createBlock('block.id', [
-            'class' => 'ConLayoutTest\Block\Factory\TplBlock'
+            'class' => TplBlock::class
         ]);
         $this->assertEquals('already/set/template', $block->getTemplate());
     }
@@ -224,17 +130,17 @@ class BlockFactoryTest extends AbstractTest
         $this->sm->setService('Request', $request);
         $this->sm->setService('ViewRenderer', $renderer);
         $block = $this->factory->createBlock('test.block.impl', [
-            'class' => 'ConLayoutTest\Block\Factory\BlockImpl'
+            'class' => BlockImpl::class
         ]);
         $this->assertInstanceof(
-            'Zend\Stdlib\RequestInterface',
+            RequestInterface::class,
             $block->getRequest()
         );
         $this->assertSame($request, $block->getRequest());
         $this->assertSame($renderer, $block->getView());
     }
 }
-
+// @codingStandardsIgnoreStart
 class TplBlock extends ViewModel
 {
     protected $template = 'already/set/template';
@@ -259,3 +165,4 @@ class BlockImpl extends AbstractBlock
 {
 
 }
+// @codingStandardsIgnoreEnd

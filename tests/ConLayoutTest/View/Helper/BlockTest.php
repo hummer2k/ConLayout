@@ -23,14 +23,14 @@ class BlockTest extends AbstractTest
     public function setUp()
     {
         parent::setUp();
-        $this->blockHelper = new Block($this->layout);
+        $this->blockHelper = new Block($this->blockPool);
         $this->blockHelper->setView(new PhpRenderer);
     }
 
     public function testInvoke()
     {
         $block = new ViewModel();
-        $this->layout->addBlock('test.block', $block);
+        $this->blockPool->add('test.block', $block);
 
         $this->assertSame(
             $block,

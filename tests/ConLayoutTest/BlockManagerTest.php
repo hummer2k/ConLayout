@@ -40,7 +40,8 @@ class BlockManagerTest extends AbstractTest
         $this->blockManager->validatePlugin(new \stdClass());
     }
 }
-
+// @codingStandardsIgnoreStart
 class TestBlock extends AbstractBlock
 {
 }
+// @codingStandardsIgnoreEnd

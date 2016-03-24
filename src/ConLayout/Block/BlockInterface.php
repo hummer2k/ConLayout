@@ -2,13 +2,14 @@
 namespace ConLayout\Block;
 
 use Zend\Http\Request;
-use Zend\View\Renderer\RendererInterface;
+use Zend\View\Helper\HelperInterface;
+use Zend\View\Model\ModelInterface;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-interface BlockInterface
+interface BlockInterface extends ModelInterface, HelperInterface
 {
     /**
      *
@@ -21,15 +22,4 @@ interface BlockInterface
      * @return Request
      */
     public function getRequest();
-
-    /**
-     *
-     * @param RendererInterface $view
-     */
-    public function setView(RendererInterface $view);
-
-    /**
-     * @return RendererInterface
-     */
-    public function getView();
 }

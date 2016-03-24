@@ -1,26 +1,14 @@
 # Layout instructions
 
-Currently there are 5 layout instructions:
+Currently there are 4 layout instructions:
 
-1. [`layout`](#1-layout)
-2. [`blocks`](#2-blocks)
-3. [`remove_blocks`](#3-remove_blocks)
-4. [`view_helpers`](#4-view_helpers)
-5. [`include`](#5-include)
+1. [`blocks`](#1-blocks)
+2. [`helpers`](#2-helpers)
+3. [`include`](#3-include)
+4. [`reference`](#4-reference)
 
-## 1. `layout`
 
-sets the layout template:
-
-````php
-<?php
-// layout update file e.g. default.php
-return [
-    'layout' => 'layout/2cols-left'
-];
-````
-
-## 2. `blocks`
+## 1. `blocks`
 
 add blocks to layout:
 
@@ -55,6 +43,7 @@ return [
              * template
              */
             'capture_to' => 'footer::content',
+            'parent' => 'footer',
             /**
              * default: true
              */
@@ -78,30 +67,18 @@ return [
                 'after' => 'some.other.block'
             ],
             /**
-             * wraps a block with another template
-             *
-             * if false, wrapper will be disabled: 'wrapper' => false,
-             *
-             * defaults: tag: 'div', 'template: 'blocks/wrapper'
+             * remove this block
              */
-            'wrapper' => [
-                'template' => 'blocks/wrapper',
-                'class' => 'col-xs-12',
-                'tag' => 'div'
-            ],
-            // just set a custom template
-            'wrapper' => 'my/wrapper',
-            // or add more attributes for the wrapper tag
-            'wrapper' => [
-                'id' => 'some-id',
-                'title' => 'Wrapper Title'
-            ],
+            'remove' => true,
             /**
              * perform some actions on the block class/method calls
              */
             'actions'   => [
                 'my-action' => [
-                    'method' => ['param1', 'param2', 'param3'] // $block->method('param1', 'param2', 'param3');
+                    'method' => 'someMethod',
+                    'param1' => 'Value param1',
+                    'param3' => 'Value param3',
+                    'param2' => 'Value param2'
                 ]
             ]
         ]
@@ -109,136 +86,164 @@ return [
 ];
 ````
 
-## 3. `remove_blocks`
-
-remove blocks from the layout structure:
-
-````php
-<?php
-// layout update file e.g. application/index.php
-return [
-    'remove_blocks' => [
-        'footer' => true // remove block with id 'footer'
-    ]
-];
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <blocks>
+        <!--
+         * unique block id
+         * can be referenced within the layout model by
+         * ConLayout\Layout\Layout::getBlock('my.unique.block.id');
+         -->
+        <my.unique.block.id>
+            <!--
+             * Can extend from ConLayout\Block\AbstractBlock
+             * Should implement ConLayout\Block\BlockInterface
+             * optional, defaults to Zend\View\ViewModel
+            -->
+            <class>Application\Block\SomeWidget</class>
+            <!--
+             * template only optional when already declared in block class
+            -->
+            <template>path/to/template</template>
+            <!--
+             * where should this block be displayed?
+             * syntax: <block-id>::<capture_to>
+             * if no "::"-delimiter found it will be added as a child of root
+             *
+             * In this case the block will be added as a child of the block with
+             * id 'footer' and captured to the 'content' variable in the footer 
+             * template
+            -->
+            <capture_to>footer::content</capture_to>
+            <!--
+             * default: true
+            -->
+            <append>0</append>
+            <!--
+             * set variables for this block that can be accessed with $this->var1,
+             * $this->var2 in the template
+            -->
+            <variables>
+                <var1>Hello</var1>
+                <var2>World</var2>
+            </variables>
+            <!--
+             * add options, for example to define the sort order
+            -->
+            <options>
+                <order>-10</order>
+                <!-- insert this block-->
+                <before>some.other.block</before>
+                <!-- or -->
+                <after>some.other.block</after>
+            </options>
+            <!--
+             * wraps a block with another template
+             *
+             * if false, wrapper will be disabled: 'wrapper' => false,
+             *
+             * defaults: tag: 'div', 'template: 'blocks/wrapper'
+            -->          
+            <wrapper>
+                <template>blocks/wrapper</template>
+                <class>col-xs-12</class>
+                <tag>div</tag>
+            </wrapper>
+            <!--
+             * remove this block
+            -->
+            <remove>1</remove>
+            <!--
+             * perform some actions on the block class/method calls
+            -->
+            <actions>
+                <my-action>
+                    <method>someMethod</method>
+                    <param1>Value param1</param1>
+                    <param3>Value param3</param3>
+                    <param2>Value param2</param2>
+                </my-action>
+            </actions>
+       </my.unique.block.id>
+    </blocks>
+</page>
 ````
 
-## 4. `view_helpers`
+Note: Use XML attributes when possible to reduce overhead:
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <blocks>
+        <my.unique.block.id class="Application\Block\SomeWidget" template="path/to/template">
+            <actions>
+                <my-action method="someMethod" param1="Value param1" param3="Value param3" param2="Value param2" />
+            </actions>
+        </my.unique.block.id>
+    </blocks>
+</page>
+````
+
+## 2. `helpers`
 
 Call view helpers. Add CSS or JavaScript assets, set page title etc.
 
-Syntax:
-
 ````php
 <?php
-// if 'value' is a string, it will be the first parameter
-// of the default method of the helper
-// @see con-layout.global.php.dist for default methods
-$headTitle = [
-    // where 'key' is a unique identifier of the 'asset'
-    // and 'value' either an array of the helper arguments or a string 
-    // (first argument)
-    'key' => 'value'
-];
-// result:
-$headTitle->append('value');
+// - support for named arguments.
+// - __call() methods are implemented by a proxy (ConLayout\View\Helper\Proxy)
+// Examples:
 
-
-// value = array, call default method
-$headScript = [
-    'html5shiv' => [
-        '//html5shiv.googlecode.com/svn/trunk/html5.js',
-        'text/javascript',
-        ['conditional' => 'lt IE 9']
-    ]
-];
-// result:
-$headScript->appendFile(
-    '//html5shiv.googlecode.com/svn/trunk/html5.js',
-    'text/javascript',
-    ['conditional' => 'lt IE 9']
-);
-
-
-
-// value = array, call specific method
-$headScript = [
-    'html5shiv' => [
-        'method' => 'prependFile',
-        'args' => [
-            '//html5shiv.googlecode.com/svn/trunk/html5.js',
-            'text/javascript',
-            ['conditional' => 'lt IE 9']
-        ]
-    ]
-];
-// result:
-$headScript->prependFile(
-    '//html5shiv.googlecode.com/svn/trunk/html5.js',
-    'text/javascript',
-    ['conditional' => 'lt IE 9']
-);
-
-````
-
-````php
-<?php
 return [
-    'view_helpers' => [
-        /**
-         * set/append/prepend head title
-         * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.head-title.html
-         */
-        'headTitle' => [
-            'separator' => [
-                'method' => 'setSeparator'
-                'args' => [' - '],
-            ],
-            'default' => 'Default Title'
-        ],
-        /**
-         * add css
-         * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.head-link.html
-         */
-        'headLink' => [
-            'twbs' => '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css',
-            'main-css' => '/css/main.css',
-            // prepend
-            'some-lib' => [
-                'method' => 'prependStylesheet',
-                'args' => ['/css/lib/some-lib.css']
-            ]
-        ],
-        /**
-         * add js
-         * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.head-script.html
-         */
+    'helpers' => [
         'headScript' => [
-            'twbs' => '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js',
-            'jquery' => [
-                'method' => 'prependFile',
-                'args' => ['https://code.jquery.com/jquery-2.1.4.min.js']
-            ]
-        ]
-        /**
-         * @see headScript
-         * @see http://framework.zend.com/manual/current/en/modules/zend.view.helpers.inline-script.html
-         */
-        'inlineScript' => [
+            'jquery' => ['src' => '/js/jquery.js']
         ]
     ]
 ];
+// result: $headScript->appendFile('/js/jquery.js');
+
+return [
+    'helpers' => [
+        'headScript' => [
+            'main' => [
+                'src' => '/js/main.js', // src = argument name of method signature
+                'after' => 'jquery'   // append after jquery
+                'attrs' => [            // attrs = argument name of method signature
+                    'conditional' => 'lt IE 9'
+                ]
+            ]
+        ]
+    ]
+];
+// result: $headScript->appendFile('/js/main.js', 'text/javascript', ['conditional' => 'lt IE 9']);
+
 ````
 
-## 5. `include`
+or via XML:
 
-With include you can include another handle.
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <helpers>
+        <headScript>
+            <main src="/js/main.js" depends="jquery" /> <!-- will be placed after jquery -->
+            <jquery src="/js/jquery.js" />
+        </headScript>
+    </helpers>
+</layout>
+
+````
+
+## 3. `include`
+
+Includes another handle
 
 ````php
 <?php
 // layout update file application/index/index.php
 return [
-    'layout' => '3cols',
     'blocks' => [
         'header' => [
             // ...
@@ -253,6 +258,17 @@ return [
 ];
 ````
 
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <blocks>
+        <header />
+        <footer />
+        <widget1 />
+    </blocks>
+</page>
+````
+
 If you want to use the same layout structure as `application/index/index` in 
 `product/index/view`:
 
@@ -263,6 +279,100 @@ If you want to use the same layout structure as `application/index/index` in
 return [
     'include' => [
         'application/index/index'
+    ]
+];
+````
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <include handle="application/index/index" />
+</page>
+````
+
+Tip: Define a "virtual handle" for reuse:
+
+````php
+<?php
+// virtual handle file default/widgets.php
+return [
+    'blocks' => [
+        'widget.forecast' => [
+            'template' => 'widgets/forecast',
+            'parent' => 'sidebar'
+        ],
+        'widget.calendar' => [
+            'template' => 'widgets/calendar',
+            'parent' => 'sidebar'
+        ]
+    ]
+];
+````
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <blocks>
+        <widget.forecast template="widgets/forecast" parent="sidebar" />
+        <widget.calendar template="widgets/calendar" parent="sidebar" />
+    </blocks>
+</page>
+````
+
+````php
+<?php
+// layout update file application/index/index.php
+return [
+    // ...
+    'include' => [
+        'default/widgets'
+    ]
+]
+````
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <include handle="default/widgets" />
+</page>
+````
+
+## 4. `reference`
+
+Reference a block to change its properties.
+
+````php
+<?php
+// default.php
+return [
+    'blocks' => [
+        'root' => [
+            'blocks' => [
+                'sidebar' => [
+                    'class' => 'container',
+                    'blocks' => [
+                        'widget.to.change' => [
+                            'template' => 'my/widget'
+                        ]                        
+                    ]
+                ]
+            ]
+        ]
+    ]
+];
+
+````
+
+Change the template of the widget without writing the nested structure again:
+
+````php
+<?php
+// application/index/index.php
+return [
+    'reference' => [
+        'widget.to.change' => [
+            'template' => 'widgets/new-template'
+        ]
     ]
 ];
 ````

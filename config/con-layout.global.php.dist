@@ -1,11 +1,25 @@
 <?php
-use \ConLayout\Updater\LayoutUpdaterInterface;
+
+use ConLayout\Generator\BlocksGenerator;
+use ConLayout\Generator\ViewHelperGenerator;
+use ConLayout\Updater\Collector\FilesystemCollector;
+use ConLayout\Updater\Collector\ConfigCollectorFactory;
+use ConLayout\Updater\Collector\ConfigCollector;
+use ConLayout\Updater\LayoutUpdaterInterface;
+use ConLayout\View\Helper\Proxy\HeadLinkProxy;
+use ConLayout\View\Helper\Proxy\HeadMetaProxy;
+use ConLayout\View\Helper\Proxy\HeadScriptProxy;
+use ConLayout\View\Helper\Proxy\HeadTitleProxy;
+use ConLayout\View\Helper\Proxy\InlineScriptProxy;
+use Zend\View\Model\ViewModel;
+
 return [
     'con-layout' => [
+        'debug' => false,
         /**
          * paths where to search for layout updates
          *
-         * see README.md for adding new areas
+         * @see docs/areas.md
          *
          * format & examples: [
          *      'global' => [
@@ -37,7 +51,7 @@ return [
          * @see http://framework.zend.com/manual/current/en/modules/zend.config.reader.html
          */
         'layout_update_extensions' => [
-            'php'
+            'xml'
         ],
         'default_area' => LayoutUpdaterInterface::AREA_DEFAULT,
         /**
@@ -73,7 +87,7 @@ return [
         /**
          * base dir to assets
          *
-         * is used by ConLayout\AssetPreparer\CacheBuster to read the file
+         * is used by ConLayout\Filter\CacheBuster to read the file
          * and appends an md5 query string so that browsers always pull the
          * latest asset from the server
          */
@@ -84,62 +98,93 @@ return [
         'block_defaults' => [
             'capture_to' => 'content',
             'append'     => true,
-            'class'      => 'Zend\View\Model\ViewModel',
+            'class'      => ViewModel::class,
             'options'    => [],
             'variables'  => [],
             'template'   => '',
             'actions'    => []
         ],
         /**
-         * available view helpers for view_helpers-instructions
+         * defaults for view_helpers-instructions
          */
         'view_helpers' => [
-            'doctype' => [],
+            'doctype' => [
+                'default_param' => 'doctype'
+            ],
             'headLink' => [
-                'default_method' => 'appendStylesheet',
+                'method' => 'appendStylesheet',
+                'debug'  => 'extras',
+                'filter' => [
+                    'href' => [
+                        'basePath' => 5,
+                        'cacheBuster' => 10
+                    ]
+                ],
+                'proxy' => HeadLinkProxy::class
             ],
             'headScript' => [
-                'default_method' => 'appendFile',
+                'method' => 'appendFile',
+                'debug'  => 'attrs',
+                'filter' => [
+                    'src' => [
+                        'basePath' => 5,
+                        'cacheBuster' => 10
+                    ]
+                ],
+                'proxy' => HeadScriptProxy::class
             ],
             'inlineScript' => [
-                'default_method' => 'appendFile',
+                'method' => 'appendFile',
+                'debug'  => 'attrs',
+                'filter' => [
+                    'src' => [
+                        'basePath' => 5,
+                        'cacheBuster' => 10
+                    ]
+                ],
+                'proxy' => InlineScriptProxy::class
             ],
             'headTitle' => [
-                'default_method' => 'append'
+                'method' => 'append',
+                'proxy' => HeadTitleProxy::class
             ],
             'headMeta' => [
-                'default_method' => 'appendName'
+                'method' => 'setName',
+                'debug' => 'modifiers',
+                'proxy' => HeadMetaProxy::class
             ],
             'bodyClass' => [
-                'default_method' => 'addClass'
+                'method' => 'addClass'
             ]
         ],
-        /**
-         * values of view_helpers instructions are prepared before they are
-         * passed to the helper.
-         *
-         * You can create your own preparer by implementing
-         * ConLayout\AssetPreparer\AssetPreparerInterface or disable with
-         * value false:
-         *
-         * 'headLink' => [
-         *      'basePath' => false,
-         *      'myPreparer' => 'Acme\AssetPreparer\MyPreparer'
-         *  ]
-         */
-        'asset_preparers' => [
-            'headLink' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
+        'generators' => [
+            BlocksGenerator::NAME => [
+                'class' => BlocksGenerator::class,
+                'priority' => 1
             ],
-            'headScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
+            ViewHelperGenerator::NAME => [
+                'class' => ViewHelperGenerator::class,
+                'priority' => 1
+            ]
+        ],
+        'collectors' => [
+            ConfigCollector::NAME => [
+                'class' => ConfigCollector::class,
+                'priority' => 20
             ],
-            'inlineScript' => [
-                'basePath' => 'ConLayout\AssetPreparer\BasePath',
-                'cacheBuster' => 'ConLayout\AssetPreparer\CacheBuster',
+            FilesystemCollector::NAME => [
+                'class' => FilesystemCollector::class,
+                'priority' => 10
             ]
         ]
+        /**
+         * enable/disable particular listeners
+         */
+        /*
+        'listeners' => [
+            'ConLayout\Listener\ActionHandlesListener'  => true,
+            'ConLayout\Listener\LoadLayoutListener'     => true,
+            'ConLayout\Listener\PrepareActionViewModelListener' => true
+        ]*/
     ]
 ];

@@ -1,15 +1,18 @@
 <?php
-
-namespace ConLayout\Layout;
-
-use ConLayout\Options\ModuleOptions;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
+
+namespace ConLayout\Layout;
+
+use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Updater\LayoutUpdaterInterface;
+use Zend\Mvc\View\Http\ViewManager;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ConLayout\Options\ModuleOptions;
+
 class LayoutFactory implements FactoryInterface
 {
     /**
@@ -19,12 +22,16 @@ class LayoutFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var $moduleOptions ModuleOptions */
-        $moduleOptions = $serviceLocator->get('ConLayout\Options\ModuleOptions');
         $layout = new Layout(
-            $serviceLocator->get('ConLayout\Block\Factory\BlockFactoryInterface'),
-            $serviceLocator->get('ConLayout\Updater\LayoutUpdaterInterface')
+            $serviceLocator->get(LayoutUpdaterInterface::class),
+            $serviceLocator->get(BlockPoolInterface::class)
         );
+        /** @var ModuleOptions $moduleOptions */
+        $moduleOptions = $serviceLocator->get(ModuleOptions::class);
+        foreach ($moduleOptions->getGenerators() as $name => $specs) {
+            $generator = $serviceLocator->get($specs['class']);
+            $layout->attachGenerator($name, $generator, $specs['priority']);
+        }
         return $layout;
     }
 }

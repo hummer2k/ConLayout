@@ -9,7 +9,8 @@ in which area we are currently in.
 
 ````php
 <?php
-$area = 'frontend'; // or 'backend' or 'admin' ...
+// determine area.
+$area = $this->determineArea(); // 'frontend' or 'backend' or 'admin' ...
 
 /* @var $layoutUpdater \ConLayout\Updater\LayoutUpdaterInterface */
 $layoutUpdater = $sm->get('ConLayout\Updater\LayoutUpdaterInterface');

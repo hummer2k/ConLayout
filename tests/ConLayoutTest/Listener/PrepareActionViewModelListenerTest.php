@@ -5,6 +5,7 @@ namespace ConLayoutTest\Listener;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\PrepareActionViewModelListener;
 use ConLayoutTest\AbstractTest;
+use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -19,8 +20,11 @@ class PrepareActionViewModelListenerTest extends AbstractTest
 
     public function setUp()
     {
-        $this->prepareActionViewModelListener = new PrepareActionViewModelListener();
-        $this->mvcEvent = new \Zend\Mvc\MvcEvent();
+        parent::setUp();
+        $this->prepareActionViewModelListener = new PrepareActionViewModelListener(
+            $this->blockPool
+        );
+        $this->mvcEvent = new MvcEvent();
     }
 
     public function testWithViewModel()
@@ -31,7 +35,7 @@ class PrepareActionViewModelListenerTest extends AbstractTest
         $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
 
         $this->assertEquals(
-            $viewModel->getVariable(LayoutInterface::BLOCK_ID_VAR),
+            $viewModel->getOption('block_id'),
             LayoutInterface::BLOCK_ID_ACTION_RESULT
         );
     }
@@ -39,16 +43,6 @@ class PrepareActionViewModelListenerTest extends AbstractTest
     public function testWithNull()
     {
         $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
-    }
-
-    public function testIsAppend()
-    {
-        $viewModel = new ViewModel();
-        $this->mvcEvent->setResult($viewModel);
-
-        $this->assertFalse($viewModel->isAppend());
-        $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
-        $this->assertTrue($viewModel->isAppend());
     }
 
     public function testDoNothingOnTerminal()
@@ -61,18 +55,7 @@ class PrepareActionViewModelListenerTest extends AbstractTest
         $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
 
         $this->assertFalse($viewModel->isAppend());
-        $this->assertNull($viewModel->getVariable(LayoutInterface::BLOCK_ID_VAR));
+        $this->assertNull($viewModel->getOption('block_id'));
 
-    }
-
-    public function testDoNotSetBlockIdIfAlreadySet()
-    {
-        $viewModel = new ViewModel();
-        $viewModel->setVariable(LayoutInterface::BLOCK_ID_VAR, 'the.block');
-
-        $this->mvcEvent->setResult($viewModel);
-        $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
-
-        $this->assertEquals('the.block', $viewModel->getVariable(LayoutInterface::BLOCK_ID_VAR));
     }
 }

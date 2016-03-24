@@ -16,20 +16,18 @@ class ModuleOptionsTest extends AbstractTest
         $moduleOptions = new ModuleOptions();
         $this->assertInternalType('array', $moduleOptions->getControllerMap());
         $this->assertInternalType('boolean', $moduleOptions->isPreferRouteMatchController());
-        $this->assertInternalType('array', $moduleOptions->getAssetPreparers());
         $this->assertInternalType('array', $moduleOptions->getViewHelpers());
         $this->assertInternalType('string', $moduleOptions->getCacheBusterInternalBaseDir());
         $this->assertInternalType('array', $moduleOptions->getLayoutUpdatePaths());
         $this->assertInternalType('array', $moduleOptions->getLayoutUpdateExtensions());
         $this->assertInternalType('array', $moduleOptions->getBlockDefaults());
+        $this->assertInternalType('array', $moduleOptions->getListeners());
         $this->assertInternalType('string', $moduleOptions->getDefaultArea());
     }
 
     public function testSettersGetters()
     {
         $moduleOptions = new ModuleOptions();
-        $moduleOptions->setAssetPreparers(['asset_preparer']);
-        $this->assertEquals(['asset_preparer'], $moduleOptions->getAssetPreparers());
 
         $moduleOptions->setViewHelpers(['view_helper']);
         $this->assertEquals(['view_helper'], $moduleOptions->getViewHelpers());
@@ -41,6 +39,10 @@ class ModuleOptionsTest extends AbstractTest
 
         $moduleOptions->setDefaultArea('default_area');
         $this->assertEquals('default_area', $moduleOptions->getDefaultArea());
+
+        $listeners = ['listener' => true];
+        $moduleOptions->setListeners($listeners);
+        $this->assertSame($listeners, $moduleOptions->getListeners());
 
         $this->assertSame([
             'class' => 'MyBlock'
@@ -55,7 +57,7 @@ class ModuleOptionsTest extends AbstractTest
             $controllerMap,
             $moduleOptions->getControllerMap()
         );
-    
+
         $this->assertEquals(false, $moduleOptions->isPreferRouteMatchController());
     }
 

@@ -2,9 +2,9 @@
 namespace ConLayout\Zdt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Listener\LayoutUpdateListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\View\Resolver\ResolverInterface;
 use ZendDeveloperTools\Collector\AbstractCollector;
 
 /**
@@ -30,16 +30,27 @@ class LayoutCollector extends AbstractCollector
 
     /**
      *
+     * @var ResolverInterface
+     */
+    protected $viewResolver;
+
+    /**
+     *
      * @param LayoutInterface $layout
      * @param LayoutUpdaterInterface $updater
+     * @param ResolverInterface $viewResolver
      */
-    public function __construct(LayoutInterface $layout, LayoutUpdaterInterface $updater)
-    {
+    public function __construct(
+        LayoutInterface $layout,
+        LayoutUpdaterInterface $updater,
+        ResolverInterface $viewResolver
+    ) {
         $this->layout  = $layout;
         $this->updater = $updater;
+        $this->viewResolver = $viewResolver;
     }
 
-        /**
+    /**
      *
      * @return string
      */
@@ -67,10 +78,16 @@ class LayoutCollector extends AbstractCollector
     {
         $layout = $mvcEvent->getViewModel();
         $blocks = [];
-        foreach ($this->layout->getBlocks() as $blockName => $block) {
-            $blocks[$blockName] = [
-                'template' => $block->getTemplate(),
-                'capture_to' => $block->captureTo(),
+        foreach ($this->layout->getBlocks() as $blockId => $block) {
+            if ($parentBlock = $block->getOption('parent')) {
+                $captureTo = $parentBlock . '::' . $block->captureTo();
+            } else {
+                $captureTo = $block->captureTo();
+            }
+            $blocks[$blockId] = [
+                'instance' => $block,
+                'template' => $this->resolveTemplate($block->getTemplate()),
+                'capture_to' => $captureTo,
                 'class' => get_class($block)
             ];
         }
@@ -84,6 +101,22 @@ class LayoutCollector extends AbstractCollector
 
         $this->data = $data;
         return $this;
+    }
+
+    /**
+     * retrieve resolved template path
+     *
+     * @param string $template
+     * @return string
+     */
+    private function resolveTemplate($template)
+    {
+        $template = str_replace(
+            getcwd(),
+            '',
+            $this->viewResolver->resolve($template)
+        );
+        return $template;
     }
 
     /**

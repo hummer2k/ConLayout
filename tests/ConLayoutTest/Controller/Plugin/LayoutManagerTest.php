@@ -2,17 +2,17 @@
 
 namespace ConLayoutTest\Controller\Plugin;
 
-use ConLayout\Block\Factory\BlockFactory;
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Controller\Plugin\LayoutManager;
 use ConLayout\Controller\Plugin\LayoutManagerFactory;
 use ConLayout\Handle\Handle;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Updater\LayoutUpdater;
-use ConLayout\View\Renderer\BlockRenderer;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
+use Zend\View\Model\ModelInterface;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -31,29 +31,16 @@ class LayoutManagerTest extends AbstractTest
 
     public function setUp()
     {
-        $updater = new LayoutUpdater();
-        $this->updater = $updater;
-        $layout = new Layout(
-            new BlockFactory(),
-            $updater
-        );
-
-        $this->layout = $layout;
-
-        $layout->addBlock(
+        parent::setUp();
+        $this->blockPool->add(
             'test-block',
             (new ViewModel())->setTemplate('widget1')
         );
 
-        $renderer = new BlockRenderer();
-        $renderer->setResolver($this->getResolver());
-
-        $this->renderer = $renderer;
-
         $this->layoutManager = new LayoutManager(
-            $layout,
-            $updater,
-            $renderer
+            $this->layout,
+            $this->layoutUpdater,
+            $this->blockPool
         );
     }
 
@@ -61,13 +48,16 @@ class LayoutManagerTest extends AbstractTest
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
-            'ConLayout\Layout\LayoutInterface', $this->layout
+            LayoutInterface::class,
+            $this->layout
         );
         $serviceManager->setService(
-            'ConLayout\Updater\LayoutUpdaterInterface', $this->updater
+            LayoutUpdaterInterface::class,
+            $this->layoutUpdater
         );
         $serviceManager->setService(
-            'ConLayout\View\Renderer\BlockRenderer', $this->renderer
+            BlockPoolInterface::class,
+            $this->blockPool
         );
 
         $controllerPluginManager = new PluginManager();
@@ -77,7 +67,7 @@ class LayoutManagerTest extends AbstractTest
         $instance = $factory->createService($controllerPluginManager);
 
         $this->assertInstanceOf(
-            'ConLayout\Controller\Plugin\LayoutManager',
+            LayoutManager::class,
             $instance
         );
     }
@@ -91,19 +81,19 @@ class LayoutManagerTest extends AbstractTest
     public function testGetBlock()
     {
         $block = $this->layoutManager->getBlock('test-block');
-        $this->assertInstanceOf('Zend\View\Model\ModelInterface', $block);
+        $this->assertInstanceOf(ModelInterface::class, $block);
 
         $this->assertFalse($this->layoutManager->getBlock('___NOT_EXISTS___'));
     }
 
     public function testAddHandle()
     {
-        $this->layoutManager->addHandle('my-test-handle');
+        $this->layoutManager->addHandle(new Handle('my-test-handle', 1));
 
         $this->assertSame([
             'default',
             'my-test-handle'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
 
         $this->layoutManager->addHandle(new Handle('test-handle-2', -10));
 
@@ -111,29 +101,29 @@ class LayoutManagerTest extends AbstractTest
             'test-handle-2',
             'default',
             'my-test-handle'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
     }
 
     public function testRemoveHandle()
     {
-        $this->layoutManager->addHandle('my-test-handle', 5);
+        $this->layoutManager->addHandle(new Handle('my-test-handle', 5));
 
         $this->assertSame([
             'default',
             'my-test-handle'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
 
         $this->layoutManager->removeHandle('my-test-handle');
 
         $this->assertSame([
             'default'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
     }
 
     public function testRemoveBlock()
     {
         $testBlock = $this->layoutManager->getBlock('test-block');
-        $this->assertInstanceOf('Zend\View\Model\ModelInterface', $testBlock);
+        $this->assertInstanceOf(ModelInterface::class, $testBlock);
         $this->layoutManager->removeBlock('test-block');
         $this->assertFalse($this->layoutManager->getBlock('test-block'));
     }
@@ -192,7 +182,7 @@ class LayoutManagerTest extends AbstractTest
             'my-handle-2',
             'my-handle-1',
             'my-handle-3'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
     }
 
     public function testSetHandlesObject()
@@ -207,6 +197,6 @@ class LayoutManagerTest extends AbstractTest
             'my-handle-2',
             'my-handle-1',
             'my-handle-3'
-        ], $this->updater->getHandles());
+        ], $this->layoutUpdater->getHandles());
     }
 }

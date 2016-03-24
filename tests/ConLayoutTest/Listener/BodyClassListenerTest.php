@@ -9,7 +9,7 @@ use Zend\EventManager\EventManager;
 use Zend\Mvc\Router\Http\RouteMatch;
 
 /**
- * @package 
+ * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class BodyClassListenerTest extends AbstractTest
@@ -28,20 +28,5 @@ class BodyClassListenerTest extends AbstractTest
         $listener->addBodyClass($event);
 
         $this->assertEquals('my-some-route', (string) $bodyClassHelper);
-    }
-
-    public function testAttach()
-    {
-        $eventManager = new EventManager();
-        $listener = new BodyClassListener(new BodyClass());
-
-        $before = $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH);
-        $this->assertCount(0, $before);
-
-        $eventManager->attach($listener);
-
-        $after = $eventManager->getListeners(\Zend\Mvc\MvcEvent::EVENT_DISPATCH);
-        $this->assertCount(1, $after);
-
     }
 }
