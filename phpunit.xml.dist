@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="./tests/Bootstrap.php" colors="true" verbose="true">
+<phpunit bootstrap="./tests/ConLayoutTest/Bootstrap.php" colors="true" verbose="true">
     <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory suffix=".php">./src/ConLayout/Sorter</directory>
+            </exclude>
         </whitelist>
     </filter>
     <testsuites>
