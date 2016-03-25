@@ -5,7 +5,7 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
             <exclude>
-                <directory suffix=".php">./src/Sorter</directory>
+                <directory suffix=".php">./src/ConLayout/Sorter</directory>
             </exclude>
         </whitelist>
     </filter>
