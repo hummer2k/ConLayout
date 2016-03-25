@@ -10,6 +10,7 @@ use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
 use Zend\EventManager\EventManager;
+use Zend\EventManager\SharedEventManager;
 
 /**
  * @package ConLayout
@@ -30,7 +31,8 @@ class LayoutUpdaterTest extends AbstractTest
     {
         parent::setUp();
         $this->updater = new LayoutUpdater();
-        $this->em = new EventManager();
+        $this->em = new EventManager(new SharedEventManager());
+        $this->updater->setEventManager($this->em);
         $instructions = [
             [
                 'default',

@@ -37,11 +37,15 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
     /**
      *
      * @param EventManagerInterface $events
+     * @param int $priority
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = -300)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'prepareActionViewModel'], -300);
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'prepareActionViewModel'], -300);
+        $this->listeners[] = $events->attach(
+            [MvcEvent::EVENT_DISPATCH, MvcEvent::EVENT_DISPATCH_ERROR],
+            [$this, 'prepareActionViewModel'],
+            $priority
+        );
     }
 
     /**

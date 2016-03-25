@@ -6,6 +6,7 @@ use ConLayout\Filter\BasePathFilter;
 use ConLayout\Filter\CacheBusterFilter;
 use ConLayout\Generator\ViewHelperGenerator;
 use ConLayout\Listener\ViewHelperListener;
+use ConLayout\Module;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\Helper\Proxy\HeadMetaProxy;
@@ -91,8 +92,7 @@ class ViewHelperGeneratorTest extends AbstractTest
 
     public function testGenerateViewHelpers()
     {
-        $config = Bootstrap::getServiceManager()->get('Config');
-
+        $config = (new Module())->getConfig();
         $helperPluginManager = new HelperPluginManager();
         $helperPluginManager->setServiceLocator(new ServiceManager);
 

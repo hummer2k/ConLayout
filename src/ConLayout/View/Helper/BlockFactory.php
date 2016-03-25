@@ -1,15 +1,16 @@
 <?php
-
-namespace ConLayout\View\Helper;
-
-use ConLayout\Block\BlockPoolInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
+
+namespace ConLayout\View\Helper;
+
+use ConLayout\Block\BlockPoolInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+
 class BlockFactory implements FactoryInterface
 {
     /**
@@ -19,9 +20,20 @@ class BlockFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $serviceManager = $serviceLocator->getServiceLocator();
+        $container = $serviceLocator->getServiceLocator();
+        return $this($container, Block::class);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Block
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         return new Block(
-            $serviceManager->get(BlockPoolInterface::class)
+            $container->get(BlockPoolInterface::class)
         );
     }
 }

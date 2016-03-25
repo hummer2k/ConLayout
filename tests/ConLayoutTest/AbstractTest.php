@@ -9,6 +9,7 @@ use ConLayout\BlockManager;
 use ConLayout\Generator\BlocksGenerator;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Layout\LayoutInterface;
+use ConLayout\Module;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
@@ -72,15 +73,6 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
         $this->sm = Bootstrap::getServiceManager();
 
         $this->em = $eventManager;
-        $this->em->getSharedManager()->clearListeners('ConLayout\Updater\LayoutUpdater');
-        $this->em->getSharedManager()->attach(
-            LayoutUpdater::class,
-            UpdateEvent::EVENT_COLLECT,
-            function (UpdateEvent $e) {
-                $layoutStructure = $e->getLayoutStructure();
-                $layoutStructure->merge($this->getLayoutStructure());
-            }
-        );
 
 
         $this->blockPool = new BlockPool();

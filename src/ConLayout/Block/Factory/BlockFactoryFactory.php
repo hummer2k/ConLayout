@@ -4,6 +4,7 @@ namespace ConLayout\Block\Factory;
 
 use ConLayout\BlockManager;
 use ConLayout\Options\ModuleOptions;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -15,12 +16,23 @@ class BlockFactoryFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, BlockFactory::class);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array $options
+     * @return BlockFactory
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         /* @var $options ModuleOptions */
-        $options = $serviceLocator->get(ModuleOptions::class);
+        $options = $container->get(ModuleOptions::class);
         $blockFactory = new BlockFactory(
             $options->getBlockDefaults(),
-            $serviceLocator->get(BlockManager::class),
-            $serviceLocator
+            $container->get(BlockManager::class),
+            $container
         );
         return $blockFactory;
     }
