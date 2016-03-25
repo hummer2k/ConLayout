@@ -4,6 +4,9 @@
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory suffix=".php">./src/Sorter</directory>
+            </exclude>
         </whitelist>
     </filter>
     <testsuites>
