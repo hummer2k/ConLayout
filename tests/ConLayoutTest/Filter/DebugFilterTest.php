@@ -6,7 +6,6 @@
 
 namespace ConLayoutTest\Filter;
 
-
 use ConLayout\Filter\DebugFilter;
 use ConLayoutTest\AbstractTest;
 use Zend\View\Helper\ViewModel as ModelHelper;
