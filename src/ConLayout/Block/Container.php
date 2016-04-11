@@ -9,11 +9,6 @@ namespace ConLayout\Block;
 class Container extends AbstractBlock
 {
     /**
-     * @var string
-     */
-    protected $template = 'container';
-
-    /**
      * @return mixed
      */
     protected function getTag()
