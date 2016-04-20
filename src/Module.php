@@ -31,7 +31,6 @@ class Module implements
     ServiceProviderInterface,
     ViewHelperProviderInterface,
     BootstrapListenerInterface,
-    AutoloaderProviderInterface,
     InitProviderInterface,
     FilterProviderInterface
 {
@@ -43,8 +42,8 @@ class Module implements
     public function getConfig()
     {
         return array_merge(
-            include __DIR__ . '/../../config/module.config.php',
-            include __DIR__ . '/../../config/con-layout.global.php.dist'
+            include __DIR__ . '/../config/module.config.php',
+            include __DIR__ . '/../config/con-layout.global.php.dist'
         );
     }
 
@@ -55,7 +54,7 @@ class Module implements
      */
     public function getViewHelperConfig()
     {
-        return include __DIR__ . '/../../config/viewhelper.config.php';
+        return include __DIR__ . '/../config/viewhelper.config.php';
     }
 
     /**
@@ -65,7 +64,7 @@ class Module implements
      */
     public function getFilterConfig()
     {
-        return include __DIR__ . '/../../config/filter.config.php';
+        return include __DIR__ . '/../config/filter.config.php';
     }
 
     /**
@@ -75,7 +74,7 @@ class Module implements
      */
     public function getServiceConfig()
     {
-        return include __DIR__ . '/../../config/service.config.php';
+        return include __DIR__ . '/../config/service.config.php';
     }
 
     /**
@@ -136,20 +135,5 @@ class Module implements
         $renderer = $serviceManager->get(PhpRenderer::class);
         $filterManager = $serviceManager->get('FilterManager');
         $renderer->getFilterChain()->attach($filterManager->get(DebugFilter::class));
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getAutoloaderConfig()
-    {
-        return [
-            StandardAutoloader::class => [
-                'namespaces' => [
-                    __NAMESPACE__ => __DIR__
-                ]
-            ]
-        ];
     }
 }

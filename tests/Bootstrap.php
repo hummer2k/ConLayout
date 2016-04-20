@@ -27,7 +27,7 @@ class Bootstrap
             ],
             'module_listener_options' => array(
                 'module_paths' => [
-                    dirname(dirname(__DIR__))
+                    dirname(__DIR__)
                 ],
             ),
         );
@@ -55,7 +55,7 @@ class Bootstrap
 
     protected static function initAutoloader()
     {
-        $vendorPath = __DIR__ . '/../../vendor';
+        $vendorPath = __DIR__ . '/../vendor';
         if (is_readable($vendorPath . '/autoload.php')) {
             include $vendorPath . '/autoload.php';
         }
