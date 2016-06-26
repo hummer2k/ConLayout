@@ -83,23 +83,6 @@ class ModuleTest extends AbstractTest
 
     }
 
-    public function testOnBootstrapListenersWithConsoleRequest()
-    {
-        $module = new Module();
-
-        $application = $this->createApplication();
-
-        $sm = $application->getServiceManager();
-        $sm->setAllowOverride(true);
-        $sm->setService('Request', new ConsoleRequest());
-
-        $event = new MvcEvent();
-        $event->setApplication($application);
-
-        $module->onBootstrap($event);
-
-    }
-
     protected function createApplication()
     {
         $sm = new ServiceManager();

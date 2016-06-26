@@ -7,7 +7,6 @@ use ConLayout\Filter\BasePathFilter as BasePathFilter2;
 use ConLayout\Filter\BasePathFilterFactory;
 use ConLayoutTest\AbstractTest;
 use Zend\Filter\FilterInterface;
-use Zend\Filter\FilterPluginManager;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\BasePath;
 use Zend\View\HelperPluginManager;
@@ -39,8 +38,6 @@ class BasePathFilterTest extends AbstractTest
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService('ViewHelperManager', $viewHelperManager);
-
-        $filterManager = new FilterPluginManager($this->sm);
 
         $instance = $factory($this->sm, BasePathFilter2::class);
 
