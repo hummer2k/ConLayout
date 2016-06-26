@@ -93,10 +93,9 @@ class ViewHelperGeneratorTest extends AbstractTest
     public function testGenerateViewHelpers()
     {
         $config = (new Module())->getConfig();
-        $helperPluginManager = new HelperPluginManager();
-        $helperPluginManager->setServiceLocator(new ServiceManager);
+        $helperPluginManager = new HelperPluginManager($this->sm);
 
-        $filterManager = new FilterPluginManager();
+        $filterManager = new FilterPluginManager($this->sm);
 
         $basePath = $helperPluginManager->get('basePath');
         $basePath->setBasePath('/assets');

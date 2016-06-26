@@ -15,24 +15,30 @@
           "homepage": "http://www.conlabz.de/"
         }
     ],
+    "repositories": [
+        {
+            "type" : "vcs",
+            "url" : "git@github.com:samsonasik/ZendDeveloperTools.git"
+        }
+    ],
     "require": {
-        "php": ">=5.5.0",
-        "zendframework/zend-mvc": "2.*",
-        "zendframework/zend-servicemanager": "2.*",
-        "zendframework/zend-eventmanager": "2.*",
+        "php": "^5.6 || ^7.0",
+        "zendframework/zend-mvc": "3.*",
+        "zendframework/zend-servicemanager": "3.*",
+        "zendframework/zend-eventmanager": "3.*",
         "zendframework/zend-modulemanager": "2.*",
-        "zendframework/zend-stdlib": "2.*",
-        "zendframework/zend-serializer": "2.*",
-        "zendframework/zend-log": "2.*",
-        "zendframework/zend-i18n": "2.*",
+        "zendframework/zend-router": "3.*",
+        "zendframework/zend-filter": "2.*",
+        "zendframework/zend-stdlib": "3.*",
         "zendframework/zend-http": "2.*",
         "zendframework/zend-config": "2.*",
-        "zendframework/zend-view": "2.*",
-        "zendframework/zend-console": "2.*"
+        "zendframework/zend-view": "2.*"
     },
     "require-dev": {
-        "zendframework/zend-developer-tools": "dev-master",
+        "zendframework/zend-developer-tools": "dev-zf3",
         "phpunit/phpunit": "4.*",
+        "zendframework/zend-console": "2.*",
+        "zendframework/zend-i18n": "2.*",
         "squizlabs/php_codesniffer": "2.*",
         "satooshi/php-coveralls": "~0.6"
     },

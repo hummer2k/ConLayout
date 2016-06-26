@@ -3,7 +3,7 @@ namespace ConLayout\Listener\Factory;
 
 use ConLayout\Listener\BodyClassListener;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**

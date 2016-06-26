@@ -14,6 +14,7 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\View\Http\InjectTemplateListener;
 use Zend\ServiceManager\Config;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\HelperPluginManager;
@@ -39,7 +40,8 @@ class ModuleTest extends AbstractTest
         $application = $this->createApplication();
 
         $sm = $application->getServiceManager();
-        $sm->setService('FilterManager', new FilterPluginManager);
+        $sm->setService('FilterManager', new FilterPluginManager($sm));
+        $sm->setService(InjectTemplateListener::class, new InjectTemplateListener());
 
         foreach ($module->getServiceConfig()['invokables'] as $key => $value) {
             $sm->setInvokableClass($key, $value);
@@ -91,8 +93,6 @@ class ModuleTest extends AbstractTest
         $sm->setAllowOverride(true);
         $sm->setService('Request', new ConsoleRequest());
 
-        $em = $application->getEventManager();
-
         $event = new MvcEvent();
         $event->setApplication($application);
 
@@ -107,8 +107,8 @@ class ModuleTest extends AbstractTest
         $sm->setService('Request', new Request());
         $sm->setService('Response', new Response());
         $sm->setService('Config', []);
-        $sm->setService('ViewHelperManager', new HelperPluginManager());
-        $application = new Application([], $sm);
+        $sm->setService('ViewHelperManager', new HelperPluginManager($this->sm));
+        $application = new Application($sm);
         return $application;
     }
 

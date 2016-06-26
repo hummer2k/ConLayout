@@ -21,17 +21,7 @@ class Bootstrap
 
     protected static function initServiceManager()
     {
-        $baseConfig = array(
-            'modules' => [
-                'ConLayout'
-            ],
-            'module_listener_options' => array(
-                'module_paths' => [
-                    dirname(__DIR__)
-                ],
-            ),
-        );
-        $config = $baseConfig;
+        $config = include __DIR__ . '/TestConfig.php.dist';
 
         $serviceManager = new ServiceManager();
         $serviceManager->setAllowOverride(true);

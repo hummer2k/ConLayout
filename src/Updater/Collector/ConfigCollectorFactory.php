@@ -8,7 +8,7 @@ namespace ConLayout\Updater\Collector;
 
 use Interop\Container\ContainerInterface;
 use Zend\Config\Config;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ConfigCollectorFactory implements FactoryInterface

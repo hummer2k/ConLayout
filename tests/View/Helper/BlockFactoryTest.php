@@ -21,11 +21,10 @@ class BlockFactoryTest extends AbstractTest
     {
         $sm = new ServiceManager();
         $sm->setService(BlockPoolInterface::class, $this->blockPool);
-        $helperManager = new HelperPluginManager();
-        $helperManager->setServiceLocator($sm);
+        $helperManager = new HelperPluginManager($this->sm);
 
         $factory = new BlockFactory();
-        $helper = $factory->createService($helperManager);
+        $helper = $factory($this->sm, Block::class);
 
         $this->assertInstanceOf(Block::class, $helper);
         $this->assertInstanceOf(AbstractHelper::class, $helper);

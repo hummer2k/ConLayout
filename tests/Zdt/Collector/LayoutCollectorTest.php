@@ -63,7 +63,7 @@ class LayoutCollectorTest extends AbstractTest
             new AggregateResolver()
         );
 
-        $instance = $layoutCollectorFactory->createService($serviceManager);
+        $instance = $layoutCollectorFactory($serviceManager, LayoutCollector::class);
         $this->assertInstanceOf(
             LayoutCollector::class,
             $instance

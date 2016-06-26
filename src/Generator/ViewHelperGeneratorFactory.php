@@ -8,7 +8,7 @@ namespace ConLayout\Generator;
 
 use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ViewHelperGeneratorFactory implements FactoryInterface

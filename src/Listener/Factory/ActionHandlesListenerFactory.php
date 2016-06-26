@@ -5,7 +5,7 @@ use ConLayout\Listener\ActionHandlesListener;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -32,13 +32,13 @@ class ActionHandlesListenerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /* @var $moduleOptions ModuleOptions */
+        /** @var $moduleOptions ModuleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
-        $updater = $container->get(LayoutUpdaterInterface::class);
-        $actionHandlesListener = new ActionHandlesListener();
-        $actionHandlesListener->setUpdater($updater);
-        $actionHandlesListener->setControllerMap($moduleOptions->getControllerMap());
-        $actionHandlesListener->setPreferRouteMatchController($moduleOptions->isPreferRouteMatchController());
+        $updater       = $container->get(LayoutUpdaterInterface::class);
+        $controllerMap = $moduleOptions->getControllerMap();
+
+        $actionHandlesListener = new ActionHandlesListener($updater);
+        $actionHandlesListener->setControllerMap($controllerMap);
 
         return $actionHandlesListener;
     }

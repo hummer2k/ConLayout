@@ -27,10 +27,9 @@ class CacheBusterFilterTest extends AbstractTest
 
         $serviceManager->setService(ModuleOptions::class, $options);
 
-        $filterManager = new FilterPluginManager();
-        $filterManager->setServiceLocator($serviceManager);
+        $filterManager = new FilterPluginManager($serviceManager);
 
-        $instance = $factory->createService($filterManager);
+        $instance = $factory($serviceManager, CacheBusterFilter::class);
 
         $this->assertInstanceOf(
             CacheBusterFilter::class,

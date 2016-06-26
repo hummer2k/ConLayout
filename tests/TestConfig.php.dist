@@ -1,12 +1,16 @@
 <?php
 return [
     'modules' => [
+        'Zend\Router',
+        'Zend\Filter',
         'ConLayout'
     ],
     'module_listener_options' => [
         'config_glob_paths'    => [
         ],
         'module_paths' => [
+            dirname(__DIR__),
+            __DIR__ . '/../vendor'
         ],
     ],
 ];

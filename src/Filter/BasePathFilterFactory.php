@@ -7,7 +7,7 @@
 namespace ConLayout\Filter;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class BasePathFilterFactory implements FactoryInterface
@@ -32,7 +32,7 @@ class BasePathFilterFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $basePathHelper = $container
-            ->get('viewHelperManager')
+            ->get('ViewHelperManager')
             ->get('basePath');
         return new BasePathFilter($basePathHelper);
     }

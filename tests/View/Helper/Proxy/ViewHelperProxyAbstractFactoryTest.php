@@ -4,6 +4,7 @@ namespace ConLayoutTest\View\Helper\Proxy;
 
 use ConLayout\Options\ModuleOptions;
 use ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory;
+use ConLayoutTest\AbstractTest;
 use PHPUnit_Framework_TestCase;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\AbstractHelper;
@@ -13,9 +14,9 @@ use Zend\View\HelperPluginManager;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ViewHelperProxyAbstractFactoryTest extends PHPUnit_Framework_TestCase
+class ViewHelperProxyAbstractFactoryTest extends AbstractTest
 {
-    public function testCanCreateServiceWithName()
+    public function testCanCreate()
     {
         $moduleOptions = new ModuleOptions([
             'view_helpers' => [
@@ -26,13 +27,10 @@ class ViewHelperProxyAbstractFactoryTest extends PHPUnit_Framework_TestCase
         ]);
         $sm = new ServiceManager();
         $sm->setService(ModuleOptions::class, $moduleOptions);
-        $viewHelperManager = new HelperPluginManager();
-        $viewHelperManager->setServiceLocator($sm);
-        $viewHelperManager->setInvokableClass(TestProxy::class, TestProxy::class);
 
         $factory = new ViewHelperProxyAbstractFactory();
-        $this->assertTrue($factory->canCreateServiceWithName($viewHelperManager, TestProxy::class, TestProxy::class));
-        $this->assertFalse($factory->canCreateServiceWithName($viewHelperManager, 'not-exist', 'not-exist'));
+        $this->assertTrue($factory->canCreate($sm, TestProxy::class, TestProxy::class));
+        $this->assertFalse($factory->canCreate($sm, 'not-exist', 'not-exist'));
     }
 }
 

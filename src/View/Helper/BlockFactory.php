@@ -8,7 +8,7 @@ namespace ConLayout\View\Helper;
 
 use ConLayout\Block\BlockPoolInterface;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class BlockFactory implements FactoryInterface

@@ -10,7 +10,7 @@ use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Interop\Container\ContainerInterface;
 use Zend\Mvc\View\Http\ViewManager;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ConLayout\Options\ModuleOptions;
 

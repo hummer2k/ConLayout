@@ -40,7 +40,7 @@ class LayoutTest extends AbstractTest
         $this->updaterMock->method('getLayoutStructure')
             ->willReturn(new Config($this->layoutStructure));
 
-        $this->blockFactory = new BlockFactory([], new BlockManager(), new ServiceManager());
+        $this->blockFactory = new BlockFactory([], new BlockManager($this->sm), new ServiceManager());
     }
 
     public function testFactory()
@@ -63,7 +63,7 @@ class LayoutTest extends AbstractTest
         );
 
         $factory = new LayoutFactory();
-        $instance = $factory->createService($serviceManager);
+        $instance = $factory($serviceManager, LayoutInterface::class);
 
 
         $this->assertInstanceOf(LayoutInterface::class, $instance);

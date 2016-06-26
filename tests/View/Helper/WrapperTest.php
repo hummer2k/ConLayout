@@ -3,6 +3,7 @@
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\Wrapper;
+use ConLayoutTest\AbstractTest;
 use PHPUnit_Framework_TestCase;
 use Zend\View\HelperPluginManager;
 use Zend\View\Renderer\PhpRenderer;
@@ -11,7 +12,7 @@ use Zend\View\Renderer\PhpRenderer;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class WrapperTest extends PHPUnit_Framework_TestCase
+class WrapperTest extends AbstractTest
 {
     /**
      *
@@ -21,9 +22,10 @@ class WrapperTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->wrapperHelper = new Wrapper();
         $view = new PhpRenderer();
-        $view->setHelperPluginManager(new HelperPluginManager());
+        $view->setHelperPluginManager(new HelperPluginManager($this->sm));
         $this->wrapperHelper->setView($view);
     }
 

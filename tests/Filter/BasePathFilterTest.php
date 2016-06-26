@@ -22,6 +22,7 @@ class BasePathFilterTest extends AbstractTest
 
     public function setUp()
     {
+        parent::setUp();
         $basePathHelper = new BasePath();
         $basePathHelper->setBasePath('/my/base/');
 
@@ -33,16 +34,15 @@ class BasePathFilterTest extends AbstractTest
     public function testFactory()
     {
         $factory = new BasePathFilterFactory();
-        $viewHelperManager = new HelperPluginManager();
+        $viewHelperManager = new HelperPluginManager($this->sm);
         $viewHelperManager->setService('basePath', new BasePath());
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('viewHelperManager', $viewHelperManager);
+        $serviceManager->setService('ViewHelperManager', $viewHelperManager);
 
-        $filterManager = new FilterPluginManager();
-        $filterManager->setServiceLocator($serviceManager);
+        $filterManager = new FilterPluginManager($this->sm);
 
-        $instance = $factory->createService($filterManager);
+        $instance = $factory($this->sm, BasePathFilter2::class);
 
         $this->assertInstanceOf(
             BasePathFilter2::class,

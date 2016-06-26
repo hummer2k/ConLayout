@@ -6,7 +6,7 @@ use ConLayout\Listener\BodyClassListener;
 use ConLayout\View\Helper\BodyClass;
 use ConLayoutTest\AbstractTest;
 use Zend\EventManager\EventManager;
-use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Router\Http\RouteMatch;
 
 /**
  * @package

@@ -35,7 +35,7 @@ class BlockFactoryTest extends AbstractTest
     {
         parent::setUp();
         $this->sm = new ServiceManager();
-        $this->factory = new BlockFactory([], new BlockManager(), $this->sm);
+        $this->factory = new BlockFactory([], new BlockManager($this->sm), $this->sm);
     }
 
     public function testCreateBlock()
@@ -102,7 +102,7 @@ class BlockFactoryTest extends AbstractTest
 
     public function testBlockFromBlockManager()
     {
-        $blockManager = new BlockManager();
+        $blockManager = new BlockManager($this->sm);
         $class = MyBlock::class;
         $blockManager->setInvokableClass(
             MyBlock::class,

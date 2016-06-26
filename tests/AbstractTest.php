@@ -76,7 +76,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
 
 
         $this->blockPool = new BlockPool();
-        $this->blockFactory = new BlockFactory([], new BlockManager(), $this->sm);
+        $this->blockFactory = new BlockFactory([], new BlockManager($this->sm), $this->sm);
 
         $this->blocksGenerator = new BlocksGenerator(
             $this->blockFactory,

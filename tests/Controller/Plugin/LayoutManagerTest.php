@@ -60,11 +60,10 @@ class LayoutManagerTest extends AbstractTest
             $this->blockPool
         );
 
-        $controllerPluginManager = new PluginManager();
-        $controllerPluginManager->setServiceLocator($serviceManager);
+        $controllerPluginManager = new PluginManager($serviceManager);
 
         $factory = new LayoutManagerFactory();
-        $instance = $factory->createService($controllerPluginManager);
+        $instance = $factory($serviceManager, LayoutManager::class);
 
         $this->assertInstanceOf(
             LayoutManager::class,

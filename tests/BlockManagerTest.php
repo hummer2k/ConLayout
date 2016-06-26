@@ -21,7 +21,7 @@ class BlockManagerTest extends AbstractTest
     public function setUp()
     {
         parent::setUp();
-        $this->blockManager = new BlockManager();
+        $this->blockManager = new BlockManager($this->sm);
     }
 
     public function testValidate()
