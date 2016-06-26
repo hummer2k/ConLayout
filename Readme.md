@@ -4,15 +4,15 @@
 [![Travis](https://travis-ci.org/hummer2k/ConLayout.svg?branch=master)](https://travis-ci.org/hummer2k/ConLayout)
 [![Coverage Status](https://coveralls.io/repos/hummer2k/ConLayout/badge.svg?branch=master&service=github)](https://coveralls.io/github/hummer2k/ConLayout?branch=master)
 
-## Develop
-[![Travis](https://travis-ci.org/hummer2k/ConLayout.svg?branch=develop)](https://travis-ci.org/hummer2k/ConLayout)
-[![Coverage Status](https://coveralls.io/repos/hummer2k/ConLayout/badge.svg?branch=develop&service=github)](https://coveralls.io/github/hummer2k/ConLayout?branch=develop)
+## Develop-ZF3
+[![Travis](https://travis-ci.org/hummer2k/ConLayout.svg?branch=zf3)](https://travis-ci.org/hummer2k/ConLayout)
+[![Coverage Status](https://coveralls.io/repos/hummer2k/ConLayout/badge.svg?branch=zf3&service=github)](https://coveralls.io/github/hummer2k/ConLayout?branch=zf3)
 
 ## Installation
 
 Install via composer:
 
-`$ composer require hummer2k/conlayout:~3.0`
+`$ composer require hummer2k/conlayout:~4.0`
 
 Enable module in your application.config.php
 
