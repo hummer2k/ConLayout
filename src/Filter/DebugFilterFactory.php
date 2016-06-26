@@ -13,15 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class DebugFilterFactory implements FactoryInterface
 {
     /**
-     * @inheritDoc
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $container = $serviceLocator->getServiceLocator();
-        return $this($container, DebugFilter::class);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options

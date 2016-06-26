@@ -15,17 +15,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class PrepareActionViewModelListenerFactory implements FactoryInterface
 {
     /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, PrepareActionViewModelListener::class);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options

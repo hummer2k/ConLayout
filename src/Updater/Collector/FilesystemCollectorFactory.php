@@ -14,14 +14,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class FilesystemCollectorFactory implements FactoryInterface
 {
     /**
-     * @inheritDoc
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, FilesystemCollector::class);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options

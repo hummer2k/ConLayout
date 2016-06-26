@@ -15,16 +15,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class LoadLayoutListenerFactory implements FactoryInterface
 {
     /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return LoadLayoutListener
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, LoadLayoutListener::class);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options

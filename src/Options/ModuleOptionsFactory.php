@@ -13,16 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ModuleOptionsFactory implements FactoryInterface
 {
     /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return ModuleOptions
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, ModuleOptions::class);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options

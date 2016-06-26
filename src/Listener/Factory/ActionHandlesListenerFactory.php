@@ -15,16 +15,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ActionHandlesListenerFactory implements FactoryInterface
 {
     /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return ActionHandlesListener
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, ActionHandlesListener::class);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options

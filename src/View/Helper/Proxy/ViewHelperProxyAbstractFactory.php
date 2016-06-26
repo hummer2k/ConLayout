@@ -26,18 +26,6 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
     protected $proxyClass;
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return bool
-     */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
-    {
-        $container = $serviceLocator->getServiceLocator();
-        return $this->canCreate($container, $requestedName);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @return bool
@@ -57,18 +45,6 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
             }
         }
         return false;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $viewHelperManager
-     * @param $name
-     * @param $requestedName
-     * @return mixed
-     */
-    public function createServiceWithName(ServiceLocatorInterface $viewHelperManager, $name, $requestedName)
-    {
-        $container = $viewHelperManager->getServiceLocator();
-        return $this($container, $requestedName);
     }
 
     /**

@@ -14,11 +14,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class BlockFactoryFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, BlockFactory::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

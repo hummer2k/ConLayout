@@ -17,16 +17,6 @@ use ConLayout\Options\ModuleOptions;
 class LayoutFactory implements FactoryInterface
 {
     /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return Layout
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, Layout::class);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
