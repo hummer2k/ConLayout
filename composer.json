@@ -38,7 +38,11 @@
     },
     "autoload": {
         "psr-4": {
-            "ConLayout\\": "src/",
+            "ConLayout\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "ConLayoutTest\\": "test/"
         }
     }
