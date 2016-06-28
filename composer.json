@@ -41,5 +41,10 @@
             "ConLayout\\": "src/",
             "ConLayoutTest\\": "test/"
         }
+    },
+    "extra": {
+        "zf": {
+            "module": "ConLayout"
+        }
     }
 }
