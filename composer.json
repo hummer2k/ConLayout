@@ -15,12 +15,6 @@
           "homepage": "http://www.conlabz.de/"
         }
     ],
-    "repositories": [
-        {
-            "type" : "vcs",
-            "url" : "git@github.com:samsonasik/ZendDeveloperTools.git"
-        }
-    ],
     "require": {
         "php": "^5.6 || ^7.0",
         "zendframework/zend-mvc": "^3.0",
@@ -35,7 +29,7 @@
         "zendframework/zend-view": "^2.6 || ^3.0"
     },
     "require-dev": {
-        "zendframework/zend-developer-tools": "dev-zf3",
+        "zendframework/zend-developer-tools": "^1.1",
         "phpunit/phpunit": "4.*",
         "zendframework/zend-console": "^2.6 || ^3.0",
         "zendframework/zend-i18n": "^2.7 || ^3.0",
