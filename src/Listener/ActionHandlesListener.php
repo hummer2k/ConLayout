@@ -80,16 +80,7 @@ class ActionHandlesListener extends InjectTemplateListener
     {
         /** @var RouteMatch $routeMatch */
         $routeMatch = $event->getRouteMatch();
-        $controller = $event->getTarget();
-        if (is_object($controller)) {
-            $controller = get_class($controller);
-        }
-
-        $routeMatchController = $routeMatch->getParam('controller', '');
-        if (!$controller || ($this->preferRouteMatchController && $routeMatchController)) {
-            $controller = $routeMatchController;
-        }
-
+        $controller = $routeMatch->getParam('controller', '');
         $template = $this->mapController($controller);
 
         $action = $routeMatch->getParam('action');

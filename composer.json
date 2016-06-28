@@ -45,5 +45,10 @@
         "psr-4": {
             "ConLayoutTest\\": "test/"
         }
+    },
+    "extra": {
+        "zf": {
+            "component": "ConLayout"
+        }
     }
 }

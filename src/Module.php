@@ -13,6 +13,7 @@ use Zend\Loader\StandardAutoloader;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
 use Zend\ModuleManager\Feature\FilterProviderInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
@@ -32,8 +33,19 @@ class Module implements
     ViewHelperProviderInterface,
     BootstrapListenerInterface,
     InitProviderInterface,
-    FilterProviderInterface
+    FilterProviderInterface,
+    DependencyIndicatorInterface
 {
+    /**
+     * @inheritDoc
+     */
+    public function getModuleDependencies()
+    {
+        return [
+            'Zend\Filter'
+        ];
+    }
+
     /**
      * retrieve module config
      *
