@@ -44,7 +44,7 @@
     },
     "extra": {
         "zf": {
-            "module": "ConLayout"
+            "component": "ConLayout"
         }
     }
 }
