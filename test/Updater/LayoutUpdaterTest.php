@@ -106,6 +106,12 @@ class LayoutUpdaterTest extends AbstractTest
         $this->updater->attachCollector('mock', $collectorMock);
     }
 
+    public function testIsReadOnly()
+    {
+        $layoutStructure = $this->updater->getLayoutStructure();
+        $this->assertTrue($layoutStructure->isReadOnly());
+    }
+
     public function testDefaultHandle()
     {
         $layoutStructure = $this->updater->getLayoutStructure()->toArray();
