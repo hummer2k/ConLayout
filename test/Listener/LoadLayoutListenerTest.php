@@ -50,6 +50,5 @@ class LoadLayoutListenerTest extends AbstractTest
         $listener->loadLayout($event);
 
         $this->assertFalse($this->layout->isLoaded());
-
     }
 }

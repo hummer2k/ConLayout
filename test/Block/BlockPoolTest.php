@@ -44,7 +44,6 @@ class BlockPoolTest extends AbstractTest
         $this->blockPool->sort();
 
         $this->assertSame($expectedOrder, array_keys($this->blockPool->get()));
-
     }
 
     public function testAddBlockWithChildren()
@@ -72,7 +71,6 @@ class BlockPoolTest extends AbstractTest
             $block3,
             $this->blockPool->get('child2')
         );
-
     }
 
     public function testAddBlockWithChildChildren()
@@ -100,7 +98,6 @@ class BlockPoolTest extends AbstractTest
             $block3,
             $this->blockPool->get('child2')
         );
-
     }
 
     public function testGetBlocks()

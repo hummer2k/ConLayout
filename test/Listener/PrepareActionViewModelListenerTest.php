@@ -56,6 +56,5 @@ class PrepareActionViewModelListenerTest extends AbstractTest
 
         $this->assertFalse($viewModel->isAppend());
         $this->assertNull($viewModel->getOption('block_id'));
-
     }
 }

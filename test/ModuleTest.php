@@ -80,7 +80,6 @@ class ModuleTest extends AbstractTest
             'default',
             'test-error'
         ], $layoutUpdater->getHandles());
-
     }
 
     protected function createApplication()

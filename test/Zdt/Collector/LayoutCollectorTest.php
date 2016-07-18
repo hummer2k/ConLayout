@@ -156,6 +156,5 @@ class LayoutCollectorTest extends AbstractTest
             'array',
             $this->collector->getLayoutStructure()
         );
-
     }
 }
