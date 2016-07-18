@@ -3,10 +3,8 @@
 namespace ConLayout\Updater;
 
 use ConLayout\Updater\Collector\CollectorInterface;
-use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\Event\UpdateEvent;
 use Zend\Config\Config;
-use Zend\Db\Sql\Update;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Stdlib\PriorityList;
