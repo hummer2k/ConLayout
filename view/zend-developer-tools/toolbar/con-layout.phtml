@@ -6,33 +6,33 @@ use Zend\Debug\Debug;
 <div class="zdt-toolbar-entry zdt-conlayout-entry">
     <div class="zdt-toolbar-preview">
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABXUlEQVRIS2NkoDFgpLH5DGALdh04HMjEyDyDkYlRjBoW/vv//zXDn/+prk7WG8EW7Dl47CXz1FYxRkYmhr85VQydH9YxMP1nZCgVDGTQfpgPVMHEcFW+nyS7///7/8rF3kocbMHew8f/M09pYwCayfAvu4qh+/16BgZGoAUCAUALCoHiTAzX5HpJsgCk2NnWEmgK1AKSdROhAW7Bmw8f/xOhnmQlIgL8EB/QzYJbd+4xfP/+A+xSLi5OBlVlRTAbWZyQN5D1Yfjg4uVrKPr1dbXA/Nt37zN8+/adkNlgeW5uLgYVJQUwm2gLiDIZi6LBYwHN4wA9bggFGSzuiA6iUQvgORlXPhg6QYScY5FzJMU5+eWbt/+ZWVgIpT6S5P/8+cMgISIMKU1PXbj8UU5Gio+FSpaADH/0+NkHM0NdQbAFu/cd9WdkZpxFrTr5/99/L/8y/Et1d7DdTPNWBQAu59kZuoTsCwAAAABJRU5ErkJggg==">
-        <span class="zdt-toolbar-info"><?= $this->translate('Layout') ?></span>
+        <span class="zdt-toolbar-info">Layout</span>
     </div>
     <div class="zdt-toolbar-detail zdt-toolbar-detail-overflow" id="zdt-conlayout-content">
         <span class="zdt-toolbar-info">
             <span class="zdt-toolbar-info zdt-toolbar-info-heading">
-                <?= $this->translate('Merged layout instructions') ?>
+                Merged layout instructions
             </span>
             <span class="zdt-detail-pre"><?php Debug::dump($collector->getLayoutStructure()); ?></span>
         </span>
         <hr>
         <span class="zdt-toolbar-info">
             <span class="zdt-toolbar-info zdt-toolbar-info-heading">
-                <?= $this->translate('Loaded blocks') ?>
+                Loaded blocks
             </span>
             <?php $loadedBlocks = $collector->getBlocks() ?>
             <?php if (!count($loadedBlocks)): ?>
             <span class="zdt-detail-value">
-                <?= $this->translate('N/A') ?>
+                N/A
             </span>
             <span class="clear"></span>
             <?php else: ?>
             <table class="table table-sm table-condensed">
                 <thead>
                     <tr>
-                        <th><?= $this->translate('ID') ?></th>
-                        <th><?= $this->translate('Capture to') ?></th>
-                        <th><?= $this->translate('Template') ?></th>
+                        <th>ID</th>
+                        <th>Capture to</th>
+                        <th>Template</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,12 +55,12 @@ use Zend\Debug\Debug;
         </span>
         <hr>
         <span class="zdt-toolbar-info">
-            <span class="zdt-toolbar-info zdt-toolbar-info-heading"><?= $this->translate('Handles') ?></span>
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading">Handles</span>
              <table class="table table-sm table-condensed">
                 <thead>
                     <tr>
-                        <th><?= $this->translate('Handle name') ?></th>
-                        <th><?= $this->translate('Priority') ?></th>
+                        <th>Handle name</th>
+                        <th>Priority</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,7 +75,7 @@ use Zend\Debug\Debug;
         </span>
         <hr>
         <span class="zdt-toolbar-info">
-            <span class="zdt-detail-label"><?= $this->translate('Current Area') ?></span>
+            <span class="zdt-detail-label">Current Area</span>
             <span class="zdt-detail-value"><?= $collector->getCurrentArea() ?></span>
         </span>
     </div>
