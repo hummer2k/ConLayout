@@ -56,7 +56,7 @@ final class LayoutUpdater implements
      */
     public function __construct()
     {
-        $this->addHandle(new Handle('default' , -1));
+        $this->addHandle(new Handle('default', -1));
         $this->collectors = new PriorityList();
     }
 
