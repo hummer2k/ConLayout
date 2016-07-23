@@ -2,6 +2,8 @@
 
 namespace ConLayout\Updater;
 
+use ConLayout\Handle\HandleInterface;
+use ConLayout\Handle\Handle;
 use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Event\UpdateEvent;
 use Zend\Config\Config;
@@ -13,8 +15,9 @@ use Zend\Stdlib\PriorityList;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-final class LayoutUpdater extends AbstractUpdater implements
-    EventManagerAwareInterface
+final class LayoutUpdater implements
+    EventManagerAwareInterface,
+    LayoutUpdaterInterface
 {
     use EventManagerAwareTrait;
 
@@ -29,9 +32,101 @@ final class LayoutUpdater extends AbstractUpdater implements
      */
     private $collectors;
 
+    /**
+     * Format:
+     * (string) handle-name => (int) priority
+     *
+     * @var array
+     */
+    protected $handles = [];
+
+    /**
+     * @var array|HandleInterface[]
+     */
+    protected $oHandles = [];
+
+    /**
+     *
+     * @var string
+     */
+    protected $area = self::AREA_DEFAULT;
+
+    /**
+     * AbstractUpdater constructor.
+     */
     public function __construct()
     {
+        $this->addHandle(new Handle('default' , -1));
         $this->collectors = new PriorityList();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addHandle(HandleInterface $handle)
+    {
+        $this->handles[$handle->getName()] = $handle->getPriority();
+        $this->oHandles[$handle->getName()] = $handle;
+        return $this;
+    }
+
+    /**
+     *
+     * @param array|HandleInterface[] $handles
+     * @return AbstractUpdater
+     */
+    public function setHandles(array $handles)
+    {
+        $this->handles = [];
+        foreach ($handles as $handle) {
+            $this->addHandle($handle);
+        }
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeHandle($handleName)
+    {
+        if (isset($this->handles[$handleName])) {
+            unset($this->handles[$handleName]);
+        }
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHandles($asObject = false)
+    {
+        asort($this->handles);
+        if ($asObject) {
+            $handles = [];
+            foreach (array_keys($this->handles) as $handle) {
+                $handles[] = $this->oHandles[$handle];
+            }
+            return $handles;
+        }
+        return array_keys($this->handles);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getArea()
+    {
+        return $this->area;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+        return $this;
     }
 
     /**

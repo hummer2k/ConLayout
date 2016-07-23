@@ -11,8 +11,7 @@ return [
         ],
         'template_map' => [
             'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',
-        ],
-        'layout' => ''
+        ]
     ],
     'controller_plugins' => [
         'factories' => [
