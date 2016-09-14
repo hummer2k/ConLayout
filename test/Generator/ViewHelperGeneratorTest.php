@@ -7,17 +7,13 @@ use ConLayout\Filter\CacheBusterFilter;
 use ConLayout\Generator\ViewHelperGenerator;
 use ConLayout\Listener\ViewHelperListener;
 use ConLayout\Module;
-use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\Helper\Proxy\HeadMetaProxy;
 use ConLayout\View\Helper\Proxy\HeadScriptProxy;
 use ConLayout\View\Helper\Proxy\HeadTitleProxy;
 use ConLayoutTest\AbstractTest;
-use ConLayoutTest\Bootstrap;
 use Zend\Config\Config;
 use Zend\Filter\FilterPluginManager;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\Doctype;
 use Zend\View\Helper\HeadLink;
 use Zend\View\Helper\HeadMeta;
@@ -106,10 +102,11 @@ class ViewHelperGeneratorTest extends AbstractTest
         $filterManager->setService('cacheBuster', $cacheBusterFilter);
 
         $generator = new ViewHelperGenerator(
-            $filterManager,
             $helperPluginManager,
             $config['con-layout']['view_helpers']
         );
+
+        $generator->setFilterManager($filterManager);
 
         $renderer = new PhpRenderer();
         $renderer->setHelperPluginManager($helperPluginManager);

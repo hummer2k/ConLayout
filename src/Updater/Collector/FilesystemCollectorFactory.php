@@ -9,7 +9,6 @@ namespace ConLayout\Updater\Collector;
 use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class FilesystemCollectorFactory implements FactoryInterface
 {

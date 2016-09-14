@@ -6,7 +6,6 @@ use ConLayout\BlockManager;
 use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @package ConLayout

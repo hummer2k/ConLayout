@@ -1,7 +1,6 @@
 <?php
 namespace ConLayout\Block;
 
-use Zend\Http\Request;
 use Zend\View\Helper\HelperInterface;
 use Zend\View\Model\ModelInterface;
 
@@ -11,15 +10,4 @@ use Zend\View\Model\ModelInterface;
  */
 interface BlockInterface extends ModelInterface, HelperInterface
 {
-    /**
-     *
-     * @param Request $request
-     */
-    public function setRequest(Request $request);
-
-    /**
-     *
-     * @return Request
-     */
-    public function getRequest();
 }

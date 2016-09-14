@@ -5,10 +5,8 @@ namespace ConLayoutTest\View\Helper\Proxy;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory;
 use ConLayoutTest\AbstractTest;
-use PHPUnit_Framework_TestCase;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\AbstractHelper;
-use Zend\View\HelperPluginManager;
 
 /**
  * @package ConLayout

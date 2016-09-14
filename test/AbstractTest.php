@@ -9,8 +9,6 @@ use ConLayout\BlockManager;
 use ConLayout\Generator\BlocksGenerator;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Module;
-use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\Layout\Layout;

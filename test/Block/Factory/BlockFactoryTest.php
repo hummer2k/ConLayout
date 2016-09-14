@@ -7,9 +7,7 @@ use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
 use ConLayoutTest\AbstractTest;
-use Zend\Http\PhpEnvironment\Request;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\RequestInterface;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -125,18 +123,11 @@ class BlockFactoryTest extends AbstractTest
 
     public function testCreateBlockImpl()
     {
-        $request = new Request();
         $renderer = new PhpRenderer();
-        $this->sm->setService('Request', $request);
         $this->sm->setService('ViewRenderer', $renderer);
         $block = $this->factory->createBlock('test.block.impl', [
             'class' => BlockImpl::class
         ]);
-        $this->assertInstanceof(
-            RequestInterface::class,
-            $block->getRequest()
-        );
-        $this->assertSame($request, $block->getRequest());
         $this->assertSame($renderer, $block->getView());
     }
 }

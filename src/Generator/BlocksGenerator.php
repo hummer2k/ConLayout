@@ -8,7 +8,6 @@ namespace ConLayout\Generator;
 
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactoryInterface;
-use ConLayout\Updater\LayoutUpdaterInterface;
 use Zend\Config\Config;
 
 final class BlocksGenerator implements GeneratorInterface

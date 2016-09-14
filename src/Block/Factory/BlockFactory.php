@@ -5,7 +5,6 @@ namespace ConLayout\Block\Factory;
 use ConLayout\Block\BlockInterface;
 use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Exception\InvalidBlockException;
-use ConLayout\Layout\LayoutInterface;
 use ConLayout\NamedParametersTrait;
 use Interop\Container\ContainerInterface;
 use Zend\EventManager\EventManagerAwareInterface;
@@ -143,7 +142,6 @@ final class BlockFactory implements
 
         if ($block instanceof BlockInterface) {
             $block->setView($this->container->get('ViewRenderer'));
-            $block->setRequest($this->container->get('Request'));
         }
 
         $results = $this->getEventManager()->trigger(

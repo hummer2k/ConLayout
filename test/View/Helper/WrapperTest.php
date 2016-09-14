@@ -4,7 +4,6 @@ namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\Wrapper;
 use ConLayoutTest\AbstractTest;
-use PHPUnit_Framework_TestCase;
 use Zend\View\HelperPluginManager;
 use Zend\View\Renderer\PhpRenderer;
 

@@ -1,7 +1,6 @@
 <?php
 namespace ConLayout\Listener;
 
-use ConLayout\Listener\BodyClassListener;
 use ConLayout\View\Helper\BodyClass;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;

@@ -8,7 +8,6 @@ namespace ConLayout\Filter;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class BasePathFilterFactory implements FactoryInterface
 {

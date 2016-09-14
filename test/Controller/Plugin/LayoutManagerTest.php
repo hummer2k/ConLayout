@@ -6,7 +6,6 @@ use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Controller\Plugin\LayoutManager;
 use ConLayout\Controller\Plugin\LayoutManagerFactory;
 use ConLayout\Handle\Handle;
-use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;

@@ -1,12 +1,11 @@
 <?php
 namespace ConLayout\Controller\Plugin;
 
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use ConLayout\Block\BlockPoolInterface;
 
 /**
  * @package ConLayout

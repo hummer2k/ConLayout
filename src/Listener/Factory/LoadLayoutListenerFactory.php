@@ -6,7 +6,6 @@ use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\LoadLayoutListener;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @package ConLayout

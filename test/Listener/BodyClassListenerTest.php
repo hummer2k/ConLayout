@@ -5,7 +5,6 @@ namespace ConLayoutTest\Listener;
 use ConLayout\Listener\BodyClassListener;
 use ConLayout\View\Helper\BodyClass;
 use ConLayoutTest\AbstractTest;
-use Zend\EventManager\EventManager;
 use Zend\Router\Http\RouteMatch;
 
 /**

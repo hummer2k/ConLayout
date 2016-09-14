@@ -5,7 +5,6 @@ namespace ConLayout\View\Helper\Proxy;
 use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\AbstractFactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @package ConLayout

@@ -3,7 +3,6 @@
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\Block\BlockPoolInterface;
-use ConLayout\Layout\LayoutInterface;
 use ConLayout\View\Helper\Block;
 use ConLayout\View\Helper\BlockFactory;
 use ConLayoutTest\AbstractTest;

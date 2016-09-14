@@ -4,7 +4,6 @@ namespace ConLayout\Listener\Factory;
 use ConLayout\Listener\BodyClassListener;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @package ConLayout

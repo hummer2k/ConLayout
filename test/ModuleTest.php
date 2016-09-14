@@ -6,7 +6,6 @@ use ConLayout\Module;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\BodyClass;
-use Zend\Console\Request as ConsoleRequest;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\SharedEventManager;
 use Zend\Filter\FilterPluginManager;
@@ -15,7 +14,6 @@ use Zend\Http\PhpEnvironment\Response;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\View\Http\InjectTemplateListener;
-use Zend\ServiceManager\Config;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\HelperPluginManager;
 

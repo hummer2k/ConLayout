@@ -2,7 +2,6 @@
 
 namespace ConLayoutTest\Zdt\Collector;
 
-use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;

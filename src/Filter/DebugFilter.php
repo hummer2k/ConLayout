@@ -6,7 +6,6 @@
 
 namespace ConLayout\Filter;
 
-use Zend\Filter\Exception;
 use Zend\Filter\FilterInterface;
 use Zend\View\Helper\ViewModel;
 

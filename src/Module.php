@@ -5,15 +5,11 @@ use ConLayout\Filter\DebugFilter;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\ModuleManager\Feature\BlockProviderInterface;
 use ConLayout\Options\ModuleOptions;
-use Zend\EventManager\EventInterface as Event;
 use Zend\EventManager\EventInterface;
-use Zend\Filter\FilterPluginManager;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Loader\StandardAutoloader;
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\EventManager\EventInterface as Event;
+use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
 use Zend\ModuleManager\Feature\FilterProviderInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
@@ -33,19 +29,8 @@ class Module implements
     ViewHelperProviderInterface,
     BootstrapListenerInterface,
     InitProviderInterface,
-    FilterProviderInterface,
-    DependencyIndicatorInterface
+    FilterProviderInterface
 {
-    /**
-     * @inheritDoc
-     */
-    public function getModuleDependencies()
-    {
-        return [
-            'Zend\Filter'
-        ];
-    }
-
     /**
      * retrieve module config
      *
@@ -117,7 +102,7 @@ class Module implements
         $eventManager   = $application->getEventManager();
         $request        = $serviceManager->get('Request');
 
-        if (!$request instanceof Request) {
+        if (!$request instanceof HttpRequest) {
             return;
         }
 
@@ -133,7 +118,7 @@ class Module implements
 
         $serviceManager->get(LayoutInterface::class)->setRoot($e->getViewModel());
 
-        if ($options->isDebug()) {
+        if ($options->isDebug() && $serviceManager->has('FilterManager')) {
             $this->attachDebugger($serviceManager);
         }
     }

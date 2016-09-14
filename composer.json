@@ -1,9 +1,10 @@
 {
     "name": "hummer2k/conlayout",
-    "description": "Module for handling ZF2 layouts with blocks and handles like magento",
+    "description": "Module for handling zend-mvc layouts with blocks and handles like magento",
     "license": "MIT",
     "keywords": [
-        "zf2",
+        "zf",
+        "zf3",
         "layout",
         "handles",
         "blocks"
@@ -20,19 +21,21 @@
         "zendframework/zend-mvc": "^3.0",
         "zendframework/zend-servicemanager": "^3.0",
         "zendframework/zend-eventmanager": "^3.0",
-        "zendframework/zend-modulemanager": "^2.7 || ^3.0",
+        "zendframework/zend-modulemanager": "^2.7",
         "zendframework/zend-router": "^3.0",
-        "zendframework/zend-filter": "^2.7.1 || ^3.0",
         "zendframework/zend-stdlib": "^3.0",
-        "zendframework/zend-http": "^2.0 || ^3.0",
-        "zendframework/zend-config": "^2.6 || ^3.0",
-        "zendframework/zend-view": "^2.6 || ^3.0"
+        "zendframework/zend-http": "^2.5",
+        "zendframework/zend-config": "^2.6",
+        "zendframework/zend-view": "^2.6"
+    },
+    "suggest": {
+        "zendframework/zend-filter": "Filter configured params e.g. src, href attributes (basepath, cachebuster, ...)"
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "^1.1",
         "phpunit/phpunit": "4.*",
-        "zendframework/zend-console": "^2.6 || ^3.0",
-        "zendframework/zend-i18n": "^2.7 || ^3.0",
+        "zendframework/zend-filter": "^2.7.1",
+        "zendframework/zend-i18n": "^2.7",
         "squizlabs/php_codesniffer": "2.*",
         "satooshi/php-coveralls": "~0.6"
     },

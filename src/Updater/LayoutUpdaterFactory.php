@@ -3,10 +3,8 @@
 namespace ConLayout\Updater;
 
 use ConLayout\Options\ModuleOptions;
-use ConLayout\Updater\Collector\FilesystemCollector;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @package ConLayout

@@ -2,8 +2,8 @@
 
 namespace ConLayout\Updater;
 
-use ConLayout\Handle\HandleInterface;
 use ConLayout\Handle\Handle;
+use ConLayout\Handle\HandleInterface;
 use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Event\UpdateEvent;
 use Zend\Config\Config;

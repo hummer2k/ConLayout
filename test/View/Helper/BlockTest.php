@@ -2,7 +2,6 @@
 
 namespace ConLayoutTest\View\Helper;
 
-use ConLayout\Layout\LayoutInterface;
 use ConLayout\View\Helper\Block;
 use ConLayoutTest\AbstractTest;
 use Zend\View\Model\ViewModel;
