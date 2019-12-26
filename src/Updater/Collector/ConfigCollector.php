@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -11,7 +12,7 @@ use Zend\Config\Config;
 
 class ConfigCollector implements CollectorInterface
 {
-    const NAME = 'config';
+    public const NAME = 'config';
 
     /**
      * @var array

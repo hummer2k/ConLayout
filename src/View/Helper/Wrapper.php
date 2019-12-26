@@ -10,7 +10,7 @@ use Zend\View\Helper\AbstractHtmlElement;
  */
 class Wrapper extends AbstractHtmlElement
 {
-    const DEFAULT_TAG = 'div';
+    public const DEFAULT_TAG = 'div';
 
     /**
      *

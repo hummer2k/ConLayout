@@ -22,7 +22,8 @@ class ModuleOptionsFactory implements FactoryInterface
         $config = $container->get('Config');
         $options = isset($config['con-layout']) ? $config['con-layout'] : [];
 
-        if (!isset($options['controller_map'])
+        if (
+            !isset($options['controller_map'])
             && isset($config['view_manager']['controller_map'])
         ) {
             $options['controller_map'] = (array) $config['view_manager']['controller_map'];

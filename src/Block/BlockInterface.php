@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout\Block;
 
 use Zend\View\Helper\HelperInterface;

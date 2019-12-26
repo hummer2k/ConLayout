@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout\Listener;
 
 use ConLayout\Handle\Handle;
@@ -15,7 +16,7 @@ use Zend\Router\Http\RouteMatch;
  */
 class ActionHandlesListener extends InjectTemplateListener
 {
-    const SEPARATOR = '/';
+    public const SEPARATOR = '/';
 
     /**
      * Layout updater instance.
@@ -95,8 +96,8 @@ class ActionHandlesListener extends InjectTemplateListener
 
         foreach ($templateParts as $name) {
             $priority += 10;
-            $actionHandles[] = new Handle($previousHandle.$name, $priority);
-            $previousHandle .= $name.self::SEPARATOR;
+            $actionHandles[] = new Handle($previousHandle . $name, $priority);
+            $previousHandle .= $name . self::SEPARATOR;
         }
 
         return $actionHandles;

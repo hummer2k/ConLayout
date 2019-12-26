@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout\Controller\Plugin;
 
 use ConLayout\Block\BlockPoolInterface;

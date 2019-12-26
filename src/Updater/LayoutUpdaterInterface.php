@@ -11,10 +11,10 @@ use Zend\Config\Config;
  */
 interface LayoutUpdaterInterface
 {
-    const INSTRUCTION_INCLUDE   = 'include';
+    public const INSTRUCTION_INCLUDE   = 'include';
 
-    const AREA_GLOBAL   = 'global';
-    const AREA_DEFAULT  = 'frontend';
+    public const AREA_GLOBAL   = 'global';
+    public const AREA_DEFAULT  = 'frontend';
 
     /**
      * retrieve layout structure for current request

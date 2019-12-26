@@ -97,7 +97,8 @@ final class BlockFactory implements
     private function prepareOptions(array $specs)
     {
         foreach ($specs as $key => $value) {
-            if (!isset($this->blockDefaults[$key])
+            if (
+                !isset($this->blockDefaults[$key])
                 && !isset($specs['options'][$key])
             ) {
                 $specs['options'][$key] = $value;

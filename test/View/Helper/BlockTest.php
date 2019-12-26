@@ -23,7 +23,7 @@ class BlockTest extends AbstractTest
     {
         parent::setUp();
         $this->blockHelper = new Block($this->blockPool);
-        $this->blockHelper->setView(new PhpRenderer);
+        $this->blockHelper->setView(new PhpRenderer());
     }
 
     public function testInvoke()

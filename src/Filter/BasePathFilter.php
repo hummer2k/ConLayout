@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout\Filter;
 
 use Zend\Filter\FilterInterface;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -12,9 +13,9 @@ use Zend\Config\Config;
 
 final class BlocksGenerator implements GeneratorInterface
 {
-    const NAME                  = 'blocks';
-    const INSTRUCTION_BLOCKS    = 'blocks';
-    const INSTRUCTION_REFERENCE = 'reference';
+    public const NAME                  = 'blocks';
+    public const INSTRUCTION_BLOCKS    = 'blocks';
+    public const INSTRUCTION_REFERENCE = 'reference';
 
     /**
      * @var BlockFactoryInterface

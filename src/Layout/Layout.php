@@ -124,7 +124,8 @@ class Layout implements
     {
         $layoutStructure = $this->updater->getLayoutStructure();
         foreach ($this->generators as $name => $generator) {
-            if (!$this->isGeneratorLoaded($name)
+            if (
+                !$this->isGeneratorLoaded($name)
                 && (empty($generators) || isset($generators[$name]))
             ) {
                 $generator->generate($layoutStructure);
@@ -151,7 +152,8 @@ class Layout implements
             $this->blockPool->sort();
             $blocks = $this->blockPool->get();
             foreach ($blocks as $blockId => $block) {
-                if ($this->isAllowed($blockId, $block) &&
+                if (
+                    $this->isAllowed($blockId, $block) &&
                     $blockId !== self::BLOCK_ID_ROOT
                 ) {
                     list($parent, $captureTo) = $this->getCaptureTo($block);

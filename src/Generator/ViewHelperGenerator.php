@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -20,8 +21,8 @@ final class ViewHelperGenerator implements GeneratorInterface
 {
     use NamedParametersTrait;
 
-    const NAME          = 'helpers';
-    const INSTRUCTION   = 'helpers';
+    public const NAME          = 'helpers';
+    public const INSTRUCTION   = 'helpers';
 
     /**
      * @var bool
@@ -149,7 +150,8 @@ final class ViewHelperGenerator implements GeneratorInterface
      */
     private function filterArgs(array $instruction)
     {
-        if (!isset($instruction['filter']) ||
+        if (
+            !isset($instruction['filter']) ||
             !$instruction['filter'] ||
             null === $this->filterManager
         ) {

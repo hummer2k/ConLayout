@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;

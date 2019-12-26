@@ -154,7 +154,7 @@ class ModuleOptions extends AbstractOptions
      */
     public function setPreferRouteMatchController($preferRouteMatchController)
     {
-        $this->preferRouteMatchController = (boolean) $preferRouteMatchController;
+        $this->preferRouteMatchController = (bool) $preferRouteMatchController;
 
         return $this;
     }

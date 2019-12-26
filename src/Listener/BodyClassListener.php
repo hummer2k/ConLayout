@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout\Listener;
 
 use ConLayout\View\Helper\BodyClass;

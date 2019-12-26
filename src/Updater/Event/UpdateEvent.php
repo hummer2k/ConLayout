@@ -11,8 +11,8 @@ use Zend\EventManager\Event;
  */
 class UpdateEvent extends Event
 {
-    const EVENT_COLLECT      = 'collect';
-    const EVENT_COLLECT_POST = 'collect.post';
+    public const EVENT_COLLECT      = 'collect';
+    public const EVENT_COLLECT_POST = 'collect.post';
 
     /**
      *

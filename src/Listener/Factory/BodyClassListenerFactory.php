@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout\Listener\Factory;
 
 use ConLayout\Listener\BodyClassListener;

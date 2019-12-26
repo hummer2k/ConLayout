@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\ActionHandlesListener;

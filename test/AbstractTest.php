@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayoutTest;
 
 use ConLayout\Block\BlockPool;

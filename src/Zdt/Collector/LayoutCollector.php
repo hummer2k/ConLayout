@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout\Zdt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
@@ -14,7 +15,7 @@ use ZendDeveloperTools\Collector\AbstractCollector;
  */
 class LayoutCollector extends AbstractCollector
 {
-    const NAME = 'con-layout';
+    public const NAME = 'con-layout';
 
     /**
      *

@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayout;
 
 use ConLayout\Filter\DebugFilter;

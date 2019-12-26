@@ -1,4 +1,5 @@
 <?php
+
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\BodyClass;

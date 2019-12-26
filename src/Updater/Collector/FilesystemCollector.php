@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -14,7 +15,7 @@ use Zend\Stdlib\Glob;
 
 class FilesystemCollector implements CollectorInterface
 {
-    const NAME = 'filesystem';
+    public const NAME = 'filesystem';
 
     /**
      *
