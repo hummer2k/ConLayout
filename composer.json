@@ -20,21 +20,21 @@
     "require": {
         "php": "^7.2",
         "zendframework/zend-mvc": "^3.0",
-        "zendframework/zend-servicemanager": "^3.0",
+        "zendframework/zend-servicemanager": "^3.4",
         "zendframework/zend-eventmanager": "^3.0",
         "zendframework/zend-modulemanager": "^2.7",
         "zendframework/zend-router": "^3.0",
         "zendframework/zend-stdlib": "^3.0",
         "zendframework/zend-http": "^2.5",
         "zendframework/zend-config": "^2.6",
-        "zendframework/zend-view": "^2.6"
+        "zendframework/zend-view": "^2.11"
     },
     "suggest": {
         "zendframework/zend-filter": "Filter configured params e.g. src, href attributes (basepath, cachebuster, ...)"
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "^1.1",
-        "phpunit/phpunit": "4.*",
+        "phpunit/phpunit": "^4.5",
         "zendframework/zend-filter": "^2.7.1",
         "zendframework/zend-i18n": "^2.7",
         "squizlabs/php_codesniffer": "2.*",
