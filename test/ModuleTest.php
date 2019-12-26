@@ -50,7 +50,7 @@ class ModuleTest extends AbstractTest
 
         $sm->get('ViewHelperManager')->setService(
             'bodyClass',
-            $this->getMock(BodyClass::class)
+            $this->getMockBuilder(BodyClass::class)->getMock()
         );
 
         $event = new MvcEvent();

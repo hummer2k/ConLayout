@@ -34,7 +34,7 @@
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "^1.1",
-        "phpunit/phpunit": "^4.5",
+        "phpunit/phpunit": "^5.0",
         "zendframework/zend-filter": "^2.7.1",
         "zendframework/zend-i18n": "^2.7",
         "squizlabs/php_codesniffer": "2.*",

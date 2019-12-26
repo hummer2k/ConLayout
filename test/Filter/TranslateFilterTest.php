@@ -15,7 +15,7 @@ class TranslateFilterTest extends PHPUnit_Framework_TestCase
     public function testFilterTranslates()
     {
         $expected = 'translated';
-        $translator = $this->getMock(TranslatorInterface::class);
+        $translator = $this->getMockBuilder(TranslatorInterface::class)->getMock();
         $translator->method('translate')
             ->willReturn($expected);
 
