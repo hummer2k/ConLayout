@@ -30,7 +30,7 @@
         "zendframework/zend-stdlib": "^3.0",
         "zendframework/zend-http": "^2.5",
         "zendframework/zend-config": "^2.6",
-        "zendframework/zend-view": "^2.11"
+        "zendframework/zend-view": "^2.11.3"
     },
     "suggest": {
         "zendframework/zend-filter": "Filter configured params e.g. src, href attributes (basepath, cachebuster, ...)"
