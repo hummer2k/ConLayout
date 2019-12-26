@@ -27,7 +27,7 @@ class LayoutCollectorTest extends AbstractTest
      */
     protected $collector;
 
-    public function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('ZendDeveloperTools\Collector\AbstractCollector')) {
             $this->markTestSkipped('ZDT not available');
@@ -107,20 +107,14 @@ class LayoutCollectorTest extends AbstractTest
             $this->collector->getLayoutTemplate()
         );
 
-        $this->assertInternalType(
-            'array',
-            $this->collector->getHandles()
-        );
+        $this->assertIsArray($this->collector->getHandles());
 
         $this->assertContainsOnlyInstancesOf(
             HandleInterface::class,
             $this->collector->getHandles()
         );
 
-        $this->assertInternalType(
-            'array',
-            $this->collector->getBlocks()
-        );
+        $this->assertIsArray($this->collector->getBlocks());
 
         $blocks = $this->collector->getBlocks();
         $testBlockArray = current($blocks);
@@ -131,7 +125,7 @@ class LayoutCollectorTest extends AbstractTest
             $testBlock2Array['capture_to']
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '_files/view/widget1.phtml',
             $testBlockArray['template']
         );
@@ -151,9 +145,6 @@ class LayoutCollectorTest extends AbstractTest
             $this->collector->getCurrentArea()
         );
 
-        $this->assertInternalType(
-            'array',
-            $this->collector->getLayoutStructure()
-        );
+        $this->assertIsArray($this->collector->getLayoutStructure());
     }
 }

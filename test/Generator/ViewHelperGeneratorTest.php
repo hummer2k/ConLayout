@@ -136,18 +136,18 @@ class ViewHelperGeneratorTest extends AbstractTest
         $generator->generate($this->getLayoutStructure());
 
         foreach (['&#x2F;assets&#x2F;css&#x2F;test.css', '&#x2F;assets&#x2F;css&#x2F;main.css'] as $expected) {
-            $this->assertContains($expected, $headLink->toString());
+            $this->assertStringContainsString($expected, $headLink->toString());
         }
 
         foreach (['jquery.min.js', 'jquery-ui.min.js'] as $expected) {
-            $this->assertContains($expected, $headScript->toString());
+            $this->assertStringContainsString($expected, $headScript->toString());
         }
 
         $this->assertEquals('<!DOCTYPE html>', (string) $doctype);
 
         $headTitle->setSeparator(' | ');
         $expected = 'First | My Title | Another Title';
-        $this->assertContains($expected, $headTitle->toString());
+        $this->assertStringContainsString($expected, $headTitle->toString());
 
         $contains = [
             'charset="utf8"',
@@ -156,7 +156,7 @@ class ViewHelperGeneratorTest extends AbstractTest
         ];
 
         foreach ($contains as $expected) {
-            $this->assertContains($expected, $headMeta->toString());
+            $this->assertStringContainsString($expected, $headMeta->toString());
         }
     }
 }

@@ -13,7 +13,7 @@ use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\Layout\Layout;
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Config\Config;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
@@ -23,7 +23,7 @@ use Zend\View\Resolver\TemplateMapResolver;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-abstract class AbstractTest extends PHPUnit_Framework_TestCase
+abstract class AbstractTest extends TestCase
 {
     /**
      *
@@ -63,7 +63,7 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
      */
     protected $em;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $eventManager = new EventManager();
         $this->layoutUpdater = new LayoutUpdater();

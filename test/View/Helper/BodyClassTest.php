@@ -7,7 +7,7 @@ use ConLayout\View\Helper\BodyClass;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BodyClassTest extends \PHPUnit_Framework_TestCase
+class BodyClassTest extends \PHPUnit\Framework\TestCase
 {
     public function testBodyClassHelper()
     {

@@ -11,6 +11,8 @@ use Zend\EventManager\SharedEventManager;
 use Zend\Filter\FilterPluginManager;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
+use Zend\ModuleManager\Listener\ServiceListener;
+use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\View\Http\InjectTemplateListener;
@@ -26,9 +28,9 @@ class ModuleTest extends AbstractTest
     public function testConfig()
     {
         $module = new Module();
-        $this->assertInternalType('array', $module->getConfig());
-        $this->assertInternalType('array', $module->getServiceConfig());
-        $this->assertInternalType('array', $module->getFilterConfig());
+        $this->assertIsArray($module->getConfig());
+        $this->assertIsArray($module->getServiceConfig());
+        $this->assertIsArray($module->getFilterConfig());
     }
 
     public function testOnBootstrapListenersWithHttpRequest()
@@ -95,13 +97,18 @@ class ModuleTest extends AbstractTest
     public function testInit()
     {
         $module = new Module();
+        /** @var ModuleManager $manager */
         $manager = Bootstrap::getServiceManager()->get('ModuleManager');
         $module->init($manager);
+
+        $sm = Bootstrap::getServiceManager();
+
+        $this->assertTrue($sm->has('BlockManager'));
     }
 
     public function testViewHelperConfig()
     {
         $module = new Module();
-        $this->assertInternalType('array', $module->getViewHelperConfig());
+        $this->assertIsArray($module->getViewHelperConfig());
     }
 }

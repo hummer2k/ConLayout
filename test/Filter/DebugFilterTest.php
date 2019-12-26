@@ -26,6 +26,6 @@ class DebugFilterTest extends AbstractTest
         $html = '<div></div>';
         $filteredHtml = $filter->filter($html);
 
-        $this->assertContains('<!--[the.block]', $filteredHtml);
+        $this->assertStringContainsString('<!--[the.block]', $filteredHtml);
     }
 }

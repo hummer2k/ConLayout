@@ -29,7 +29,7 @@ class BlockFactoryTest extends AbstractTest
      */
     protected $sm;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->sm = new ServiceManager();
@@ -68,9 +68,6 @@ class BlockFactoryTest extends AbstractTest
         $this->assertEquals('value_my-option', $block->getOptions()['my-option']);
     }
 
-    /**
-     * @expectedException \ConLayout\Exception\BadMethodCallException
-     */
     public function testThrowsExceptionOnMissingMethod()
     {
         $specs = [
@@ -81,6 +78,7 @@ class BlockFactoryTest extends AbstractTest
             ]
         ];
 
+        $this->expectException(\ConLayout\Exception\BadMethodCallException::class);
         $this->factory->createBlock('my-block', $specs);
     }
 

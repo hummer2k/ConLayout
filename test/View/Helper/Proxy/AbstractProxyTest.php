@@ -3,14 +3,14 @@
 namespace ConLayoutTest\View\Helper\Proxy;
 
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\View\Helper\AbstractHelper;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class AbstractProxyTest extends PHPUnit_Framework_TestCase
+class AbstractProxyTest extends TestCase
 {
     public function testDelegatesNotExistingMethodsToSubject()
     {

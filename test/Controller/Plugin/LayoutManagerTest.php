@@ -28,7 +28,7 @@ class LayoutManagerTest extends AbstractTest
 
     protected $renderer;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->blockPool->add(
@@ -136,7 +136,7 @@ class LayoutManagerTest extends AbstractTest
 
     public function testGetBlocks()
     {
-        $this->assertInternalType('array', $this->layoutManager->getBlocks());
+        $this->assertIsArray($this->layoutManager->getBlocks());
         $this->layoutManager->addBlock('test-block', new ViewModel());
         $this->assertCount(1, $this->layoutManager->getBlocks());
     }

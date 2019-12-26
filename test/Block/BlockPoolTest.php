@@ -104,7 +104,7 @@ class BlockPoolTest extends AbstractTest
     {
         $blocks = $this->blockPool->get();
 
-        $this->assertInternalType('array', $blocks);
+        $this->assertIsArray($blocks);
     }
 
     public function testSortBlocks()

@@ -19,7 +19,7 @@ class BlockTest extends AbstractTest
      */
     protected $blockHelper;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->blockHelper = new Block($this->blockPool);

@@ -30,7 +30,7 @@ class LayoutTest extends AbstractTest
 
     protected $layoutStructure;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->layoutStructure = include __DIR__ . '/_files/layout-structure.php';

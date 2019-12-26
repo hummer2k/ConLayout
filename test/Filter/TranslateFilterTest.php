@@ -3,14 +3,14 @@
 namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\TranslateFilter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\I18n\Translator\TranslatorInterface;
 
 /**
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class TranslateFilterTest extends PHPUnit_Framework_TestCase
+class TranslateFilterTest extends TestCase
 {
     public function testFilterTranslates()
     {

@@ -14,15 +14,15 @@ class ModuleOptionsTest extends AbstractTest
     public function testDefaults()
     {
         $moduleOptions = new ModuleOptions();
-        $this->assertInternalType('array', $moduleOptions->getControllerMap());
-        $this->assertInternalType('boolean', $moduleOptions->isPreferRouteMatchController());
-        $this->assertInternalType('array', $moduleOptions->getViewHelpers());
-        $this->assertInternalType('string', $moduleOptions->getCacheBusterInternalBaseDir());
-        $this->assertInternalType('array', $moduleOptions->getLayoutUpdatePaths());
-        $this->assertInternalType('array', $moduleOptions->getLayoutUpdateExtensions());
-        $this->assertInternalType('array', $moduleOptions->getBlockDefaults());
-        $this->assertInternalType('array', $moduleOptions->getListeners());
-        $this->assertInternalType('string', $moduleOptions->getDefaultArea());
+        $this->assertIsArray($moduleOptions->getControllerMap());
+        $this->assertIsBool($moduleOptions->isPreferRouteMatchController());
+        $this->assertIsArray($moduleOptions->getViewHelpers());
+        $this->assertIsString($moduleOptions->getCacheBusterInternalBaseDir());
+        $this->assertIsArray($moduleOptions->getLayoutUpdatePaths());
+        $this->assertIsArray($moduleOptions->getLayoutUpdateExtensions());
+        $this->assertIsArray($moduleOptions->getBlockDefaults());
+        $this->assertIsArray($moduleOptions->getListeners());
+        $this->assertIsString($moduleOptions->getDefaultArea());
     }
 
     public function testSettersGetters()

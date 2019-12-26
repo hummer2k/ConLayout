@@ -18,7 +18,7 @@ class BlockManagerTest extends AbstractTest
      */
     protected $blockManager;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->blockManager = new BlockManager($this->sm);
@@ -32,11 +32,9 @@ class BlockManagerTest extends AbstractTest
         $this->assertNull($this->blockManager->validatePlugin(new TestBlock()));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testThrowsExceptionForInvalidBlock()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->blockManager->validatePlugin(new \stdClass());
     }
 }

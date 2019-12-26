@@ -27,7 +27,7 @@ class LayoutUpdaterTest extends AbstractTest
      */
     protected $updater;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->updater = new LayoutUpdater();

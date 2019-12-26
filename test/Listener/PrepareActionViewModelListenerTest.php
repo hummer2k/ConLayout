@@ -18,7 +18,7 @@ class PrepareActionViewModelListenerTest extends AbstractTest
 
     protected $mvcEvent;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->prepareActionViewModelListener = new PrepareActionViewModelListener(
@@ -43,6 +43,8 @@ class PrepareActionViewModelListenerTest extends AbstractTest
     public function testWithNull()
     {
         $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
+
+        $this->assertNull($this->mvcEvent->getResult());
     }
 
     public function testDoNothingOnTerminal()

@@ -27,7 +27,7 @@ class ActionHandlesListenerTest extends AbstractTest
      */
     protected $routeMatch;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->listener = new ActionHandlesListener($this->layoutUpdater);

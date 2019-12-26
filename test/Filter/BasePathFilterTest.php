@@ -19,7 +19,7 @@ class BasePathFilterTest extends AbstractTest
 {
     private $basePathFilter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $basePathHelper = new BasePath();

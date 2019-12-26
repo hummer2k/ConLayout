@@ -19,7 +19,7 @@ class WrapperTest extends AbstractTest
      */
     private $wrapperHelper;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->wrapperHelper = new Wrapper();

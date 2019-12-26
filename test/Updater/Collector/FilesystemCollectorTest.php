@@ -19,7 +19,7 @@ class FilesystemCollectorTest extends AbstractTest
      */
     protected $collector;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->collector = new FilesystemCollector([
