@@ -125,8 +125,11 @@ class Layout implements
         $layoutStructure = $this->updater->getLayoutStructure();
         foreach ($this->generators as $name => $generator) {
             if (
-                !$this->isGeneratorLoaded($name)
-                && (empty($generators) || isset($generators[$name]))
+                !$this->isGeneratorLoaded($name) &&
+                (
+                    empty($generators) ||
+                    isset($generators[$name])
+                )
             ) {
                 $generator->generate($layoutStructure);
                 $this->loadedGenerators[$name] = true;
