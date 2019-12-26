@@ -4,7 +4,7 @@ namespace ConLayoutTest\View\Helper\Proxy;
 
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use PHPUnit\Framework\TestCase;
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 /**
  * @package ConLayout

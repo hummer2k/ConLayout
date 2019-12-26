@@ -3,7 +3,7 @@
 namespace ConLayout\Layout;
 
 use ConLayout\Generator\GeneratorInterface;
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout

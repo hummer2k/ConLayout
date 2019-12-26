@@ -9,10 +9,10 @@ use ConLayout\Handle\Handle;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
-use Zend\Mvc\Controller\PluginManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Model\ModelInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\PluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Model\ModelInterface;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @package ConLayout

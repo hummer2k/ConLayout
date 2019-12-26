@@ -5,7 +5,7 @@ namespace ConLayoutTest\Listener;
 use ConLayout\Listener\BodyClassListener;
 use ConLayout\View\Helper\BodyClass;
 use ConLayoutTest\AbstractTest;
-use Zend\Router\Http\RouteMatch;
+use Laminas\Router\Http\RouteMatch;
 
 /**
  * @package
@@ -21,7 +21,7 @@ class BodyClassListenerTest extends AbstractTest
 
         $routeMatch = new RouteMatch([]);
         $routeMatch->setMatchedRouteName('my/SOME/route');
-        $event = new \Zend\Mvc\MvcEvent();
+        $event = new \Laminas\Mvc\MvcEvent();
         $event->setRouteMatch($routeMatch);
 
         $listener->addBodyClass($event);

@@ -10,7 +10,7 @@ namespace ConLayout\Listener\Factory;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Listener\PrepareActionViewModelListener;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class PrepareActionViewModelListenerFactory implements FactoryInterface
 {

@@ -7,8 +7,8 @@
 
 namespace ConLayout\Filter;
 
-use Zend\Filter\FilterInterface;
-use Zend\View\Helper\ViewModel;
+use Laminas\Filter\FilterInterface;
+use Laminas\View\Helper\ViewModel;
 
 class DebugFilter implements FilterInterface
 {

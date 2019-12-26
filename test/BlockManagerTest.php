@@ -4,7 +4,7 @@ namespace ConLayoutTest;
 
 use ConLayout\Block\AbstractBlock;
 use ConLayout\BlockManager;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @package ConLayout

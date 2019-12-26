@@ -2,7 +2,7 @@
 
 namespace ConLayoutTest\Controller\TestAsset;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class SampleController extends AbstractActionController
 {

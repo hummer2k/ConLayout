@@ -6,9 +6,9 @@ use ConLayout\Block\BlockPoolInterface;
 use ConLayout\View\Helper\Block;
 use ConLayout\View\Helper\BlockFactory;
 use ConLayoutTest\AbstractTest;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\HelperPluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\HelperPluginManager;
 
 /**
  * @package ConLayout

@@ -7,7 +7,7 @@
 
 namespace ConLayout\Generator;
 
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 interface GeneratorInterface
 {

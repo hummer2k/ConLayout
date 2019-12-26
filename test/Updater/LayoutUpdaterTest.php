@@ -8,9 +8,9 @@ use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
-use Zend\Config\Config;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\SharedEventManager;
+use Laminas\Config\Config;
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\SharedEventManager;
 
 /**
  * @package ConLayout

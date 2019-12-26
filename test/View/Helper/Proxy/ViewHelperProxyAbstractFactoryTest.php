@@ -5,8 +5,8 @@ namespace ConLayoutTest\View\Helper\Proxy;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory;
 use ConLayoutTest\AbstractTest;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Helper\AbstractHelper;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\AbstractHelper;
 
 /**
  * @package ConLayout

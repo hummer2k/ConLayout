@@ -4,7 +4,7 @@ namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\TranslateFilter;
 use PHPUnit\Framework\TestCase;
-use Zend\I18n\Translator\TranslatorInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * @package

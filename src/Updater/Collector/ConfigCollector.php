@@ -8,7 +8,7 @@
 namespace ConLayout\Updater\Collector;
 
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 class ConfigCollector implements CollectorInterface
 {

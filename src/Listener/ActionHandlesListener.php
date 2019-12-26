@@ -4,11 +4,11 @@ namespace ConLayout\Listener;
 
 use ConLayout\Handle\Handle;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\EventManager\EventInterface;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\View\Http\InjectTemplateListener;
-use Zend\Router\Http\RouteMatch;
+use Laminas\EventManager\EventInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\View\Http\InjectTemplateListener;
+use Laminas\Router\Http\RouteMatch;
 
 /**
  * @package ConLayout

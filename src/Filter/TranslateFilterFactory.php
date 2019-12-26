@@ -8,8 +8,8 @@
 namespace ConLayout\Filter;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\MutableCreationOptionsInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\MutableCreationOptionsInterface;
 
 class TranslateFilterFactory implements FactoryInterface
 {

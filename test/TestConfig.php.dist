@@ -1,8 +1,8 @@
 <?php
 return [
     'modules' => [
-        'Zend\Router',
-        'Zend\Filter',
+        'Laminas\Router',
+        'Laminas\Filter',
         'ConLayout'
     ],
     'module_listener_options' => [

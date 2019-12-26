@@ -3,7 +3,7 @@
 namespace ConLayout\Updater;
 
 use ConLayout\Handle\HandleInterface;
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 /**
  * @package ConLayout

@@ -6,10 +6,10 @@ use ConLayout\Handle\Handle;
 use ConLayout\Handle\HandleInterface;
 use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Event\UpdateEvent;
-use Zend\Config\Config;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
-use Zend\Stdlib\PriorityList;
+use Laminas\Config\Config;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
+use Laminas\Stdlib\PriorityList;
 
 /**
  * @package ConLayout

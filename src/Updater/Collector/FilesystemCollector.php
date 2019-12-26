@@ -8,10 +8,10 @@
 namespace ConLayout\Updater\Collector;
 
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Config\Config;
-use Zend\Config\Factory as ConfigFactory;
-use Zend\Stdlib\Exception\RuntimeException;
-use Zend\Stdlib\Glob;
+use Laminas\Config\Config;
+use Laminas\Config\Factory as ConfigFactory;
+use Laminas\Stdlib\Exception\RuntimeException;
+use Laminas\Stdlib\Glob;
 
 class FilesystemCollector implements CollectorInterface
 {

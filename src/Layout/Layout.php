@@ -5,10 +5,10 @@ namespace ConLayout\Layout;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
-use Zend\Stdlib\PriorityList;
-use Zend\View\Model\ModelInterface;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
+use Laminas\Stdlib\PriorityList;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout

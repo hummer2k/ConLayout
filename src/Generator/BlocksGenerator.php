@@ -9,7 +9,7 @@ namespace ConLayout\Generator;
 
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactoryInterface;
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 final class BlocksGenerator implements GeneratorInterface
 {

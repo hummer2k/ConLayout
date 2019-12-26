@@ -4,8 +4,8 @@ namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\ActionHandlesListener;
 use ConLayoutTest\AbstractTest;
-use Zend\Mvc\MvcEvent;
-use Zend\Router\Http\RouteMatch;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Router\Http\RouteMatch;
 
 /**
  * @package ConLayout

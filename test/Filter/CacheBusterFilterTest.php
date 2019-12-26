@@ -6,9 +6,9 @@ use ConLayout\Filter\CacheBusterFilter;
 use ConLayout\Filter\CacheBusterFilterFactory;
 use ConLayout\Options\ModuleOptions;
 use ConLayoutTest\AbstractTest;
-use Zend\Filter\FilterInterface;
-use Zend\Filter\FilterPluginManager;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\Filter\FilterInterface;
+use Laminas\Filter\FilterPluginManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * @package

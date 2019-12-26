@@ -2,8 +2,8 @@
 
 namespace ConLayout\Block;
 
-use Zend\View\Helper\HelperInterface;
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Helper\HelperInterface;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout

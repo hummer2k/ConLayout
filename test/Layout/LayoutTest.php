@@ -14,9 +14,9 @@ use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use ConLayoutTest\Layout\Layout as TestLayout;
-use Zend\Config\Config;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Model\ViewModel;
+use Laminas\Config\Config;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @package

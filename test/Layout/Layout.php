@@ -3,7 +3,7 @@
 namespace ConLayoutTest\Layout;
 
 use ConLayout\Layout\Layout as DefaultLayout;
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package

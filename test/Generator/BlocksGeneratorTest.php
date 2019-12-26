@@ -9,9 +9,9 @@ namespace ConLayoutTest\Generator;
 
 use ConLayout\Generator\BlocksGenerator;
 use ConLayoutTest\AbstractTest;
-use Zend\Config\Config;
-use Zend\View\Model\ModelInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\Config\Config;
+use Laminas\View\Model\ModelInterface;
+use Laminas\View\Model\ViewModel;
 
 class BlocksGeneratorTest extends AbstractTest
 {

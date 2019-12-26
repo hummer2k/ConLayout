@@ -4,9 +4,9 @@ namespace ConLayout\Zdt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Resolver\ResolverInterface;
-use ZendDeveloperTools\Collector\AbstractCollector;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\Resolver\ResolverInterface;
+use Laminas\DeveloperTools\Collector\AbstractCollector;
 
 /**
  * Collector for ZendDeveloperToolbar

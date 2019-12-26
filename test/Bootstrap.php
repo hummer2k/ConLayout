@@ -2,8 +2,8 @@
 // @codingStandardsIgnoreFile
 namespace ConLayoutTest;
 
-use Zend\Mvc\Service\ServiceManagerConfig;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\Mvc\Service\ServiceManagerConfig;
+use Laminas\ServiceManager\ServiceManager;
 
 error_reporting(E_ALL);
 

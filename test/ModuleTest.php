@@ -6,18 +6,18 @@ use ConLayout\Module;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\BodyClass;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\SharedEventManager;
-use Zend\Filter\FilterPluginManager;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Http\PhpEnvironment\Response;
-use Zend\ModuleManager\Listener\ServiceListener;
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\View\Http\InjectTemplateListener;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\HelperPluginManager;
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\SharedEventManager;
+use Laminas\Filter\FilterPluginManager;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Http\PhpEnvironment\Response;
+use Laminas\ModuleManager\Listener\ServiceListener;
+use Laminas\ModuleManager\ModuleManager;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\View\Http\InjectTemplateListener;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\HelperPluginManager;
 
 /**
  * @package

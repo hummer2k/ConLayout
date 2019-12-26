@@ -6,10 +6,10 @@ use ConLayout\Filter\BasePathFilter as BasePathFilter;
 use ConLayout\Filter\BasePathFilter as BasePathFilter2;
 use ConLayout\Filter\BasePathFilterFactory;
 use ConLayoutTest\AbstractTest;
-use Zend\Filter\FilterInterface;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Helper\BasePath;
-use Zend\View\HelperPluginManager;
+use Laminas\Filter\FilterInterface;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\BasePath;
+use Laminas\View\HelperPluginManager;
 
 /**
  * @package ConLayout

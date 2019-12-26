@@ -9,8 +9,8 @@ namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\DebugFilter;
 use ConLayoutTest\AbstractTest;
-use Zend\View\Helper\ViewModel as ModelHelper;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Helper\ViewModel as ModelHelper;
+use Laminas\View\Model\ViewModel;
 
 class DebugFilterTest extends AbstractTest
 {

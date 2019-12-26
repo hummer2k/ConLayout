@@ -7,11 +7,11 @@ use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Exception\InvalidBlockException;
 use ConLayout\NamedParametersTrait;
 use Interop\Container\ContainerInterface;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
-use Zend\Stdlib\ArrayUtils;
-use Zend\View\Model\ModelInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\View\Model\ModelInterface;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @package ConLayout

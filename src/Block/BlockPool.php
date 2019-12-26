@@ -8,8 +8,8 @@
 namespace ConLayout\Block;
 
 use ConLayout\Layout\LayoutInterface;
-use Zend\View\Model\ClearableModelInterface;
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Model\ClearableModelInterface;
+use Laminas\View\Model\ModelInterface;
 
 final class BlockPool implements BlockPoolInterface
 {

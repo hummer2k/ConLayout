@@ -5,7 +5,7 @@ namespace ConLayout\Listener\Factory;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\LoadLayoutListener;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @package ConLayout

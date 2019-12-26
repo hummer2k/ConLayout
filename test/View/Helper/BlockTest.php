@@ -4,8 +4,8 @@ namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\Block;
 use ConLayoutTest\AbstractTest;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * @package

@@ -11,7 +11,7 @@ use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 class ConfigCollectorTest extends AbstractTest
 {

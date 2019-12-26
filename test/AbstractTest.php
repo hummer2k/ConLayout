@@ -15,10 +15,10 @@ use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\Layout\Layout;
 use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
-use Zend\Config\Config;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
-use Zend\View\Resolver\TemplateMapResolver;
+use Laminas\Config\Config;
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\View\Resolver\TemplateMapResolver;
 
 /**
  * @package

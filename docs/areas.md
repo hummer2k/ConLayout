@@ -51,10 +51,10 @@ and determine the area by the matched route name:
 namespace Application\Listener;
 
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\EventManager\ListenerAggregateTrait;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\ListenerAggregateTrait;
+use Laminas\Mvc\MvcEvent;
 
 class AreaListener implements ListenerAggregateInterface
 {

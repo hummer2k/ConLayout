@@ -2,7 +2,7 @@
 
 namespace ConLayout\View\Helper;
 
-use Zend\View\Helper\AbstractHtmlElement;
+use Laminas\View\Helper\AbstractHtmlElement;
 
 /**
  * @package ConLayout

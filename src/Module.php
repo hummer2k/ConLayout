@@ -6,19 +6,19 @@ use ConLayout\Filter\DebugFilter;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\ModuleManager\Feature\BlockProviderInterface;
 use ConLayout\Options\ModuleOptions;
-use Zend\EventManager\EventInterface;
-use Zend\EventManager\EventInterface as Event;
-use Zend\Http\PhpEnvironment\Request as HttpRequest;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ModuleManager\Feature\FilterProviderInterface;
-use Zend\ModuleManager\Feature\InitProviderInterface;
-use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
-use Zend\ModuleManager\ModuleManagerInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\EventManager\EventInterface;
+use Laminas\EventManager\EventInterface as Event;
+use Laminas\Http\PhpEnvironment\Request as HttpRequest;
+use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
+use Laminas\ModuleManager\Feature\ConfigProviderInterface;
+use Laminas\ModuleManager\Feature\FilterProviderInterface;
+use Laminas\ModuleManager\Feature\InitProviderInterface;
+use Laminas\ModuleManager\Feature\ServiceProviderInterface;
+use Laminas\ModuleManager\Feature\ViewHelperProviderInterface;
+use Laminas\ModuleManager\ModuleManagerInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout

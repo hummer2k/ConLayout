@@ -6,7 +6,7 @@ use ConLayout\Listener\ActionHandlesListener;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @package ConLayout

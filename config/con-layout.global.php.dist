@@ -11,7 +11,7 @@ use ConLayout\View\Helper\Proxy\HeadMetaProxy;
 use ConLayout\View\Helper\Proxy\HeadScriptProxy;
 use ConLayout\View\Helper\Proxy\HeadTitleProxy;
 use ConLayout\View\Helper\Proxy\InlineScriptProxy;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 return [
     'con-layout' => [

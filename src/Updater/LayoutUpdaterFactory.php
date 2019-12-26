@@ -4,7 +4,7 @@ namespace ConLayout\Updater;
 
 use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @package ConLayout

@@ -14,8 +14,8 @@ use ConLayout\NamedParametersTrait;
 use ConLayout\Sorter\BeforeAfterComparison;
 use ConLayout\Sorter\SorterInterface;
 use Interop\Container\ContainerInterface;
-use Zend\Config\Config;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\Config\Config;
+use Laminas\Stdlib\ArrayUtils;
 
 final class ViewHelperGenerator implements GeneratorInterface
 {

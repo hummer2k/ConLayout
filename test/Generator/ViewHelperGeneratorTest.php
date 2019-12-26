@@ -12,16 +12,16 @@ use ConLayout\View\Helper\Proxy\HeadMetaProxy;
 use ConLayout\View\Helper\Proxy\HeadScriptProxy;
 use ConLayout\View\Helper\Proxy\HeadTitleProxy;
 use ConLayoutTest\AbstractTest;
-use Zend\Config\Config;
-use Zend\Escaper\Escaper;
-use Zend\Filter\FilterPluginManager;
-use Zend\View\Helper\Doctype;
-use Zend\View\Helper\HeadLink;
-use Zend\View\Helper\HeadMeta;
-use Zend\View\Helper\HeadScript;
-use Zend\View\Helper\HeadTitle;
-use Zend\View\HelperPluginManager;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\Config\Config;
+use Laminas\Escaper\Escaper;
+use Laminas\Filter\FilterPluginManager;
+use Laminas\View\Helper\Doctype;
+use Laminas\View\Helper\HeadLink;
+use Laminas\View\Helper\HeadMeta;
+use Laminas\View\Helper\HeadScript;
+use Laminas\View\Helper\HeadTitle;
+use Laminas\View\HelperPluginManager;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout

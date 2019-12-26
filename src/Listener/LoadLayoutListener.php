@@ -3,11 +3,11 @@
 namespace ConLayout\Listener;
 
 use ConLayout\Layout\LayoutInterface;
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\EventManager\ListenerAggregateTrait;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Model\ModelInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\ListenerAggregateTrait;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout

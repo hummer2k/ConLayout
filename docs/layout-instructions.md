@@ -26,7 +26,7 @@ return [
             /**
              * Can extend from ConLayout\Block\AbstractBlock
              * Should implement ConLayout\Block\BlockInterface
-             * optional, defaults to Zend\View\ViewModel
+             * optional, defaults to Laminas\View\ViewModel
              */
             'class' => 'Application\Block\SomeWidget',
             /**
@@ -99,7 +99,7 @@ return [
             <!--
              * Can extend from ConLayout\Block\AbstractBlock
              * Should implement ConLayout\Block\BlockInterface
-             * optional, defaults to Zend\View\ViewModel
+             * optional, defaults to Laminas\View\ViewModel
             -->
             <class>Application\Block\SomeWidget</class>
             <!--

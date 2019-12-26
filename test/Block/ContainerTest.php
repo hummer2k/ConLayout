@@ -9,7 +9,7 @@ namespace ConLayoutTest\Block;
 
 use ConLayout\Block\Container;
 use ConLayoutTest\AbstractTest;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 
 class ContainerTest extends AbstractTest
 {

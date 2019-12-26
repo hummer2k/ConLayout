@@ -5,8 +5,8 @@ namespace ConLayoutTest\Listener;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\PrepareActionViewModelListener;
 use ConLayoutTest\AbstractTest;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @package ConLayout

@@ -2,8 +2,8 @@
 
 namespace ConLayout\Block;
 
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\RendererInterface;
 
 /**
  * @package ConLayout

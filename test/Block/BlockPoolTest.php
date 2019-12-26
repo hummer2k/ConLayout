@@ -8,7 +8,7 @@
 namespace ConLayoutTest\Block;
 
 use ConLayoutTest\AbstractTest;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 class BlockPoolTest extends AbstractTest
 {

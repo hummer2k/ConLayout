@@ -7,9 +7,9 @@ use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
 use ConLayoutTest\AbstractTest;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * @package ConLayout

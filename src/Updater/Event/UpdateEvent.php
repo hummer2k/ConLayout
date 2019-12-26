@@ -2,8 +2,8 @@
 
 namespace ConLayout\Updater\Event;
 
-use Zend\Config\Config;
-use Zend\EventManager\Event;
+use Laminas\Config\Config;
+use Laminas\EventManager\Event;
 
 /**
  * @package ConLayout

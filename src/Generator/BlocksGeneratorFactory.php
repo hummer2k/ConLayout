@@ -10,7 +10,7 @@ namespace ConLayout\Generator;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class BlocksGeneratorFactory implements FactoryInterface
 {

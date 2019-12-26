@@ -7,7 +7,7 @@
 
 namespace ConLayout\Updater\Collector;
 
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 interface CollectorInterface
 {

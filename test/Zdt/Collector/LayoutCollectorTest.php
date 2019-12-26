@@ -10,10 +10,10 @@ use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\Zdt\Collector\LayoutCollector;
 use ConLayout\Zdt\Collector\LayoutCollectorFactory;
 use ConLayoutTest\AbstractTest;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Model\ViewModel;
-use Zend\View\Resolver\AggregateResolver;
+use Laminas\Mvc\MvcEvent;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Resolver\AggregateResolver;
 
 /**
  * @package ConLayout
@@ -29,7 +29,7 @@ class LayoutCollectorTest extends AbstractTest
 
     protected function setUp(): void
     {
-        if (!class_exists('ZendDeveloperTools\Collector\AbstractCollector')) {
+        if (!class_exists('Laminas\DeveloperTools\Collector\AbstractCollector')) {
             $this->markTestSkipped('ZDT not available');
         }
         parent::setUp();

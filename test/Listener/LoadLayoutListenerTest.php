@@ -5,7 +5,7 @@ namespace ConLayoutTest\Listener;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\LoadLayoutListener;
 use ConLayoutTest\AbstractTest;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @package ConLayout
@@ -19,7 +19,7 @@ class LoadLayoutListenerTest extends AbstractTest
 
         $layoutModel = new ViewModel();
 
-        $event = new \Zend\Mvc\MvcEvent();
+        $event = new \Laminas\Mvc\MvcEvent();
         $event->setViewModel($layoutModel);
 
         $this->layout->setRoot($layoutModel);
@@ -42,7 +42,7 @@ class LoadLayoutListenerTest extends AbstractTest
         $layoutModel = new ViewModel();
         $layoutModel->setTerminal(true);
 
-        $event = new \Zend\Mvc\MvcEvent();
+        $event = new \Laminas\Mvc\MvcEvent();
         $event->setViewModel($layoutModel);
 
         $this->assertFalse($this->layout->isLoaded());

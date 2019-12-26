@@ -7,7 +7,7 @@
 
 namespace ConLayout\Block;
 
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Model\ModelInterface;
 
 interface BlockPoolInterface
 {
