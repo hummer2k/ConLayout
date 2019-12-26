@@ -1,23 +1,23 @@
 language: php
 
 php:
-  - 7.1
   - 7.2
   - 7.3
+  - 7.4
 
 matrix:
   include:
-    - php: 7.1
-      env: dependencies=lowest
     - php: 7.2
       env: dependencies=lowest
     - php: 7.3
       env: dependencies=lowest
-    - php: 7.1
-      env: dependencies=highest
+    - php: 7.4
+      env: dependencies=lowest
     - php: 7.2
       env: dependencies=highest
     - php: 7.3
+      env: dependencies=highest
+    - php: 7.4
       env: dependencies=highest
 
 before_script:
@@ -25,7 +25,7 @@ before_script:
   - if [ -z "$dependencies" ]; then composer install --prefer-dist -n; fi;
   - if [ "$dependencies" = "lowest" ]; then composer update --prefer-dist --prefer-lowest -n; fi;
   - if [ "$dependencies" = "highest" ]; then composer update --prefer-dist -n; fi;
-  
+
 script:
   - ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
   - ./vendor/bin/phpcs --standard=PSR2 ./src/ ./test/

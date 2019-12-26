@@ -13,6 +13,7 @@ use ConLayout\View\Helper\Proxy\HeadScriptProxy;
 use ConLayout\View\Helper\Proxy\HeadTitleProxy;
 use ConLayoutTest\AbstractTest;
 use Zend\Config\Config;
+use Zend\Escaper\Escaper;
 use Zend\Filter\FilterPluginManager;
 use Zend\View\Helper\Doctype;
 use Zend\View\Helper\HeadLink;
@@ -134,7 +135,7 @@ class ViewHelperGeneratorTest extends AbstractTest
 
         $generator->generate($this->getLayoutStructure());
 
-        foreach (['/assets/css/test.css', '/assets/css/main.css'] as $expected) {
+        foreach (['&#x2F;assets&#x2F;css&#x2F;test.css', '&#x2F;assets&#x2F;css&#x2F;main.css'] as $expected) {
             $this->assertContains($expected, $headLink->toString());
         }
 
@@ -150,8 +151,8 @@ class ViewHelperGeneratorTest extends AbstractTest
 
         $contains = [
             'charset="utf8"',
-            'name="description" content="My description"',
-            'name="keywords" content="keyword1, keyword2, keyword3"',
+            'name="description" content="My&#x20;description"',
+            'name="keywords" content="keyword1,&#x20;keyword2,&#x20;keyword3"',
         ];
 
         foreach ($contains as $expected) {
