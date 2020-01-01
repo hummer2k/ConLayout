@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -6,7 +7,7 @@
 
 namespace ConLayout\Updater\Collector;
 
-use Zend\Config\Config;
+use Laminas\Config\Config;
 
 interface CollectorInterface
 {

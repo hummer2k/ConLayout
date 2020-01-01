@@ -9,7 +9,7 @@ you can determine whether the block is allowed to be shown.
 <?php
 // Module.php
 /**
- * @param \Zend\EventManager\EventInterface $e
+ * @param \Laminas\EventManager\EventInterface $e
  */
 public function onBootstrap(EventInterface $e)
 {

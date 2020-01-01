@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -7,21 +8,21 @@
 namespace ConLayout\Generator;
 
 use ConLayout\Exception\BadMethodCallException;
+use ConLayout\Filter\FilterInterface;
+use ConLayout\Filter\RawValueAwareInterface;
 use ConLayout\NamedParametersTrait;
 use ConLayout\Sorter\BeforeAfterComparison;
 use ConLayout\Sorter\SorterInterface;
 use Interop\Container\ContainerInterface;
-use Zend\Config\Config;
-use Zend\Stdlib\ArrayUtils;
-use ConLayout\Filter\FilterInterface;
-use ConLayout\Filter\RawValueAwareInterface;
+use Laminas\Config\Config;
+use Laminas\Stdlib\ArrayUtils;
 
 final class ViewHelperGenerator implements GeneratorInterface
 {
     use NamedParametersTrait;
 
-    const NAME          = 'helpers';
-    const INSTRUCTION   = 'helpers';
+    public const NAME          = 'helpers';
+    public const INSTRUCTION   = 'helpers';
 
     /**
      * @var bool
@@ -50,18 +51,33 @@ final class ViewHelperGenerator implements GeneratorInterface
 
     /**
      * ViewHelperGenerator constructor.
-     * @param ContainerInterface $filterManager
      * @param ContainerInterface $viewHelperManager
      * @param array $helperConfig
      */
     public function __construct(
-        ContainerInterface $filterManager,
         ContainerInterface $viewHelperManager,
         array $helperConfig = []
     ) {
-        $this->filterManager = $filterManager;
         $this->viewHelperManager = $viewHelperManager;
         $this->helperConfig = $helperConfig;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getFilterManager()
+    {
+        return $this->filterManager;
+    }
+
+    /**
+     * @param ContainerInterface $filterManager
+     * @return ViewHelperGenerator
+     */
+    public function setFilterManager(ContainerInterface $filterManager)
+    {
+        $this->filterManager = $filterManager;
+        return $this;
     }
 
     /**
@@ -134,7 +150,11 @@ final class ViewHelperGenerator implements GeneratorInterface
      */
     private function filterArgs(array $instruction)
     {
-        if (!isset($instruction['filter']) || !$instruction['filter']) {
+        if (
+            !isset($instruction['filter']) ||
+            !$instruction['filter'] ||
+            null === $this->filterManager
+        ) {
             return $instruction;
         }
         foreach ((array) $instruction['filter'] as $param => $filters) {

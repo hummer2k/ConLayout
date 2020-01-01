@@ -2,8 +2,8 @@
 
 namespace ConLayout\Filter;
 
-use Zend\Filter\FilterInterface;
-use Zend\I18n\Translator\TranslatorInterface;
+use Laminas\Filter\FilterInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * @package ConLayout

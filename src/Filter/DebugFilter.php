@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -6,9 +7,8 @@
 
 namespace ConLayout\Filter;
 
-use Zend\Filter\Exception;
-use Zend\Filter\FilterInterface;
-use Zend\View\Helper\ViewModel;
+use Laminas\Filter\FilterInterface;
+use Laminas\View\Helper\ViewModel;
 
 class DebugFilter implements FilterInterface
 {

@@ -5,10 +5,10 @@ namespace ConLayout\Layout;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
-use Zend\Stdlib\PriorityList;
-use Zend\View\Model\ModelInterface;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
+use Laminas\Stdlib\PriorityList;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout
@@ -124,8 +124,12 @@ class Layout implements
     {
         $layoutStructure = $this->updater->getLayoutStructure();
         foreach ($this->generators as $name => $generator) {
-            if (!$this->isGeneratorLoaded($name)
-                && (empty($generators) || isset($generators[$name]))
+            if (
+                !$this->isGeneratorLoaded($name) &&
+                (
+                    empty($generators) ||
+                    isset($generators[$name])
+                )
             ) {
                 $generator->generate($layoutStructure);
                 $this->loadedGenerators[$name] = true;
@@ -151,7 +155,8 @@ class Layout implements
             $this->blockPool->sort();
             $blocks = $this->blockPool->get();
             foreach ($blocks as $blockId => $block) {
-                if ($this->isAllowed($blockId, $block) &&
+                if (
+                    $this->isAllowed($blockId, $block) &&
                     $blockId !== self::BLOCK_ID_ROOT
                 ) {
                     list($parent, $captureTo) = $this->getCaptureTo($block);

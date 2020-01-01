@@ -4,9 +4,9 @@ namespace ConLayout;
 
 use ConLayout\Block\BlockInterface;
 use InvalidArgumentException;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\View\Model\ModelInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout
@@ -26,7 +26,7 @@ class BlockManager extends AbstractPluginManager
             return;
         }
         throw new InvalidServiceException(sprintf(
-            'Plugin of type %s is invalid; must implement %s\Block\BlockInterface or Zend\View\Model\ModelInterface',
+            'Plugin of type %s is invalid; must implement %s\Block\BlockInterface or Laminas\View\Model\ModelInterface',
             (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
             __NAMESPACE__
         ));

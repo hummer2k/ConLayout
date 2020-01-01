@@ -1,7 +1,8 @@
 <?php
+
 namespace ConLayout\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 /**
  * @package ConLayout

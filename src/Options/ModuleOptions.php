@@ -9,7 +9,7 @@ use ConLayout\Listener\LayoutUpdateListener;
 use ConLayout\Listener\LoadLayoutListener;
 use ConLayout\Listener\PrepareActionViewModelListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Stdlib\AbstractOptions;
 
 /**
  * @package ConLayout
@@ -154,7 +154,7 @@ class ModuleOptions extends AbstractOptions
      */
     public function setPreferRouteMatchController($preferRouteMatchController)
     {
-        $this->preferRouteMatchController = (boolean) $preferRouteMatchController;
+        $this->preferRouteMatchController = (bool) $preferRouteMatchController;
 
         return $this;
     }

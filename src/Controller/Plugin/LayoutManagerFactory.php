@@ -1,12 +1,12 @@
 <?php
+
 namespace ConLayout\Controller\Plugin;
 
+use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use ConLayout\Block\BlockPoolInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @package ConLayout
@@ -14,17 +14,6 @@ use ConLayout\Block\BlockPoolInterface;
  */
 class LayoutManagerFactory implements FactoryInterface
 {
-    /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return LayoutManager
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $container = $serviceLocator->getServiceLocator();
-        return $this($container, LayoutManager::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

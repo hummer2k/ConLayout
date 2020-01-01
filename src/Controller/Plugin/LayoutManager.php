@@ -1,14 +1,16 @@
 <?php
+
 namespace ConLayout\Controller\Plugin;
 
+use ConLayout\Block\BlockInterface;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Handle\Handle;
 use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Model\ModelInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout

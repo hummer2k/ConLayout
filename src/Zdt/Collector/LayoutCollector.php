@@ -1,20 +1,21 @@
 <?php
+
 namespace ConLayout\Zdt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Resolver\ResolverInterface;
-use ZendDeveloperTools\Collector\AbstractCollector;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\Resolver\ResolverInterface;
+use Laminas\DeveloperTools\Collector\AbstractCollector;
 
 /**
- * Collector for ZendDeveloperToolbar
+ * Collector for LaminasDeveloperToolbar
  *
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutCollector extends AbstractCollector
 {
-    const NAME = 'con-layout';
+    public const NAME = 'con-layout';
 
     /**
      *

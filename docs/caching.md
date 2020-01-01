@@ -4,7 +4,7 @@
 
 Listen to the `UpdateEvent::EVENT_COLLECT` and `UpdateEvent::EVENT_COLLECT_POST` events:
 
-### Example with Zend\Cache:
+### Example with Laminas\Cache:
 
 ````php
 <?php
@@ -12,11 +12,11 @@ Listen to the `UpdateEvent::EVENT_COLLECT` and `UpdateEvent::EVENT_COLLECT_POST`
 namespace Application\Listener;
 
 use ConLayout\Updater\Event\UpdateEvent;
-use Zend\Cache\Storage\StorageInterface;
-use Zend\Config\Config;
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\EventManager\ListenerAggregateTrait;
+use Laminas\Cache\Storage\StorageInterface;
+use Laminas\Config\Config;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\ListenerAggregateTrait;
 
 class LayoutStructureCacheListener implements ListenerAggregateInterface
 {

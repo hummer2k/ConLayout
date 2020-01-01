@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -7,12 +8,12 @@
 namespace ConLayout\Block;
 
 use ConLayout\Layout\LayoutInterface;
-use Zend\View\Model\ClearableModelInterface;
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Model\ClearableModelInterface;
+use Laminas\View\Model\ModelInterface;
 
 final class BlockPool implements BlockPoolInterface
 {
-    const ANONYMOUS_ID_PATTERN = 'anonymous.%s.%s';
+    public const ANONYMOUS_ID_PATTERN = 'anonymous.%s.%s';
 
     /**
      * suffix for anonymous block names
