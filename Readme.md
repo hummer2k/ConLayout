@@ -8,7 +8,7 @@
 
 Install via composer:
 
-`$ composer require hummer2k/conlayout:^5.0`
+`$ composer require hummer2k/conlayout:^4.0`
 
 Copy `vendor/hummer2k/conlayout/config/con-layout.global.php.dist` to `config/autoload/con-layout.global.php`
 
