@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -8,21 +9,10 @@ namespace ConLayout\Filter;
 
 use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class CacheBusterFilterFactory implements FactoryInterface
 {
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $container = $serviceLocator->getServiceLocator();
-        return $this($container, CacheBusterFilter::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

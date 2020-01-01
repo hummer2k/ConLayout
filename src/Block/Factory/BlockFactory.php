@@ -5,14 +5,13 @@ namespace ConLayout\Block\Factory;
 use ConLayout\Block\BlockInterface;
 use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Exception\InvalidBlockException;
-use ConLayout\Layout\LayoutInterface;
 use ConLayout\NamedParametersTrait;
 use Interop\Container\ContainerInterface;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
-use Zend\Stdlib\ArrayUtils;
-use Zend\View\Model\ModelInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\View\Model\ModelInterface;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @package ConLayout
@@ -98,7 +97,8 @@ final class BlockFactory implements
     private function prepareOptions(array $specs)
     {
         foreach ($specs as $key => $value) {
-            if (!isset($this->blockDefaults[$key])
+            if (
+                !isset($this->blockDefaults[$key])
                 && !isset($specs['options'][$key])
             ) {
                 $specs['options'][$key] = $value;
@@ -143,7 +143,6 @@ final class BlockFactory implements
 
         if ($block instanceof BlockInterface) {
             $block->setView($this->container->get('ViewRenderer'));
-            $block->setRequest($this->container->get('Request'));
         }
 
         $results = $this->getEventManager()->trigger(

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -7,14 +8,14 @@
 namespace ConLayout\Updater\Collector;
 
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Config\Config;
-use Zend\Stdlib\Exception\RuntimeException;
-use Zend\Stdlib\Glob;
-use Zend\Config\Factory as ConfigFactory;
+use Laminas\Config\Config;
+use Laminas\Config\Factory as ConfigFactory;
+use Laminas\Stdlib\Exception\RuntimeException;
+use Laminas\Stdlib\Glob;
 
 class FilesystemCollector implements CollectorInterface
 {
-    const NAME = 'filesystem';
+    public const NAME = 'filesystem';
 
     /**
      *

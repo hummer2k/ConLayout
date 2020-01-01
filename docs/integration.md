@@ -8,7 +8,7 @@
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 // initialize zf2 application
-$application = Zend\Mvc\Application::init(require 'config/application.config.php');
+$application = Laminas\Mvc\Application::init(require 'config/application.config.php');
 // retrieve service manager
 $sm = $application->getServiceManager();
 
@@ -16,11 +16,11 @@ $sm = $application->getServiceManager();
 $layout = $sm->get('Layout');
 $layout->load();
 
-/* @var $view \Zend\View\View */
+/* @var $view \Laminas\View\View */
 $view = $sm->get('View');
 
-/* @var $renderer Zend\View\Renderer\PhpRenderer */
-$renderer = $sm->get(Zend\View\Renderer\PhpRenderer::class);
+/* @var $renderer Laminas\View\Renderer\PhpRenderer */
+$renderer = $sm->get(Laminas\View\Renderer\PhpRenderer::class);
 ?>
 <!doctype html>
 <html>

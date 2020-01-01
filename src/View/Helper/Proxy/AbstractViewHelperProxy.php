@@ -2,8 +2,8 @@
 
 namespace ConLayout\View\Helper\Proxy;
 
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\HelperInterface;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\HelperInterface;
 
 /**
  * @package ConLayout

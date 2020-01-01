@@ -1,0 +1,100 @@
+<?php
+/* @var $collector LayoutCollector */
+use ConLayout\Zdt\Collector\LayoutCollector;
+?>
+<div class="zdt-toolbar-entry zdt-conlayout-entry">
+    <div class="zdt-toolbar-preview">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABXUlEQVRIS2NkoDFgpLH5DGALdh04HMjEyDyDkYlRjBoW/vv//zXDn/+prk7WG8EW7Dl47CXz1FYxRkYmhr85VQydH9YxMP1nZCgVDGTQfpgPVMHEcFW+nyS7///7/8rF3kocbMHew8f/M09pYwCayfAvu4qh+/16BgZGoAUCAUALCoHiTAzX5HpJsgCk2NnWEmgK1AKSdROhAW7Bmw8f/xOhnmQlIgL8EB/QzYJbd+4xfP/+A+xSLi5OBlVlRTAbWZyQN5D1Yfjg4uVrKPr1dbXA/Nt37zN8+/adkNlgeW5uLgYVJQUwm2gLiDIZi6LBYwHN4wA9bggFGSzuiA6iUQvgORlXPhg6QYScY5FzJMU5+eWbt/+ZWVgIpT6S5P/8+cMgISIMKU1PXbj8UU5Gio+FSpaADH/0+NkHM0NdQbAFu/cd9WdkZpxFrTr5/99/L/8y/Et1d7DdTPNWBQAu59kZuoTsCwAAAABJRU5ErkJggg==">
+        <span class="zdt-toolbar-info">Layout</span>
+    </div>
+    <div class="zdt-toolbar-detail zdt-toolbar-detail-overflow" id="zdt-conlayout-content">
+        <span class="zdt-toolbar-info">
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading">
+                Merged layout instructions
+            </span>
+            <span class="zdt-detail-pre"><?php var_export($collector->getLayoutStructure()); ?></span>
+        </span>
+        <hr>
+        <span class="zdt-toolbar-info">
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading">
+                Loaded blocks
+            </span>
+            <?php $loadedBlocks = $collector->getBlocks() ?>
+            <?php if (!count($loadedBlocks)): ?>
+            <span class="zdt-detail-value">
+                N/A
+            </span>
+            <span class="clear"></span>
+            <?php else: ?>
+            <table class="table table-sm table-condensed">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Capture to</th>
+                        <th>Template</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($loadedBlocks as $blockId => $block): ?>
+                    <tr>
+                        <td>
+                            <?= $blockId ?>
+                        </td>
+                        <td>
+                            <?= $block['capture_to'] ?>
+                        </td>
+                        <td>
+                            <?= $block['template'] ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+        </span>
+        <hr>
+        <div class="zdt-toolbar-info">
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading">Handles</span>
+             <table class="table table-sm table-condensed">
+                <thead>
+                    <tr>
+                        <th>Handle name</th>
+                        <th>Priority</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach($collector->getHandles() as $handle): ?>
+                   <tr>
+                       <td><?= $handle->getName() ?></td>
+                       <td><?= $handle->getPriority() ?></td>
+                   </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <span class="zdt-toolbar-info">
+            <span class="zdt-detail-label">Current Area</span>
+            <span class="zdt-detail-value"><?= $collector->getCurrentArea() ?></span>
+        </span>
+    </div>
+</div>
+<script>
+    if (typeof window.jQuery !== 'undefined') {
+        (function($) {
+            $('.zdt-conlayout-entry').on('mouseenter', function() {
+                var $detail = $(this).find('.zdt-toolbar-detail'),
+                    offset  = $(this).offset().left,
+                    width   = $detail.outerWidth(),
+                    offsetWidth = offset + width,
+                    windowWidth = $(window).width();
+
+                if (offsetWidth > windowWidth) {
+                    $detail.css('right', 0);
+                } else {
+                    $detail.css('right', 'auto');
+                }
+            });
+        })(jQuery);
+    }
+</script>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -9,19 +10,10 @@ namespace ConLayout\Generator;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class BlocksGeneratorFactory implements FactoryInterface
 {
-    /**
-     * @inheritDoc
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, BlocksGenerator::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

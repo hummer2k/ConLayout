@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -8,19 +9,10 @@ namespace ConLayout\Updater\Collector;
 
 use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class FilesystemCollectorFactory implements FactoryInterface
 {
-    /**
-     * @inheritDoc
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, FilesystemCollector::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

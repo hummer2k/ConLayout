@@ -3,7 +3,7 @@
 namespace ConLayout\Layout;
 
 use ConLayout\Generator\GeneratorInterface;
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout
@@ -14,17 +14,17 @@ interface LayoutInterface
     /**
      * block id of root view model
      */
-    const BLOCK_ID_ROOT = 'root';
+    public const BLOCK_ID_ROOT = 'root';
 
     /**
      * block id of view model returned by controller
      */
-    const BLOCK_ID_ACTION_RESULT = 'action.result';
+    public const BLOCK_ID_ACTION_RESULT = 'action.result';
 
     /**
      * delimiter block_id::cpature_to
      */
-    const CAPTURE_TO_DELIMITER = '::';
+    public const CAPTURE_TO_DELIMITER = '::';
 
     /**
      * retrieve single block by block id

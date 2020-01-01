@@ -1,11 +1,11 @@
 <?php
+
 namespace ConLayout\Listener;
 
-use ConLayout\Listener\BodyClassListener;
 use ConLayout\View\Helper\BodyClass;
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\AbstractListenerAggregate;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Mvc\MvcEvent;
 
 /**
  * @package ConLayout
