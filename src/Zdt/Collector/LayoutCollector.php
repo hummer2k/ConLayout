@@ -9,7 +9,7 @@ use Laminas\View\Resolver\ResolverInterface;
 use Laminas\DeveloperTools\Collector\AbstractCollector;
 
 /**
- * Collector for ZendDeveloperToolbar
+ * Collector for LaminasDeveloperToolbar
  *
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */

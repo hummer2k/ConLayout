@@ -1,7 +1,6 @@
 <?php
 /* @var $collector LayoutCollector */
 use ConLayout\Zdt\Collector\LayoutCollector;
-use Zend\Debug\Debug;
 ?>
 <div class="zdt-toolbar-entry zdt-conlayout-entry">
     <div class="zdt-toolbar-preview">
@@ -13,7 +12,7 @@ use Zend\Debug\Debug;
             <span class="zdt-toolbar-info zdt-toolbar-info-heading">
                 Merged layout instructions
             </span>
-            <span class="zdt-detail-pre"><?php Debug::dump($collector->getLayoutStructure()); ?></span>
+            <span class="zdt-detail-pre"><?php var_export($collector->getLayoutStructure()); ?></span>
         </span>
         <hr>
         <span class="zdt-toolbar-info">
@@ -54,7 +53,7 @@ use Zend\Debug\Debug;
             <?php endif; ?>
         </span>
         <hr>
-        <span class="zdt-toolbar-info">
+        <div class="zdt-toolbar-info">
             <span class="zdt-toolbar-info zdt-toolbar-info-heading">Handles</span>
              <table class="table table-sm table-condensed">
                 <thead>
@@ -72,7 +71,7 @@ use Zend\Debug\Debug;
                 <?php endforeach; ?>
                 </tbody>
             </table>
-        </span>
+        </div>
         <hr>
         <span class="zdt-toolbar-info">
             <span class="zdt-detail-label">Current Area</span>

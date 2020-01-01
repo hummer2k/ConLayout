@@ -2,6 +2,7 @@
 
 namespace ConLayout\Controller\Plugin;
 
+use ConLayout\Block\BlockInterface;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Handle\Handle;

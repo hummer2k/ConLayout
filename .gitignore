@@ -3,3 +3,4 @@
 /public/.sass-cache/
 /tests/TestConfig.php
 /vendor/
+/.phpunit.result.cache
