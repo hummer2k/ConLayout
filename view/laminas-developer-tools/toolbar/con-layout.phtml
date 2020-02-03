@@ -79,22 +79,3 @@ use ConLayout\Ldt\Collector\LayoutCollector;
         </span>
     </div>
 </div>
-<script>
-    if (typeof window.jQuery !== 'undefined') {
-        (function($) {
-            $('.laminas-conlayout-entry').on('mouseenter', function() {
-                var $detail = $(this).find('.laminas-toolbar-detail'),
-                    offset  = $(this).offset().left,
-                    width   = $detail.outerWidth(),
-                    offsetWidth = offset + width,
-                    windowWidth = $(window).width();
-
-                if (offsetWidth > windowWidth) {
-                    $detail.css('right', 0);
-                } else {
-                    $detail.css('right', 'auto');
-                }
-            });
-        })(jQuery);
-    }
-</script>
