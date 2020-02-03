@@ -5,7 +5,7 @@
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 
-namespace ConLayout\Zdt\Collector;
+namespace ConLayout\Ldt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;

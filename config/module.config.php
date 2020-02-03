@@ -1,7 +1,7 @@
 <?php
 
 use ConLayout\Controller\Plugin\LayoutManagerFactory;
-use ConLayout\Zdt\Collector\LayoutCollector;
+use ConLayout\Ldt\Collector\LayoutCollector;
 use ConLayout\Block\Container;
 
 return [

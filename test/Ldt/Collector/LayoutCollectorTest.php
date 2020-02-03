@@ -1,14 +1,14 @@
 <?php
 
-namespace ConLayoutTest\Zdt\Collector;
+namespace ConLayoutTest\Ldt\Collector;
 
 use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayout\Zdt\Collector\LayoutCollector;
-use ConLayout\Zdt\Collector\LayoutCollectorFactory;
+use ConLayout\Ldt\Collector\LayoutCollector;
+use ConLayout\Ldt\Collector\LayoutCollectorFactory;
 use ConLayoutTest\AbstractTest;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceManager;

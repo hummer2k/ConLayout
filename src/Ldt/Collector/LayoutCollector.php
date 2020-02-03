@@ -1,6 +1,6 @@
 <?php
 
-namespace ConLayout\Zdt\Collector;
+namespace ConLayout\Ldt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
