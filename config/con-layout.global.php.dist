@@ -146,7 +146,8 @@ return [
                 'class' => FilesystemCollector::class,
                 'priority' => 10
             ]
-        ]
+        ],
+        'body_class_prefix' => '',
         /**
          * enable/disable particular listeners
          */

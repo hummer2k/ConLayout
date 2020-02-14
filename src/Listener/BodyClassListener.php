@@ -18,14 +18,21 @@ class BodyClassListener extends AbstractListenerAggregate
      * @var BodyClass
      */
     protected $bodyClassHelper;
-    
+
+    /**
+     * @var string
+     */
+    private $prefix;
+
     /**
      *
      * @param BodyClass $bodyClassHelper
+     * @param string $prefix
      */
-    public function __construct(BodyClass $bodyClassHelper)
+    public function __construct(BodyClass $bodyClassHelper, string $prefix = '')
     {
         $this->bodyClassHelper = $bodyClassHelper;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -47,7 +54,7 @@ class BodyClassListener extends AbstractListenerAggregate
     {
         $helper = $this->bodyClassHelper;
         $routeMatchName = $e->getRouteMatch()->getMatchedRouteName();
-        $className = preg_replace('#[^a-z0-9-]+#i', '-', $routeMatchName);
+        $className = $this->prefix . preg_replace('#[^a-z0-9-]+#i', '-', $routeMatchName);
         $helper(strtolower($className));
         return $this;
     }

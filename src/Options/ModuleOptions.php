@@ -84,6 +84,11 @@ class ModuleOptions extends AbstractOptions
     protected $collectors = [];
 
     /**
+     * @var string
+     */
+    protected $bodyClassPrefix = '';
+
+    /**
      * Listeners to attach to EVM
      *
      * @var array
@@ -357,5 +362,21 @@ class ModuleOptions extends AbstractOptions
     {
         $this->listeners = $listeners;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBodyClassPrefix(): string
+    {
+        return $this->bodyClassPrefix;
+    }
+
+    /**
+     * @param string $bodyClassPrefix
+     */
+    public function setBodyClassPrefix(string $bodyClassPrefix): void
+    {
+        $this->bodyClassPrefix = $bodyClassPrefix;
     }
 }
