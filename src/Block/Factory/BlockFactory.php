@@ -134,7 +134,7 @@ final class BlockFactory implements
                 }
             }
         }
-        if (!$block->getTemplate() && $template = $this->getOption('template', $specs)) {
+        if ($template = $this->getOption('template', $specs)) {
             $block->setTemplate($template);
         }
         $block->setCaptureTo($this->getOption('capture_to', $specs));
