@@ -1,6 +1,8 @@
 <?php
-/* @var $collector LayoutCollector */
-use ConLayout\Ldt\Collector\LayoutCollector;
+/** @var Laminas\View\Renderer\PhpRenderer $this */
+/** @var ConLayout\Ldt\Collector\LayoutCollector $collector */
+$dump = function_exists('dump') ? 'dump': 'var_export';
+$collectedFiles = $collector->getCollectedFiles();
 ?>
 <div class="laminas-toolbar-entry laminas-conlayout-entry">
     <div class="laminas-toolbar-preview">
@@ -8,22 +10,19 @@ use ConLayout\Ldt\Collector\LayoutCollector;
         <span class="laminas-toolbar-info">Layout</span>
     </div>
     <div class="laminas-toolbar-detail laminas-toolbar-detail-overflow" id="laminas-conlayout-content">
+        <div class="laminas-toolbar-info">
+            <span class="laminas-detail-label">Current Area</span>
+            <span class="laminas-detail-value"><?= $this->escapeHtml($collector->getCurrentArea()) ?></span>
+        </div>
         <span class="laminas-toolbar-info">
-            <span class="laminas-toolbar-info laminas-toolbar-info-heading">
-                Merged layout instructions
-            </span>
-            <span class="laminas-detail-pre"><?php var_export($collector->getLayoutStructure()); ?></span>
+            <span class="laminas-toolbar-info laminas-toolbar-info-heading">Merged layout instructions</span>
+            <span class="laminas-detail-pre"><?php ($dump)($collector->getLayoutStructure()); ?></span>
         </span>
-        <hr>
         <span class="laminas-toolbar-info">
-            <span class="laminas-toolbar-info laminas-toolbar-info-heading">
-                Loaded blocks
-            </span>
+            <span class="laminas-toolbar-info laminas-toolbar-info-heading">Loaded blocks</span>
             <?php $loadedBlocks = $collector->getBlocks() ?>
             <?php if (!count($loadedBlocks)): ?>
-            <span class="laminas-detail-value">
-                N/A
-            </span>
+            <span class="laminas-detail-value">N/A</span>
             <span class="clear"></span>
             <?php else: ?>
             <table class="table table-sm table-condensed table-dark">
@@ -38,13 +37,19 @@ use ConLayout\Ldt\Collector\LayoutCollector;
                 <?php foreach ($loadedBlocks as $blockId => $block): ?>
                     <tr>
                         <td>
-                            <?= $blockId ?>
+                            <?= $this->escapeHtml($blockId) ?>
                         </td>
                         <td>
-                            <?= $block['capture_to'] ?>
+                            <?= $this->escapeHtml($block['capture_to']) ?>
                         </td>
                         <td>
-                            <?= $block['template'] ?>
+                            <?php if ($remoteCall = $collector->getRemoteCall()): ?>
+                                <a href="<?= $this->escapeHtml($collector->getRemoteCallUrl($block['template'])) ?>">
+                                    <?= $this->escapeHtml($block['template']) ?>
+                                </a>
+                            <?php else: ?>
+                                <?= $this->escapeHtml($block['template']) ?>
+                            <?php endif ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -52,10 +57,9 @@ use ConLayout\Ldt\Collector\LayoutCollector;
             </table>
             <?php endif; ?>
         </span>
-        <hr>
         <div class="laminas-toolbar-info">
             <span class="laminas-toolbar-info laminas-toolbar-info-heading">Handles</span>
-             <table class="table table-sm table-condensed table-dark">
+            <table class="table table-sm table-condensed table-dark">
                 <thead>
                     <tr>
                         <th>Handle name</th>
@@ -65,17 +69,45 @@ use ConLayout\Ldt\Collector\LayoutCollector;
                 <tbody>
                 <?php foreach($collector->getHandles() as $handle): ?>
                    <tr>
-                       <td><?= $handle->getName() ?></td>
-                       <td><?= $handle->getPriority() ?></td>
+                       <td><?= $this->escapeHtml($handle->getName()) ?></td>
+                       <td><?= (int) $handle->getPriority() ?></td>
                    </tr>
                 <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-        <hr>
-        <span class="laminas-toolbar-info">
-            <span class="laminas-detail-label">Current Area</span>
-            <span class="laminas-detail-value"><?= $collector->getCurrentArea() ?></span>
-        </span>
+        <div class="laminas-toolbar-info">
+            <table class="table table-sm table-dark">
+                <thead>
+                    <tr>
+                        <th>Handle</th>
+                        <th>Collected files</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($collectedFiles as $handle => $files): ?>
+                    <tr>
+                        <td><?= $this->escapeHtml($handle) ?></td>
+                        <td>
+                            <ol>
+                                <?php foreach ($files as $file): ?>
+                                <li>
+                                    <?php if ($remoteCall = $collector->getRemoteCall()): ?>
+                                        <a href="<?= $this->escapeHtml($collector->getRemoteCallUrl($file)) ?>">
+                                            <?= $this->escapeHtml($file) ?>
+                                        </a>
+                                    <?php else: ?>
+                                        <?= $this->escapeHtml($file) ?>
+                                    <?php endif ?>
+                                </li>
+                                <?php endforeach; ?>
+                            </ol>
+
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

@@ -3,6 +3,8 @@
 namespace ConLayout\Ldt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
+use ConLayout\Options\ModuleOptions;
+use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Mvc\MvcEvent;
 use Laminas\View\Resolver\ResolverInterface;
@@ -36,19 +38,35 @@ class LayoutCollector extends AbstractCollector
     protected $viewResolver;
 
     /**
+     * @var ModuleOptions
+     */
+    private $moduleOptions;
+
+    /**
+     * @var FilesystemCollector
+     */
+    private $filesystemCollector;
+
+    /**
      *
      * @param LayoutInterface $layout
      * @param LayoutUpdaterInterface $updater
      * @param ResolverInterface $viewResolver
+     * @param ModuleOptions $moduleOptions
+     * @param FilesystemCollector $filesystemCollector
      */
     public function __construct(
         LayoutInterface $layout,
         LayoutUpdaterInterface $updater,
-        ResolverInterface $viewResolver
+        ResolverInterface $viewResolver,
+        ModuleOptions $moduleOptions,
+        FilesystemCollector $filesystemCollector
     ) {
         $this->layout  = $layout;
         $this->updater = $updater;
         $this->viewResolver = $viewResolver;
+        $this->moduleOptions = $moduleOptions;
+        $this->filesystemCollector = $filesystemCollector;
     }
 
     /**
@@ -92,15 +110,15 @@ class LayoutCollector extends AbstractCollector
                 'class' => get_class($block)
             ];
         }
-        $data = [
+        $this->data = [
             'handles' => $this->updater->getHandles(true),
+            'collected_files' => $this->resolveCollectedFiles($this->filesystemCollector->getCollectedFiles()),
             'layout_structure' => $this->updater->getLayoutStructure()->toArray(),
             'blocks' => $blocks,
             'layout_template' => $layout->getTemplate(),
-            'current_area' => $this->updater->getArea()
+            'current_area' => $this->updater->getArea(),
+            'remote_call' => $this->moduleOptions->getRemoteCall()
         ];
-
-        $this->data = $data;
         return $this;
     }
 
@@ -110,14 +128,32 @@ class LayoutCollector extends AbstractCollector
      * @param string $template
      * @return string
      */
-    private function resolveTemplate($template)
+    private function resolveTemplate(string $template): string
     {
-        $template = str_replace(
-            getcwd(),
-            '',
-            $this->viewResolver->resolve($template)
-        );
-        return $template;
+        return $this->getFilepath($this->viewResolver->resolve($template));
+    }
+
+    /**
+     * @param array $collectedFiles
+     * @return array
+     */
+    private function resolveCollectedFiles(array $collectedFiles): array
+    {
+        foreach ($collectedFiles as &$files) {
+            foreach ($files as &$file) {
+                $file = $this->getFilepath(realpath($file));
+            }
+        }
+        return $collectedFiles;
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    private function getFilepath(string $file): string
+    {
+        return str_replace(getcwd(), '', $file);
     }
 
     /**
@@ -163,5 +199,33 @@ class LayoutCollector extends AbstractCollector
     public function getBlocks()
     {
         return $this->data['blocks'];
+    }
+
+    /**
+     * @return string|false
+     */
+    public function getRemoteCall()
+    {
+        return $this->data['remote_call'];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollectedFiles()
+    {
+        return $this->data['collected_files'];
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    public function getRemoteCallUrl(string $file): string
+    {
+        if ($remoteCall = $this->getRemoteCall()) {
+            return 'http://' . $remoteCall . '?message=' . $file;
+        }
+        return $file;
     }
 }

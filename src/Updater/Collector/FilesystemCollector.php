@@ -7,6 +7,7 @@
 
 namespace ConLayout\Updater\Collector;
 
+use ConLayout\Ldt\Collector\LayoutCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Config\Config;
 use Laminas\Config\Factory as ConfigFactory;
@@ -29,6 +30,11 @@ class FilesystemCollector implements CollectorInterface
      * @var array
      */
     private $extensions = [];
+
+    /**
+     * @var array
+     */
+    private $collectedFiles = [];
 
     /**
      *
@@ -61,6 +67,7 @@ class FilesystemCollector implements CollectorInterface
             foreach ($configFiles as $configFile) {
                 $config = ConfigFactory::fromFile($configFile, true);
                 $tempStructure->merge($config);
+                $this->collectedFiles[$handle][] = $configFile;
             }
         }
         return $tempStructure;
@@ -94,5 +101,13 @@ class FilesystemCollector implements CollectorInterface
         }
         array_unique($globPaths);
         return $globPaths;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCollectedFiles(): array
+    {
+        return $this->collectedFiles;
     }
 }
