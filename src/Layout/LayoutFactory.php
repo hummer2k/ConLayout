@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -7,25 +8,13 @@
 namespace ConLayout\Layout;
 
 use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Interop\Container\ContainerInterface;
-use Zend\Mvc\View\Http\ViewManager;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use ConLayout\Options\ModuleOptions;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class LayoutFactory implements FactoryInterface
 {
-    /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return Layout
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, Layout::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

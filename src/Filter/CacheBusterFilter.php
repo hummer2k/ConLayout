@@ -2,7 +2,7 @@
 
 namespace ConLayout\Filter;
 
-use Zend\Filter\FilterInterface;
+use Laminas\Filter\FilterInterface;
 
 /**
  * @package ConLayout

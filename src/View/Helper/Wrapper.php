@@ -2,7 +2,7 @@
 
 namespace ConLayout\View\Helper;
 
-use Zend\View\Helper\AbstractHtmlElement;
+use Laminas\View\Helper\AbstractHtmlElement;
 
 /**
  * @package ConLayout
@@ -10,7 +10,7 @@ use Zend\View\Helper\AbstractHtmlElement;
  */
 class Wrapper extends AbstractHtmlElement
 {
-    const DEFAULT_TAG = 'div';
+    public const DEFAULT_TAG = 'div';
 
     /**
      *

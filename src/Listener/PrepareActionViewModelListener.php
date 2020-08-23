@@ -4,11 +4,11 @@ namespace ConLayout\Listener;
 
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Layout\LayoutInterface;
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\EventManager\ListenerAggregateTrait;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Model\ModelInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\ListenerAggregateTrait;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * Listener to prepare action result view model
@@ -41,11 +41,13 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
      */
     public function attach(EventManagerInterface $events, $priority = -300)
     {
-        $this->listeners[] = $events->attach(
-            [MvcEvent::EVENT_DISPATCH, MvcEvent::EVENT_DISPATCH_ERROR],
-            [$this, 'prepareActionViewModel'],
-            $priority
-        );
+        foreach ([MvcEvent::EVENT_DISPATCH, MvcEvent::EVENT_DISPATCH_ERROR] as $eventName) {
+            $this->listeners[] = $events->attach(
+                $eventName,
+                [$this, 'prepareActionViewModel'],
+                $priority
+            );
+        }
     }
 
     /**

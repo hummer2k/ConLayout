@@ -1,10 +1,11 @@
 <?php
+
 namespace ConLayout\Listener\Factory;
 
 use ConLayout\Listener\BodyClassListener;
+use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @package ConLayout
@@ -12,16 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class BodyClassListenerFactory implements FactoryInterface
 {
-    /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return BodyClassListener
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, BodyClassListener::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName
@@ -31,8 +22,11 @@ class BodyClassListenerFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $bodyClassHelper = $container->get('ViewHelperManager')->get('bodyClass');
+        /** @var ModuleOptions $moduleOptions */
+        $moduleOptions   = $container->get(ModuleOptions::class);
         return new BodyClassListener(
-            $bodyClassHelper
+            $bodyClassHelper,
+            $moduleOptions->getBodyClassPrefix()
         );
     }
 }

@@ -3,10 +3,8 @@
 namespace ConLayout\Updater;
 
 use ConLayout\Options\ModuleOptions;
-use ConLayout\Updater\Collector\FilesystemCollector;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @package ConLayout
@@ -14,15 +12,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class LayoutUpdaterFactory implements FactoryInterface
 {
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, LayoutUpdater::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

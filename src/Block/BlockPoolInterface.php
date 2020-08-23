@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
@@ -6,7 +7,7 @@
 
 namespace ConLayout\Block;
 
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Model\ModelInterface;
 
 interface BlockPoolInterface
 {

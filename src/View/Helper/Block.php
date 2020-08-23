@@ -2,12 +2,10 @@
 
 namespace ConLayout\View\Helper;
 
-use ConLayout\Block\BlockPool;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Layout\LayoutInterface;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Model\ModelInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout

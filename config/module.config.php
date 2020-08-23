@@ -1,7 +1,7 @@
 <?php
 
 use ConLayout\Controller\Plugin\LayoutManagerFactory;
-use ConLayout\Zdt\Collector\LayoutCollector;
+use ConLayout\Ldt\Collector\LayoutCollector;
 use ConLayout\Block\Container;
 
 return [
@@ -10,7 +10,7 @@ return [
             __DIR__ . '/../view',
         ],
         'template_map' => [
-            'zend-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/zend-developer-tools/toolbar/con-layout.phtml',
+            'laminas-developer-tools/toolbar/con-layout' => __DIR__ . '/../view/laminas-developer-tools/toolbar/con-layout.phtml',
         ],
         'layout' => ''
     ],
@@ -19,7 +19,7 @@ return [
             'layoutManager' => LayoutManagerFactory::class
         ]
     ],
-    'zenddevelopertools' => [
+    'laminas-developer-tools' => [
         'profiler' => [
             'collectors' => [
                 'con-layout' => LayoutCollector::class,
@@ -27,7 +27,7 @@ return [
         ],
         'toolbar' => [
             'entries' => [
-                'con-layout' => 'zend-developer-tools/toolbar/con-layout',
+                'con-layout' => 'laminas-developer-tools/toolbar/con-layout',
             ],
         ],
     ],

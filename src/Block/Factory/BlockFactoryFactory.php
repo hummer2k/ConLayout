@@ -5,8 +5,7 @@ namespace ConLayout\Block\Factory;
 use ConLayout\BlockManager;
 use ConLayout\Options\ModuleOptions;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @package ConLayout
@@ -14,11 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class BlockFactoryFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, BlockFactory::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

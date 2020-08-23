@@ -1,8 +1,9 @@
 <?php
+
 namespace ConLayout\Filter;
 
-use Zend\Filter\FilterInterface;
-use Zend\View\Helper\BasePath as BasePathHelper;
+use Laminas\Filter\FilterInterface;
+use Laminas\View\Helper\BasePath as BasePathHelper;
 
 /**
  * @package ConLayout

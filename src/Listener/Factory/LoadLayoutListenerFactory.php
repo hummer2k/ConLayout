@@ -5,8 +5,7 @@ namespace ConLayout\Listener\Factory;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\LoadLayoutListener;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @package ConLayout
@@ -14,16 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class LoadLayoutListenerFactory implements FactoryInterface
 {
-    /**
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return LoadLayoutListener
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, LoadLayoutListener::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

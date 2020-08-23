@@ -3,7 +3,7 @@
 namespace ConLayout\Block\Factory;
 
 use ConLayout\Block\BlockInterface;
-use Zend\View\Model\ModelInterface;
+use Laminas\View\Model\ModelInterface;
 
 /**
  * @package ConLayout

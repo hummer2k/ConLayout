@@ -2,8 +2,6 @@
 
 namespace ConLayout\View\Helper\Proxy;
 
-use ConLayout\View\Helper\Proxy\AbstractViewHelperProxy;
-
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>

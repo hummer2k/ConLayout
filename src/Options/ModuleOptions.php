@@ -9,7 +9,7 @@ use ConLayout\Listener\LayoutUpdateListener;
 use ConLayout\Listener\LoadLayoutListener;
 use ConLayout\Listener\PrepareActionViewModelListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Stdlib\AbstractOptions;
 
 /**
  * @package ConLayout
@@ -84,6 +84,11 @@ class ModuleOptions extends AbstractOptions
     protected $collectors = [];
 
     /**
+     * @var string
+     */
+    protected $bodyClassPrefix = '';
+
+    /**
      * Listeners to attach to EVM
      *
      * @var array
@@ -154,7 +159,7 @@ class ModuleOptions extends AbstractOptions
      */
     public function setPreferRouteMatchController($preferRouteMatchController)
     {
-        $this->preferRouteMatchController = (boolean) $preferRouteMatchController;
+        $this->preferRouteMatchController = (bool) $preferRouteMatchController;
 
         return $this;
     }
@@ -357,5 +362,21 @@ class ModuleOptions extends AbstractOptions
     {
         $this->listeners = $listeners;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBodyClassPrefix(): string
+    {
+        return $this->bodyClassPrefix;
+    }
+
+    /**
+     * @param string $bodyClassPrefix
+     */
+    public function setBodyClassPrefix(string $bodyClassPrefix): void
+    {
+        $this->bodyClassPrefix = $bodyClassPrefix;
     }
 }

@@ -1,11 +1,11 @@
 <?php
+
 namespace ConLayout\Listener;
 
-use ConLayout\Listener\BodyClassListener;
 use ConLayout\View\Helper\BodyClass;
-use Zend\EventManager\AbstractListenerAggregate;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\AbstractListenerAggregate;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Mvc\MvcEvent;
 
 /**
  * @package ConLayout
@@ -18,14 +18,21 @@ class BodyClassListener extends AbstractListenerAggregate
      * @var BodyClass
      */
     protected $bodyClassHelper;
-    
+
+    /**
+     * @var string
+     */
+    private $prefix;
+
     /**
      *
      * @param BodyClass $bodyClassHelper
+     * @param string $prefix
      */
-    public function __construct(BodyClass $bodyClassHelper)
+    public function __construct(BodyClass $bodyClassHelper, string $prefix = '')
     {
         $this->bodyClassHelper = $bodyClassHelper;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -47,7 +54,7 @@ class BodyClassListener extends AbstractListenerAggregate
     {
         $helper = $this->bodyClassHelper;
         $routeMatchName = $e->getRouteMatch()->getMatchedRouteName();
-        $className = preg_replace('#[^a-z0-9-]+#i', '-', $routeMatchName);
+        $className = $this->prefix . preg_replace('#[^a-z0-9-]+#i', '-', $routeMatchName);
         $helper(strtolower($className));
         return $this;
     }

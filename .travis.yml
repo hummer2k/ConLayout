@@ -1,18 +1,38 @@
 language: php
 
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
-  
+  - 7.2
+  - 7.3
+  - 7.4
+
+matrix:
+  include:
+    - php: 7.2
+      env: dependencies=lowest
+    - php: 7.3
+      env: dependencies=lowest
+    - php: 7.4
+      env: dependencies=lowest
+    - php: 7.2
+      env: dependencies=highest
+    - php: 7.3
+      env: dependencies=highest
+    - php: 7.4
+      env: dependencies=highest
+
 before_script:
   - composer self-update
-  - composer update --prefer-dist
-  
+  - if [ -z "$dependencies" ]; then composer install --prefer-dist -n; fi;
+  - if [ "$dependencies" = "lowest" ]; then composer update --prefer-dist --prefer-lowest -n; fi;
+  - if [ "$dependencies" = "highest" ]; then composer update --prefer-dist -n; fi;
+
 script:
   - ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
-  - ./vendor/bin/phpcs --standard=PSR2 ./src/ ./tests/
+  - ./vendor/bin/phpcs --standard=PSR12 ./src/ ./test/
 
 after_script:
   - ./vendor/bin/coveralls -v
