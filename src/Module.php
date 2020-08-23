@@ -2,6 +2,7 @@
 
 namespace ConLayout;
 
+use ConLayout\Filter\ContainerFilter;
 use ConLayout\Filter\DebugFilter;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\ModuleManager\Feature\BlockProviderInterface;
@@ -19,6 +20,8 @@ use Laminas\ModuleManager\ModuleManagerInterface;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Renderer\PhpRenderer;
+use Laminas\Filter\FilterChain;
+use Psr\Container\ContainerInterface;
 
 /**
  * @package ConLayout
@@ -119,19 +122,33 @@ class Module implements
 
         $serviceManager->get(LayoutInterface::class)->setRoot($e->getViewModel());
 
-        if ($options->isDebug() && $serviceManager->has('FilterManager')) {
-            $this->attachDebugger($serviceManager);
+        if ($serviceManager->has('FilterManager')) {
+            $this->attachContainerFilter($serviceManager);
+            if ($options->isDebug()) {
+                $this->attachDebugger($serviceManager);
+            }
         }
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceManager
+     * @param ContainerInterface $container
      */
-    private function attachDebugger(ServiceLocatorInterface $serviceManager)
+    private function attachContainerFilter(ContainerInterface $container)
+    {
+        /** @var PhpRenderer $renderer */
+        $renderer = $container->get(PhpRenderer::class);
+        $filterManager = $container->get('FilterManager');
+        $renderer->getFilterChain()->attach($filterManager->get(ContainerFilter::class), 20);
+    }
+
+    /**
+     * @param ContainerInterface $serviceManager
+     */
+    private function attachDebugger(ContainerInterface $serviceManager)
     {
         /** @var PhpRenderer $renderer */
         $renderer = $serviceManager->get(PhpRenderer::class);
         $filterManager = $serviceManager->get('FilterManager');
-        $renderer->getFilterChain()->attach($filterManager->get(DebugFilter::class));
+        $renderer->getFilterChain()->attach($filterManager->get(DebugFilter::class), 10);
     }
 }
