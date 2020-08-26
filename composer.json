@@ -22,16 +22,16 @@
     ],
     "require": {
         "php": "^7.2",
-        "laminas/laminas-mvc": "^3.0",
-        "laminas/laminas-servicemanager": "^3.4",
+        "laminas/laminas-config": "^3.0",
+        "laminas/laminas-dependency-plugin": "^0.2",
         "laminas/laminas-eventmanager": "^3.0",
-        "laminas/laminas-modulemanager": "^2.7",
-        "laminas/laminas-router": "^3.0",
-        "laminas/laminas-stdlib": "^3.0",
         "laminas/laminas-http": "^2.5",
-        "laminas/laminas-config": "^2.6",
-        "laminas/laminas-view": "^2.11.3",
-        "laminas/laminas-dependency-plugin": "^0.2"
+        "laminas/laminas-modulemanager": "^2.7",
+        "laminas/laminas-mvc": "^3.0",
+        "laminas/laminas-router": "^3.0",
+        "laminas/laminas-servicemanager": "^3.4",
+        "laminas/laminas-stdlib": "^3.0",
+        "laminas/laminas-view": "^2.11.3"
     },
     "suggest": {
         "laminas/laminas-filter": "Filter configured params e.g. src, href attributes (basepath, cachebuster, ...)"
