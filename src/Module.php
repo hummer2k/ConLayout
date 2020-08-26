@@ -9,6 +9,7 @@ use ConLayout\ModuleManager\Feature\BlockProviderInterface;
 use ConLayout\Options\ModuleOptions;
 use Laminas\EventManager\EventInterface;
 use Laminas\EventManager\EventInterface as Event;
+use Laminas\Filter\FilterInterface;
 use Laminas\Http\PhpEnvironment\Request as HttpRequest;
 use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
@@ -18,9 +19,7 @@ use Laminas\ModuleManager\Feature\ServiceProviderInterface;
 use Laminas\ModuleManager\Feature\ViewHelperProviderInterface;
 use Laminas\ModuleManager\ModuleManagerInterface;
 use Laminas\Mvc\MvcEvent;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Renderer\PhpRenderer;
-use Laminas\Filter\FilterChain;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -123,32 +122,24 @@ class Module implements
         $serviceManager->get(LayoutInterface::class)->setRoot($e->getViewModel());
 
         if ($serviceManager->has('FilterManager')) {
-            $this->attachContainerFilter($serviceManager);
+            /** @var ContainerInterface $filterManager */
+            $filterManager = $serviceManager->get('FilterManager');
+            /** @var PhpRenderer $phpRenderer */
+            $phpRenderer = $serviceManager->get(PhpRenderer::class);
+            $this->attachFilter($phpRenderer, $filterManager->get(ContainerFilter::class), 20);
             if ($options->isDebug()) {
-                $this->attachDebugger($serviceManager);
+                $this->attachFilter($phpRenderer, $filterManager->get(DebugFilter::class), 10);
             }
         }
     }
 
     /**
-     * @param ContainerInterface $container
+     * @param PhpRenderer $phpRenderer
+     * @param FilterInterface $filter
+     * @param int $priority
      */
-    private function attachContainerFilter(ContainerInterface $container)
+    private function attachFilter(PhpRenderer $phpRenderer, FilterInterface $filter, int $priority): void
     {
-        /** @var PhpRenderer $renderer */
-        $renderer = $container->get(PhpRenderer::class);
-        $filterManager = $container->get('FilterManager');
-        $renderer->getFilterChain()->attach($filterManager->get(ContainerFilter::class), 20);
-    }
-
-    /**
-     * @param ContainerInterface $serviceManager
-     */
-    private function attachDebugger(ContainerInterface $serviceManager)
-    {
-        /** @var PhpRenderer $renderer */
-        $renderer = $serviceManager->get(PhpRenderer::class);
-        $filterManager = $serviceManager->get('FilterManager');
-        $renderer->getFilterChain()->attach($filterManager->get(DebugFilter::class), 10);
+        $phpRenderer->getFilterChain()->attach($filter, $priority);
     }
 }
