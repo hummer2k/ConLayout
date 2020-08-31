@@ -8,6 +8,7 @@ use ConLayout\Layout\LayoutInterface;
 use ConLayout\Ldt\Collector\LayoutCollector;
 use ConLayout\Ldt\Collector\LayoutCollectorFactory;
 use ConLayout\Options\ModuleOptions;
+use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
@@ -45,7 +46,8 @@ class LayoutCollectorTest extends AbstractTest
             $this->layout,
             $this->layoutUpdater,
             $resolver,
-            $moduleOptions
+            $moduleOptions,
+            new FilesystemCollector()
         );
     }
 
@@ -71,6 +73,10 @@ class LayoutCollectorTest extends AbstractTest
         $serviceManager->setService(
             ModuleOptions::class,
             new ModuleOptions()
+        );
+        $serviceManager->setService(
+            FilesystemCollector::class,
+            new FilesystemCollector()
         );
 
         $instance = $layoutCollectorFactory($serviceManager, LayoutCollector::class);
