@@ -18,7 +18,7 @@ class DebugFilter implements FilterInterface
     /**
      * @var PhpRenderer
      */
-    private PhpRenderer $phpRenderer;
+    private $phpRenderer;
 
     /**
      * DebugFilter constructor.
