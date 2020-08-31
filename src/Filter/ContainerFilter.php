@@ -17,7 +17,7 @@ class ContainerFilter implements FilterInterface
     /**
      * @var PhpRenderer
      */
-    private PhpRenderer $phpRenderer;
+    private $phpRenderer;
 
     /**
      * @var ModelInterface
