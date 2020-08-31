@@ -1,20 +1,36 @@
 <?php
 /* @var $collector LayoutCollector */
 use ConLayout\Ldt\Collector\LayoutCollector;
+$dump = function_exists('dump') ? 'dump' : 'var_export';
 ?>
 <div class="laminas-toolbar-entry laminas-conlayout-entry">
     <div class="laminas-toolbar-preview">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABXUlEQVRIS2NkoDFgpLH5DGALdh04HMjEyDyDkYlRjBoW/vv//zXDn/+prk7WG8EW7Dl47CXz1FYxRkYmhr85VQydH9YxMP1nZCgVDGTQfpgPVMHEcFW+nyS7///7/8rF3kocbMHew8f/M09pYwCayfAvu4qh+/16BgZGoAUCAUALCoHiTAzX5HpJsgCk2NnWEmgK1AKSdROhAW7Bmw8f/xOhnmQlIgL8EB/QzYJbd+4xfP/+A+xSLi5OBlVlRTAbWZyQN5D1Yfjg4uVrKPr1dbXA/Nt37zN8+/adkNlgeW5uLgYVJQUwm2gLiDIZi6LBYwHN4wA9bggFGSzuiA6iUQvgORlXPhg6QYScY5FzJMU5+eWbt/+ZWVgIpT6S5P/8+cMgISIMKU1PXbj8UU5Gio+FSpaADH/0+NkHM0NdQbAFu/cd9WdkZpxFrTr5/99/L/8y/Et1d7DdTPNWBQAu59kZuoTsCwAAAABJRU5ErkJggg==">
+        <svg width="20px" height="20px" viewBox="0 0 16 16" class="bi bi-columns" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M15 2H1v12h14V2zM1 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H1z"/>
+          <path fill-rule="evenodd" d="M7.5 14V2h1v12h-1zm0-8H1V5h6.5v1zm7.5 5H8.5v-1H15v1z"/>
+        </svg>
         <span class="laminas-toolbar-info">Layout</span>
     </div>
     <div class="laminas-toolbar-detail laminas-toolbar-detail-overflow" id="laminas-conlayout-content">
-        <span class="laminas-toolbar-info">
-            <span class="laminas-toolbar-info laminas-toolbar-info-heading">
-                Merged layout instructions
-            </span>
-            <span class="laminas-detail-pre"><?php var_export($collector->getLayoutStructure()); ?></span>
-        </span>
-        <hr>
+        <div class="laminas-toolbar-info">
+          <span class="laminas-toolbar-info laminas-toolbar-info-heading">Handles</span>
+          <table class="table table-sm table-condensed table-dark">
+            <thead>
+            <tr>
+              <th>Handle name</th>
+              <th>Priority</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach($collector->getHandles() as $handle): ?>
+              <tr>
+                <td><?= $handle->getName() ?></td>
+                <td><?= $handle->getPriority() ?></td>
+              </tr>
+            <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
         <span class="laminas-toolbar-info">
             <span class="laminas-toolbar-info laminas-toolbar-info-heading">
                 Loaded blocks
@@ -53,25 +69,12 @@ use ConLayout\Ldt\Collector\LayoutCollector;
             <?php endif; ?>
         </span>
         <hr>
-        <div class="laminas-toolbar-info">
-            <span class="laminas-toolbar-info laminas-toolbar-info-heading">Handles</span>
-             <table class="table table-sm table-condensed table-dark">
-                <thead>
-                    <tr>
-                        <th>Handle name</th>
-                        <th>Priority</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php foreach($collector->getHandles() as $handle): ?>
-                   <tr>
-                       <td><?= $handle->getName() ?></td>
-                       <td><?= $handle->getPriority() ?></td>
-                   </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+        <span class="laminas-toolbar-info">
+              <span class="laminas-toolbar-info laminas-toolbar-info-heading">
+                  Merged layout instructions
+              </span>
+              <?php $dump($collector->getLayoutStructure()); ?>
+          </span>
         <hr>
         <span class="laminas-toolbar-info">
             <span class="laminas-detail-label">Current Area</span>
