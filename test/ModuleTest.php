@@ -2,6 +2,8 @@
 
 namespace ConLayoutTest;
 
+use ConLayout\Filter\ContainerFilter;
+use ConLayout\Filter\DebugFilterFactory;
 use ConLayout\Module;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
@@ -18,6 +20,7 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\View\Http\InjectTemplateListener;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\HelperPluginManager;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * @package
@@ -38,19 +41,24 @@ class ModuleTest extends AbstractTest
         $module = new Module();
 
         $application = $this->createApplication();
+        $phpRenderer = new PhpRenderer();
+        $container = $application->getServiceManager();
+        $filterManager = new FilterPluginManager($container);
+        $filterManager->setFactory(ContainerFilter::class, DebugFilterFactory::class);
 
-        $sm = $application->getServiceManager();
-        $sm->setService('FilterManager', new FilterPluginManager($sm));
-        $sm->setService(InjectTemplateListener::class, new InjectTemplateListener());
+
+        $container->setService('FilterManager', $filterManager);
+        $container->setService(InjectTemplateListener::class, new InjectTemplateListener());
+        $container->setService(PhpRenderer::class, $phpRenderer);
 
         foreach ($module->getServiceConfig()['invokables'] as $key => $value) {
-            $sm->setInvokableClass($key, $value);
+            $container->setInvokableClass($key, $value);
         }
         foreach ($module->getServiceConfig()['factories'] as $key => $value) {
-            $sm->setFactory($key, $value);
+            $container->setFactory($key, $value);
         }
 
-        $sm->get('ViewHelperManager')->setService(
+        $container->get('ViewHelperManager')->setService(
             'bodyClass',
             $this->getMockBuilder(BodyClass::class)->getMock()
         );
@@ -63,7 +71,7 @@ class ModuleTest extends AbstractTest
 
         $module->onBootstrap($event);
 
-        $layoutUpdater = $sm->get(LayoutUpdaterInterface::class);
+        $layoutUpdater = $container->get(LayoutUpdaterInterface::class);
 
         $this->assertEquals([
             'default'

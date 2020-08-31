@@ -16,6 +16,7 @@ use Laminas\View\Model\ViewModel;
 return [
     'con-layout' => [
         'debug' => false,
+        'remote_call' => '127.0.0.1:8095',
         /**
          * paths where to search for layout updates
          *

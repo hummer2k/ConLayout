@@ -8,6 +8,8 @@
 namespace ConLayout\Ldt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
+use ConLayout\Options\ModuleOptions;
+use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -25,7 +27,9 @@ class LayoutCollectorFactory implements FactoryInterface
         $layoutCollector = new LayoutCollector(
             $container->get(LayoutInterface::class),
             $container->get(LayoutUpdaterInterface::class),
-            $container->get('ViewResolver')
+            $container->get('ViewResolver'),
+            $container->get(ModuleOptions::class),
+            $container->get(FilesystemCollector::class)
         );
         return $layoutCollector;
     }

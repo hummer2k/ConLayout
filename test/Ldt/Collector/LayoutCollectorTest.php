@@ -5,10 +5,12 @@ namespace ConLayoutTest\Ldt\Collector;
 use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\Layout;
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Updater\LayoutUpdater;
-use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\Ldt\Collector\LayoutCollector;
 use ConLayout\Ldt\Collector\LayoutCollectorFactory;
+use ConLayout\Options\ModuleOptions;
+use ConLayout\Updater\Collector\FilesystemCollector;
+use ConLayout\Updater\LayoutUpdater;
+use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTest;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceManager;
@@ -33,12 +35,19 @@ class LayoutCollectorTest extends AbstractTest
             $this->markTestSkipped('ZDT not available');
         }
         parent::setUp();
+        $moduleOptions = new ModuleOptions(
+            [
+                'remote_call' => '127.0.0.1:8095'
+            ]
+        );
         $resolver = new AggregateResolver();
         $resolver->attach($this->getResolver());
         $this->collector = new LayoutCollector(
             $this->layout,
             $this->layoutUpdater,
-            $resolver
+            $resolver,
+            $moduleOptions,
+            new FilesystemCollector()
         );
     }
 
@@ -60,6 +69,14 @@ class LayoutCollectorTest extends AbstractTest
         $serviceManager->setService(
             'ViewResolver',
             new AggregateResolver()
+        );
+        $serviceManager->setService(
+            ModuleOptions::class,
+            new ModuleOptions()
+        );
+        $serviceManager->setService(
+            FilesystemCollector::class,
+            new FilesystemCollector()
         );
 
         $instance = $layoutCollectorFactory($serviceManager, LayoutCollector::class);

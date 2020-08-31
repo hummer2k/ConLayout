@@ -9,6 +9,7 @@ namespace ConLayout\Filter;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Laminas\View\Renderer\PhpRenderer;
 
 class DebugFilterFactory implements FactoryInterface
 {
@@ -16,13 +17,10 @@ class DebugFilterFactory implements FactoryInterface
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
-     * @return DebugFilter
+     * @return DebugFilter|ContainerFilter
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $viewHelperManager = $container->get('ViewHelperManager');
-        return new DebugFilter(
-            $viewHelperManager->get('viewModel')
-        );
+        return new $requestedName($container->get(PhpRenderer::class));
     }
 }

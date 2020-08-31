@@ -2,12 +2,14 @@
 
 namespace ConLayout;
 
+use ConLayout\Filter\ContainerFilter;
 use ConLayout\Filter\DebugFilter;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\ModuleManager\Feature\BlockProviderInterface;
 use ConLayout\Options\ModuleOptions;
 use Laminas\EventManager\EventInterface;
 use Laminas\EventManager\EventInterface as Event;
+use Laminas\Filter\FilterInterface;
 use Laminas\Http\PhpEnvironment\Request as HttpRequest;
 use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
@@ -17,8 +19,8 @@ use Laminas\ModuleManager\Feature\ServiceProviderInterface;
 use Laminas\ModuleManager\Feature\ViewHelperProviderInterface;
 use Laminas\ModuleManager\ModuleManagerInterface;
 use Laminas\Mvc\MvcEvent;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Renderer\PhpRenderer;
+use Psr\Container\ContainerInterface;
 
 /**
  * @package ConLayout
@@ -119,19 +121,25 @@ class Module implements
 
         $serviceManager->get(LayoutInterface::class)->setRoot($e->getViewModel());
 
-        if ($options->isDebug() && $serviceManager->has('FilterManager')) {
-            $this->attachDebugger($serviceManager);
+        if ($serviceManager->has('FilterManager')) {
+            /** @var ContainerInterface $filterManager */
+            $filterManager = $serviceManager->get('FilterManager');
+            /** @var PhpRenderer $phpRenderer */
+            $phpRenderer = $serviceManager->get(PhpRenderer::class);
+            $this->attachFilter($phpRenderer, $filterManager->get(ContainerFilter::class), 20);
+            if ($options->isDebug()) {
+                $this->attachFilter($phpRenderer, $filterManager->get(DebugFilter::class), 10);
+            }
         }
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceManager
+     * @param PhpRenderer $phpRenderer
+     * @param FilterInterface $filter
+     * @param int $priority
      */
-    private function attachDebugger(ServiceLocatorInterface $serviceManager)
+    private function attachFilter(PhpRenderer $phpRenderer, FilterInterface $filter, int $priority): void
     {
-        /** @var PhpRenderer $renderer */
-        $renderer = $serviceManager->get(PhpRenderer::class);
-        $filterManager = $serviceManager->get('FilterManager');
-        $renderer->getFilterChain()->attach($filterManager->get(DebugFilter::class));
+        $phpRenderer->getFilterChain()->attach($filter, $priority);
     }
 }

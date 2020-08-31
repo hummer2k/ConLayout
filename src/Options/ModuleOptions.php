@@ -19,9 +19,14 @@ class ModuleOptions extends AbstractOptions
 {
     /**
      *
-     * @var boolean
+     * @var bool
      */
     protected $debug = false;
+
+    /**
+     * @var bool|string
+     */
+    protected $remoteCall = false;
 
     /**
      *
@@ -69,7 +74,7 @@ class ModuleOptions extends AbstractOptions
     /**
      * Flag to force the use of the route match controller param.
      *
-     * @var boolean
+     * @var bool
      */
     protected $preferRouteMatchController = false;
 
@@ -101,7 +106,7 @@ class ModuleOptions extends AbstractOptions
     ];
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDebug()
     {
@@ -109,7 +114,7 @@ class ModuleOptions extends AbstractOptions
     }
 
     /**
-     * @param boolean $debug
+     * @param bool $debug
      * @return ModuleOptions
      */
     public function setDebug($debug)
@@ -378,5 +383,21 @@ class ModuleOptions extends AbstractOptions
     public function setBodyClassPrefix(string $bodyClassPrefix): void
     {
         $this->bodyClassPrefix = $bodyClassPrefix;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getRemoteCall()
+    {
+        return $this->remoteCall;
+    }
+
+    /**
+     * @param bool|string $remoteCall
+     */
+    public function setRemoteCall($remoteCall): void
+    {
+        $this->remoteCall = $remoteCall;
     }
 }
