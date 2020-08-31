@@ -6,6 +6,7 @@ use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Layout\LayoutInterface;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Model\ModelInterface;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @package ConLayout
@@ -15,7 +16,7 @@ class Block extends AbstractHelper
 {
     /**
      *
-     * @var LayoutInterface
+     * @var BlockPoolInterface
      */
     private $blockPool;
 
@@ -31,7 +32,7 @@ class Block extends AbstractHelper
     /**
      *
      * @param string $blockId
-     * @return ModelInterface
+     * @return ModelInterface|ViewModel
      */
     public function __invoke($blockId)
     {
