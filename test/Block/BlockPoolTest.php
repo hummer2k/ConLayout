@@ -109,7 +109,7 @@ class BlockPoolTest extends AbstractTest
 
     public function testSortBlocks()
     {
-        
+
         $expectedOrder = [
             1 => 'block-2',
             2 => 'block-4',

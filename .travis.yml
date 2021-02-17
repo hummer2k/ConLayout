@@ -14,13 +14,21 @@ env:
 matrix:
   include:
     - php: 7.3
-      env: dependencies=lowest
+      env:
+        - dependencies=lowest
+        - XDEBUG_MODE=coverage
     - php: 7.4
-      env: dependencies=lowest
+      env:
+        - dependencies=lowest
+        - XDEBUG_MODE=coverage
     - php: 7.3
-      env: dependencies=highest
+      env:
+        - dependencies=highest
+        - XDEBUG_MODE=coverage
     - php: 7.4
-      env: dependencies=highest
+      env:
+        - dependencies=highest
+        - XDEBUG_MODE=coverage
 
 before_script:
   - composer self-update
