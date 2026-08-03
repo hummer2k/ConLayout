@@ -14,9 +14,6 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
 
     protected ?string $proxyClass = null;
 
-    /**
-     * @param $requestedName
-     */
     public function canCreate(ContainerInterface $container, $requestedName): bool
     {
         /* @var $moduleOptions ModuleOptions */
@@ -35,10 +32,6 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
         return false;
     }
 
-    /**
-     * @param $requestedName
-     * @param array $options
-     */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): mixed
     {
         $viewHelperManager = $container->get('ViewHelperManager');

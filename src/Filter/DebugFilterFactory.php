@@ -10,9 +10,6 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class DebugFilterFactory implements FactoryInterface
 {
-    /**
-     * @param $requestedName
-     */
     public function __invoke(
         ContainerInterface $container,
         $requestedName,

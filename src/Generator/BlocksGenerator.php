@@ -40,9 +40,6 @@ final class BlocksGenerator implements GeneratorInterface
         $this->generateBlocks($blocks, $references);
     }
 
-    /**
-     * @param Config $references
-     */
     private function generateBlocks(Config $blocks, ?Config $references = null, ?string $parentId = null): void
     {
         foreach ($blocks as $blockId => $specs) {

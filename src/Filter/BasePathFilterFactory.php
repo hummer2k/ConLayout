@@ -9,9 +9,6 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class BasePathFilterFactory implements FactoryInterface
 {
-    /**
-     * @param $requestedName
-     */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): BasePathFilter
     {
         $basePathHelper = $container

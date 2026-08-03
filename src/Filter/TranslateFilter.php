@@ -16,10 +16,6 @@ class TranslateFilter implements FilterInterface
         $this->translator = $translator;
     }
 
-    /**
-     *
-     * @param mixed $value
-     */
     public function filter($value): string
     {
         return $this->translator->translate((string) $value);

@@ -10,10 +10,6 @@ use Laminas\ServiceManager\MutableCreationOptionsInterface;
 
 class TranslateFilterFactory implements FactoryInterface
 {
-    /**
-     * @param $requestedName
-     * @param array $options
-     */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): TranslateFilter
     {
         $translator = $container->get('MvcTranslator');

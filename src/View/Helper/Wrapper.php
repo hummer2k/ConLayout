@@ -18,10 +18,6 @@ class Wrapper extends AbstractHtmlElement
         return $this;
     }
 
-    /**
-     *
-     * @param mixed $attributes
-     */
     public function openTag(array $attributes = []): string
     {
         $htmlAttribs = '';

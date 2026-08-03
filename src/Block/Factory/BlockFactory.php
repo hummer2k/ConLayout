@@ -43,8 +43,6 @@ final class BlockFactory implements
 
     /**
      * BlockFactory constructor.
-     * @param ContainerInterface $blockManager
-     * @param ContainerInterface $container
      */
     public function __construct(
         array $blockDefaults = [],

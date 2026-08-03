@@ -11,10 +11,6 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class BlockFactoryFactory implements FactoryInterface
 {
-    /**
-     * @param $requestedName
-     * @param array $options
-     */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): BlockFactory
     {
         /* @var $options ModuleOptions */

@@ -23,9 +23,6 @@ class ContainerFilter implements FilterInterface
         $this->phpRenderer = $phpRenderer;
     }
 
-    /**
-     * @param mixed $value
-     */
     public function filter($value): mixed
     {
         /** @var ViewModel $viewModel */

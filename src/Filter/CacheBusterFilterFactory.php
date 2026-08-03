@@ -10,10 +10,6 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class CacheBusterFilterFactory implements FactoryInterface
 {
-    /**
-     * @param $requestedName
-     * @param array $options
-     */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): CacheBusterFilter
     {
         /* @var $options ModuleOptions */

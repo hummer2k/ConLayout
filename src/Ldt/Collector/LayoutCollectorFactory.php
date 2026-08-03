@@ -13,10 +13,6 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class LayoutCollectorFactory implements FactoryInterface
 {
-    /**
-     * @param $requestedName
-     * @param array $options
-     */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): LayoutCollector
     {
         $layoutCollector = new LayoutCollector(

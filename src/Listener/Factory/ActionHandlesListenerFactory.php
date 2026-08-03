@@ -12,10 +12,6 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ActionHandlesListenerFactory implements FactoryInterface
 {
-    /**
-     * @param $requestedName
-     * @param array $options
-     */
     public function __invoke(
         ContainerInterface $container,
         $requestedName,

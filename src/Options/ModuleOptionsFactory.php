@@ -9,10 +9,6 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ModuleOptionsFactory implements FactoryInterface
 {
-    /**
-     * @param $requestedName
-     * @param array $options
-     */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): ModuleOptions
     {
         $config = $container->get('Config');
