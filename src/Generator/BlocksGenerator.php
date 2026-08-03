@@ -14,9 +14,9 @@ final class BlocksGenerator implements GeneratorInterface
     public const INSTRUCTION_BLOCKS    = 'blocks';
     public const INSTRUCTION_REFERENCE = 'reference';
 
-    protected \ConLayout\Block\Factory\BlockFactoryInterface $blockFactory;
+    protected BlockFactoryInterface $blockFactory;
 
-    protected \ConLayout\Block\BlockPoolInterface $blockPool;
+    protected BlockPoolInterface $blockPool;
 
     /**
      * BlocksGenerator constructor.

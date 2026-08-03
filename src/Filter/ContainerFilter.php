@@ -11,9 +11,9 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class ContainerFilter implements FilterInterface
 {
-    private \Laminas\View\Renderer\PhpRenderer $phpRenderer;
+    private PhpRenderer $phpRenderer;
 
-    private ?\Laminas\View\Model\ModelInterface $currentViewModel = null;
+    private ?ModelInterface $currentViewModel = null;
 
     /**
      * ContainerFilter constructor.

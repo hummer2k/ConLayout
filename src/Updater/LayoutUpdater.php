@@ -28,7 +28,7 @@ final class LayoutUpdater implements
     /**
      * @var PriorityList|CollectorInterface[]
      */
-    private \Laminas\Stdlib\PriorityList $collectors;
+    private PriorityList $collectors;
 
     /**
      * Format:

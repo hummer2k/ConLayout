@@ -23,7 +23,7 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
     /**
      * @var LayoutInterface
      */
-    private \ConLayout\Block\BlockPoolInterface $blockPool;
+    private BlockPoolInterface $blockPool;
 
     /**
      * PrepareActionViewModelListener constructor.

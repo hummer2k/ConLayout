@@ -9,7 +9,7 @@ use Laminas\View\Helper\HelperInterface;
 
 abstract class AbstractViewHelperProxy extends AbstractHelper
 {
-    protected \Laminas\View\Helper\HelperInterface $helper;
+    protected HelperInterface $helper;
 
     public function __construct(HelperInterface $helper)
     {

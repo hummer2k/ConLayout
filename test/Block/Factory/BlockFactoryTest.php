@@ -8,6 +8,7 @@ use ConLayout\Block\AbstractBlock;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
+use ConLayout\Exception\BadMethodCallException;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ViewModel;
@@ -66,7 +67,7 @@ class BlockFactoryTest extends AbstractTestCase
             ]
         ];
 
-        $this->expectException(\ConLayout\Exception\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->factory->createBlock('my-block', $specs);
     }
 

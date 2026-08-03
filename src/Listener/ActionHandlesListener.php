@@ -19,7 +19,7 @@ class ActionHandlesListener extends InjectTemplateListener
     /**
      * Layout updater instance.
      */
-    private \ConLayout\Updater\LayoutUpdaterInterface $updater;
+    private LayoutUpdaterInterface $updater;
 
     /**
      * ActionHandlesListener constructor.

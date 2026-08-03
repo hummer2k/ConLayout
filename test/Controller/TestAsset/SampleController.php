@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace ConLayoutTest\Controller\TestAsset;
 
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ModelInterface;
 
 class SampleController extends AbstractActionController
 {
@@ -18,7 +20,7 @@ class SampleController extends AbstractActionController
         return ['content' => 'Test Some Strangely Separated Words'];
     }
 
-    public function testCircularAction(): \Laminas\View\Model\ModelInterface|\Laminas\Http\Response
+    public function testCircularAction(): ModelInterface|Response
     {
         return $this->forward()->dispatch('sample', ['action' => 'test-circular']);
     }

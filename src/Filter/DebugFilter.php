@@ -12,7 +12,7 @@ use Laminas\View\Variables;
 
 class DebugFilter implements FilterInterface
 {
-    private \Laminas\View\Renderer\PhpRenderer $phpRenderer;
+    private PhpRenderer $phpRenderer;
 
     /**
      * DebugFilter constructor.

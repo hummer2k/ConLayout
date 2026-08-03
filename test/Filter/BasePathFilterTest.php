@@ -15,7 +15,7 @@ use Laminas\View\HelperPluginManager;
 
 class BasePathFilterTest extends AbstractTestCase
 {
-    private \ConLayout\Filter\BasePathFilter $basePathFilter;
+    private BasePathFilter $basePathFilter;
 
     protected function setUp(): void
     {

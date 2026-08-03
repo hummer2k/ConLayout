@@ -88,7 +88,7 @@ class ModuleTest extends AbstractTestCase
         ], $layoutUpdater->getHandles());
     }
 
-    protected function createApplication(): \Laminas\Mvc\Application
+    protected function createApplication(): Application
     {
         $sm = new ServiceManager();
         $sm->setService('EventManager', new EventManager(new SharedEventManager()));

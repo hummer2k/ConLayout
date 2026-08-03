@@ -15,7 +15,7 @@ class LoadLayoutListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
 
-    protected \ConLayout\Layout\LayoutInterface $layout;
+    protected LayoutInterface $layout;
 
     public function __construct(LayoutInterface $layout)
     {

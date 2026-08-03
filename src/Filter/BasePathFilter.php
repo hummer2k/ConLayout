@@ -13,7 +13,7 @@ class BasePathFilter implements FilterInterface
      *
      * @var BasePathHelper $basePathHelper
      */
-    protected \Laminas\View\Helper\BasePath $basePathHelper;
+    protected BasePathHelper $basePathHelper;
 
     public function __construct(BasePathHelper $basePathHelper)
     {

@@ -20,15 +20,15 @@ class LayoutCollector extends AbstractCollector
 {
     public const NAME = 'con-layout';
 
-    protected \ConLayout\Layout\LayoutInterface $layout;
+    protected LayoutInterface $layout;
 
-    protected \ConLayout\Updater\LayoutUpdaterInterface $updater;
+    protected LayoutUpdaterInterface $updater;
 
-    protected \Laminas\View\Resolver\ResolverInterface $viewResolver;
+    protected ResolverInterface $viewResolver;
 
-    private \ConLayout\Options\ModuleOptions $moduleOptions;
+    private ModuleOptions $moduleOptions;
 
-    private \ConLayout\Updater\Collector\FilesystemCollector $filesystemCollector;
+    private FilesystemCollector $filesystemCollector;
 
     public function __construct(
         LayoutInterface $layout,

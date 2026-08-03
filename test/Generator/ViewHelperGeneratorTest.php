@@ -27,7 +27,7 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class ViewHelperGeneratorTest extends AbstractTestCase
 {
-    protected function getLayoutStructure(): \Laminas\Config\Config
+    protected function getLayoutStructure(): Config
     {
         return new Config([
             ViewHelperGenerator::INSTRUCTION => [

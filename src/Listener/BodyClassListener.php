@@ -11,7 +11,7 @@ use Laminas\Mvc\MvcEvent;
 
 class BodyClassListener extends AbstractListenerAggregate
 {
-    protected \ConLayout\View\Helper\BodyClass $bodyClassHelper;
+    protected BodyClass $bodyClassHelper;
 
     private string $prefix;
 

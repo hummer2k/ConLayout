@@ -12,7 +12,7 @@ use Laminas\View\Model\ViewModel;
 
 class Block extends AbstractHelper
 {
-    private \ConLayout\Block\BlockPoolInterface $blockPool;
+    private BlockPoolInterface $blockPool;
 
     public function __construct(BlockPoolInterface $blockPool)
     {

@@ -37,9 +37,9 @@ final class BlockFactory implements
         'blocks'     => []
     ];
 
-    private ?\Psr\Container\ContainerInterface $container = null;
+    private ?ContainerInterface $container = null;
 
-    private ?\Psr\Container\ContainerInterface $blockManager = null;
+    private ?ContainerInterface $blockManager = null;
 
     /**
      * BlockFactory constructor.

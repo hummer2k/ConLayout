@@ -23,18 +23,18 @@ class Layout implements
      */
     protected bool $blocksInjected = false;
 
-    protected \ConLayout\Updater\LayoutUpdaterInterface $updater;
+    protected LayoutUpdaterInterface $updater;
 
     /**
      * blocks registry
      */
-    protected \ConLayout\Block\BlockPoolInterface $blockPool;
+    protected BlockPoolInterface $blockPool;
 
     /**
      *
      * @var GeneratorInterface[]|PriorityList
      */
-    protected \Laminas\Stdlib\PriorityList $generators;
+    protected PriorityList $generators;
 
     protected array $loadedGenerators = [];
 

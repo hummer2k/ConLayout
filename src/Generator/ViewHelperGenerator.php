@@ -23,9 +23,9 @@ final class ViewHelperGenerator implements GeneratorInterface
 
     private bool $debug = false;
 
-    private \Psr\Container\ContainerInterface $viewHelperManager;
+    private ContainerInterface $viewHelperManager;
 
-    private ?\Psr\Container\ContainerInterface $filterManager = null;
+    private ?ContainerInterface $filterManager = null;
 
     private array $helperConfig = [];
 

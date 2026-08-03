@@ -19,11 +19,11 @@ class LayoutManager extends AbstractPlugin implements
     LayoutInterface,
     LayoutUpdaterInterface
 {
-    protected \ConLayout\Layout\LayoutInterface $layout;
+    protected LayoutInterface $layout;
 
-    protected \ConLayout\Updater\LayoutUpdaterInterface $updater;
+    protected LayoutUpdaterInterface $updater;
 
-    protected \ConLayout\Block\BlockPoolInterface $blockPool;
+    protected BlockPoolInterface $blockPool;
 
     public function __construct(
         LayoutInterface $layout,
