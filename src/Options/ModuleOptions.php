@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace ConLayout\Options;
 
-use ConLayout\Listener\ActionHandlesListener;
-use ConLayout\Listener\BodyClassListener;
-use ConLayout\Listener\LayoutTemplateListener;
-use ConLayout\Listener\LayoutUpdateListener;
-use ConLayout\Listener\LoadLayoutListener;
-use ConLayout\Listener\PrepareActionViewModelListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Stdlib\AbstractOptions;
+use Throwable;
 
 class ModuleOptions extends AbstractOptions
 {
@@ -50,15 +45,13 @@ class ModuleOptions extends AbstractOptions
 
     protected string $bodyClassPrefix = '';
 
-    /**
-     * Listeners to attach to EVM
-     */
-    protected array $listeners = [
-        ActionHandlesListener::class  => true,
-        BodyClassListener::class      => true,
-        LoadLayoutListener::class     => true,
-        PrepareActionViewModelListener::class => true
-    ];
+    protected bool $enabled = true;
+
+    protected string $layoutTemplate = '';
+
+    protected string $basePath = '';
+
+    protected string $errorHandleAttribute = Throwable::class;
 
     public function isDebug(): bool
     {
@@ -217,17 +210,6 @@ class ModuleOptions extends AbstractOptions
         return $this;
     }
 
-    public function getListeners(): array
-    {
-        return $this->listeners;
-    }
-
-    public function setListeners(array $listeners): static
-    {
-        $this->listeners = $listeners;
-        return $this;
-    }
-
     public function getBodyClassPrefix(): string
     {
         return $this->bodyClassPrefix;
@@ -246,5 +228,49 @@ class ModuleOptions extends AbstractOptions
     public function setRemoteCall(bool|string $remoteCall): void
     {
         $this->remoteCall = $remoteCall;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): static
+    {
+        $this->enabled = $enabled;
+        return $this;
+    }
+
+    public function getLayoutTemplate(): string
+    {
+        return $this->layoutTemplate;
+    }
+
+    public function setLayoutTemplate(string $layoutTemplate): static
+    {
+        $this->layoutTemplate = $layoutTemplate;
+        return $this;
+    }
+
+    public function getBasePath(): string
+    {
+        return $this->basePath;
+    }
+
+    public function setBasePath(string $basePath): static
+    {
+        $this->basePath = $basePath;
+        return $this;
+    }
+
+    public function getErrorHandleAttribute(): string
+    {
+        return $this->errorHandleAttribute;
+    }
+
+    public function setErrorHandleAttribute(string $errorHandleAttribute): static
+    {
+        $this->errorHandleAttribute = $errorHandleAttribute;
+        return $this;
     }
 }

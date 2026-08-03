@@ -21,9 +21,7 @@ class ViewHelperGeneratorFactory implements FactoryInterface
             $helperConfig
         );
 
-        if ($container->has('FilterManager')) {
-            $viewHelperGenerator->setFilterManager($container->get('FilterManager'));
-        }
+        $viewHelperGenerator->setFilterManager($container);
 
         $viewHelperGenerator->setDebug($options->isDebug());
 

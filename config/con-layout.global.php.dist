@@ -3,7 +3,6 @@
 use ConLayout\Generator\BlocksGenerator;
 use ConLayout\Generator\ViewHelperGenerator;
 use ConLayout\Updater\Collector\FilesystemCollector;
-use ConLayout\Updater\Collector\ConfigCollectorFactory;
 use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
@@ -16,6 +15,24 @@ use Laminas\View\Model\ViewModel;
 return [
     'con-layout' => [
         'debug' => false,
+        /**
+         * global switch to enable/disable the layout rendering
+         */
+        'enabled' => true,
+        /**
+         * layout template name, falls back to the Mezzio "templates.layout" config
+         */
+        'layout_template' => '',
+        /**
+         * base path prepended to local asset urls by the BasePathFilter
+         *
+         * @see docs/areas.md
+         */
+        'base_path' => '',
+        /**
+         * request attribute key used by HandleExtractionMiddleware to detect errors
+         */
+        'error_handle_attribute' => \Throwable::class,
         'remote_call' => '127.0.0.1:8095',
         /**
          * paths where to search for layout updates
@@ -148,15 +165,6 @@ return [
                 'priority' => 10
             ]
         ],
-        'body_class_prefix' => '',
-        /**
-         * enable/disable particular listeners
-         */
-        /*
-        'listeners' => [
-            'ConLayout\Listener\ActionHandlesListener'  => true,
-            'ConLayout\Listener\LoadLayoutListener'     => true,
-            'ConLayout\Listener\PrepareActionViewModelListener' => true
-        ]*/
+        'body_class_prefix' => ''
     ]
 ];

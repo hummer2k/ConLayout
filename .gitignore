@@ -1,6 +1,6 @@
 /build/
 /.idea/
 /public/.sass-cache/
-/tests/TestConfig.php
+/test/TestConfig.php
 /vendor/
 /.phpunit.result.cache

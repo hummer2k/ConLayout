@@ -9,44 +9,29 @@ Listen to the `UpdateEvent::EVENT_COLLECT` and `UpdateEvent::EVENT_COLLECT_POST`
 ````php
 <?php
 
-namespace Application\Listener;
+namespace App\Listener;
 
 use ConLayout\Updater\Event\UpdateEvent;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Config\Config;
+use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
-use Laminas\EventManager\ListenerAggregateInterface;
-use Laminas\EventManager\ListenerAggregateTrait;
 
-class LayoutStructureCacheListener implements ListenerAggregateInterface
+class LayoutStructureCacheListener extends AbstractListenerAggregate
 {
-    use ListenerAggregateTrait;
-
-    /**
-     *
-     * @var StorageInterface
-     */
-    protected $cache;
-
-    /**
-     *
-     * @param StorageInterface $cache
-     */
-    public function __construct(StorageInterface $cache)
+    public function __construct(private StorageInterface $cache)
     {
-        $this->cache = $cache;
     }
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1): void
     {
-        $events->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
+        // the layout updater triggers the events on its own event manager
+        $this->listeners[] = $events->attach(
             UpdateEvent::EVENT_COLLECT,
             [$this, 'loadCache'],
             1000
         );
-        $events->getSharedManager()->attach(
-            'ConLayout\Updater\LayoutUpdater',
+        $this->listeners[] = $events->attach(
             UpdateEvent::EVENT_COLLECT_POST,
             [$this, 'saveCache']
         );
@@ -78,5 +63,27 @@ class LayoutStructureCacheListener implements ListenerAggregateInterface
         $this->cache->setItem($cacheKey, $layoutStructure);
     }
 }
+````
 
+Attach the listener to the layout updater event manager via a delegator
+factory for the `ConLayout\Updater\LayoutUpdaterInterface` service:
+
+````php
+<?php
+namespace App\Factory;
+
+use App\Listener\LayoutStructureCacheListener;
+use ConLayout\Updater\LayoutUpdaterInterface;
+use Psr\Container\ContainerInterface;
+
+class LayoutUpdaterCacheDelegatorFactory
+{
+    public function __invoke(ContainerInterface $container, $name, callable $callback): mixed
+    {
+        $updater = $callback();
+        $listener = $container->get(LayoutStructureCacheListener::class);
+        $listener->attach($updater->getEventManager());
+        return $updater;
+    }
+}
 ````

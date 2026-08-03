@@ -19,8 +19,10 @@ class ModuleOptionsTest extends AbstractTestCase
         $this->assertIsArray($moduleOptions->getLayoutUpdatePaths());
         $this->assertIsArray($moduleOptions->getLayoutUpdateExtensions());
         $this->assertIsArray($moduleOptions->getBlockDefaults());
-        $this->assertIsArray($moduleOptions->getListeners());
         $this->assertIsString($moduleOptions->getDefaultArea());
+        $this->assertTrue($moduleOptions->isEnabled());
+        $this->assertSame('', $moduleOptions->getLayoutTemplate());
+        $this->assertSame('', $moduleOptions->getBasePath());
     }
 
     public function testSettersGetters(): void
@@ -38,9 +40,14 @@ class ModuleOptionsTest extends AbstractTestCase
         $moduleOptions->setDefaultArea('default_area');
         $this->assertEquals('default_area', $moduleOptions->getDefaultArea());
 
-        $listeners = ['listener' => true];
-        $moduleOptions->setListeners($listeners);
-        $this->assertSame($listeners, $moduleOptions->getListeners());
+        $moduleOptions->setEnabled(false);
+        $this->assertFalse($moduleOptions->isEnabled());
+
+        $moduleOptions->setLayoutTemplate('layout::default');
+        $this->assertSame('layout::default', $moduleOptions->getLayoutTemplate());
+
+        $moduleOptions->setBasePath('/my/base');
+        $this->assertSame('/my/base', $moduleOptions->getBasePath());
 
         $this->assertSame([
             'class' => 'MyBlock'

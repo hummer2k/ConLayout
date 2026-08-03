@@ -31,13 +31,15 @@ class BasePathFilterTest extends AbstractTestCase
     public function testFactory(): void
     {
         $factory = new BasePathFilterFactory();
-        $viewHelperManager = new HelperPluginManager($this->sm);
-        $viewHelperManager->setService('basePath', new BasePath());
 
         $serviceManager = new ServiceManager();
-        $serviceManager->setService('ViewHelperManager', $viewHelperManager);
+        $serviceManager->setService('config', [
+            'con-layout' => [
+                'base_path' => '/my/base/'
+            ]
+        ]);
 
-        $instance = $factory($this->sm, BasePathFilter2::class);
+        $instance = $factory($serviceManager, BasePathFilter2::class);
 
         $this->assertInstanceOf(
             BasePathFilter2::class,
@@ -48,6 +50,8 @@ class BasePathFilterTest extends AbstractTestCase
             FilterInterface::class,
             $instance
         );
+
+        $this->assertEquals('/my/base/css/styles.css', $instance->filter('/css/styles.css'));
     }
 
     public function testBasePathLocal(): void

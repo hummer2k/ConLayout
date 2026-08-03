@@ -1,16 +1,21 @@
 <?php
+
+declare(strict_types=1);
+
 return [
-    'modules' => [
-        'Laminas\Router',
-        'Laminas\Filter',
-        'ConLayout'
-    ],
-    'module_listener_options' => [
-        'config_glob_paths'    => [
+    'con-layout' => [
+        'debug' => false,
+        'enabled' => true,
+        'layout_template' => 'layout',
+        'base_path' => '/my/base/',
+        'layout_update_paths' => [
+            'global' => []
         ],
-        'module_paths' => [
-            dirname(__DIR__),
-            __DIR__ . '/../vendor'
+        'layout_update_extensions' => [
+            'xml'
         ],
-    ],
+        'default_area' => 'default',
+        'cache_buster_internal_base_dir' => './public',
+        'body_class_prefix' => ''
+    ]
 ];

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ConLayout\Updater\Collector;
 
-use ConLayout\Ldt\Collector\LayoutCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Config\Config;
 use Laminas\Config\Factory as ConfigFactory;

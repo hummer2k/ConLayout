@@ -111,7 +111,7 @@ class BlockFactoryTest extends AbstractTestCase
     public function testCreateBlockImpl(): void
     {
         $renderer = new PhpRenderer();
-        $this->sm->setService('ViewRenderer', $renderer);
+        $this->sm->setService(PhpRenderer::class, $renderer);
         $block = $this->factory->createBlock('test.block.impl', [
             'class' => BlockImpl::class
         ]);

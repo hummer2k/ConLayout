@@ -11,19 +11,8 @@ class ModuleOptionsFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): ModuleOptions
     {
-        $config = $container->get('Config');
-        $options = isset($config['con-layout']) ? $config['con-layout'] : [];
-
-        if (
-            !isset($options['controller_map'])
-            && isset($config['view_manager']['controller_map'])
-        ) {
-            $options['controller_map'] = (array) $config['view_manager']['controller_map'];
-        }
-
-        $moduleOptions = new ModuleOptions(
-            $options
-        );
-        return $moduleOptions;
+        $config = $container->has('config') ? $container->get('config') : [];
+        $options = $config['con-layout'] ?? [];
+        return new ModuleOptions($options);
     }
 }

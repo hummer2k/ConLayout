@@ -1,13 +1,13 @@
 {
     "name": "hummer2k/conlayout",
-    "description": "Module for handling laminas-mvc layouts with blocks and handles similar to magento",
+    "description": "Mezzio package for handling layouts with blocks and handles similar to magento",
     "license": "MIT",
     "config": {
         "sort-packages": true
     },
     "keywords": [
-        "zf",
-        "zf3",
+        "mezzio",
+        "psr-15",
         "laminas",
         "layout",
         "handles",
@@ -23,22 +23,20 @@
     "require": {
         "php": "^8.2",
         "laminas/laminas-config": "^3.10",
+        "laminas/laminas-diactoros": "^3.8",
         "laminas/laminas-eventmanager": "^3.14",
-        "laminas/laminas-http": "^2.22",
-        "laminas/laminas-modulemanager": "^2.18",
-        "laminas/laminas-mvc": "^3.8",
-        "laminas/laminas-router": "^3.16",
-        "laminas/laminas-servicemanager": "^3.20",
+        "laminas/laminas-filter": "^2.42",
+        "laminas/laminas-servicemanager": "^3.24",
         "laminas/laminas-stdlib": "^3.20",
-        "laminas/laminas-view": "^2.25"
+        "laminas/laminas-view": "^2.27",
+        "mezzio/mezzio": "^3.28",
+        "mezzio/mezzio-laminasviewrenderer": "^2.19"
     },
     "suggest": {
-        "laminas/laminas-filter": "Filter configured params e.g. src, href attributes (basepath, cachebuster, ...)"
+        "laminas/laminas-i18n": "Translate filter support"
     },
     "require-dev": {
-        "laminas/laminas-developer-tools": "^2.10",
-        "laminas/laminas-filter": "^2.42",
-        "laminas/laminas-i18n": "^2.15",
+        "laminas/laminas-i18n": "^2.30",
         "phpunit/phpunit": "^11.5",
         "rector/rector": "^2.6",
         "squizlabs/php_codesniffer": "^3.11"
@@ -51,11 +49,6 @@
     "autoload-dev": {
         "psr-4": {
             "ConLayoutTest\\": "test/"
-        }
-    },
-    "extra": {
-        "zf": {
-            "component": "ConLayout"
         }
     }
 }

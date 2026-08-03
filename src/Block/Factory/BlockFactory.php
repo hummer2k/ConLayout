@@ -13,6 +13,7 @@ use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\View\Model\ModelInterface;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerInterface;
 
 final class BlockFactory implements
@@ -124,7 +125,7 @@ final class BlockFactory implements
         $block->setVariable('block', $block);
 
         if ($block instanceof BlockInterface) {
-            $block->setView($this->container->get('ViewRenderer'));
+            $block->setView($this->container->get(PhpRenderer::class));
         }
 
         $results = $this->getEventManager()->trigger(

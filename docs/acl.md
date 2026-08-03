@@ -1,28 +1,65 @@
 # ACL
 
-An Event is fired before the block instance is injected into the layout where
+An event is fired before the block instance is injected into the layout where
 you can determine whether the block is allowed to be shown.
 
 (return true or false in your event listener)
 
 ````php
 <?php
-// Module.php
-/**
- * @param \Laminas\EventManager\EventInterface $e
- */
-public function onBootstrap(EventInterface $e)
+namespace App\Listener;
+
+use Laminas\EventManager\EventInterface;
+
+class AclBlockListener
 {
-    $application    = $e->getApplication();
-    $eventManager   = $application->getEventManager();
+    public function __construct(private \Laminas\Permissions\Acl\Acl $acl)
+    {
+    }
 
-    // get the authorization service
-    $authService = $application->getServiceLocator('My\AuthService');
-
-    $eventManager->getSharedManager()->attach('ConLayout\Layout\Layout', 'isAllowed', function($e) use ($authService) {
+    public function isAllowed(EventInterface $e): bool
+    {
         $resource = $e->getParam('block_id');
         $e->stopPropagation();
-        return $authService->isGranted($resource);
-    });
+        return $this->acl->isAllowed('user', $resource);
+    }
 }
+````
+
+The event is triggered on the `ConLayout\Layout\Layout` instance. Attach the
+listener with a delegator factory for the layout service:
+
+````php
+<?php
+namespace App\Factory;
+
+use App\Listener\AclBlockListener;
+use ConLayout\Layout\LayoutInterface;
+use Psr\Container\ContainerInterface;
+
+class LayoutAclDelegatorFactory
+{
+    public function __invoke(ContainerInterface $container, $name, callable $callback): mixed
+    {
+        $layout = $callback();
+        $listener = $container->get(AclBlockListener::class);
+        $layout->getEventManager()->attach('isAllowed', [$listener, 'isAllowed']);
+        return $layout;
+    }
+}
+````
+
+````php
+<?php
+// in your application ConfigProvider
+'dependencies' => [
+    'factories' => [
+        \App\Listener\AclBlockListener::class => \App\Listener\AclBlockListenerFactory::class
+    ],
+    'delegators' => [
+        \ConLayout\Layout\LayoutInterface::class => [
+            \App\Factory\LayoutAclDelegatorFactory::class
+        ]
+    ]
+]
 ````

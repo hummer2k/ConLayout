@@ -6,25 +6,22 @@ E.g. frontend, backend etc.
 Before you can use this feature, you have to tell the layout updater
 in which area we are currently in.
 
-
 ````php
 <?php
 // determine area.
 $area = $this->determineArea(); // 'frontend' or 'backend' or 'admin' ...
 
-/* @var $layoutUpdater \ConLayout\Updater\LayoutUpdaterInterface */
-$layoutUpdater = $sm->get('ConLayout\Updater\LayoutUpdaterInterface');
-$layoutUpdater->setArea($area);
-
+/* @var $layoutManager \ConLayout\LayoutManager */
+$layoutManager = $request->getAttribute(\ConLayout\Http\LayoutContext::class)->getLayoutManager();
+$layoutManager->setArea($area);
 ````
 
-Now you could add the paths for the areas in some module configuration:
+Now you could add the paths for the areas in some application configuration:
 
 ````php
 <?php
-// module.config.php in Application module
+// config/autoload/con-layout.global.php
 return [
-    // ...
     'con-layout' => [
         'layout_update_paths' => [
             'frontend' => [
@@ -35,61 +32,51 @@ return [
             ]
         ]
     ]
-    // ...
 ];
 ````
 
 ### How to determine the current area?
 
-A possible implementation could be to listen to the MVC dispatch event
-and determine the area by the matched route name:
-
+A possible implementation could be a small middleware that determines the
+area by the matched route name:
 
 ````php
 <?php
 
-namespace Application\Listener;
+namespace App\Middleware;
 
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Laminas\EventManager\EventManagerInterface;
-use Laminas\EventManager\ListenerAggregateInterface;
-use Laminas\EventManager\ListenerAggregateTrait;
-use Laminas\Mvc\MvcEvent;
+use Mezzio\Router\RouteResult;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class AreaListener implements ListenerAggregateInterface
+class AreaMiddleware implements MiddlewareInterface
 {
-    use ListenerAggregateTrait;
+    public const AREA_BACKEND = 'backend';
 
-    const AREA_BACKEND  = 'backend';
-
-    /**
-     * @var LayoutUpdaterInterface
-     */
-    protected $layoutUpdater;
-
-    public function __construct(LayoutUpdaterInterface $layoutUpdateListener)
+    public function __construct(private LayoutUpdaterInterface $layoutUpdater)
     {
-        $this->layoutUpdater = $layoutUpdater;
     }
 
-    public function attach(EventManagerInterface $events)
-    {
-        $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch']);
-    }
-
-    public function onDispatch(MvcEvent $e)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $area = LayoutUpdaterInterface::AREA_DEFAULT;
 
-        $routeMatch = $e->getRouteMatch();
-        $matchedRouteName = $routeMatch->getMatchedRouteName();
+        $routeResult = $request->getAttribute(RouteResult::class);
+        if ($routeResult instanceof RouteResult && $routeResult->isSuccess()) {
+            $matchedRouteName = $routeResult->getMatchedRouteName();
 
-        // example for zfc admin
-        if (fnmatch('zfcadmin*', $matchedRouteName)) {
-            $area = self::AREA_BACKEND;
+            // example for zfc admin
+            if (fnmatch('zfcadmin*', $matchedRouteName)) {
+                $area = self::AREA_BACKEND;
+            }
         }
 
         $this->layoutUpdater->setArea($area);
+
+        return $handler->handle($request);
     }
 }
 ````

@@ -6,9 +6,8 @@ namespace ConLayoutTest\Generator;
 
 use ConLayout\Filter\BasePathFilter;
 use ConLayout\Filter\CacheBusterFilter;
+use ConLayout\ConfigProvider;
 use ConLayout\Generator\ViewHelperGenerator;
-use ConLayout\Listener\ViewHelperListener;
-use ConLayout\Module;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\Helper\Proxy\HeadMetaProxy;
 use ConLayout\View\Helper\Proxy\HeadScriptProxy;
@@ -87,7 +86,7 @@ class ViewHelperGeneratorTest extends AbstractTestCase
 
     public function testGenerateViewHelpers(): void
     {
-        $config = (new Module())->getConfig();
+        $config = (new ConfigProvider())()['con-layout'];
         $helperPluginManager = new HelperPluginManager($this->sm);
 
         $filterManager = new FilterPluginManager($this->sm);
@@ -102,7 +101,7 @@ class ViewHelperGeneratorTest extends AbstractTestCase
 
         $generator = new ViewHelperGenerator(
             $helperPluginManager,
-            $config['con-layout']['view_helpers']
+            $config['view_helpers']
         );
 
         $generator->setFilterManager($filterManager);
