@@ -3,7 +3,7 @@
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\Block;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 
@@ -11,7 +11,7 @@ use Laminas\View\Renderer\PhpRenderer;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockTest extends AbstractTest
+class BlockTest extends AbstractTestCase
 {
     /**
      *

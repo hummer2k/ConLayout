@@ -5,7 +5,7 @@ namespace ConLayoutTest\Filter;
 use ConLayout\Filter\BasePathFilter as BasePathFilter;
 use ConLayout\Filter\BasePathFilter as BasePathFilter2;
 use ConLayout\Filter\BasePathFilterFactory;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Filter\FilterInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Helper\BasePath;
@@ -15,7 +15,7 @@ use Laminas\View\HelperPluginManager;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BasePathFilterTest extends AbstractTest
+class BasePathFilterTest extends AbstractTestCase
 {
     private $basePathFilter;
 

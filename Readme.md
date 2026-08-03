@@ -1,8 +1,7 @@
 # ConLayout 
 
 ## Master
-[![Travis](https://travis-ci.org/hummer2k/ConLayout.svg?branch=master)](https://travis-ci.org/hummer2k/ConLayout)
-[![Coverage Status](https://coveralls.io/repos/hummer2k/ConLayout/badge.svg?branch=master&service=github)](https://coveralls.io/github/hummer2k/ConLayout?branch=master)
+[![CI](https://github.com/hummer2k/ConLayout/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/hummer2k/ConLayout/actions/workflows/ci.yml)
 
 ## Installation
 

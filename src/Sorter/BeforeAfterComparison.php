@@ -72,6 +72,7 @@ final class BeforeAfterComparison implements SorterInterface
      */
     private function prepareItem($code, $item)
     {
+        $item = (array) $item;
         if (isset($item['before'])) {
             $item['before'] = explode(',', $item['before']);
         } else {

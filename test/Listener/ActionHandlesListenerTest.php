@@ -3,7 +3,7 @@
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\ActionHandlesListener;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\RouteMatch;
 
@@ -11,7 +11,7 @@ use Laminas\Router\Http\RouteMatch;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ActionHandlesListenerTest extends AbstractTest
+class ActionHandlesListenerTest extends AbstractTestCase
 {
     /**
      * @var ActionHandlesListener
@@ -52,10 +52,10 @@ class ActionHandlesListenerTest extends AbstractTest
             'application/index/index'
         ];
 
-        $handles = $this->layoutUpdater->getHandles();
+        $handles = implode(' ', $this->layoutUpdater->getHandles());
 
         foreach ($expectedHandles as $expectedHandle) {
-            $this->assertContains($expectedHandle, $handles);
+            $this->assertStringContainsString($expectedHandle, $handles);
         }
     }
 
@@ -78,10 +78,10 @@ class ActionHandlesListenerTest extends AbstractTest
             'app/index/index'
         ];
 
-        $handles = $this->layoutUpdater->getHandles();
+        $handles = implode(' ', $this->layoutUpdater->getHandles());
 
         foreach ($expectedHandles as $expectedHandle) {
-            $this->assertContains($expectedHandle, $handles);
+            $this->assertStringContainsString($expectedHandle, $handles);
         }
     }
 
@@ -91,6 +91,6 @@ class ActionHandlesListenerTest extends AbstractTest
         $this->mvcEvent->setError($error);
         $this->listener->injectErrorHandle($this->mvcEvent);
 
-        $this->assertContains($error, $this->layoutUpdater->getHandles());
+        $this->assertStringContainsString($error, implode(' ', $this->layoutUpdater->getHandles()));
     }
 }

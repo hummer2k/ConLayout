@@ -19,7 +19,7 @@ class BlockFactory implements FactoryInterface
      * @param array|null $options
      * @return Block
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         return new Block(
             $container->get(BlockPoolInterface::class)

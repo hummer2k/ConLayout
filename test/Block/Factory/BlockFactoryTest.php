@@ -6,7 +6,7 @@ use ConLayout\Block\AbstractBlock;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
@@ -15,7 +15,7 @@ use Laminas\View\Renderer\PhpRenderer;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockFactoryTest extends AbstractTest
+class BlockFactoryTest extends AbstractTestCase
 {
     /**
      *

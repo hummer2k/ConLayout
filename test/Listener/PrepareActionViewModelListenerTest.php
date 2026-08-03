@@ -4,7 +4,7 @@ namespace ConLayoutTest\Listener;
 
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\PrepareActionViewModelListener;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Mvc\MvcEvent;
 use Laminas\View\Model\ViewModel;
 
@@ -12,7 +12,7 @@ use Laminas\View\Model\ViewModel;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class PrepareActionViewModelListenerTest extends AbstractTest
+class PrepareActionViewModelListenerTest extends AbstractTestCase
 {
     protected $prepareActionViewModelListener;
 

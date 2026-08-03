@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="./test/Bootstrap.php" colors="true" verbose="true">
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+         bootstrap="./test/Bootstrap.php"
+         colors="true">
+    <source>
+        <include>
             <directory suffix=".php">./src</directory>
-            <exclude>
-                <directory suffix=".php">./src/ConLayout/Sorter</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory suffix=".php">./src/ConLayout/Sorter</directory>
+        </exclude>
+    </source>
     <testsuites>
         <testsuite name="con-layout-test">
             <directory>./test</directory>

@@ -19,7 +19,7 @@ class CacheBusterFilterFactory implements FactoryInterface
      * @param array $options
      * @return CacheBusterFilter
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         /* @var $options ModuleOptions */
         $options = $container->get(ModuleOptions::class);

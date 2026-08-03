@@ -9,7 +9,6 @@ namespace ConLayout\View\Helper\Proxy;
  */
 class HeadMetaProxy extends AbstractViewHelperProxy
 {
-
     public function appendName($name, $content, $modifiers = [])
     {
         return $this->helper->appendName($name, $content, $modifiers);

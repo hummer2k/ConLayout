@@ -19,7 +19,7 @@ class ViewHelperGeneratorFactory implements FactoryInterface
      * @param array $options
      * @return ViewHelperGenerator
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         /** @var ModuleOptions $options */
         $options             = $container->get(ModuleOptions::class);

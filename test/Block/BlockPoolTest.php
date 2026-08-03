@@ -7,10 +7,10 @@
 
 namespace ConLayoutTest\Block;
 
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Model\ViewModel;
 
-class BlockPoolTest extends AbstractTest
+class BlockPoolTest extends AbstractTestCase
 {
     public function testAddAndGetBlock()
     {
@@ -109,7 +109,7 @@ class BlockPoolTest extends AbstractTest
 
     public function testSortBlocks()
     {
-        
+
         $expectedOrder = [
             1 => 'block-2',
             2 => 'block-4',

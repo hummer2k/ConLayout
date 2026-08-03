@@ -12,7 +12,7 @@ use ConLayout\Layout\LayoutInterface;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use ConLayoutTest\Layout\Layout as TestLayout;
 use Laminas\Config\Config;
 use Laminas\ServiceManager\ServiceManager;
@@ -22,7 +22,7 @@ use Laminas\View\Model\ViewModel;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutTest extends AbstractTest
+class LayoutTest extends AbstractTestCase
 {
     protected $updaterMock;
 

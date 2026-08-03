@@ -11,7 +11,7 @@ use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\Helper\Proxy\HeadMetaProxy;
 use ConLayout\View\Helper\Proxy\HeadScriptProxy;
 use ConLayout\View\Helper\Proxy\HeadTitleProxy;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Config\Config;
 use Laminas\Escaper\Escaper;
 use Laminas\Filter\FilterPluginManager;
@@ -27,7 +27,7 @@ use Laminas\View\Renderer\PhpRenderer;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ViewHelperGeneratorTest extends AbstractTest
+class ViewHelperGeneratorTest extends AbstractTestCase
 {
     protected function getLayoutStructure()
     {

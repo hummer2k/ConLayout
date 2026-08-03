@@ -8,10 +8,10 @@
 namespace ConLayoutTest\Block;
 
 use ConLayout\Block\Container;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Renderer\PhpRenderer;
 
-class ContainerTest extends AbstractTest
+class ContainerTest extends AbstractTestCase
 {
     public function testDefaultTag()
     {

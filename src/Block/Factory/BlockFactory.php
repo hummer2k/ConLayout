@@ -58,8 +58,8 @@ final class BlockFactory implements
      */
     public function __construct(
         array $blockDefaults = [],
-        ContainerInterface $blockManager = null,
-        ContainerInterface $container = null
+        ?ContainerInterface $blockManager = null,
+        ?ContainerInterface $container = null
     ) {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,

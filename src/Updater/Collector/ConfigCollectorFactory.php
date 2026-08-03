@@ -18,7 +18,7 @@ class ConfigCollectorFactory implements FactoryInterface
      * @param array $options
      * @return ConfigCollector
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $config = $container->get('config');
         $configStructure = isset($config['layout_updates'])

@@ -24,7 +24,7 @@ use Laminas\View\Resolver\TemplateMapResolver;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-abstract class AbstractTest extends TestCase
+abstract class AbstractTestCase extends TestCase
 {
     /**
      *

@@ -7,7 +7,7 @@ use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Config\Config;
 use Laminas\EventManager\EventManager;
 use Laminas\EventManager\SharedEventManager;
@@ -16,7 +16,7 @@ use Laminas\EventManager\SharedEventManager;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutUpdaterTest extends AbstractTest
+class LayoutUpdaterTest extends AbstractTestCase
 {
     protected $em;
 
@@ -101,7 +101,7 @@ class LayoutUpdaterTest extends AbstractTest
         $collectorMock = $this->getMockBuilder(CollectorInterface::class)->getMock();
         $collectorMock
             ->method('collect')
-            ->will($this->returnValueMap($instructions));
+            ->willReturnMap($instructions);
 
         $this->updater->attachCollector('mock', $collectorMock);
     }

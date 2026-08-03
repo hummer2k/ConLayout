@@ -4,16 +4,15 @@ namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\BodyClassListener;
 use ConLayout\View\Helper\BodyClass;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Router\Http\RouteMatch;
 
 /**
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BodyClassListenerTest extends AbstractTest
+class BodyClassListenerTest extends AbstractTestCase
 {
-
     public function testAddBodyClass()
     {
         $bodyClassHelper = new BodyClass();

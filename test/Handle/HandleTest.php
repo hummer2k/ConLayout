@@ -3,13 +3,13 @@
 namespace ConLayoutTest\Handle;
 
 use ConLayout\Handle\Handle;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 
 /**
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class HandleTest extends AbstractTest
+class HandleTest extends AbstractTestCase
 {
     public function testHandle()
     {

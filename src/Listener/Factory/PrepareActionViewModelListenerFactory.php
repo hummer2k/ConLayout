@@ -20,7 +20,7 @@ class PrepareActionViewModelListenerFactory implements FactoryInterface
      * @param array $options
      * @return PrepareActionViewModelListener
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         return new PrepareActionViewModelListener(
             $container->get(BlockPoolInterface::class)

@@ -9,5 +9,4 @@ namespace ConLayout\View\Helper\Proxy;
  */
 class InlineScriptProxy extends HeadScriptProxy
 {
-
 }

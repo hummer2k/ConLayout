@@ -3,13 +3,13 @@
 namespace ConLayoutTest\Options;
 
 use ConLayout\Options\ModuleOptions;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ModuleOptionsTest extends AbstractTest
+class ModuleOptionsTest extends AbstractTestCase
 {
     public function testDefaults()
     {

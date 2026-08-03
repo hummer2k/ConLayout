@@ -4,14 +4,14 @@ namespace ConLayoutTest\Listener;
 
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\LoadLayoutListener;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Model\ViewModel;
 
 /**
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LoadLayoutListenerTest extends AbstractTest
+class LoadLayoutListenerTest extends AbstractTestCase
 {
     public function testLoadLayout()
     {

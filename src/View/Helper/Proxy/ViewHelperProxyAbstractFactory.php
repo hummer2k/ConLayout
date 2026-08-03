@@ -53,7 +53,7 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
      * @param array $options
      * @return mixed
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $viewHelperManager = $container->get('ViewHelperManager');
         $helper = $viewHelperManager->get($this->helperAlias);

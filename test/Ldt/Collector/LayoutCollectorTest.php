@@ -11,7 +11,7 @@ use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ViewModel;
@@ -21,7 +21,7 @@ use Laminas\View\Resolver\AggregateResolver;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutCollectorTest extends AbstractTest
+class LayoutCollectorTest extends AbstractTestCase
 {
     /**
      *

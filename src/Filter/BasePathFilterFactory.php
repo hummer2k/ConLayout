@@ -18,7 +18,7 @@ class BasePathFilterFactory implements FactoryInterface
      * @param array|null $options
      * @return BasePathFilter
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $basePathHelper = $container
             ->get('ViewHelperManager')

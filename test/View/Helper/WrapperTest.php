@@ -3,7 +3,7 @@
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\Wrapper;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\View\HelperPluginManager;
 use Laminas\View\Renderer\PhpRenderer;
 
@@ -11,7 +11,7 @@ use Laminas\View\Renderer\PhpRenderer;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class WrapperTest extends AbstractTest
+class WrapperTest extends AbstractTestCase
 {
     /**
      *

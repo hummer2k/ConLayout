@@ -21,7 +21,7 @@ class LayoutFactory implements FactoryInterface
      * @param array $options
      * @return Layout
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $layout = new Layout(
             $container->get(LayoutUpdaterInterface::class),

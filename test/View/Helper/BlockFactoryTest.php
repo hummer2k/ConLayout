@@ -5,7 +5,7 @@ namespace ConLayoutTest\View\Helper;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\View\Helper\Block;
 use ConLayout\View\Helper\BlockFactory;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\HelperPluginManager;
@@ -14,7 +14,7 @@ use Laminas\View\HelperPluginManager;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockFactoryTest extends AbstractTest
+class BlockFactoryTest extends AbstractTestCase
 {
     public function testFactory()
     {

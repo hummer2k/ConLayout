@@ -44,7 +44,7 @@ class BodyClassListener extends AbstractListenerAggregate
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'addBodyClass'], $priority);
     }
-    
+
     /**
      *
      * @param MvcEvent $e

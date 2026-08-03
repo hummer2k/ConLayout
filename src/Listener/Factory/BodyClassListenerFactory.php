@@ -19,7 +19,7 @@ class BodyClassListenerFactory implements FactoryInterface
      * @param array $options
      * @return BodyClassListener
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $bodyClassHelper = $container->get('ViewHelperManager')->get('bodyClass');
         /** @var ModuleOptions $moduleOptions */

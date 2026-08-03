@@ -10,7 +10,7 @@ use Laminas\View\Model\ViewModel;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class BlockManagerTest extends AbstractTest
+class BlockManagerTest extends AbstractTestCase
 {
     /**
      *

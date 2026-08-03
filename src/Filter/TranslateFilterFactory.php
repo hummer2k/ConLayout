@@ -19,7 +19,7 @@ class TranslateFilterFactory implements FactoryInterface
      * @param array $options
      * @return TranslateFilter
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $translator = $container->get('MvcTranslator');
         return new TranslateFilter($translator);

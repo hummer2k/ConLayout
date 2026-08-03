@@ -20,7 +20,7 @@ class ActionHandlesListenerFactory implements FactoryInterface
      * @param array $options
      * @return ActionHandlesListener
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         /** @var $moduleOptions ModuleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);

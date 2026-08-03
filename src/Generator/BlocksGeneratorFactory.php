@@ -20,7 +20,7 @@ class BlocksGeneratorFactory implements FactoryInterface
      * @param array|null $options
      * @return BlocksGenerator
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $blocksGenerator = new BlocksGenerator(
             $container->get(BlockFactoryInterface::class),

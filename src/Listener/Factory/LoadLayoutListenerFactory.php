@@ -19,7 +19,7 @@ class LoadLayoutListenerFactory implements FactoryInterface
      * @param array $options
      * @return LoadLayoutListener
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $injectBlocksListener = new LoadLayoutListener(
             $container->get(LayoutInterface::class)

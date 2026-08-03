@@ -10,10 +10,10 @@ namespace ConLayoutTest\Updater\Collector;
 use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Config\Config;
 
-class ConfigCollectorTest extends AbstractTest
+class ConfigCollectorTest extends AbstractTestCase
 {
     /**
      * @var CollectorInterface

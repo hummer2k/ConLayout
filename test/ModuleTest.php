@@ -26,7 +26,7 @@ use Laminas\View\Renderer\PhpRenderer;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ModuleTest extends AbstractTest
+class ModuleTest extends AbstractTestCase
 {
     public function testConfig()
     {

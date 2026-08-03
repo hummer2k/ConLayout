@@ -10,10 +10,10 @@ namespace ConLayoutTest\Updater\Collector;
 use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Config\Config;
 
-class FilesystemCollectorTest extends AbstractTest
+class FilesystemCollectorTest extends AbstractTestCase
 {
     /**
      * @var CollectorInterface

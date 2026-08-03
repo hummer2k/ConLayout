@@ -8,14 +8,14 @@
 namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\DebugFilter;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Helper\ViewModel as ModelHelper;
 use Laminas\View\Model\ViewModel;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\HelperPluginManager;
 use Laminas\View\Renderer\PhpRenderer;
 
-class DebugFilterTest extends AbstractTest
+class DebugFilterTest extends AbstractTestCase
 {
     public function testMarkupContainsCommentsWithDebugInfo()
     {

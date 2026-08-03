@@ -22,7 +22,7 @@ class LayoutCollectorFactory implements FactoryInterface
      * @param array $options
      * @return LayoutCollector
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $layoutCollector = new LayoutCollector(
             $container->get(LayoutInterface::class),

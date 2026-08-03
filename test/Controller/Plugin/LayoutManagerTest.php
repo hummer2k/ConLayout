@@ -8,7 +8,7 @@ use ConLayout\Controller\Plugin\LayoutManagerFactory;
 use ConLayout\Handle\Handle;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Mvc\Controller\PluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ModelInterface;
@@ -18,7 +18,7 @@ use Laminas\View\Model\ViewModel;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class LayoutManagerTest extends AbstractTest
+class LayoutManagerTest extends AbstractTestCase
 {
     protected $layoutManager;
 

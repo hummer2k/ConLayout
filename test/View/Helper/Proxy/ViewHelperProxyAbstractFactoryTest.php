@@ -4,7 +4,7 @@ namespace ConLayoutTest\View\Helper\Proxy;
 
 use ConLayout\Options\ModuleOptions;
 use ConLayout\View\Helper\Proxy\ViewHelperProxyAbstractFactory;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Helper\AbstractHelper;
 
@@ -12,7 +12,7 @@ use Laminas\View\Helper\AbstractHelper;
  * @package ConLayout
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class ViewHelperProxyAbstractFactoryTest extends AbstractTest
+class ViewHelperProxyAbstractFactoryTest extends AbstractTestCase
 {
     public function testCanCreate()
     {

@@ -5,7 +5,7 @@ namespace ConLayoutTest\Filter;
 use ConLayout\Filter\CacheBusterFilter;
 use ConLayout\Filter\CacheBusterFilterFactory;
 use ConLayout\Options\ModuleOptions;
-use ConLayoutTest\AbstractTest;
+use ConLayoutTest\AbstractTestCase;
 use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\ServiceManager;
@@ -14,7 +14,7 @@ use Laminas\ServiceManager\ServiceManager;
  * @package
  * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
-class CacheBusterFilterTest extends AbstractTest
+class CacheBusterFilterTest extends AbstractTestCase
 {
     public function testFactory()
     {

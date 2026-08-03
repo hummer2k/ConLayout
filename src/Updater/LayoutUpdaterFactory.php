@@ -18,7 +18,7 @@ class LayoutUpdaterFactory implements FactoryInterface
      * @param array $options
      * @return LayoutUpdater
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $updater = new LayoutUpdater();
         /** @var ModuleOptions $moduleOptions */

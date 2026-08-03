@@ -50,7 +50,7 @@ class ContainerFilter implements FilterInterface
             return $value;
         }
 
-        $container = trim($viewModel->getOption('container'));
+        $container = trim((string) $viewModel->getOption('container'));
         if (!strlen($container)) {
             return $value;
         }

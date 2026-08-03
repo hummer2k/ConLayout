@@ -19,7 +19,7 @@ class FilesystemCollectorFactory implements FactoryInterface
      * @param array $options
      * @return FilesystemCollector
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         /* @var $options ModuleOptions */
         $options = $container->get(ModuleOptions::class);

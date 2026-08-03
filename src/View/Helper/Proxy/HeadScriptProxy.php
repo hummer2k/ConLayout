@@ -9,7 +9,6 @@ namespace ConLayout\View\Helper\Proxy;
  */
 class HeadScriptProxy extends AbstractViewHelperProxy
 {
-
     public function appendFile($src, $type = 'text/javascript', $attrs = [])
     {
         return $this->helper->appendFile($src, $type, $attrs);

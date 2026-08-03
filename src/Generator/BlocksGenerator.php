@@ -56,7 +56,7 @@ final class BlocksGenerator implements GeneratorInterface
      * @param Config $references
      * @param string $parentId
      */
-    private function generateBlocks(Config $blocks, Config $references = null, $parentId = null)
+    private function generateBlocks(Config $blocks, ?Config $references = null, $parentId = null)
     {
         foreach ($blocks as $blockId => $specs) {
             if (null !== $references && $blockReference = $references->get($blockId)) {
