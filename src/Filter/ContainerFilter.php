@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Filter;
 
@@ -14,19 +11,12 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class ContainerFilter implements FilterInterface
 {
-    /**
-     * @var PhpRenderer
-     */
-    private $phpRenderer;
+    private \Laminas\View\Renderer\PhpRenderer $phpRenderer;
 
-    /**
-     * @var ModelInterface
-     */
-    private $currentViewModel;
+    private ?\Laminas\View\Model\ModelInterface $currentViewModel = null;
 
     /**
      * ContainerFilter constructor.
-     * @param PhpRenderer $phpRenderer
      */
     public function __construct(PhpRenderer $phpRenderer)
     {
@@ -34,10 +24,9 @@ class ContainerFilter implements FilterInterface
     }
 
     /**
-     * @param string $value
-     * @return string
+     * @param mixed $value
      */
-    public function filter($value)
+    public function filter($value): mixed
     {
         /** @var ViewModel $viewModel */
         $viewModel = $this->phpRenderer->viewModel()->getCurrent();

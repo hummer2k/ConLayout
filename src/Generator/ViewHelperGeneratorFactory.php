@@ -1,25 +1,20 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Generator;
 
 use ConLayout\Options\ModuleOptions;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ViewHelperGeneratorFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
-     * @return ViewHelperGenerator
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): ViewHelperGenerator
     {
         /** @var ModuleOptions $options */
         $options             = $container->get(ModuleOptions::class);

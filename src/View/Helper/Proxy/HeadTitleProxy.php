@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\View\Helper\Proxy;
 
 /**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  * @codeCoverageIgnore
  */
 class HeadTitleProxy extends AbstractViewHelperProxy

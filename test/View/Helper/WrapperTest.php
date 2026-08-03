@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\Wrapper;
@@ -7,10 +9,6 @@ use ConLayoutTest\AbstractTestCase;
 use Laminas\View\HelperPluginManager;
 use Laminas\View\Renderer\PhpRenderer;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class WrapperTest extends AbstractTestCase
 {
     /**
@@ -28,7 +26,7 @@ class WrapperTest extends AbstractTestCase
         $this->wrapperHelper->setView($view);
     }
 
-    public function testDefaultOpeningTag()
+    public function testDefaultOpeningTag(): void
     {
         call_user_func($this->wrapperHelper);
         $this->assertEquals(
@@ -37,7 +35,7 @@ class WrapperTest extends AbstractTestCase
         );
     }
 
-    public function testOpenTagHasAttributes()
+    public function testOpenTagHasAttributes(): void
     {
         $tag = 'aside';
         call_user_func($this->wrapperHelper, $tag);
@@ -47,7 +45,7 @@ class WrapperTest extends AbstractTestCase
         );
     }
 
-    public function testClosingTag()
+    public function testClosingTag(): void
     {
         call_user_func($this->wrapperHelper);
         $this->assertEquals('</div>', $this->wrapperHelper->closeTag());

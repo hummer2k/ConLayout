@@ -1,17 +1,10 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Sorter;
 
 interface SorterInterface
 {
-    /**
-     * @param array $data
-     * @return mixed
-     */
-    public function sort(array $data);
+    public function sort(array $data): array;
 }

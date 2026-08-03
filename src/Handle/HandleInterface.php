@@ -1,25 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Handle;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 interface HandleInterface
 {
-    /**
-     * @return string
-     */
-    public function getName();
+    public function getName(): string;
 
-    /**
-     * @return int
-     */
-    public function getPriority();
+    public function getPriority(): int;
 
-    /**
-     * @return string
-     */
-    public function __toString();
+    public function __toString(): string;
 }

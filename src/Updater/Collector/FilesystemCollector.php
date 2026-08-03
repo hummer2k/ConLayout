@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Updater\Collector;
 
@@ -18,29 +15,15 @@ class FilesystemCollector implements CollectorInterface
 {
     public const NAME = 'filesystem';
 
-    /**
-     *
-     * @var array
-     */
-    private $paths = [];
+    private array $paths = [];
 
     /**
      * list of file extensions to search for e.g. ['php', 'xml']
-     *
-     * @var array
      */
-    private $extensions = [];
+    private array $extensions = [];
 
-    /**
-     * @var array
-     */
-    private $collectedFiles = [];
+    private array $collectedFiles = [];
 
-    /**
-     *
-     * @param array $paths
-     * @param array $extensions
-     */
     public function __construct(
         array $paths = [],
         array $extensions = ['php', 'xml']
@@ -52,7 +35,7 @@ class FilesystemCollector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function collect($handle, $area = null)
+    public function collect(string $handle, ?string $area = null): Config
     {
         $globPaths = $this->getGlobPaths($handle, $area);
         $tempStructure = new Config([], true);
@@ -73,13 +56,7 @@ class FilesystemCollector implements CollectorInterface
         return $tempStructure;
     }
 
-    /**
-     *
-     * @param string $handle
-     * @param null|string $area
-     * @return array
-     */
-    private function getGlobPaths($handle, $area = null)
+    private function getGlobPaths(string $handle, ?string $area = null): array
     {
         $globPaths = [];
         $areas = [
@@ -103,9 +80,6 @@ class FilesystemCollector implements CollectorInterface
         return $globPaths;
     }
 
-    /**
-     * @return array
-     */
     public function getCollectedFiles(): array
     {
         return $this->collectedFiles;

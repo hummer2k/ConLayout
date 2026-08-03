@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest;
 
 use ConLayout\Filter\ContainerFilter;
@@ -22,13 +24,9 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\HelperPluginManager;
 use Laminas\View\Renderer\PhpRenderer;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class ModuleTest extends AbstractTestCase
 {
-    public function testConfig()
+    public function testConfig(): void
     {
         $module = new Module();
         $this->assertIsArray($module->getConfig());
@@ -36,7 +34,7 @@ class ModuleTest extends AbstractTestCase
         $this->assertIsArray($module->getFilterConfig());
     }
 
-    public function testOnBootstrapListenersWithHttpRequest()
+    public function testOnBootstrapListenersWithHttpRequest(): void
     {
         $module = new Module();
 
@@ -90,7 +88,7 @@ class ModuleTest extends AbstractTestCase
         ], $layoutUpdater->getHandles());
     }
 
-    protected function createApplication()
+    protected function createApplication(): \Laminas\Mvc\Application
     {
         $sm = new ServiceManager();
         $sm->setService('EventManager', new EventManager(new SharedEventManager()));
@@ -102,7 +100,7 @@ class ModuleTest extends AbstractTestCase
         return $application;
     }
 
-    public function testInit()
+    public function testInit(): void
     {
         $module = new Module();
         /** @var ModuleManager $manager */
@@ -114,7 +112,7 @@ class ModuleTest extends AbstractTestCase
         $this->assertTrue($sm->has('BlockManager'));
     }
 
-    public function testViewHelperConfig()
+    public function testViewHelperConfig(): void
     {
         $module = new Module();
         $this->assertIsArray($module->getViewHelperConfig());

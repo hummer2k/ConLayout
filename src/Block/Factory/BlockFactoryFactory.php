@@ -1,25 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Block\Factory;
 
 use ConLayout\BlockManager;
 use ConLayout\Options\ModuleOptions;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BlockFactoryFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
-     * @return BlockFactory
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): BlockFactory
     {
         /* @var $options ModuleOptions */
         $options = $container->get(ModuleOptions::class);

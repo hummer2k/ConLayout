@@ -1,42 +1,27 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Block;
 
 class Container extends AbstractBlock
 {
-    /**
-     * @return mixed
-     */
-    protected function getTag()
+    protected function getTag(): string
     {
         return $this->getOption('tag', 'div');
     }
 
-    /**
-     * @return string
-     */
-    public function openTag()
+    public function openTag(): string
     {
         return '<' . $this->getTag() . $this->htmlAttributes() . '>';
     }
 
-    /**
-     * @return string
-     */
-    public function closeTag()
+    public function closeTag(): string
     {
         return '</' . $this->getTag() . '>';
     }
 
-    /**
-     * @return string
-     */
-    protected function htmlAttributes()
+    protected function htmlAttributes(): string
     {
         $html = '';
         foreach ($this->getOptions() as $name => $value) {

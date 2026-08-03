@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Updater\Collector;
 
@@ -14,14 +11,10 @@ class ConfigCollector implements CollectorInterface
 {
     public const NAME = 'config';
 
-    /**
-     * @var array
-     */
-    private $config;
+    private array $config;
 
     /**
      * ConfigCollector constructor.
-     * @param array $config
      */
     public function __construct(array $config)
     {
@@ -31,7 +24,7 @@ class ConfigCollector implements CollectorInterface
     /**
      * @inheritDoc
      */
-    public function collect($handle, $area = null)
+    public function collect(string $handle, ?string $area = null): Config
     {
         $areas = [
             LayoutUpdaterInterface::AREA_GLOBAL,

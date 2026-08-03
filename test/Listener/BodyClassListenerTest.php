@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\BodyClassListener;
@@ -7,13 +9,9 @@ use ConLayout\View\Helper\BodyClass;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\Router\Http\RouteMatch;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BodyClassListenerTest extends AbstractTestCase
 {
-    public function testAddBodyClass()
+    public function testAddBodyClass(): void
     {
         $bodyClassHelper = new BodyClass();
         $listener = new BodyClassListener($bodyClassHelper);

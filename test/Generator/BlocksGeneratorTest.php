@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayoutTest\Generator;
 
@@ -15,7 +12,7 @@ use Laminas\View\Model\ViewModel;
 
 class BlocksGeneratorTest extends AbstractTestCase
 {
-    public function testBlockIsGenerated()
+    public function testBlockIsGenerated(): void
     {
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
@@ -36,7 +33,7 @@ class BlocksGeneratorTest extends AbstractTestCase
         );
     }
 
-    public function testReferenceOverwritesDefaults()
+    public function testReferenceOverwritesDefaults(): void
     {
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
@@ -55,7 +52,7 @@ class BlocksGeneratorTest extends AbstractTestCase
         $this->assertEquals('set/by/reference', $block->getTemplate());
     }
 
-    public function testReferenceWithNestedChildren()
+    public function testReferenceWithNestedChildren(): void
     {
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
@@ -78,7 +75,7 @@ class BlocksGeneratorTest extends AbstractTestCase
         );
     }
 
-    public function testDoNotCreateBlockIfRemoved()
+    public function testDoNotCreateBlockIfRemoved(): void
     {
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
@@ -96,7 +93,7 @@ class BlocksGeneratorTest extends AbstractTestCase
         $this->assertFalse($this->blockPool->get('some.block'));
     }
 
-    public function testCreateChildren()
+    public function testCreateChildren(): void
     {
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
@@ -120,7 +117,7 @@ class BlocksGeneratorTest extends AbstractTestCase
         $this->assertTrue($child->getOption('has_parent'));
     }
 
-    public function testConfigureBlockIfAlreadyInPool()
+    public function testConfigureBlockIfAlreadyInPool(): void
     {
         $block = new ViewModel();
         $this->blockPool->add('some.block', $block);

@@ -1,30 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout;
 
 use ReflectionMethod;
 use ReflectionParameter;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 trait NamedParametersTrait
 {
     /**
      *
      * @var array
      */
-    protected static $reflectionCache = [];
+    protected static array $reflectionCache = [];
 
-    /**
-     *
-     * @param object $instance
-     * @param string $method
-     * @param array $args
-     * @return mixed
-     */
-    protected function invokeArgs($instance, $method, array $args = [])
+    protected function invokeArgs(object $instance, string $method, array $args = []): mixed
     {
         $class = get_class($instance);
         if (isset(self::$reflectionCache[$class][$method])) {

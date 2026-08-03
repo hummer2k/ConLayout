@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\BasePathFilter as BasePathFilter;
@@ -11,13 +13,9 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Helper\BasePath;
 use Laminas\View\HelperPluginManager;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BasePathFilterTest extends AbstractTestCase
 {
-    private $basePathFilter;
+    private \ConLayout\Filter\BasePathFilter $basePathFilter;
 
     protected function setUp(): void
     {
@@ -30,7 +28,7 @@ class BasePathFilterTest extends AbstractTestCase
         );
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $factory = new BasePathFilterFactory();
         $viewHelperManager = new HelperPluginManager($this->sm);
@@ -52,7 +50,7 @@ class BasePathFilterTest extends AbstractTestCase
         );
     }
 
-    public function testBasePathLocal()
+    public function testBasePathLocal(): void
     {
         $value  = '/css/styles.css';
         $result = $this->basePathFilter->filter($value, $value);
@@ -60,7 +58,7 @@ class BasePathFilterTest extends AbstractTestCase
         $this->assertEquals('/my/base/css/styles.css', $result);
     }
 
-    public function testBasePathRemote()
+    public function testBasePathRemote(): void
     {
         $value  = '//cdn.example.com/css/styles.css';
         $result = $this->basePathFilter->filter($value, $value);
@@ -68,7 +66,7 @@ class BasePathFilterTest extends AbstractTestCase
         $this->assertEquals($value, $result);
     }
 
-    public function testBasePathHttp()
+    public function testBasePathHttp(): void
     {
         $value  = 'http://cdn.example.com/css/styles.css';
         $result = $this->basePathFilter->filter($value, $value);
@@ -76,7 +74,7 @@ class BasePathFilterTest extends AbstractTestCase
         $this->assertEquals($value, $result);
     }
 
-    public function testBasePathHttps()
+    public function testBasePathHttps(): void
     {
         $value  = 'https://cdn.example.com/css/styles.css';
         $result = $this->basePathFilter->filter($value, $value);

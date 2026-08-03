@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayoutTest\Block;
 
@@ -13,14 +10,14 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class ContainerTest extends AbstractTestCase
 {
-    public function testDefaultTag()
+    public function testDefaultTag(): void
     {
         $container = new Container();
         $this->assertEquals('<div>', $container->openTag());
         $this->assertEquals('</div>', $container->closeTag());
     }
 
-    public function testCustomTag()
+    public function testCustomTag(): void
     {
         $container = new Container();
         $container->setOption('tag', 'section');
@@ -28,7 +25,7 @@ class ContainerTest extends AbstractTestCase
         $this->assertEquals('</section>', $container->closeTag());
     }
 
-    public function testAttributes()
+    public function testAttributes(): void
     {
         $container = new Container();
         $container->setView(new PhpRenderer());

@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayoutTest\Updater\Collector;
 
@@ -33,7 +30,7 @@ class FilesystemCollectorTest extends AbstractTestCase
         ]);
     }
 
-    public function testCollectorCollectsHandle()
+    public function testCollectorCollectsHandle(): void
     {
         $result = $this->collector->collect('default');
         $this->assertInstanceOf(Config::class, $result);
@@ -42,7 +39,7 @@ class FilesystemCollectorTest extends AbstractTestCase
         $this->assertEmpty($block->get('template'));
     }
 
-    public function testAreaOverridesGlobal()
+    public function testAreaOverridesGlobal(): void
     {
         $result = $this->collector->collect('default', 'frontend');
         $block = $result->blocks->get('some.block');

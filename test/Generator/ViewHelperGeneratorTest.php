@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Generator;
 
 use ConLayout\Filter\BasePathFilter;
@@ -23,13 +25,9 @@ use Laminas\View\Helper\HeadTitle;
 use Laminas\View\HelperPluginManager;
 use Laminas\View\Renderer\PhpRenderer;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class ViewHelperGeneratorTest extends AbstractTestCase
 {
-    protected function getLayoutStructure()
+    protected function getLayoutStructure(): \Laminas\Config\Config
     {
         return new Config([
             ViewHelperGenerator::INSTRUCTION => [
@@ -87,7 +85,7 @@ class ViewHelperGeneratorTest extends AbstractTestCase
         ]);
     }
 
-    public function testGenerateViewHelpers()
+    public function testGenerateViewHelpers(): void
     {
         $config = (new Module())->getConfig();
         $helperPluginManager = new HelperPluginManager($this->sm);

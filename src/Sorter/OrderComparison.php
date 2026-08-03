@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Sorter;
 
@@ -12,7 +9,7 @@ class OrderComparison implements SorterInterface
     /**
      * @inheritDoc
      */
-    public function sort(array $data)
+    public function sort(array $data): array
     {
         uasort($data, function ($a, $b) {
             $orderA = isset($a['order']) ? $a['order'] : 1;

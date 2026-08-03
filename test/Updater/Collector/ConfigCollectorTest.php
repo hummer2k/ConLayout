@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayoutTest\Updater\Collector;
 
@@ -55,14 +52,14 @@ class ConfigCollectorTest extends AbstractTestCase
         $this->collector = new ConfigCollector($config);
     }
 
-    public function testCollectorCollectsHandle()
+    public function testCollectorCollectsHandle(): void
     {
         $result = $this->collector->collect('default', 'frontend');
         $this->assertInstanceOf(Config::class, $result);
         $this->assertNotEmpty($result->get('blocks'));
     }
 
-    public function testAreaOverridesGlobal()
+    public function testAreaOverridesGlobal(): void
     {
         $result = $this->collector->collect('default', 'frontend');
 

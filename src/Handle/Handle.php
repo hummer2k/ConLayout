@@ -1,33 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Handle;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 final class Handle implements HandleInterface
 {
     /**
      * handle name
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * handle's priority
-     *
-     * @var int
      */
-    protected $priority;
+    protected int $priority;
 
-    /**
-     *
-     * @param string $name
-     * @param int $priority
-     */
-    public function __construct($name, $priority)
+    public function __construct(string $name, int $priority)
     {
         $this->name     = $name;
         $this->priority = $priority;
@@ -36,7 +25,7 @@ final class Handle implements HandleInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -44,7 +33,7 @@ final class Handle implements HandleInterface
     /**
      * {@inheritdoc}
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return $this->priority;
     }
@@ -52,7 +41,7 @@ final class Handle implements HandleInterface
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName();
     }

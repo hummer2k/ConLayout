@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Ldt\Collector;
 
 use ConLayout\Handle\HandleInterface;
@@ -17,10 +19,6 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Resolver\AggregateResolver;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LayoutCollectorTest extends AbstractTestCase
 {
     /**
@@ -51,7 +49,7 @@ class LayoutCollectorTest extends AbstractTestCase
         );
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $layoutCollectorFactory = new LayoutCollectorFactory();
         $serviceManager = new ServiceManager();
@@ -86,7 +84,7 @@ class LayoutCollectorTest extends AbstractTestCase
         );
     }
 
-    public function testGetName()
+    public function testGetName(): void
     {
         $this->assertEquals(
             LayoutCollector::NAME,
@@ -94,12 +92,12 @@ class LayoutCollectorTest extends AbstractTestCase
         );
     }
 
-    public function testGetPriority()
+    public function testGetPriority(): void
     {
         $this->assertEquals(600, $this->collector->getPriority());
     }
 
-    public function testCollect()
+    public function testCollect(): void
     {
         $event = new MvcEvent();
         $layoutModel = new ViewModel();

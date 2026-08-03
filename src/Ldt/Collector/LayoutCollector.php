@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Ldt\Collector;
 
 use ConLayout\Layout\LayoutInterface;
@@ -13,48 +15,21 @@ use Laminas\DeveloperTools\Collector\AbstractCollector;
 /**
  * Collector for LaminasDeveloperToolbar
  *
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class LayoutCollector extends AbstractCollector
 {
     public const NAME = 'con-layout';
 
-    /**
-     *
-     * @var LayoutInterface
-     */
-    protected $layout;
+    protected \ConLayout\Layout\LayoutInterface $layout;
 
-    /**
-     *
-     * @var LayoutUpdaterInterface
-     */
-    protected $updater;
+    protected \ConLayout\Updater\LayoutUpdaterInterface $updater;
 
-    /**
-     *
-     * @var ResolverInterface
-     */
-    protected $viewResolver;
+    protected \Laminas\View\Resolver\ResolverInterface $viewResolver;
 
-    /**
-     * @var ModuleOptions
-     */
-    private $moduleOptions;
+    private \ConLayout\Options\ModuleOptions $moduleOptions;
 
-    /**
-     * @var FilesystemCollector
-     */
-    private $filesystemCollector;
+    private \ConLayout\Updater\Collector\FilesystemCollector $filesystemCollector;
 
-    /**
-     *
-     * @param LayoutInterface $layout
-     * @param LayoutUpdaterInterface $updater
-     * @param ResolverInterface $viewResolver
-     * @param ModuleOptions $moduleOptions
-     * @param FilesystemCollector $filesystemCollector
-     */
     public function __construct(
         LayoutInterface $layout,
         LayoutUpdaterInterface $updater,
@@ -69,31 +44,20 @@ class LayoutCollector extends AbstractCollector
         $this->filesystemCollector = $filesystemCollector;
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return self::NAME;
     }
 
-    /**
-     *
-     * @return int
-     */
-    public function getPriority()
+    public function getPriority(): int
     {
         return 600;
     }
 
     /**
      * collect data for zdt
-     *
-     * @param MvcEvent $mvcEvent
-     * @return LayoutCollector
      */
-    public function collect(MvcEvent $mvcEvent)
+    public function collect(MvcEvent $mvcEvent): static
     {
         $layout = $mvcEvent->getViewModel();
         $blocks = [];
@@ -124,19 +88,12 @@ class LayoutCollector extends AbstractCollector
 
     /**
      * retrieve resolved template path
-     *
-     * @param string $template
-     * @return string
      */
     private function resolveTemplate(string $template): string
     {
         return $this->getFilepath($this->viewResolver->resolve($template));
     }
 
-    /**
-     * @param array $collectedFiles
-     * @return array
-     */
     private function resolveCollectedFiles(array $collectedFiles): array
     {
         foreach ($collectedFiles as &$files) {
@@ -147,80 +104,46 @@ class LayoutCollector extends AbstractCollector
         return $collectedFiles;
     }
 
-    /**
-     * @param string $file
-     * @return string
-     */
     private function getFilepath(string $file): string
     {
         return str_replace(getcwd(), '', $file);
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getLayoutTemplate()
+    public function getLayoutTemplate(): string
     {
         return $this->data['layout_template'];
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getCurrentArea()
+    public function getCurrentArea(): string
     {
         return $this->data['current_area'];
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getHandles()
+    public function getHandles(): array
     {
         return $this->data['handles'];
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getLayoutStructure()
+    public function getLayoutStructure(): array
     {
         return $this->data['layout_structure'];
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getBlocks()
+    public function getBlocks(): array
     {
         return $this->data['blocks'];
     }
 
-    /**
-     * @return string|false
-     */
-    public function getRemoteCall()
+    public function getRemoteCall(): bool|string
     {
         return $this->data['remote_call'];
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCollectedFiles()
+    public function getCollectedFiles(): array
     {
         return $this->data['collected_files'];
     }
 
-    /**
-     * @param string $file
-     * @return string
-     */
     public function getRemoteCallUrl(string $file): string
     {
         if ($remoteCall = $this->getRemoteCall()) {

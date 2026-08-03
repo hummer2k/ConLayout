@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Listener;
 
 use ConLayout\Block\BlockPoolInterface;
@@ -13,8 +15,6 @@ use Laminas\View\Model\ModelInterface;
 /**
  * Listener to prepare action result view model
  *
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
  */
 class PrepareActionViewModelListener implements ListenerAggregateInterface
 {
@@ -23,11 +23,10 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
     /**
      * @var LayoutInterface
      */
-    private $blockPool;
+    private \ConLayout\Block\BlockPoolInterface $blockPool;
 
     /**
      * PrepareActionViewModelListener constructor.
-     * @param BlockPoolInterface $blockPool
      */
     public function __construct(BlockPoolInterface $blockPool)
     {
@@ -36,10 +35,9 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
 
     /**
      *
-     * @param EventManagerInterface $events
      * @param int $priority
      */
-    public function attach(EventManagerInterface $events, $priority = -300)
+    public function attach(EventManagerInterface $events, $priority = -300): void
     {
         foreach ([MvcEvent::EVENT_DISPATCH, MvcEvent::EVENT_DISPATCH_ERROR] as $eventName) {
             $this->listeners[] = $events->attach(
@@ -50,11 +48,7 @@ class PrepareActionViewModelListener implements ListenerAggregateInterface
         }
     }
 
-    /**
-     *
-     * @param MvcEvent $e
-     */
-    public function prepareActionViewModel(MvcEvent $e)
+    public function prepareActionViewModel(MvcEvent $e): void
     {
         /* @var $result ModelInterface */
         $result = $e->getResult();

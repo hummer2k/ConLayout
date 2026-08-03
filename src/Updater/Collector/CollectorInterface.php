@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Updater\Collector;
 
@@ -11,10 +8,5 @@ use Laminas\Config\Config;
 
 interface CollectorInterface
 {
-    /**
-     * @param string $handle
-     * @param null|string $area
-     * @return Config
-     */
-    public function collect($handle, $area = null);
+    public function collect(string $handle, ?string $area = null): Config;
 }

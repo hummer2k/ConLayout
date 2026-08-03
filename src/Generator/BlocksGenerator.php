@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Generator;
 
@@ -17,20 +14,12 @@ final class BlocksGenerator implements GeneratorInterface
     public const INSTRUCTION_BLOCKS    = 'blocks';
     public const INSTRUCTION_REFERENCE = 'reference';
 
-    /**
-     * @var BlockFactoryInterface
-     */
-    protected $blockFactory;
+    protected \ConLayout\Block\Factory\BlockFactoryInterface $blockFactory;
 
-    /**
-     * @var BlockPoolInterface
-     */
-    protected $blockPool;
+    protected \ConLayout\Block\BlockPoolInterface $blockPool;
 
     /**
      * BlocksGenerator constructor.
-     * @param BlockFactoryInterface $blockFactory
-     * @param BlockPoolInterface $blockPool
      */
     public function __construct(
         BlockFactoryInterface $blockFactory,
@@ -43,7 +32,7 @@ final class BlocksGenerator implements GeneratorInterface
     /**
      * @inheritDoc
      */
-    public function generate(Config $layoutStructure)
+    public function generate(Config $layoutStructure): void
     {
         $blocks     = $layoutStructure->get(self::INSTRUCTION_BLOCKS, new Config([]));
         $references = $layoutStructure->get(self::INSTRUCTION_REFERENCE);
@@ -52,11 +41,9 @@ final class BlocksGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Config $blocks
      * @param Config $references
-     * @param string $parentId
      */
-    private function generateBlocks(Config $blocks, ?Config $references = null, $parentId = null)
+    private function generateBlocks(Config $blocks, ?Config $references = null, ?string $parentId = null): void
     {
         foreach ($blocks as $blockId => $specs) {
             if (null !== $references && $blockReference = $references->get($blockId)) {
@@ -83,14 +70,10 @@ final class BlocksGenerator implements GeneratorInterface
         }
     }
 
-    /**
-     * @param Config $specs
-     * @return boolean
-     */
-    private function isRemoved(Config $specs)
+    private function isRemoved(Config $specs): bool
     {
         if ($remove = $specs->get('remove')) {
-            return filter_var($remove, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            return (bool) (filter_var($remove, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false);
         }
         return false;
     }

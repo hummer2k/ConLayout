@@ -1,23 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Options;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class ModuleOptionsFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
-     * @return ModuleOptions
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): ModuleOptions
     {
         $config = $container->get('Config');
         $options = isset($config['con-layout']) ? $config['con-layout'] : [];

@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Block;
 
@@ -18,25 +15,20 @@ final class BlockPool implements BlockPoolInterface
     /**
      * suffix for anonymous block names
      * will be incremented on every addBlock call when block has no id
-     *
-     * @var int
      */
-    private static $anonymousSuffix = 1;
+    private static int $anonymousSuffix = 1;
 
     /**
      * @var ModelInterface[]|BlockInterface[]
      */
-    private $blocks = [];
+    private array $blocks = [];
 
-    /**
-     * @var array
-     */
-    private $removedBlocks = [];
+    private array $removedBlocks = [];
 
     /**
      * @inheritDoc
      */
-    public function get($blockId = null)
+    public function get(?string $blockId = null): array|ModelInterface|false
     {
         if (null === $blockId) {
             return $this->blocks;
@@ -49,7 +41,7 @@ final class BlockPool implements BlockPoolInterface
     /**
      * @inheritDoc
      */
-    public function add($blockId, ModelInterface $block)
+    public function add(string $blockId, ModelInterface $block): static
     {
         $block->setOption('block_id', $blockId);
         if ($block->hasChildren()) {
@@ -71,7 +63,7 @@ final class BlockPool implements BlockPoolInterface
     /**
      * @inheritDoc
      */
-    public function remove($blockId)
+    public function remove(string $blockId): void
     {
         if (isset($this->blocks[$blockId])) {
             unset($this->blocks[$blockId]);
@@ -82,7 +74,7 @@ final class BlockPool implements BlockPoolInterface
     /**
      * @inheritDoc
      */
-    public function sort()
+    public function sort(): static
     {
         foreach ($this->blocks as $block) {
             if ($beforeBlockId = $block->getOption('before')) {
@@ -109,11 +101,7 @@ final class BlockPool implements BlockPoolInterface
         return $this;
     }
 
-    /**
-     * @param ModelInterface $block
-     * @return mixed|string
-     */
-    private function determineAnonymousBlockId(ModelInterface $block)
+    private function determineAnonymousBlockId(ModelInterface $block): string
     {
         $blockId = $block->getOption('block_id');
         if (!$blockId) {

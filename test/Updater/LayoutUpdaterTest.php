@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Updater;
 
 use ConLayout\Handle\Handle;
@@ -12,20 +14,12 @@ use Laminas\Config\Config;
 use Laminas\EventManager\EventManager;
 use Laminas\EventManager\SharedEventManager;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LayoutUpdaterTest extends AbstractTestCase
 {
-    protected $em;
-
-    protected $layoutStructure;
-
     /**
      * @var LayoutUpdaterInterface
      */
-    protected $updater;
+    protected LayoutUpdaterInterface $updater;
 
     protected function setUp(): void
     {
@@ -106,13 +100,13 @@ class LayoutUpdaterTest extends AbstractTestCase
         $this->updater->attachCollector('mock', $collectorMock);
     }
 
-    public function testIsReadOnly()
+    public function testIsReadOnly(): void
     {
         $layoutStructure = $this->updater->getLayoutStructure();
         $this->assertTrue($layoutStructure->isReadOnly());
     }
 
-    public function testDefaultHandle()
+    public function testDefaultHandle(): void
     {
         $layoutStructure = $this->updater->getLayoutStructure()->toArray();
         $this->assertEquals([
@@ -123,7 +117,7 @@ class LayoutUpdaterTest extends AbstractTestCase
         ], $layoutStructure);
     }
 
-    public function testAnotherHandle()
+    public function testAnotherHandle(): void
     {
         $this->updater->addHandle(new Handle('another-handle', 1));
         $this->assertEquals([
@@ -135,7 +129,7 @@ class LayoutUpdaterTest extends AbstractTestCase
         ], $this->updater->getLayoutStructure()->toArray());
     }
 
-    public function testShortCircuiting()
+    public function testShortCircuiting(): void
     {
         $this->em->getSharedManager()->attach(
             LayoutUpdater::class,
@@ -153,7 +147,7 @@ class LayoutUpdaterTest extends AbstractTestCase
         ], $layoutStructure);
     }
 
-    public function testSetHandles()
+    public function testSetHandles(): void
     {
         $this->updater->setHandles([
             new Handle('handle-1', 5),
@@ -168,14 +162,14 @@ class LayoutUpdaterTest extends AbstractTestCase
         ], $this->updater->getHandles());
     }
 
-    public function testSetAndGetArea()
+    public function testSetAndGetArea(): void
     {
         $area = 'some-area';
         $this->layoutUpdater->setArea($area);
         $this->assertSame($area, $this->layoutUpdater->getArea());
     }
 
-    public function testIncludedHandleRecursivly()
+    public function testIncludedHandleRecursivly(): void
     {
         $this->updater->setHandles([
             new Handle('handle/with-include', 10)
@@ -191,7 +185,7 @@ class LayoutUpdaterTest extends AbstractTestCase
         $this->assertInstanceOf(Config::class, $block2);
     }
 
-    public function testIncludedHandleDoesNotOverride()
+    public function testIncludedHandleDoesNotOverride(): void
     {
         $this->updater->setHandles([
             new Handle('handle/with-include', 10)

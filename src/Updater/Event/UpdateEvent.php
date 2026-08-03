@@ -1,88 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Updater\Event;
 
 use Laminas\Config\Config;
 use Laminas\EventManager\Event;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class UpdateEvent extends Event
 {
     public const EVENT_COLLECT      = 'collect';
     public const EVENT_COLLECT_POST = 'collect.post';
 
-    /**
-     *
-     * @var Config
-     */
-    protected $layoutStructure;
+    protected Config $layoutStructure;
 
-    /**
-     *
-     * @var array
-     */
-    protected $handles;
+    protected array $handles;
 
-    /**
-     *
-     * @var string
-     */
-    protected $area;
+    protected string $area;
 
-    /**
-     * @return Config
-     */
-    public function getLayoutStructure()
+    public function getLayoutStructure(): Config
     {
         return $this->layoutStructure;
     }
 
-    /**
-     * @return array
-     */
-    public function getHandles()
+    public function getHandles(): array
     {
         return $this->handles;
     }
 
-    /**
-     * @param Config $layoutStructure
-     * @return UpdateEvent
-     */
-    public function setLayoutStructure(Config $layoutStructure)
+    public function setLayoutStructure(Config $layoutStructure): static
     {
         $this->layoutStructure = $layoutStructure;
         return $this;
     }
 
-    /**
-     * @param array $handles
-     * @return UpdateEvent
-     */
-    public function setHandles(array $handles)
+    public function setHandles(array $handles): static
     {
         $this->handles = $handles;
         return $this;
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getArea()
+    public function getArea(): string
     {
         return $this->area;
     }
 
-    /**
-     *
-     * @param string $area
-     * @return UpdateEvent
-     */
-    public function setArea($area)
+    public function setArea(string $area): static
     {
         $this->area = $area;
         return $this;

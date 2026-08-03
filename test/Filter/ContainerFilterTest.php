@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
-
 declare(strict_types=1);
 
 namespace ConLayoutTest\Filter;
@@ -17,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class ContainerFilterTest
- * @package ConLayoutTest\Filter
  */
 class ContainerFilterTest extends TestCase
 {
@@ -50,7 +45,7 @@ class ContainerFilterTest extends TestCase
         $this->containerFilter = new ContainerFilter($phpRenderer);
     }
 
-    public function testContentIsWrappedWithString()
+    public function testContentIsWrappedWithString(): void
     {
         $this->currentViewModel->setOption('container', '<div class="wrapper">%s</div>');
         $value = '<span class="my-content">lorem ipsum</span>';
@@ -61,7 +56,7 @@ class ContainerFilterTest extends TestCase
         $this->assertEquals($expected, $filtered);
     }
 
-    public function testContentIsWrappedWithTemplate()
+    public function testContentIsWrappedWithTemplate(): void
     {
         $this->currentViewModel->setOption('container', 'container');
         $value = '<div class="header"><img src="logo.png"></div>';
@@ -72,7 +67,7 @@ class ContainerFilterTest extends TestCase
         $this->assertEquals($expected, $filtered);
     }
 
-    public function testContentIsWrappedWithMultipleTemplates()
+    public function testContentIsWrappedWithMultipleTemplates(): void
     {
         $this->currentViewModel->setOption('container', 'container-2,container');
         $value = '<span>Lorem Ipsum</span>';
@@ -83,7 +78,7 @@ class ContainerFilterTest extends TestCase
         $this->assertEquals($expected, $filtered);
     }
 
-    public function testNoWrappingIfContainerIsEmpty()
+    public function testNoWrappingIfContainerIsEmpty(): void
     {
         $value = 'Lorem Ipsum';
 

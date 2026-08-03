@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Layout\LayoutInterface;
@@ -8,10 +10,6 @@ use ConLayoutTest\AbstractTestCase;
 use Laminas\Mvc\MvcEvent;
 use Laminas\View\Model\ViewModel;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class PrepareActionViewModelListenerTest extends AbstractTestCase
 {
     protected $prepareActionViewModelListener;
@@ -27,7 +25,7 @@ class PrepareActionViewModelListenerTest extends AbstractTestCase
         $this->mvcEvent = new MvcEvent();
     }
 
-    public function testWithViewModel()
+    public function testWithViewModel(): void
     {
         $viewModel = new ViewModel();
         $this->mvcEvent->setResult($viewModel);
@@ -40,14 +38,14 @@ class PrepareActionViewModelListenerTest extends AbstractTestCase
         );
     }
 
-    public function testWithNull()
+    public function testWithNull(): void
     {
         $this->prepareActionViewModelListener->prepareActionViewModel($this->mvcEvent);
 
         $this->assertNull($this->mvcEvent->getResult());
     }
 
-    public function testDoNothingOnTerminal()
+    public function testDoNothingOnTerminal(): void
     {
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);

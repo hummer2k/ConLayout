@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Options;
 
 use ConLayout\Options\ModuleOptions;
 use ConLayoutTest\AbstractTestCase;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class ModuleOptionsTest extends AbstractTestCase
 {
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $moduleOptions = new ModuleOptions();
         $this->assertIsArray($moduleOptions->getControllerMap());
@@ -25,7 +23,7 @@ class ModuleOptionsTest extends AbstractTestCase
         $this->assertIsString($moduleOptions->getDefaultArea());
     }
 
-    public function testSettersGetters()
+    public function testSettersGetters(): void
     {
         $moduleOptions = new ModuleOptions();
 
@@ -61,7 +59,7 @@ class ModuleOptionsTest extends AbstractTestCase
         $this->assertEquals(false, $moduleOptions->isPreferRouteMatchController());
     }
 
-    public function testSetLayoutUpdateExtensions()
+    public function testSetLayoutUpdateExtensions(): void
     {
         $moduleOptions = new ModuleOptions();
         $layoutUpdateExtensions = [

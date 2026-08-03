@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Listener;
 
 use ConLayout\View\Helper\BodyClass;
@@ -7,28 +9,12 @@ use Laminas\EventManager\AbstractListenerAggregate;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\Mvc\MvcEvent;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BodyClassListener extends AbstractListenerAggregate
 {
-    /**
-     *
-     * @var BodyClass
-     */
-    protected $bodyClassHelper;
+    protected \ConLayout\View\Helper\BodyClass $bodyClassHelper;
 
-    /**
-     * @var string
-     */
-    private $prefix;
+    private string $prefix;
 
-    /**
-     *
-     * @param BodyClass $bodyClassHelper
-     * @param string $prefix
-     */
     public function __construct(BodyClass $bodyClassHelper, string $prefix = '')
     {
         $this->bodyClassHelper = $bodyClassHelper;
@@ -37,20 +23,14 @@ class BodyClassListener extends AbstractListenerAggregate
 
     /**
      *
-     * @param EventManagerInterface $events
      * @param int $priority
      */
-    public function attach(EventManagerInterface $events, $priority = 1)
+    public function attach(EventManagerInterface $events, $priority = 1): void
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'addBodyClass'], $priority);
     }
 
-    /**
-     *
-     * @param MvcEvent $e
-     * @return BodyClassListener
-     */
-    public function addBodyClass(MvcEvent $e)
+    public function addBodyClass(MvcEvent $e): static
     {
         $helper = $this->bodyClassHelper;
         $routeMatchName = $e->getRouteMatch()->getMatchedRouteName();

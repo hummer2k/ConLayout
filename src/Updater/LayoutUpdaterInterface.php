@@ -1,14 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Updater;
 
 use ConLayout\Handle\HandleInterface;
 use Laminas\Config\Config;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 interface LayoutUpdaterInterface
 {
     public const INSTRUCTION_INCLUDE   = 'include';
@@ -19,51 +17,38 @@ interface LayoutUpdaterInterface
     /**
      * retrieve layout structure for current request
      * respectively current handles
-     *
-     * @return Config
      */
-    public function getLayoutStructure();
+    public function getLayoutStructure(): Config;
 
     /**
      * adds a handle
-     *
-     * @param HandleInterface $handle
      */
-    public function addHandle(HandleInterface $handle);
+    public function addHandle(HandleInterface $handle): static;
 
     /**
      * set/replace handles
-     *
-     * @param array $handles
      */
-    public function setHandles(array $handles);
+    public function setHandles(array $handles): static;
 
     /**
      * removes a handle by name
-     *
-     * @param string $handleName
      */
-    public function removeHandle($handleName);
+    public function removeHandle(string $handleName): static;
 
     /**
      * retrieve handles
      *
-     * @param bool $asObject
      * @return string[]|HandleInterface[]
      */
-    public function getHandles($asObject = false);
+    public function getHandles(bool $asObject = false): array;
 
     /**
      * set current area
-     *
-     * @param string $area
      */
-    public function setArea($area);
+    public function setArea(string $area): static;
 
     /**
      * retrieve current area
-     *
-     * @return string
      */
-    public function getArea();
+    public function getArea(): string;
 }

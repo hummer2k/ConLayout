@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Layout;
 
 use ConLayout\Block\BlockPoolInterface;
@@ -10,10 +12,6 @@ use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\Stdlib\PriorityList;
 use Laminas\View\Model\ModelInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class Layout implements
     EventManagerAwareInterface,
     LayoutInterface
@@ -22,47 +20,29 @@ class Layout implements
 
     /**
      * flag if blocks have already been injected
-     *
-     * @var bool
      */
-    protected $blocksInjected = false;
+    protected bool $blocksInjected = false;
 
-    /**
-     *
-     * @var LayoutUpdaterInterface
-     */
-    protected $updater;
+    protected \ConLayout\Updater\LayoutUpdaterInterface $updater;
 
     /**
      * blocks registry
-     *
-     * @var BlockPoolInterface
      */
-    protected $blockPool;
+    protected \ConLayout\Block\BlockPoolInterface $blockPool;
 
     /**
      *
      * @var GeneratorInterface[]|PriorityList
      */
-    protected $generators;
+    protected \Laminas\Stdlib\PriorityList $generators;
 
-    /**
-     * @var array
-     */
-    protected $loadedGenerators = [];
+    protected array $loadedGenerators = [];
 
     /**
      * flag if layout has been loaded
-     *
-     * @var bool
      */
-    protected $isLoaded = false;
+    protected bool $isLoaded = false;
 
-    /**
-     *
-     * @param LayoutUpdaterInterface $updater
-     * @param BlockPoolInterface $blockPool
-     */
     public function __construct(
         LayoutUpdaterInterface $updater,
         BlockPoolInterface $blockPool
@@ -75,7 +55,7 @@ class Layout implements
     /**
      * {@inheritdoc}
      */
-    public function getRoot()
+    public function getRoot(): ModelInterface|false
     {
         return $this->getBlock(self::BLOCK_ID_ROOT);
     }
@@ -83,7 +63,7 @@ class Layout implements
     /**
      * @inheritDoc
      */
-    public function setRoot(ModelInterface $root)
+    public function setRoot(ModelInterface $root): static
     {
         $this->blockPool->add(self::BLOCK_ID_ROOT, $root);
         return $this;
@@ -94,7 +74,7 @@ class Layout implements
      *
      * @return LayoutInterface
      */
-    public function load()
+    public function load(): static
     {
         if (false === $this->isLoaded) {
             $this->getEventManager()->trigger(
@@ -116,11 +96,7 @@ class Layout implements
         return $this;
     }
 
-    /**
-     * @param array $generators
-     * @return mixed|void
-     */
-    public function generate(array $generators = [])
+    public function generate(array $generators = []): static
     {
         $layoutStructure = $this->updater->getLayoutStructure();
         foreach ($this->generators as $name => $generator) {
@@ -135,13 +111,10 @@ class Layout implements
                 $this->loadedGenerators[$name] = true;
             }
         }
+        return $this;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
-    private function isGeneratorLoaded($name)
+    private function isGeneratorLoaded(string $name): bool
     {
         return isset($this->loadedGenerators[$name]);
     }
@@ -149,7 +122,7 @@ class Layout implements
     /**
      * @inheritDoc
      */
-    public function injectBlocks()
+    public function injectBlocks(): void
     {
         if (false === $this->blocksInjected) {
             $this->blockPool->sort();
@@ -159,7 +132,7 @@ class Layout implements
                     $this->isAllowed($blockId, $block) &&
                     $blockId !== self::BLOCK_ID_ROOT
                 ) {
-                    list($parent, $captureTo) = $this->getCaptureTo($block);
+                    [$parent, $captureTo] = $this->getCaptureTo($block);
                     if ($parentBlock = $this->getBlock($parent)) {
                         $parentBlock->addChild($block, $captureTo);
                         $block->setOption('parent_block', $parentBlock);
@@ -172,12 +145,8 @@ class Layout implements
 
     /**
      * Determines whether a block should be allowed given certain parameters
-     *
-     * @param   string          $blockId
-     * @param   ModelInterface  $block
-     * @return  bool
      */
-    private function isAllowed($blockId, ModelInterface $block)
+    private function isAllowed(string $blockId, ModelInterface $block): bool
     {
         $result = $this->getEventManager()->trigger(
             __FUNCTION__,
@@ -188,7 +157,7 @@ class Layout implements
             ]
         );
         if ($result->stopped()) {
-            return $result->last();
+            return (bool) $result->last();
         }
         return true;
     }
@@ -196,11 +165,9 @@ class Layout implements
     /**
      * adds a block to the registry
      *
-     * @param   string          $blockId
-     * @param   ModelInterface  $block
      * @return  LayoutInterface
      */
-    public function addBlock($blockId, ModelInterface $block)
+    public function addBlock(string $blockId, ModelInterface $block): static
     {
         $this->blockPool->add($blockId, $block);
         return $this;
@@ -208,11 +175,8 @@ class Layout implements
 
     /**
      * removes a single block from block registry
-     *
-     * @param   string          $blockId
-     * @return  LayoutInterface
      */
-    public function removeBlock($blockId)
+    public function removeBlock(string $blockId): static
     {
         $this->blockPool->remove($blockId);
         return $this;
@@ -221,11 +185,8 @@ class Layout implements
     /**
      * retrieve parent and capture_to as array, e.g.: [ 'layout', 'content' ]
      * so we are able to list() block_id and capture_to values
-     *
-     * @param   ModelInterface  $block
-     * @return  array
      */
-    protected function getCaptureTo(ModelInterface $block)
+    protected function getCaptureTo(ModelInterface $block): array
     {
         $captureTo = $block->captureTo();
         if ($parent = $block->getOption('parent')) {
@@ -247,10 +208,9 @@ class Layout implements
     /**
      * retrieve single block by its id
      *
-     * @param   string                  $blockId
      * @return  false|ModelInterface
      */
-    public function getBlock($blockId)
+    public function getBlock(string $blockId): ModelInterface|false
     {
         return $this->blockPool->get($blockId);
     }
@@ -264,7 +224,7 @@ class Layout implements
      *
      * @return ModelInterface[]
      */
-    public function getBlocks()
+    public function getBlocks(): array
     {
         return $this->blockPool->get();
     }
@@ -272,7 +232,7 @@ class Layout implements
     /**
      * @inheritDoc
      */
-    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1)
+    public function attachGenerator(string $name, GeneratorInterface $generator, int $priority = 1): static
     {
         $this->generators->insert($name, $generator, $priority);
         return $this;
@@ -281,7 +241,7 @@ class Layout implements
     /**
      * @inheritDoc
      */
-    public function detachGenerator($name)
+    public function detachGenerator(string $name): static
     {
         $this->generators->remove($name);
         return $this;

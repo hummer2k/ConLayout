@@ -1,26 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Filter;
 
 use Laminas\Filter\FilterInterface;
 use Laminas\View\Helper\BasePath as BasePathHelper;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BasePathFilter implements FilterInterface
 {
     /**
      *
      * @var BasePathHelper $basePathHelper
      */
-    protected $basePathHelper;
+    protected \Laminas\View\Helper\BasePath $basePathHelper;
 
-    /**
-     *
-     * @param BasePathHelper $basePathHelper
-     */
     public function __construct(BasePathHelper $basePathHelper)
     {
         $this->basePathHelper = $basePathHelper;
@@ -31,7 +25,7 @@ class BasePathFilter implements FilterInterface
      * @param string $value asset url to prepare
      * @return string prepared asset url
      */
-    public function filter($value)
+    public function filter($value): string
     {
         $urlHost = parse_url($value, PHP_URL_HOST);
         if (empty($urlHost)) {

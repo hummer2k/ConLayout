@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\Block\BlockPoolInterface;
@@ -10,13 +12,9 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\HelperPluginManager;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BlockFactoryTest extends AbstractTestCase
 {
-    public function testFactory()
+    public function testFactory(): void
     {
         $sm = new ServiceManager();
         $sm->setService(BlockPoolInterface::class, $this->blockPool);

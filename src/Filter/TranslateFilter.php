@@ -1,26 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Filter;
 
 use Laminas\Filter\FilterInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class TranslateFilter implements FilterInterface
 {
-    /**
-     *
-     * @var TranslatorInterface
-     */
-    protected $translator;
+    protected \Laminas\I18n\Translator\TranslatorInterface $translator;
 
-    /**
-     *
-     * @param TranslatorInterface $translator
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
@@ -28,10 +18,9 @@ class TranslateFilter implements FilterInterface
 
     /**
      *
-     * @param string $value
-     * @return string
+     * @param mixed $value
      */
-    public function filter($value)
+    public function filter($value): string
     {
         return $this->translator->translate((string) $value);
     }

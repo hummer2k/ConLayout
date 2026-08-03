@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest;
 
 use ConLayout\Block\BlockPool;
@@ -13,56 +15,28 @@ use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\Layout\Layout;
-use Interop\Container\ContainerInterface;
-use PHPUnit\Framework\TestCase;
 use Laminas\Config\Config;
 use Laminas\EventManager\EventManager;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\View\Resolver\TemplateMapResolver;
+use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 abstract class AbstractTestCase extends TestCase
 {
-    /**
-     *
-     * @var LayoutUpdaterInterface
-     */
-    protected $layoutUpdater;
+    protected LayoutUpdaterInterface $layoutUpdater;
 
-    /**
-     *
-     * @var LayoutInterface
-     */
-    protected $layout;
+    protected LayoutInterface $layout;
 
-    /**
-     * @var BlockPoolInterface
-     */
-    protected $blockPool;
+    protected BlockPoolInterface $blockPool;
 
-    /**
-     * @var BlockFactoryInterface
-     */
-    protected $blockFactory;
+    protected BlockFactoryInterface $blockFactory;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $sm;
+    protected ContainerInterface $sm;
 
-    /**
-     * @var GeneratorInterface
-     */
-    protected $blocksGenerator;
+    protected GeneratorInterface $blocksGenerator;
 
-    /**
-     *
-     * @var EventManagerInterface
-     */
-    protected $em;
+    protected EventManagerInterface $em;
 
     protected function setUp(): void
     {
@@ -93,7 +67,7 @@ abstract class AbstractTestCase extends TestCase
         );
     }
 
-    protected function getResolver()
+    protected function getResolver(): TemplateMapResolver
     {
         return new TemplateMapResolver([
             'widget1' => __DIR__ . '/_files/view/widget1.phtml',
@@ -103,7 +77,7 @@ abstract class AbstractTestCase extends TestCase
         ]);
     }
 
-    protected function getLayoutStructure()
+    protected function getLayoutStructure(): Config
     {
         return new Config([], true);
     }

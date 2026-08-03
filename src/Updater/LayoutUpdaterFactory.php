@@ -1,24 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Updater;
 
 use ConLayout\Options\ModuleOptions;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LayoutUpdaterFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
-     * @return LayoutUpdater
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): LayoutUpdater
     {
         $updater = new LayoutUpdater();
         /** @var ModuleOptions $moduleOptions */

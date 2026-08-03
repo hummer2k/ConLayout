@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Layout;
 
 use ConLayout\Block\BlockPool;
@@ -18,15 +20,9 @@ use Laminas\Config\Config;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ViewModel;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LayoutTest extends AbstractTestCase
 {
     protected $updaterMock;
-
-    protected $blockFactory;
 
     protected $layoutStructure;
 
@@ -43,7 +39,7 @@ class LayoutTest extends AbstractTestCase
         $this->blockFactory = new BlockFactory([], new BlockManager($this->sm), new ServiceManager());
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setAllowOverride(true);
@@ -69,7 +65,7 @@ class LayoutTest extends AbstractTestCase
         $this->assertInstanceOf(LayoutInterface::class, $instance);
     }
 
-    public function testGetCaptureTo()
+    public function testGetCaptureTo(): void
     {
         $viewModel = new ViewModel();
         $viewModel->setCaptureTo('root::footer');
@@ -83,7 +79,7 @@ class LayoutTest extends AbstractTestCase
         ], $layout->getCaptureTo($viewModel));
     }
 
-    public function testGetCaptureToDefault()
+    public function testGetCaptureToDefault(): void
     {
         $viewModel = new ViewModel();
         $viewModel->setOption('parent', 'some.parent');
@@ -96,7 +92,7 @@ class LayoutTest extends AbstractTestCase
         ], $layout->getCaptureTo($viewModel));
     }
 
-    public function testInjectBlocks()
+    public function testInjectBlocks(): void
     {
         $layout = new Layout(
             $this->updaterMock,
@@ -112,7 +108,7 @@ class LayoutTest extends AbstractTestCase
         $this->assertCount(1, $layout->getBlock('widget.1')->getChildren());
     }
 
-    public function testParentBlockIsAddedAsOption()
+    public function testParentBlockIsAddedAsOption(): void
     {
         $parent = new ViewModel();
         $child  = new ViewModel();

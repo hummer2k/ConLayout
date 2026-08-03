@@ -1,18 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\View\Helper\Proxy;
 
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use PHPUnit\Framework\TestCase;
 use Laminas\View\Helper\AbstractHelper;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class AbstractProxyTest extends TestCase
 {
-    public function testDelegatesNotExistingMethodsToSubject()
+    public function testDelegatesNotExistingMethodsToSubject(): void
     {
         $helper = new TestHelper();
         $proxy = new HeadLinkProxy($helper);
@@ -26,12 +24,12 @@ class TestHelper extends AbstractHelper
 {
     protected $called = false;
 
-    public function call()
+    public function call(): void
     {
         $this->called = true;
     }
 
-    public function isCalled()
+    public function isCalled(): bool
     {
         return $this->called;
     }

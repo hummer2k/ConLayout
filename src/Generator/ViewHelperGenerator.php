@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Generator;
 
@@ -13,7 +10,7 @@ use ConLayout\Filter\RawValueAwareInterface;
 use ConLayout\NamedParametersTrait;
 use ConLayout\Sorter\BeforeAfterComparison;
 use ConLayout\Sorter\SorterInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Config\Config;
 use Laminas\Stdlib\ArrayUtils;
 
@@ -24,35 +21,18 @@ final class ViewHelperGenerator implements GeneratorInterface
     public const NAME          = 'helpers';
     public const INSTRUCTION   = 'helpers';
 
-    /**
-     * @var bool
-     */
-    private $debug = false;
+    private bool $debug = false;
 
-    /**
-     * @var ContainerInterface
-     */
-    private $viewHelperManager;
+    private \Psr\Container\ContainerInterface $viewHelperManager;
 
-    /**
-     * @var ContainerInterface
-     */
-    private $filterManager;
+    private ?\Psr\Container\ContainerInterface $filterManager = null;
 
-    /**
-     * @var array
-     */
-    private $helperConfig = [];
+    private array $helperConfig = [];
 
-    /**
-     * @var SorterInterface
-     */
-    private $sorter;
+    private ?SorterInterface $sorter = null;
 
     /**
      * ViewHelperGenerator constructor.
-     * @param ContainerInterface $viewHelperManager
-     * @param array $helperConfig
      */
     public function __construct(
         ContainerInterface $viewHelperManager,
@@ -62,19 +42,12 @@ final class ViewHelperGenerator implements GeneratorInterface
         $this->helperConfig = $helperConfig;
     }
 
-    /**
-     * @return ContainerInterface
-     */
-    public function getFilterManager()
+    public function getFilterManager(): ?ContainerInterface
     {
         return $this->filterManager;
     }
 
-    /**
-     * @param ContainerInterface $filterManager
-     * @return ViewHelperGenerator
-     */
-    public function setFilterManager(ContainerInterface $filterManager)
+    public function setFilterManager(ContainerInterface $filterManager): static
     {
         $this->filterManager = $filterManager;
         return $this;
@@ -83,7 +56,7 @@ final class ViewHelperGenerator implements GeneratorInterface
     /**
      * @inheritDoc
      */
-    public function generate(Config $layoutStructure)
+    public function generate(Config $layoutStructure): void
     {
         if ($helpers = $layoutStructure->get(self::INSTRUCTION)) {
             $this->generateViewHelpers($helpers);
@@ -91,10 +64,9 @@ final class ViewHelperGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Config $helpers
      * @throws BadMethodCallException
      */
-    private function generateViewHelpers(Config $helpers)
+    private function generateViewHelpers(Config $helpers): void
     {
         foreach ($this->helperConfig as $helper => $config) {
             if (!$helpers->get($helper)) {
@@ -134,21 +106,12 @@ final class ViewHelperGenerator implements GeneratorInterface
         }
     }
 
-    /**
-     *
-     * @param array $data
-     * @return array
-     */
-    private function sort($data)
+    private function sort(array $data): array
     {
         return $this->getSorter()->sort($data);
     }
 
-    /**
-     * @param array $instruction
-     * @return array
-     */
-    private function filterArgs(array $instruction)
+    private function filterArgs(array $instruction): array
     {
         if (
             !isset($instruction['filter']) ||
@@ -179,7 +142,7 @@ final class ViewHelperGenerator implements GeneratorInterface
         return $instruction;
     }
 
-    private function isRemoved($item)
+    private function isRemoved(array $item): bool
     {
         if (!$item) {
             return true;
@@ -187,13 +150,10 @@ final class ViewHelperGenerator implements GeneratorInterface
         if (!isset($item['remove'])) {
             return false;
         }
-        return filter_var($item['remove'], FILTER_VALIDATE_BOOLEAN);
+        return (bool) filter_var($item['remove'], FILTER_VALIDATE_BOOLEAN);
     }
 
-    /**
-     * @return SorterInterface
-     */
-    public function getSorter()
+    public function getSorter(): SorterInterface
     {
         if (!$this->sorter) {
             $this->sorter = new BeforeAfterComparison();
@@ -201,31 +161,20 @@ final class ViewHelperGenerator implements GeneratorInterface
         return $this->sorter;
     }
 
-    /**
-     * @param SorterInterface $sorter
-     * @return ViewHelperGenerator
-     */
-    public function setSorter(SorterInterface $sorter)
+    public function setSorter(SorterInterface $sorter): static
     {
         $this->sorter = $sorter;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isDebug()
+    public function isDebug(): bool
     {
         return $this->debug;
     }
 
-    /**
-     * @param boolean $debug
-     * @return ViewHelperGenerator
-     */
-    public function setDebug($debug)
+    public function setDebug(bool $debug): static
     {
-        $this->debug = (bool) $debug;
+        $this->debug = $debug;
         return $this;
     }
 }

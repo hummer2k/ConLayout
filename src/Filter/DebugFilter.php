@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Filter;
 
@@ -15,14 +12,10 @@ use Laminas\View\Variables;
 
 class DebugFilter implements FilterInterface
 {
-    /**
-     * @var PhpRenderer
-     */
-    private $phpRenderer;
+    private \Laminas\View\Renderer\PhpRenderer $phpRenderer;
 
     /**
      * DebugFilter constructor.
-     * @param PhpRenderer $phpRenderer
      */
     public function __construct(PhpRenderer $phpRenderer)
     {
@@ -32,7 +25,7 @@ class DebugFilter implements FilterInterface
     /**
      * @inheritDoc
      */
-    public function filter($value)
+    public function filter($value): mixed
     {
         /** @var ViewModel $viewModel */
         $viewModel = $this->phpRenderer->viewModel()->getCurrent();

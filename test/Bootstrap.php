@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 // @codingStandardsIgnoreFile
 namespace ConLayoutTest;
 
@@ -9,16 +12,16 @@ error_reporting(E_ALL);
 
 class Bootstrap
 {
-    protected static $serviceManager;
-    protected static $bootstrap;
+    protected static ?ServiceManager $serviceManager = null;
+    protected static mixed $bootstrap = null;
 
-    public static function init()
+    public static function init(): void
     {
         static::initAutoloader();
         static::initServiceManager();
     }
 
-    protected static function initServiceManager()
+    protected static function initServiceManager(): void
     {
         $config = include __DIR__ . '/TestConfig.php.dist';
 
@@ -33,16 +36,12 @@ class Bootstrap
         static::$serviceManager = $serviceManager;
     }
 
-    /**
-     *
-     * @return ServiceManager
-     */
-    public static function getServiceManager()
+    public static function getServiceManager(): ServiceManager
     {
         return static::$serviceManager;
     }
 
-    protected static function initAutoloader()
+    protected static function initAutoloader(): void
     {
         $vendorPath = __DIR__ . '/../vendor';
         if (is_readable($vendorPath . '/autoload.php')) {

@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Block;
 
@@ -12,26 +9,13 @@ use Laminas\View\Model\ModelInterface;
 interface BlockPoolInterface
 {
     /**
-     * @param string|null $blockId
-     * @return ModelInterface|BlockInterface|false
+     * @return ModelInterface[]|ModelInterface|false
      */
-    public function get($blockId = null);
+    public function get(?string $blockId = null): array|ModelInterface|false;
 
-    /**
-     * @param string $blockId
-     * @param ModelInterface $block
-     * @return mixed
-     */
-    public function add($blockId, ModelInterface $block);
+    public function add(string $blockId, ModelInterface $block): static;
 
-    /**
-     * @param string $blockId
-     * @return mixed
-     */
-    public function remove($blockId);
+    public function remove(string $blockId): void;
 
-    /**
-     * @return mixed
-     */
-    public function sort();
+    public function sort(): static;
 }

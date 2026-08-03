@@ -1,27 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\View\Helper;
 
 use Laminas\View\Helper\AbstractHelper;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BodyClass extends AbstractHelper
 {
     /**
-     *
-     * @var array
+     * @var string[]
      */
-    protected $classes = [];
+    protected array $classes = [];
 
-    /**
-     *
-     * @param type $class
-     * @return BodyClass
-     */
-    public function __invoke($class = null)
+    public function __invoke(?string $class = null): static
     {
         if (null !== $class) {
             $this->addClass($class);
@@ -29,22 +21,13 @@ class BodyClass extends AbstractHelper
         return $this;
     }
 
-    /**
-     *
-     * @param string $class
-     */
-    public function removeClass($class)
+    public function removeClass(string $class): static
     {
         $this->classes = array_diff($this->classes, [$class]);
         return $this;
     }
 
-    /**
-     *
-     * @param string $class
-     * @return BodyClass
-     */
-    public function addClass($class)
+    public function addClass(string $class): static
     {
         $this->classes[] = $class;
         return $this;
@@ -54,7 +37,7 @@ class BodyClass extends AbstractHelper
      *
      * @return string class names space separated
      */
-    public function __toString()
+    public function __toString(): string
     {
         return implode(' ', array_unique($this->classes));
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Controller\Plugin;
 
 use ConLayout\Block\BlockInterface;
@@ -9,40 +11,20 @@ use ConLayout\Handle\Handle;
 use ConLayout\Handle\HandleInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
+use Laminas\Config\Config;
 use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use Laminas\View\Model\ModelInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LayoutManager extends AbstractPlugin implements
     LayoutInterface,
     LayoutUpdaterInterface
 {
-    /**
-     *
-     * @var LayoutInterface
-     */
-    protected $layout;
+    protected \ConLayout\Layout\LayoutInterface $layout;
 
-    /**
-     *
-     * @var LayoutUpdaterInterface
-     */
-    protected $updater;
+    protected \ConLayout\Updater\LayoutUpdaterInterface $updater;
 
-    /**
-     * @var BlockPoolInterface
-     */
-    protected $blockPool;
+    protected \ConLayout\Block\BlockPoolInterface $blockPool;
 
-    /**
-     *
-     * @param LayoutInterface $layout
-     * @param LayoutUpdaterInterface $updater
-     * @param BlockPoolInterface $blockPool
-     */
     public function __construct(
         LayoutInterface $layout,
         LayoutUpdaterInterface $updater,
@@ -53,43 +35,27 @@ class LayoutManager extends AbstractPlugin implements
         $this->blockPool = $blockPool;
     }
 
-    /**
-     *
-     * @return mixed
-     */
-    public function __invoke()
+    public function __invoke(): static
     {
         return $this;
     }
 
     /**
      *
-     * @param string $blockId
-     * @return ModelInterface
+     * @return false|ModelInterface
      */
-    public function getBlock($blockId)
+    public function getBlock(string $blockId): ModelInterface|false
     {
         return $this->blockPool->get($blockId);
     }
 
-    /**
-     *
-     * @param string $blockId
-     * @param ModelInterface $block
-     * @return LayoutManager
-     */
-    public function addBlock($blockId, ModelInterface $block)
+    public function addBlock(string $blockId, ModelInterface $block): static
     {
         $this->blockPool->add($blockId, $block);
         return $this;
     }
 
-    /**
-     *
-     * @param string $blockId
-     * @return LayoutManager
-     */
-    public function removeBlock($blockId)
+    public function removeBlock(string $blockId): static
     {
         $this->blockPool->remove($blockId);
         return $this;
@@ -98,7 +64,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function getLayoutStructure()
+    public function getLayoutStructure(): Config
     {
         return $this->updater->getLayoutStructure();
     }
@@ -106,7 +72,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function addHandle(HandleInterface $handle)
+    public function addHandle(HandleInterface $handle): static
     {
         $this->updater->addHandle($handle);
         return $this;
@@ -115,7 +81,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function setArea($area)
+    public function setArea(string $area): static
     {
         $this->updater->setArea($area);
         return $this;
@@ -124,22 +90,17 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function getArea()
+    public function getArea(): string
     {
         return $this->updater->getArea();
     }
 
-    /**
-     *
-     * @param array $handles
-     * @return LayoutManager
-     */
-    public function setHandles(array $handles)
+    public function setHandles(array $handles): static
     {
         $newHandles = [];
         foreach ($handles as $handle => $priority) {
             if (is_string($handle) && !$priority instanceof HandleInterface) {
-                $handle = new Handle($handle, $priority);
+                $handle = new Handle($handle, (int) $priority);
             } elseif ($priority instanceof HandleInterface) {
                 $handle = $priority;
             }
@@ -149,17 +110,12 @@ class LayoutManager extends AbstractPlugin implements
         return $this;
     }
 
-    public function getHandles($asObject = false)
+    public function getHandles(bool $asObject = false): array
     {
         return $this->updater->getHandles($asObject);
     }
 
-    /**
-     *
-     * @param string $handle
-     * @return LayoutManager
-     */
-    public function removeHandle($handle)
+    public function removeHandle(string $handle): static
     {
         $this->updater->removeHandle($handle);
         return $this;
@@ -169,16 +125,12 @@ class LayoutManager extends AbstractPlugin implements
      *
      * @return ModelInterface[]
      */
-    public function getBlocks()
+    public function getBlocks(): array
     {
         return $this->blockPool->get();
     }
 
-    /**
-     *
-     * @return LayoutManager
-     */
-    public function load()
+    public function load(): static
     {
         $this->layout->load();
         return $this;
@@ -187,7 +139,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * {@inheritdoc}
      */
-    public function getRoot()
+    public function getRoot(): ModelInterface|false
     {
         return $this->layout->getRoot();
     }
@@ -195,7 +147,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function setRoot(ModelInterface $root)
+    public function setRoot(ModelInterface $root): static
     {
         $this->layout->setRoot($root);
         return $this;
@@ -204,7 +156,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function injectBlocks()
+    public function injectBlocks(): void
     {
         $this->layout->injectBlocks();
     }
@@ -212,7 +164,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1)
+    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1): static
     {
         $this->layout->attachGenerator($name, $generator, $priority);
         return $this;
@@ -221,7 +173,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function detachGenerator($name)
+    public function detachGenerator($name): static
     {
         $this->layout->detachGenerator($name);
         return $this;
@@ -230,7 +182,7 @@ class LayoutManager extends AbstractPlugin implements
     /**
      * @inheritDoc
      */
-    public function generate(array $generators = [])
+    public function generate(array $generators = []): static
     {
         $this->layout->generate($generators);
         return $this;

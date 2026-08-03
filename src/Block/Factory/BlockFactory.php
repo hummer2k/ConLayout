@@ -1,22 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Block\Factory;
 
 use ConLayout\Block\BlockInterface;
 use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Exception\InvalidBlockException;
 use ConLayout\NamedParametersTrait;
-use Interop\Container\ContainerInterface;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\View\Model\ModelInterface;
 use Laminas\View\Model\ViewModel;
+use Psr\Container\ContainerInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 final class BlockFactory implements
     BlockFactoryInterface,
     EventManagerAwareInterface
@@ -28,7 +26,7 @@ final class BlockFactory implements
      *
      * @var array
      */
-    private $blockDefaults = [
+    private array $blockDefaults = [
         'capture_to' => 'content',
         'append'     => true,
         'class'      => ViewModel::class,
@@ -39,20 +37,12 @@ final class BlockFactory implements
         'blocks'     => []
     ];
 
-    /**
-     *
-     * @var ContainerInterface
-     */
-    private $container;
+    private ?\Psr\Container\ContainerInterface $container = null;
 
-    /**
-     * @var ContainerInterface
-     */
-    private $blockManager;
+    private ?\Psr\Container\ContainerInterface $blockManager = null;
 
     /**
      * BlockFactory constructor.
-     * @param array $blockDefaults
      * @param ContainerInterface $blockManager
      * @param ContainerInterface $container
      */
@@ -69,13 +59,7 @@ final class BlockFactory implements
         $this->blockManager = $blockManager;
     }
 
-    /**
-     *
-     * @param string $blockId
-     * @param array $specs
-     * @return ModelInterface
-     */
-    public function createBlock($blockId, array $specs)
+    public function createBlock(string $blockId, array $specs): ModelInterface
     {
         /* @var $block ModelInterface */
         $class = $this->getOption('class', $specs);
@@ -94,7 +78,7 @@ final class BlockFactory implements
         return $this->configure($block, $specs);
     }
 
-    private function prepareOptions(array $specs)
+    private function prepareOptions(array $specs): array
     {
         foreach ($specs as $key => $value) {
             if (
@@ -110,7 +94,7 @@ final class BlockFactory implements
     /**
      * @inheritDoc
      */
-    public function configure(ModelInterface $block, array $specs)
+    public function configure(ModelInterface $block, array $specs): ModelInterface
     {
         $specs = $this->prepareOptions($specs);
 
@@ -162,13 +146,7 @@ final class BlockFactory implements
         return $block;
     }
 
-    /**
-     *
-     * @param string $name
-     * @param array $specs
-     * @return mixed
-     */
-    private function getOption($name, array $specs)
+    private function getOption(string $name, array $specs): mixed
     {
         return isset($specs[$name])
             ? $specs[$name]

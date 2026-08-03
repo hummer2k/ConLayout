@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout;
 
 use ConLayout\Filter\ContainerFilter;
@@ -22,10 +24,6 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class Module implements
     ConfigProviderInterface,
     ServiceProviderInterface,
@@ -36,10 +34,8 @@ class Module implements
 {
     /**
      * retrieve module config
-     *
-     * @return array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return array_merge(
             include __DIR__ . '/../config/module.config.php',
@@ -49,39 +45,29 @@ class Module implements
 
     /**
      * retrieve view helpers
-     *
-     * @return array
      */
-    public function getViewHelperConfig()
+    public function getViewHelperConfig(): array
     {
         return include __DIR__ . '/../config/viewhelper.config.php';
     }
 
     /**
      * retrieve filters
-     *
-     * @return array
      */
-    public function getFilterConfig()
+    public function getFilterConfig(): array
     {
         return include __DIR__ . '/../config/filter.config.php';
     }
 
     /**
      * retrieve services
-     *
-     * @return array
      */
-    public function getServiceConfig()
+    public function getServiceConfig(): array
     {
         return include __DIR__ . '/../config/service.config.php';
     }
 
-    /**
-     *
-     * @param ModuleManagerInterface $manager
-     */
-    public function init(ModuleManagerInterface $manager)
+    public function init(ModuleManagerInterface $manager): void
     {
         $sm = $manager->getEvent()->getParam('ServiceManager');
         $serviceListener = $sm->get('ServiceListener');
@@ -93,12 +79,7 @@ class Module implements
         );
     }
 
-    /**
-     *
-     * @param MvcEvent|EventInterface $e
-     * @return array|void
-     */
-    public function onBootstrap(Event $e)
+    public function onBootstrap(Event $e): void
     {
         $application    = $e->getApplication();
         $serviceManager = $application->getServiceManager();
@@ -133,11 +114,6 @@ class Module implements
         }
     }
 
-    /**
-     * @param PhpRenderer $phpRenderer
-     * @param FilterInterface $filter
-     * @param int $priority
-     */
     private function attachFilter(PhpRenderer $phpRenderer, FilterInterface $filter, int $priority): void
     {
         $phpRenderer->getFilterChain()->attach($filter, $priority);

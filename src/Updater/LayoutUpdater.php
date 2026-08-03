@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Updater;
 
 use ConLayout\Handle\Handle;
@@ -11,10 +13,6 @@ use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\Stdlib\PriorityList;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 final class LayoutUpdater implements
     EventManagerAwareInterface,
     LayoutUpdaterInterface
@@ -23,33 +21,27 @@ final class LayoutUpdater implements
 
     /**
      *
-     * @var Config
+     * @var Config|null
      */
-    private $layoutStructure;
+    private ?Config $layoutStructure = null;
 
     /**
      * @var PriorityList|CollectorInterface[]
      */
-    private $collectors;
+    private \Laminas\Stdlib\PriorityList $collectors;
 
     /**
      * Format:
      * (string) handle-name => (int) priority
-     *
-     * @var array
      */
-    protected $handles = [];
+    protected array $handles = [];
 
     /**
      * @var array|HandleInterface[]
      */
-    protected $oHandles = [];
+    protected array $oHandles = [];
 
-    /**
-     *
-     * @var string
-     */
-    protected $area = self::AREA_DEFAULT;
+    protected string $area = self::AREA_DEFAULT;
 
     /**
      * AbstractUpdater constructor.
@@ -63,7 +55,7 @@ final class LayoutUpdater implements
     /**
      * {@inheritdoc}
      */
-    public function addHandle(HandleInterface $handle)
+    public function addHandle(HandleInterface $handle): static
     {
         $this->handles[$handle->getName()] = $handle->getPriority();
         $this->oHandles[$handle->getName()] = $handle;
@@ -73,9 +65,8 @@ final class LayoutUpdater implements
     /**
      *
      * @param array|HandleInterface[] $handles
-     * @return AbstractUpdater
      */
-    public function setHandles(array $handles)
+    public function setHandles(array $handles): static
     {
         $this->handles = [];
         foreach ($handles as $handle) {
@@ -87,7 +78,7 @@ final class LayoutUpdater implements
     /**
      * {@inheritdoc}
      */
-    public function removeHandle($handleName)
+    public function removeHandle(string $handleName): static
     {
         if (isset($this->handles[$handleName])) {
             unset($this->handles[$handleName]);
@@ -98,7 +89,7 @@ final class LayoutUpdater implements
     /**
      * {@inheritdoc}
      */
-    public function getHandles($asObject = false)
+    public function getHandles(bool $asObject = false): array
     {
         asort($this->handles);
         if ($asObject) {
@@ -114,7 +105,7 @@ final class LayoutUpdater implements
     /**
      * {@inheritDoc}
      */
-    public function getArea()
+    public function getArea(): string
     {
         return $this->area;
     }
@@ -123,39 +114,25 @@ final class LayoutUpdater implements
      *
      * {@inheritDoc}
      */
-    public function setArea($area)
+    public function setArea(string $area): static
     {
         $this->area = $area;
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @param CollectorInterface $collector
-     * @param int $priority
-     * @return $this
-     */
-    public function attachCollector($name, CollectorInterface $collector, $priority = 1)
+    public function attachCollector(string $name, CollectorInterface $collector, int $priority = 1): static
     {
         $this->collectors->insert($name, $collector, $priority);
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function detachCollector($name)
+    public function detachCollector(string $name): static
     {
         $this->collectors->remove($name);
         return $this;
     }
 
-    /**
-     *
-     * @return Config
-     */
-    public function getLayoutStructure()
+    public function getLayoutStructure(): Config
     {
         if (null === $this->layoutStructure) {
             $this->layoutStructure = new Config([], true);
@@ -188,7 +165,7 @@ final class LayoutUpdater implements
         return $this->layoutStructure;
     }
 
-    private function fetchUpdates()
+    private function fetchUpdates(): void
     {
         $handles = $this->getHandles();
         foreach ($handles as $handle) {
@@ -196,10 +173,7 @@ final class LayoutUpdater implements
         }
     }
 
-    /**
-     * @param string $handle
-     */
-    private function fetchHandle($handle)
+    private function fetchHandle(string $handle): void
     {
         foreach ($this->collectors->getIterator() as $collector) {
             $tempStructure = $collector->collect($handle, $this->getArea());

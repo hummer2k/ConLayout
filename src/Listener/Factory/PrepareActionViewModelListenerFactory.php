@@ -1,27 +1,25 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Listener\Factory;
 
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Listener\PrepareActionViewModelListener;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class PrepareActionViewModelListenerFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
-     * @return PrepareActionViewModelListener
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
-    {
+    public function __invoke(
+        ContainerInterface $container,
+        $requestedName,
+        ?array $options = null
+    ): PrepareActionViewModelListener {
         return new PrepareActionViewModelListener(
             $container->get(BlockPoolInterface::class)
         );

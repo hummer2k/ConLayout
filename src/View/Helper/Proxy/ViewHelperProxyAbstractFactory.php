@@ -1,35 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\View\Helper\Proxy;
 
 use ConLayout\Options\ModuleOptions;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
 {
-    /**
-     *
-     * @var string
-     */
-    protected $helperAlias;
+    protected ?string $helperAlias = null;
+
+    protected ?string $proxyClass = null;
 
     /**
-     *
-     * @var string
-     */
-    protected $proxyClass;
-
-    /**
-     * @param ContainerInterface $container
      * @param $requestedName
-     * @return bool
      */
-    public function canCreate(ContainerInterface $container, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName): bool
     {
         /* @var $moduleOptions ModuleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
@@ -48,12 +36,10 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
     }
 
     /**
-     * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
-     * @return mixed
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): mixed
     {
         $viewHelperManager = $container->get('ViewHelperManager');
         $helper = $viewHelperManager->get($this->helperAlias);

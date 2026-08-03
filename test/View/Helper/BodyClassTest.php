@@ -1,16 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\BodyClass;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BodyClassTest extends \PHPUnit\Framework\TestCase
 {
-    public function testBodyClassHelper()
+    public function testBodyClassHelper(): void
     {
         $helper = new BodyClass();
         $helper('my-class');

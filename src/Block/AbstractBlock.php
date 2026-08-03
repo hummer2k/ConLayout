@@ -1,38 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Block;
 
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\RendererInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 abstract class AbstractBlock extends ViewModel implements BlockInterface
 {
-    /**
-     *
-     * @var RendererInterface
-     */
-    protected $view;
+    protected ?RendererInterface $view = null;
 
-    /**
-     *
-     * @param RendererInterface $view
-     * @return AbstractBlock
-     */
-    public function setView(RendererInterface $view)
+    public function setView(RendererInterface $view): static
     {
         $this->view = $view;
         return $this;
     }
 
-    /**
-     *
-     * @return RendererInterface
-     */
-    public function getView()
+    public function getView(): ?RendererInterface
     {
         return $this->view;
     }

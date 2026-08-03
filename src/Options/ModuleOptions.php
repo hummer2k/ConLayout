@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Options;
 
 use ConLayout\Listener\ActionHandlesListener;
@@ -11,135 +13,76 @@ use ConLayout\Listener\PrepareActionViewModelListener;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Stdlib\AbstractOptions;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class ModuleOptions extends AbstractOptions
 {
-    /**
-     *
-     * @var bool
-     */
-    protected $debug = false;
+    protected bool $debug = false;
 
     /**
      * @var bool|string
      */
-    protected $remoteCall = false;
+    protected bool|string $remoteCall = false;
 
-    /**
-     *
-     * @var array
-     */
-    protected $viewHelpers = [];
+    protected array $viewHelpers = [];
 
-    /**
-     *
-     * @var string
-     */
-    protected $cacheBusterInternalBaseDir = './public';
+    protected string $cacheBusterInternalBaseDir = './public';
 
-    /**
-     *
-     * @var array
-     */
-    protected $layoutUpdatePaths = [];
+    protected array $layoutUpdatePaths = [];
 
-    /**
-     *
-     * @var array
-     */
-    protected $layoutUpdateExtensions = ['php' => 'php'];
+    protected array $layoutUpdateExtensions = ['php' => 'php'];
 
-    /**
-     *
-     * @var array
-     */
-    protected $blockDefaults = [];
+    protected array $blockDefaults = [];
 
-    /**
-     *
-     * @var array
-     */
-    protected $defaultArea;
+    protected ?string $defaultArea = null;
 
     /**
      * Array of controller namespace -> action handle mappings.
-     *
-     * @var array
      */
-    protected $controllerMap = [];
+    protected array $controllerMap = [];
 
     /**
      * Flag to force the use of the route match controller param.
-     *
-     * @var bool
      */
-    protected $preferRouteMatchController = false;
+    protected bool $preferRouteMatchController = false;
 
-    /**
-     * @var array
-     */
-    protected $generators = [];
+    protected array $generators = [];
 
-    /**
-     * @var array
-     */
-    protected $collectors = [];
+    protected array $collectors = [];
 
-    /**
-     * @var string
-     */
-    protected $bodyClassPrefix = '';
+    protected string $bodyClassPrefix = '';
 
     /**
      * Listeners to attach to EVM
-     *
-     * @var array
      */
-    protected $listeners = [
+    protected array $listeners = [
         ActionHandlesListener::class  => true,
         BodyClassListener::class      => true,
         LoadLayoutListener::class     => true,
         PrepareActionViewModelListener::class => true
     ];
 
-    /**
-     * @return bool
-     */
-    public function isDebug()
+    public function isDebug(): bool
     {
         return $this->debug;
     }
 
-    /**
-     * @param bool $debug
-     * @return ModuleOptions
-     */
-    public function setDebug($debug)
+    public function setDebug(bool $debug): static
     {
-        $this->debug = (bool) $debug;
+        $this->debug = $debug;
         return $this;
     }
 
     /**
      * Retrieve an array of controller namespace -> action handle mappings.
-     *
-     * @return array
      */
-    public function getControllerMap()
+    public function getControllerMap(): array
     {
         return $this->controllerMap;
     }
 
     /**
      * Set an array of controller namespace -> action handle mappings.
-     *
-     * @param array $controllerMap
-     * @return ModuleOptions
      */
-    public function setControllerMap(array $controllerMap)
+    public function setControllerMap(array $controllerMap): static
     {
         $this->controllerMap = $controllerMap;
 
@@ -148,32 +91,23 @@ class ModuleOptions extends AbstractOptions
 
     /**
      * Whether to force the use of the route match controller param.
-     *
-     * @return boolean
      */
-    public function isPreferRouteMatchController()
+    public function isPreferRouteMatchController(): bool
     {
         return $this->preferRouteMatchController;
     }
 
     /**
      * Set whether to force the use of the route match controller param.
-     *
-     * @param boolean $preferRouteMatchController
-     * @return ModuleOptions
      */
-    public function setPreferRouteMatchController($preferRouteMatchController)
+    public function setPreferRouteMatchController(bool $preferRouteMatchController): static
     {
-        $this->preferRouteMatchController = (bool) $preferRouteMatchController;
+        $this->preferRouteMatchController = $preferRouteMatchController;
 
         return $this;
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getDefaultArea()
+    public function getDefaultArea(): string
     {
         if (!$this->defaultArea) {
             $this->defaultArea = LayoutUpdaterInterface::AREA_DEFAULT;
@@ -181,22 +115,13 @@ class ModuleOptions extends AbstractOptions
         return $this->defaultArea;
     }
 
-    /**
-     *
-     * @param string $defaultArea
-     * @return ModuleOptions
-     */
-    public function setDefaultArea($defaultArea)
+    public function setDefaultArea(string $defaultArea): static
     {
         $this->defaultArea = $defaultArea;
         return $this;
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getViewHelpers()
+    public function getViewHelpers(): array
     {
         return $this->viewHelpers;
     }
@@ -205,81 +130,47 @@ class ModuleOptions extends AbstractOptions
      * just here for bc
      *
      * @codeCoverageIgnore
-     * @param bool $enableDebug
-     * @return ModuleOptions
      */
-    public function setEnableDebug($enableDebug = false)
+    public function setEnableDebug(bool $enableDebug = false): static
     {
         $this->enableDebug = $enableDebug;
         return $this;
     }
 
-    /**
-     *
-     * @param array $viewHelpers
-     * @return ModuleOptions
-     */
-    public function setViewHelpers(array $viewHelpers)
+    public function setViewHelpers(array $viewHelpers): static
     {
         $this->viewHelpers = $viewHelpers;
         return $this;
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getCacheBusterInternalBaseDir()
+    public function getCacheBusterInternalBaseDir(): string
     {
         return $this->cacheBusterInternalBaseDir;
     }
 
-    /**
-     *
-     * @param string $cacheBusterInternalBaseDir
-     * @return ModuleOptions
-     */
-    public function setCacheBusterInternalBaseDir($cacheBusterInternalBaseDir)
+    public function setCacheBusterInternalBaseDir(string $cacheBusterInternalBaseDir): static
     {
         $this->cacheBusterInternalBaseDir = $cacheBusterInternalBaseDir;
         return $this;
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getLayoutUpdatePaths()
+    public function getLayoutUpdatePaths(): array
     {
         return $this->layoutUpdatePaths;
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getLayoutUpdateExtensions()
+    public function getLayoutUpdateExtensions(): array
     {
         return $this->layoutUpdateExtensions;
     }
 
-    /**
-     *
-     * @param array $layoutUpdatePaths
-     * @return ModuleOptions
-     */
-    public function setLayoutUpdatePaths(array $layoutUpdatePaths)
+    public function setLayoutUpdatePaths(array $layoutUpdatePaths): static
     {
         $this->layoutUpdatePaths = $layoutUpdatePaths;
         return $this;
     }
 
-    /**
-     *
-     * @param array $layoutUpdateExtensions
-     * @return ModuleOptions
-     */
-    public function setLayoutUpdateExtensions(array $layoutUpdateExtensions)
+    public function setLayoutUpdateExtensions(array $layoutUpdateExtensions): static
     {
         foreach ($layoutUpdateExtensions as $extension => $value) {
             if (false === $value) {
@@ -293,110 +184,66 @@ class ModuleOptions extends AbstractOptions
         return $this;
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getBlockDefaults()
+    public function getBlockDefaults(): array
     {
         return $this->blockDefaults;
     }
 
-    /**
-     *
-     * @param array $blockDefaults
-     * @return ModuleOptions
-     */
-    public function setBlockDefaults(array $blockDefaults)
+    public function setBlockDefaults(array $blockDefaults): static
     {
         $this->blockDefaults = $blockDefaults;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getGenerators()
+    public function getGenerators(): array
     {
         return $this->generators;
     }
 
-    /**
-     * @param array $generators
-     * @return ModuleOptions
-     */
-    public function setGenerators(array $generators)
+    public function setGenerators(array $generators): static
     {
         $this->generators = $generators;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getCollectors()
+    public function getCollectors(): array
     {
         return $this->collectors;
     }
 
-    /**
-     * @param array $collectors
-     * @return ModuleOptions
-     */
-    public function setCollectors(array $collectors)
+    public function setCollectors(array $collectors): static
     {
         $this->collectors = $collectors;
         return $this;
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getListeners()
+    public function getListeners(): array
     {
         return $this->listeners;
     }
 
-    /**
-     *
-     * @param array $listeners
-     * @return ModuleOptions
-     */
-    public function setListeners(array $listeners)
+    public function setListeners(array $listeners): static
     {
         $this->listeners = $listeners;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getBodyClassPrefix(): string
     {
         return $this->bodyClassPrefix;
     }
 
-    /**
-     * @param string $bodyClassPrefix
-     */
     public function setBodyClassPrefix(string $bodyClassPrefix): void
     {
         $this->bodyClassPrefix = $bodyClassPrefix;
     }
 
-    /**
-     * @return bool|string
-     */
-    public function getRemoteCall()
+    public function getRemoteCall(): bool|string
     {
         return $this->remoteCall;
     }
 
-    /**
-     * @param bool|string $remoteCall
-     */
-    public function setRemoteCall($remoteCall): void
+    public function setRemoteCall(bool|string $remoteCall): void
     {
         $this->remoteCall = $remoteCall;
     }

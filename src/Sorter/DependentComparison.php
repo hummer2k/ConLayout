@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Sorter;
 
@@ -12,7 +9,7 @@ final class DependentComparison implements SorterInterface
     /**
      * @inheritDoc
      */
-    public function sort(array $data)
+    public function sort(array $data): array
     {
         $tmp = [];
         foreach (array_keys($data) as $key) {
@@ -22,14 +19,7 @@ final class DependentComparison implements SorterInterface
         return $data;
     }
 
-    /**
-     *
-     * @param array $array
-     * @param string $key
-     * @param array $references
-     * @return int
-     */
-    private function getNodeLevel(array $array, $key, array $references = [])
+    private function getNodeLevel(array $array, string $key, array $references = []): int
     {
         if (!isset($array[$key]['depends'])) {
             return 0;

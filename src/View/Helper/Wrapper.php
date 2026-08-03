@@ -1,29 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\View\Helper;
 
 use Laminas\View\Helper\AbstractHtmlElement;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class Wrapper extends AbstractHtmlElement
 {
     public const DEFAULT_TAG = 'div';
 
-    /**
-     *
-     * @var string
-     */
-    protected $tag;
+    protected string $tag = self::DEFAULT_TAG;
 
-    /**
-     *
-     * @param string $tag
-     * @return Wrapper
-     */
-    public function __invoke($tag = null)
+    public function __invoke(?string $tag = null): static
     {
         $this->tag = $tag ?: static::DEFAULT_TAG;
         return $this;
@@ -32,9 +21,8 @@ class Wrapper extends AbstractHtmlElement
     /**
      *
      * @param mixed $attributes
-     * @return string
      */
-    public function openTag($attributes = [])
+    public function openTag(array $attributes = []): string
     {
         $htmlAttribs = '';
         if (count($attributes)) {
@@ -47,11 +35,7 @@ class Wrapper extends AbstractHtmlElement
         );
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function closeTag()
+    public function closeTag(): string
     {
         return '</' . $this->tag . '>';
     }

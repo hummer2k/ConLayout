@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\CacheBusterFilter;
@@ -10,13 +12,9 @@ use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\ServiceManager;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class CacheBusterFilterTest extends AbstractTestCase
 {
-    public function testFactory()
+    public function testFactory(): void
     {
         $factory = new CacheBusterFilterFactory();
 
@@ -41,7 +39,7 @@ class CacheBusterFilterTest extends AbstractTestCase
         );
     }
 
-    public function testMd5File()
+    public function testMd5File(): void
     {
         $cacheBuster = new CacheBusterFilter(
             __DIR__ . '/_files'
@@ -51,7 +49,7 @@ class CacheBusterFilterTest extends AbstractTestCase
         $this->assertEquals('styles.css?v=1688c821', $value);
     }
 
-    public function testFileDoesNotExist()
+    public function testFileDoesNotExist(): void
     {
         $cacheBuster = new CacheBusterFilter(
             'DOES_NOT_EXIST_____'
@@ -60,7 +58,7 @@ class CacheBusterFilterTest extends AbstractTestCase
         $this->assertEquals('styles.css', $value);
     }
 
-    public function testOriginalValue()
+    public function testOriginalValue(): void
     {
         $cacheBuster = new CacheBusterFilter(__DIR__ . '/_files');
         $cacheBuster->setRawValue('original.css');

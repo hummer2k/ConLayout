@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout;
 
 use ConLayout\Block\BlockInterface;
@@ -8,19 +10,14 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\View\Model\ModelInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BlockManager extends AbstractPluginManager
 {
     /**
      *
      * @param BlockInterface $plugin
-     * @return void
      * @throws InvalidArgumentException
      */
-    public function validate($plugin)
+    public function validate($plugin): void
     {
         if ($plugin instanceof BlockInterface || $plugin instanceof ModelInterface) {
             return;
@@ -32,7 +29,7 @@ class BlockManager extends AbstractPluginManager
         ));
     }
 
-    public function validatePlugin($instance)
+    public function validatePlugin($instance): void
     {
         try {
             $this->validate($instance);

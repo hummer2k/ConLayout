@@ -1,18 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\TranslateFilter;
 use PHPUnit\Framework\TestCase;
 use Laminas\I18n\Translator\TranslatorInterface;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class TranslateFilterTest extends TestCase
 {
-    public function testFilterTranslates()
+    public function testFilterTranslates(): void
     {
         $expected = 'translated';
         $translator = $this->getMockBuilder(TranslatorInterface::class)->getMock();

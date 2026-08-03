@@ -1,32 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Filter;
 
 use Laminas\Filter\FilterInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class CacheBusterFilter implements FilterInterface, RawValueAwareInterface
 {
-    /**
-     *
-     * @var string
-     */
-    protected $internalBasePath;
+    protected string $internalBasePath;
 
     /**
      *
-     * @var string
+     * @var string|null
      */
-    protected $rawValue;
+    protected ?string $rawValue = null;
 
-    /**
-     *
-     * @param string $internalBasePath
-     */
-    public function __construct($internalBasePath = './public')
+    public function __construct(string $internalBasePath = './public')
     {
         $this->internalBasePath = $internalBasePath;
     }
@@ -34,9 +24,8 @@ class CacheBusterFilter implements FilterInterface, RawValueAwareInterface
     /**
      *
      * @param string $value
-     * @return string
      */
-    public function filter($value)
+    public function filter($value): string
     {
         $file = $this->getFilePath($value);
         if (is_file($file) && is_readable($file)) {
@@ -45,21 +34,16 @@ class CacheBusterFilter implements FilterInterface, RawValueAwareInterface
         return $value;
     }
 
-    /**
-     *
-     * @param mixed $value
-     */
-    public function setRawValue($value)
+    public function setRawValue(mixed $value): void
     {
-        $this->rawValue = $value;
+        $this->rawValue = (string) $value;
     }
 
     /**
      *
      * @param string $value
-     * @return string
      */
-    protected function getFilePath($value)
+    protected function getFilePath($value): string
     {
         if (null !== $this->rawValue) {
             $value = $this->rawValue;

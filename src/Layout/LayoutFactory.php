@@ -1,27 +1,22 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Layout;
 
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class LayoutFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
-     * @return Layout
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Layout
     {
         $layout = new Layout(
             $container->get(LayoutUpdaterInterface::class),

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Listener\ActionHandlesListener;
@@ -7,10 +9,6 @@ use ConLayoutTest\AbstractTestCase;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\RouteMatch;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class ActionHandlesListenerTest extends AbstractTestCase
 {
     /**
@@ -37,7 +35,7 @@ class ActionHandlesListenerTest extends AbstractTestCase
         $this->mvcEvent->setRouteMatch($this->routeMatch);
     }
 
-    public function testApplicationIndexIndex()
+    public function testApplicationIndexIndex(): void
     {
         $routeMatch = new RouteMatch([
             'controller' => 'Application\Controller\Index',
@@ -59,7 +57,7 @@ class ActionHandlesListenerTest extends AbstractTestCase
         }
     }
 
-    public function testApplicationIndexIndexWithControllerMap()
+    public function testApplicationIndexIndexWithControllerMap(): void
     {
         $routeMatch = new RouteMatch([
             'controller' => 'Application\Controller\Index',
@@ -85,7 +83,7 @@ class ActionHandlesListenerTest extends AbstractTestCase
         }
     }
 
-    public function testInjectErrorHandle()
+    public function testInjectErrorHandle(): void
     {
         $error = 'test-error';
         $this->mvcEvent->setError($error);

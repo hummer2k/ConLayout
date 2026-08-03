@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Block\Factory;
 
 use ConLayout\Block\AbstractBlock;
@@ -11,23 +13,9 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BlockFactoryTest extends AbstractTestCase
 {
-    /**
-     *
-     * @var BlockFactoryInterface
-     */
-    protected $factory;
-
-    /**
-     *
-     * @var ServiceManager
-     */
-    protected $sm;
+    protected BlockFactoryInterface $factory;
 
     protected function setUp(): void
     {
@@ -36,7 +24,7 @@ class BlockFactoryTest extends AbstractTestCase
         $this->factory = new BlockFactory([], new BlockManager($this->sm), $this->sm);
     }
 
-    public function testCreateBlock()
+    public function testCreateBlock(): void
     {
         $blockSpecs = [
             'options' => [
@@ -68,7 +56,7 @@ class BlockFactoryTest extends AbstractTestCase
         $this->assertEquals('value_my-option', $block->getOptions()['my-option']);
     }
 
-    public function testThrowsExceptionOnMissingMethod()
+    public function testThrowsExceptionOnMissingMethod(): void
     {
         $specs = [
             'actions' => [
@@ -82,7 +70,7 @@ class BlockFactoryTest extends AbstractTestCase
         $this->factory->createBlock('my-block', $specs);
     }
 
-    public function testClass()
+    public function testClass(): void
     {
         $specs = [
             'class' => MyBlock::class
@@ -96,7 +84,7 @@ class BlockFactoryTest extends AbstractTestCase
         );
     }
 
-    public function testBlockFromBlockManager()
+    public function testBlockFromBlockManager(): void
     {
         $blockManager = new BlockManager($this->sm);
         $class = MyBlock::class;
@@ -111,7 +99,7 @@ class BlockFactoryTest extends AbstractTestCase
         $this->assertInstanceOf($class, $block);
     }
 
-    public function testCreateBlockWithTemplate()
+    public function testCreateBlockWithTemplate(): void
     {
         $block = $this->factory->createBlock('block.id', [
             'class' => TplBlock::class
@@ -119,7 +107,7 @@ class BlockFactoryTest extends AbstractTestCase
         $this->assertEquals('already/set/template', $block->getTemplate());
     }
 
-    public function testCreateBlockImpl()
+    public function testCreateBlockImpl(): void
     {
         $renderer = new PhpRenderer();
         $this->sm->setService('ViewRenderer', $renderer);
@@ -137,14 +125,14 @@ class TplBlock extends ViewModel
 
 class MyBlock extends ViewModel
 {
-    protected $initialized = false;
+    protected bool $initialized = false;
 
-    public function init()
+    public function init(): void
     {
         $this->initialized = true;
     }
 
-    public function isInitialized()
+    public function isInitialized(): bool
     {
         return $this->initialized;
     }

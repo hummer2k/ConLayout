@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Controller\Plugin;
 
 use ConLayout\Block\BlockPoolInterface;
@@ -14,19 +16,9 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ModelInterface;
 use Laminas\View\Model\ViewModel;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LayoutManagerTest extends AbstractTestCase
 {
-    protected $layoutManager;
-
-    protected $updater;
-
-    protected $layout;
-
-    protected $renderer;
+    protected LayoutManager $layoutManager;
 
     protected function setUp(): void
     {
@@ -43,7 +35,7 @@ class LayoutManagerTest extends AbstractTestCase
         );
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
@@ -70,13 +62,13 @@ class LayoutManagerTest extends AbstractTestCase
         );
     }
 
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $result = call_user_func($this->layoutManager);
         $this->assertSame($result, $this->layoutManager);
     }
 
-    public function testGetBlock()
+    public function testGetBlock(): void
     {
         $block = $this->layoutManager->getBlock('test-block');
         $this->assertInstanceOf(ModelInterface::class, $block);
@@ -84,7 +76,7 @@ class LayoutManagerTest extends AbstractTestCase
         $this->assertFalse($this->layoutManager->getBlock('___NOT_EXISTS___'));
     }
 
-    public function testAddHandle()
+    public function testAddHandle(): void
     {
         $this->layoutManager->addHandle(new Handle('my-test-handle', 1));
 
@@ -102,7 +94,7 @@ class LayoutManagerTest extends AbstractTestCase
         ], $this->layoutUpdater->getHandles());
     }
 
-    public function testRemoveHandle()
+    public function testRemoveHandle(): void
     {
         $this->layoutManager->addHandle(new Handle('my-test-handle', 5));
 
@@ -118,7 +110,7 @@ class LayoutManagerTest extends AbstractTestCase
         ], $this->layoutUpdater->getHandles());
     }
 
-    public function testRemoveBlock()
+    public function testRemoveBlock(): void
     {
         $testBlock = $this->layoutManager->getBlock('test-block');
         $this->assertInstanceOf(ModelInterface::class, $testBlock);
@@ -126,7 +118,7 @@ class LayoutManagerTest extends AbstractTestCase
         $this->assertFalse($this->layoutManager->getBlock('test-block'));
     }
 
-    public function testAddBlock()
+    public function testAddBlock(): void
     {
         $block = new ViewModel();
         $this->layoutManager->addBlock('some-block', $block);
@@ -134,14 +126,14 @@ class LayoutManagerTest extends AbstractTestCase
         $this->assertSame($block, $this->layout->getBlock('some-block'));
     }
 
-    public function testGetBlocks()
+    public function testGetBlocks(): void
     {
         $this->assertIsArray($this->layoutManager->getBlocks());
         $this->layoutManager->addBlock('test-block', new ViewModel());
         $this->assertCount(1, $this->layoutManager->getBlocks());
     }
 
-    public function testSetRoot()
+    public function testSetRoot(): void
     {
         $root = new ViewModel();
         $this->layoutManager->setRoot($root);
@@ -152,7 +144,7 @@ class LayoutManagerTest extends AbstractTestCase
         );
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $root = new ViewModel();
         $content = new ViewModel();
@@ -168,7 +160,7 @@ class LayoutManagerTest extends AbstractTestCase
         $this->assertCount(3, $root->getChildren());
     }
 
-    public function testSetHandlesScalar()
+    public function testSetHandlesScalar(): void
     {
         $this->layoutManager->setHandles([
             'my-handle-1' => 5,
@@ -183,7 +175,7 @@ class LayoutManagerTest extends AbstractTestCase
         ], $this->layoutUpdater->getHandles());
     }
 
-    public function testSetHandlesObject()
+    public function testSetHandlesObject(): void
     {
         $this->layoutManager->setHandles([
             new Handle('my-handle-1', 5),

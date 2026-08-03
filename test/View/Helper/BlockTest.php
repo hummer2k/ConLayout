@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\Block;
@@ -7,10 +9,6 @@ use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class BlockTest extends AbstractTestCase
 {
     /**
@@ -26,7 +24,7 @@ class BlockTest extends AbstractTestCase
         $this->blockHelper->setView(new PhpRenderer());
     }
 
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $block = new ViewModel();
         $this->blockPool->add('test.block', $block);

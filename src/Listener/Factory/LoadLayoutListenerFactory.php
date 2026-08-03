@@ -1,25 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayout\Listener\Factory;
 
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Listener\LoadLayoutListener;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LoadLayoutListenerFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface $container
      * @param $requestedName
      * @param array $options
-     * @return LoadLayoutListener
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): LoadLayoutListener
     {
         $injectBlocksListener = new LoadLayoutListener(
             $container->get(LayoutInterface::class)

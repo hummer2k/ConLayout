@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayoutTest\Filter;
 
@@ -17,7 +14,7 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class DebugFilterTest extends AbstractTestCase
 {
-    public function testMarkupContainsCommentsWithDebugInfo()
+    public function testMarkupContainsCommentsWithDebugInfo(): void
     {
         $block = new ViewModel();
         $block->setOption('block_id', 'the.block');

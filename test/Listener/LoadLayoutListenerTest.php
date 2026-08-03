@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Listener;
 
 use ConLayout\Layout\LayoutInterface;
@@ -7,13 +9,9 @@ use ConLayout\Listener\LoadLayoutListener;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Model\ViewModel;
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class LoadLayoutListenerTest extends AbstractTestCase
 {
-    public function testLoadLayout()
+    public function testLoadLayout(): void
     {
         $listener = new LoadLayoutListener($this->layout);
 
@@ -35,7 +33,7 @@ class LoadLayoutListenerTest extends AbstractTestCase
         ));
     }
 
-    public function testLoadLayoutWithTerminationModel()
+    public function testLoadLayoutWithTerminationModel(): void
     {
         $listener = new LoadLayoutListener($this->layout);
 

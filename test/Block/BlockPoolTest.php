@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayoutTest\Block;
 
@@ -12,14 +9,14 @@ use Laminas\View\Model\ViewModel;
 
 class BlockPoolTest extends AbstractTestCase
 {
-    public function testAddAndGetBlock()
+    public function testAddAndGetBlock(): void
     {
         $block = new ViewModel();
         $this->blockPool->add('my-block', $block);
         $this->assertSame($block, $this->blockPool->get('my-block'));
     }
 
-    public function testAddSortBlockWithBeforeAndAfter()
+    public function testAddSortBlockWithBeforeAndAfter(): void
     {
         $block1 = new ViewModel([], ['after' => 'block2']);
         $block2 = new Viewmodel();
@@ -46,7 +43,7 @@ class BlockPoolTest extends AbstractTestCase
         $this->assertSame($expectedOrder, array_keys($this->blockPool->get()));
     }
 
-    public function testAddBlockWithChildren()
+    public function testAddBlockWithChildren(): void
     {
         $block1 = new ViewModel();
         $block2 = new ViewModel([], [
@@ -73,7 +70,7 @@ class BlockPoolTest extends AbstractTestCase
         );
     }
 
-    public function testAddBlockWithChildChildren()
+    public function testAddBlockWithChildChildren(): void
     {
         $block1 = new ViewModel();
         $block2 = new ViewModel([], [
@@ -100,14 +97,14 @@ class BlockPoolTest extends AbstractTestCase
         );
     }
 
-    public function testGetBlocks()
+    public function testGetBlocks(): void
     {
         $blocks = $this->blockPool->get();
 
         $this->assertIsArray($blocks);
     }
 
-    public function testSortBlocks()
+    public function testSortBlocks(): void
     {
 
         $expectedOrder = [
@@ -136,7 +133,7 @@ class BlockPoolTest extends AbstractTestCase
         }
     }
 
-    public function testRemoveAddedBlock()
+    public function testRemoveAddedBlock(): void
     {
         $block = new ViewModel();
         $this->blockPool->add('some-block', $block);
@@ -147,7 +144,7 @@ class BlockPoolTest extends AbstractTestCase
         $this->assertFalse($this->blockPool->get('some-block'));
     }
 
-    public function testAnonymousBlockId()
+    public function testAnonymousBlockId(): void
     {
         $viewModel = new ViewModel();
         $child = new ViewModel();

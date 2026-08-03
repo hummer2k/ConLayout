@@ -1,22 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ConLayoutTest\Layout;
 
 use ConLayout\Layout\Layout as DefaultLayout;
 use Laminas\View\Model\ModelInterface;
 
-/**
- * @package
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
 class Layout extends DefaultLayout
 {
-    public function isLoaded()
+    public function isLoaded(): bool
     {
         return $this->isLoaded;
     }
 
-    public function getCaptureTo(ModelInterface $block)
+    public function getCaptureTo(ModelInterface $block): array
     {
         return parent::getCaptureTo($block);
     }

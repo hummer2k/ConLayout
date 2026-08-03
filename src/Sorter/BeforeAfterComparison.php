@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @package ConLayout
- * @author Cornelius Adams (conlabz GmbH) <cornelius.adams@conlabz.de>
- */
+declare(strict_types=1);
 
 namespace ConLayout\Sorter;
 
@@ -12,7 +9,7 @@ final class BeforeAfterComparison implements SorterInterface
     /**
      * @inheritDoc
      */
-    public function sort(array $arrayToSort)
+    public function sort(array $arrayToSort): array
     {
         $configArray = $this->prepare($arrayToSort);
         foreach ($configArray as $code => $data) {
@@ -26,7 +23,7 @@ final class BeforeAfterComparison implements SorterInterface
                 ));
                 $configArray[$beforeCode]['after'] = array_merge(
                     $configArray[$beforeCode]['after'],
-                    array($code),
+                    [$code],
                     $data['after']
                 );
                 $configArray[$beforeCode]['after'] = array_unique($configArray[$beforeCode]['after']);
@@ -41,23 +38,20 @@ final class BeforeAfterComparison implements SorterInterface
                 ));
                 $configArray[$afterCode]['before'] = array_merge(
                     $configArray[$afterCode]['before'],
-                    array($code),
+                    [$code],
                     $data['before']
                 );
                 $configArray[$afterCode]['before'] = array_unique($configArray[$afterCode]['before']);
             }
         }
-        uasort($configArray, array($this, 'compare'));
+        uasort($configArray, [$this, 'compare']);
         return $configArray;
     }
 
     /**
      * prepare array for sorting
-     *
-     * @param array $data
-     * @return mixed
      */
-    private function prepare($data)
+    private function prepare(array $data): array
     {
         foreach ($data as $code => &$item) {
             $item = $this->prepareItem($code, $item);
@@ -65,12 +59,7 @@ final class BeforeAfterComparison implements SorterInterface
         return $data;
     }
 
-    /**
-     * @param   string $code
-     * @param   $item
-     * @return  array
-     */
-    private function prepareItem($code, $item)
+    private function prepareItem(string $code, mixed $item): array
     {
         $item = (array) $item;
         if (isset($item['before'])) {
@@ -90,9 +79,8 @@ final class BeforeAfterComparison implements SorterInterface
     /**
      * @param   array $a
      * @param   array $b
-     * @return  int
      */
-    protected function compare($a, $b)
+    protected function compare($a, $b): int
     {
         $aCode = $a['_code'];
         $bCode = $b['_code'];
