@@ -1,9 +1,9 @@
 # ACL
 
-An event is fired before the block instance is injected into the layout where
-you can determine whether the block is allowed to be shown.
+ConLayout fires an event before it injects the block instance into the layout.
+In this event, you can determine whether the block is allowed to be shown.
 
-(return true or false in your event listener)
+Your event listener must return `true` or `false`.
 
 ````php
 <?php
@@ -26,8 +26,8 @@ class AclBlockListener
 }
 ````
 
-The event is triggered on the `ConLayout\Layout\Layout` instance. Attach the
-listener with a delegator factory for the layout service:
+ConLayout triggers the event on the `ConLayout\Layout\Layout` instance. Attach
+the listener with a delegator factory for the layout service:
 
 ````php
 <?php
@@ -63,3 +63,28 @@ class LayoutAclDelegatorFactory
     ]
 ]
 ````
+
+## How the event works
+
+The event name is `isAllowed`. ConLayout triggers it on the event manager
+of the `Layout` instance during `injectBlocks()`. The event has these
+parameters:
+
+- `block_id`: The id of the block.
+- `block`: The view model instance of the block.
+
+ConLayout allows the block when no listener stops the propagation. To deny
+a block, stop the propagation and return `false`. ConLayout does not add a
+denied block to the rendered tree.
+
+The `root` block is never checked. ConLayout always renders the root.
+
+## Other layout events
+
+The `Layout` instance triggers two events during `load()`:
+
+- `load.pre` before the generators run.
+- `load.post` after ConLayout injected the blocks.
+
+The `BlockFactory` triggers `configure.post` after it configures a block.
+A listener can return another view model to replace the block.

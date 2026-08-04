@@ -1,35 +1,39 @@
 # Debug Toolbar
 
-The debug toolbar renders a small floating panel (similar to laminas-developer-tools) into HTML responses.
-It shows the ConLayout state of the current request in four tabs:
+The debug toolbar renders a small floating panel into HTML responses. The
+panel is similar to the laminas-developer-tools toolbar. The toolbar shows the
+ConLayout state of the current request in four tabs:
 
 **Handles**
 
-- the update handles of the request (name and priority),
-- for each handle, the layout update files that were applied,
-- the rendered layout template (the root block template).
+- The update handles of the request (name and priority).
+- For each handle, the layout update files that were applied.
+- The rendered layout template (the root block template).
 
 **Blocks**
 
-- the rendered blocks as a nesting tree (block id, template, `capture_to`, `order`, `parent`, `before`/`after`, `container`, `wrapper`, `append`; anonymous blocks are marked),
-- blocks that are registered in the pool but not part of the rendered tree,
-- blocks that were removed.
+- The rendered blocks as a nesting tree (block id, template, `capture_to`,
+  `order`, `parent`, `before`/`after`, `container`, `wrapper`, `append`).
+  The toolbar marks anonymous blocks.
+- Blocks that are registered in the pool but not part of the rendered tree.
+- Blocks that were removed.
 
 **Structure**
 
-- counts of the `blocks`, `reference`, `helpers` and `include` instructions in the merged layout structure,
-- the layout area,
-- the view helpers invoked via the helpers instructions.
+- The count of the `blocks`, `reference`, `helpers`, and `include`
+  instructions in the merged layout structure.
+- The layout area.
+- The view helpers called with the `helpers` instructions.
 
 **Info**
 
-- the request duration and peak memory usage,
-- a snapshot of the relevant `con-layout` module options.
+- The request duration and the peak memory usage.
+- A snapshot of the relevant `con-layout` module options.
 
 ## Enable
 
-The toolbar is only rendered when the application runs in development mode,
-i.e. the merged `debug` config key is `true`:
+ConLayout renders the toolbar only when the application runs in development
+mode. The merged `debug` config key must be `true`:
 
 ```php
 return [
@@ -37,7 +41,7 @@ return [
 ];
 ```
 
-The mezzio development mode does this automatically:
+Mezzio development mode does this automatically:
 
 ```bash
 composer development-enable
@@ -47,23 +51,38 @@ composer development-enable
 
 The `ConLayout\Toolbar\ToolbarMiddleware` is part of the `middleware` config
 returned by the `ConfigProvider`. It must be the outermost middleware of the
-pipeline so that it can inject the toolbar into the final response. Pipe it
+pipeline. Then it can inject the toolbar into the final response. Pipe it
 before any other middleware:
 
 ```php
 $app->pipe(\ConLayout\Middleware\ToolbarMiddleware::class);
 ```
 
-## Behaviour
+## Behavior
 
-- The toolbar is skipped for non-HTML responses and for requests where no
-  layout has been rendered (e.g. JSON APIs).
-- The toolbar is injected before the closing `</body>` tag; if the body has
-  none, it is appended to the response.
+- The toolbar is skipped for non-HTML responses. It is also skipped for
+  requests where no layout has been rendered. For example: JSON APIs.
+- The toolbar is injected before the closing `</body>` tag. If the body does
+  not have this tag, the toolbar is appended to the response.
 - The data is read from the `LayoutManager` service after the request has been
-  handled, so it reflects exactly the handles and blocks of the current request.
+  handled. So the data shows the exact handles and blocks of the current
+  request.
 
-## Customisation
+## Customization
 
-The toolbar template can be replaced by overriding the `con-layout::toolbar`
-template map entry, or by passing a custom template name to the middleware.
+You can replace the toolbar template. Override the `con-layout::toolbar`
+template map entry. Or pass a custom template name to the middleware.
+
+## Worth knowing
+
+- Use the Handles tab to check the layout update files that were applied.
+  The tab shows the handles with their priority and the files for each
+  handle.
+- In debug mode, ConLayout adds the `data-layout-id` attribute to the
+  output of the view helpers that have a `debug` config entry. The
+  attribute contains the id of the `helpers` instruction. Use it to find
+  the layout update file of an asset.
+- The toolbar does not change the response when no layout was rendered. It
+  also does not change JSON responses.
+- The toolbar measures the complete request. The duration includes the
+  time of all middleware.

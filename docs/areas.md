@@ -1,10 +1,10 @@
 # Areas
 
-With areas you can tell the layout updater which layout updates to fetch.
-E.g. frontend, backend etc.
+An area tells the layout updater which layout updates to fetch. For example:
+`frontend`, `backend`, `admin`, and so on.
 
-Before you can use this feature, you have to tell the layout updater
-in which area we are currently in.
+Before you use this feature, you must tell the layout updater the current
+area.
 
 ````php
 <?php
@@ -16,7 +16,7 @@ $layoutManager = $request->getAttribute(\ConLayout\Http\LayoutContext::class)->g
 $layoutManager->setArea($area);
 ````
 
-Now you could add the paths for the areas in some application configuration:
+Then add the paths for the areas in the application configuration:
 
 ````php
 <?php
@@ -35,10 +35,10 @@ return [
 ];
 ````
 
-### How to determine the current area?
+### Determine the current area
 
-A possible implementation could be a small middleware that determines the
-area by the matched route name:
+You can determine the area with a small middleware. The middleware uses the
+matched route name:
 
 ````php
 <?php
@@ -79,4 +79,38 @@ class AreaMiddleware implements MiddlewareInterface
         return $handler->handle($request);
     }
 }
-````
+```
+
+## How ConLayout finds the layout update files
+
+The layout updater reads one file per handle. The file name is the handle
+name plus a file extension. For example, the handle `home` reads the file
+`home.xml`.
+
+ConLayout searches the file in the paths of the `global` area first. Then
+it searches in the paths of the current area. It merges the files of both
+areas. The `global` area is always searched, whatever the current area is.
+
+## The default area
+
+The default area is `frontend`. You can change it with the
+`con-layout.default_area` option:
+
+```php
+return [
+    'con-layout' => [
+        'default_area' => 'admin',
+    ],
+];
+```
+
+Note: The `LayoutMiddleware` sets the area from the `default_area` option
+before it loads the layout. This overwrites an area that you set earlier in
+the request. Set `default_area` in the configuration when you need one
+fixed area for the whole application.
+
+## Check the current area
+
+The debug toolbar shows the current area in the Structure tab. Use the
+toolbar to verify the area that ConLayout uses for the request. For more
+information, see `docs/toolbar.md`.

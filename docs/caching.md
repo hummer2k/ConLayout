@@ -1,6 +1,6 @@
 # Caching
 
-## Caching layout structure
+## Cache the layout structure
 
 Listen to the `UpdateEvent::EVENT_COLLECT` and `UpdateEvent::EVENT_COLLECT_POST` events:
 
@@ -65,8 +65,8 @@ class LayoutStructureCacheListener extends AbstractListenerAggregate
 }
 ````
 
-Attach the listener to the layout updater event manager via a delegator
-factory for the `ConLayout\Updater\LayoutUpdaterInterface` service:
+Attach the listener to the event manager of the layout updater. Use a
+delegator factory for the `ConLayout\Updater\LayoutUpdaterInterface` service:
 
 ````php
 <?php
@@ -86,4 +86,29 @@ class LayoutUpdaterCacheDelegatorFactory
         return $updater;
     }
 }
-````
+```
+
+## How the layout structure is built
+
+ConLayout builds the layout structure once per request. The first call to
+`getLayoutStructure()` collects the layout updates and merges them. Later
+calls in the same request return the same structure.
+
+The collection uses two events:
+
+- `EVENT_COLLECT` fires before the collectors run. To use your own
+  structure, return a `Config` object and stop the propagation. ConLayout
+  then reads no layout update files.
+- `EVENT_COLLECT_POST` fires after the collectors merged all updates. Use
+  this event to save the structure to a cache.
+
+The merged structure is read-only.
+
+## Cache invalidation
+
+ConLayout does not clear the cache. When you change a layout update file,
+you must clear the affected cache items yourself.
+
+The cache key must contain all values that select the structure. The
+example above uses the handles and the area. Do not use the same cache key
+for different areas.`

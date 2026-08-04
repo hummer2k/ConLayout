@@ -1,16 +1,83 @@
 # Layout instructions
 
-Currently there are 4 layout instructions:
+There are four layout instructions:
 
 1. [`blocks`](#1-blocks)
 2. [`helpers`](#2-helpers)
 3. [`include`](#3-include)
 4. [`reference`](#4-reference)
 
+## How ConLayout finds the layout updates
+
+ConLayout uses handles to select the layout update files. Each handle has a
+name and a priority.
+
+The `default` handle always exists. Its priority is `-1`.
+
+For a successful route, ConLayout creates one handle for each part of the
+route name. The route name `app.index.index` creates these handles:
+
+- `app` with priority `10`
+- `app/index` with priority `20`
+- `app/index/index` with priority `30`
+
+ConLayout converts route names to lowercase. It keeps the dot separators.
+For example, the route name `App.Index` creates the handles `app` and
+`app/index`.
+
+For a route that matches nothing, ConLayout adds the handle
+`error-router-no-match` with priority `666`. For a handled exception, it
+adds the handle `error-<exception-name>` with priority `666`. For example,
+a `NotFoundException` creates the handle `error-not-found-exception`.
+
+ConLayout processes the handles in the order of their priority. The lowest
+priority comes first. The file name for a handle is the handle name plus a
+file extension, for example `default.xml` or `app/index.xml`. ConLayout
+searches the file in the `global` area and in the current area. For the
+search paths, see `docs/areas.md`.
+
+You can add and remove handles in your code. Use `addHandle()` and
+`removeHandle()` on the `LayoutManager`. See `docs/controller-plugin.md`.
+
+### Merge order
+
+The layout update files are merged in the order of the handle priorities.
+A file of a later handle can override a file of an earlier handle. Use the
+`reference` instruction to change a block that an earlier file defined.
+
+The files of an `include` instruction are merged before the file that
+contains the instruction. So the including file can override the included
+files.
+
+ConLayout reads the `layout_updates` config before it reads the files from
+`layout_update_paths`. So the files can override the config.
+
+### Block defaults
+
+The `block_defaults` option defines the default values for all blocks:
+
+```php
+return [
+    'con-layout' => [
+        'block_defaults' => [
+            'capture_to' => 'content',
+            'append'     => true,
+            'class'      => Laminas\View\Model\ViewModel::class,
+            'options'    => [],
+            'variables'  => [],
+            'template'   => '',
+            'actions'    => [],
+        ],
+    ],
+];
+```
+
+You can override the defaults for a single block in the block definition.
+
 
 ## 1. `blocks`
 
-add blocks to layout:
+Add blocks to the layout:
 
 ````php
 <?php
@@ -170,7 +237,7 @@ return [
 </page>
 ````
 
-Note: Use XML attributes when possible to reduce overhead:
+Note: Use XML attributes when possible. This reduces overhead:
 
 ````xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -185,9 +252,24 @@ Note: Use XML attributes when possible to reduce overhead:
 </page>
 ````
 
+### Sort order
+
+ConLayout renders the blocks in the order of their `order` option. Blocks
+with the same order keep the sequence of their insertion.
+
+You can also use the `before` and `after` options. ConLayout converts them
+to an `order` value at sort time:
+
+- `before` gives the block the order of the target block minus `1`.
+- `after` gives the block the order of the target block plus `1`.
+
+The target block must exist in the block pool. The options do not work
+when you reference a block that ConLayout removed.
+
 ## 2. `helpers`
 
-Call view helpers. Add CSS or JavaScript assets, set page title etc.
+Call view helpers. You can add CSS or JavaScript assets. You can also set the
+page title.
 
 ````php
 <?php
@@ -221,7 +303,7 @@ return [
 
 ````
 
-or via XML:
+Or use XML:
 
 ````xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -238,7 +320,7 @@ or via XML:
 
 ## 3. `include`
 
-Includes another handle
+Include another handle.
 
 ````php
 <?php
@@ -269,8 +351,8 @@ return [
 </page>
 ````
 
-If you want to use the same layout structure as `application/index/index` in 
-`product/index/view`:
+To use the same layout structure in `product/index/view` as in
+`application/index/index`:
 
 
 ````php
@@ -290,7 +372,7 @@ return [
 </page>
 ````
 
-Tip: Define a "virtual handle" for reuse:
+Tip: Define a virtual handle for reuse:
 
 ````php
 <?php
@@ -339,7 +421,7 @@ return [
 
 ## 4. `reference`
 
-Reference a block to change its properties.
+Use `reference` to change the properties of a block.
 
 ````php
 <?php

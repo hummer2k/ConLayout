@@ -2,12 +2,12 @@
 
 ## Handler contract
 
-Any PSR-15 handler that returns an `HtmlResponse` gets its body captured as
-the `content` region of the layout. For advanced use, return a
-`ConLayout\Http\ViewModelResponse` wrapping a `Laminas\View\Model\ViewModel`;
-it will be registered as the `main.content` block. If the view model is
-marked as terminal (`setTerminal(true)`), the layout is skipped and the view
-model is rendered standalone.
+If a handler returns an `HtmlResponse`, ConLayout captures the body of the
+response. The body becomes the `content` region of the layout. For advanced
+use, return a `ConLayout\Http\ViewModelResponse` that wraps a
+`Laminas\View\Model\ViewModel`. ConLayout registers it as the `main.content`
+block. If you mark the view model as terminal with `setTerminal(true)`,
+ConLayout skips the layout. Then it renders the view model standalone.
 
 ````php
 <?php
@@ -33,9 +33,9 @@ class PageHandler implements RequestHandlerInterface
 }
 ````
 
-## Accessing the LayoutManager in handlers
+## Access the LayoutManager in handlers
 
-The `LayoutManager` facade is exposed via:
+You can get the `LayoutManager` facade with:
 
 - the `ConLayout\Http\LayoutContext` request attribute,
 - the `layout()` view helper,
@@ -69,7 +69,7 @@ class PageHandler implements RequestHandlerInterface
 }
 ````
 
-In view scripts you can use the `layout()` view helper:
+In view scripts, use the `layout()` view helper:
 
 ````php
 <?php
@@ -80,29 +80,70 @@ $layoutManager = $this->layout();
 $header = $layoutManager->getBlock('header');
 ````
 
-## Rendering with the PhpRenderer
+## Render with the PhpRenderer
 
-Layouts and blocks are rendered with the `Laminas\View\Renderer\PhpRenderer`
-service. The renderer is created by the ConLayout delegator factory, which
-attaches the `ContainerFilter` (and the `DebugFilter` when
-`con-layout.debug` is enabled) to the renderer filter chain.
+ConLayout renders layouts and blocks with the
+`Laminas\View\Renderer\PhpRenderer` service. The ConLayout delegator factory
+creates the renderer. The factory attaches the `ContainerFilter` to the
+renderer filter chain. The factory also attaches the `DebugFilter` when
+`con-layout.debug` is enabled.
 
-The same renderer instance is shared with `mezzio-laminasviewrenderer`, so the
-Mezzio template resolver (paths and map from the `templates` config) is used.
+ConLayout shares the same renderer instance with `mezzio-laminasviewrenderer`.
+So ConLayout uses the Mezzio template resolver. The resolver uses the paths
+and the map from the `templates` config.
+
+## Error pages
+
+ConLayout has special handles for errors:
+
+- `error-router-no-match` for a request that matches no route.
+- `error-<exception-name>` for a request that ends with an exception.
+
+Both handles have the priority `666`. For example, a `NotFoundException`
+creates the handle `error-not-found-exception`.
+
+Create layout update files with these names to style your error pages. For
+example:
+
+- `layout/<area>/error-router-no-match.xml`
+- `layout/<area>/error-not-found-exception.xml`
+
+The `HandleExtractionMiddleware` reads the exception from the request
+attribute that the `error_handle_attribute` option defines. The default is
+the `Throwable::class` attribute.
+
+## Body class
+
+The `BodyClassMiddleware` adds the matched route name to the body class.
+It converts the route name to lowercase. It replaces each character that
+is not a letter, a digit, or a dash with a dash. For example, the route
+name `app.index.index` becomes `app-index-index`.
+
+Use the `bodyClass` view helper in your layout template to render the
+class:
+
+```php
+<body class="<?= $this->bodyClass() ?>">
+```
+
+You can set a prefix with the `con-layout.body_class_prefix` option.
+ConLayout prepends the prefix to the route name.
 
 ## Migration from v4 (laminas-mvc)
 
-This is a major BC break. The following pieces no longer exist:
+This version breaks backward compatibility with v4. The following pieces no
+longer exist:
 
-- the `ConLayout\Module` class and the ModuleManager integration; register
-  `ConLayout\ConfigProvider` instead,
-- the MVC listeners (`ActionHandlesListener`, `BodyClassListener`,
-  `LoadLayoutListener`, `PrepareActionViewModelListener`); they are replaced
-  by the middleware of the pipeline above,
-- the controller plugin `layoutManager()`; use the `LayoutContext` request
-  attribute, the `layout()` view helper or the `LayoutManager` service,
-- the laminas-developer-tools collector; Mezzio has no developer toolbar
-  integration.
+- The `ConLayout\Module` class and the ModuleManager integration. Register
+  `ConLayout\ConfigProvider` instead.
+- The MVC listeners: `ActionHandlesListener`, `BodyClassListener`,
+  `LoadLayoutListener`, `PrepareActionViewModelListener`. The middleware of
+  the pipeline above replaces them.
+- The controller plugin `layoutManager()`. Use the `LayoutContext` request
+  attribute, the `layout()` view helper, or the `LayoutManager` service.
+- The laminas-developer-tools collector. Mezzio does not have a developer
+  toolbar integration.
 
-Block and layout templates stay unchanged, as does the layout update XML
-format and the `blocks`, `helpers`, `include` and `reference` instructions.
+Block templates and layout templates do not change. The layout update XML
+format does not change. The `blocks`, `helpers`, `include`, and `reference`
+instructions do not change.
