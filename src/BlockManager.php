@@ -25,7 +25,7 @@ class BlockManager extends AbstractPluginManager
         throw new InvalidServiceException(sprintf(
             'Plugin of type %s is invalid; must implement %s\Block\BlockInterface or Laminas\View\Model\ModelInterface',
             (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
-            __NAMESPACE__
+            __NAMESPACE__,
         ));
     }
 

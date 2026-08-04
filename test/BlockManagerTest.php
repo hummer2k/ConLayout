@@ -37,7 +37,5 @@ class BlockManagerTest extends AbstractTestCase
     }
 }
 // @codingStandardsIgnoreStart
-class TestBlock extends AbstractBlock
-{
-}
+class TestBlock extends AbstractBlock {}
 // @codingStandardsIgnoreEnd

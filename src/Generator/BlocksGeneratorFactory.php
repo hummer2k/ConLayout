@@ -15,7 +15,7 @@ class BlocksGeneratorFactory implements FactoryInterface
     {
         $blocksGenerator = new BlocksGenerator(
             $container->get(BlockFactoryInterface::class),
-            $container->get(BlockPoolInterface::class)
+            $container->get(BlockPoolInterface::class),
         );
         return $blocksGenerator;
     }

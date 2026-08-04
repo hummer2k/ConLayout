@@ -21,8 +21,8 @@ class ViewHelperProxyAbstractFactory implements AbstractFactoryInterface
 
         foreach ($moduleOptions->getViewHelpers() as $helperAlias => $helperConfig) {
             if (
-                isset($helperConfig['proxy']) &&
-                $helperConfig['proxy'] === $requestedName
+                isset($helperConfig['proxy'])
+                && $helperConfig['proxy'] === $requestedName
             ) {
                 $this->helperAlias = $helperAlias;
                 $this->proxyClass  = $requestedName;

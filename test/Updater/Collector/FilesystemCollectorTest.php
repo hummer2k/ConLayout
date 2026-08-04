@@ -22,11 +22,11 @@ class FilesystemCollectorTest extends AbstractTestCase
         parent::setUp();
         $this->collector = new FilesystemCollector([
             LayoutUpdaterInterface::AREA_GLOBAL => [
-                __DIR__ . '/_files/global'
+                __DIR__ . '/_files/global',
             ],
             'frontend' => [
-                __DIR__ . '/_files/frontend'
-            ]
+                __DIR__ . '/_files/frontend',
+            ],
         ]);
     }
 
@@ -45,7 +45,7 @@ class FilesystemCollectorTest extends AbstractTestCase
         $block = $result->blocks->get('some.block');
         $this->assertEquals(
             'tpl/for/frontend',
-            $block->get('template')
+            $block->get('template'),
         );
     }
 }

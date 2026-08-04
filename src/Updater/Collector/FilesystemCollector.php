@@ -25,7 +25,7 @@ class FilesystemCollector implements CollectorInterface
 
     public function __construct(
         array $paths = [],
-        array $extensions = ['php', 'xml']
+        array $extensions = ['php', 'xml'],
     ) {
         $this->paths = $paths;
         $this->extensions = $extensions;
@@ -60,7 +60,7 @@ class FilesystemCollector implements CollectorInterface
         $globPaths = [];
         $areas = [
             LayoutUpdaterInterface::AREA_GLOBAL,
-            $area
+            $area,
         ];
         $areas = array_unique($areas);
         foreach ($areas as $area) {
@@ -70,7 +70,7 @@ class FilesystemCollector implements CollectorInterface
                         '%s/%s.{%s}',
                         $basePath,
                         $handle,
-                        implode(',', $this->extensions)
+                        implode(',', $this->extensions),
                     );
                 }
             }

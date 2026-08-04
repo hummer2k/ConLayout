@@ -16,7 +16,7 @@ class LayoutFactory implements FactoryInterface
     {
         $layout = new Layout(
             $container->get(LayoutUpdaterInterface::class),
-            $container->get(BlockPoolInterface::class)
+            $container->get(BlockPoolInterface::class),
         );
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);

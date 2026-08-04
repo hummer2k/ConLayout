@@ -17,19 +17,19 @@ class BlocksGeneratorTest extends AbstractTestCase
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
                 'some.block' => [
-                    'template' => 'some/template'
-                ]
-            ]
+                    'template' => 'some/template',
+                ],
+            ],
         ]);
         $this->blocksGenerator->generate($specs);
         $block = $this->blockPool->get('some.block');
         $this->assertInstanceOf(
             ModelInterface::class,
-            $block
+            $block,
         );
         $this->assertEquals(
             'some/template',
-            $block->getTemplate()
+            $block->getTemplate(),
         );
     }
 
@@ -38,14 +38,14 @@ class BlocksGeneratorTest extends AbstractTestCase
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
                 'some.block' => [
-                    'template' => 'some/template'
-                ]
+                    'template' => 'some/template',
+                ],
             ],
             BlocksGenerator::INSTRUCTION_REFERENCE => [
                 'some.block' => [
-                    'template' => 'set/by/reference'
-                ]
-            ]
+                    'template' => 'set/by/reference',
+                ],
+            ],
         ]);
         $this->blocksGenerator->generate($specs);
         $block = $this->blockPool->get('some.block');
@@ -58,20 +58,20 @@ class BlocksGeneratorTest extends AbstractTestCase
             BlocksGenerator::INSTRUCTION_BLOCKS => [
                 'some.block' => [
                     BlocksGenerator::INSTRUCTION_BLOCKS => [
-                        'some.child' => []
-                    ]
-                ]
+                        'some.child' => [],
+                    ],
+                ],
             ],
             BlocksGenerator::INSTRUCTION_REFERENCE => [
                 'some.child' => [
-                    'template' => 'test/tpl'
-                ]
-            ]
+                    'template' => 'test/tpl',
+                ],
+            ],
         ]);
         $this->blocksGenerator->generate($specs);
         $this->assertEquals(
             'test/tpl',
-            $this->blockPool->get('some.child')->getTemplate()
+            $this->blockPool->get('some.child')->getTemplate(),
         );
     }
 
@@ -80,15 +80,15 @@ class BlocksGeneratorTest extends AbstractTestCase
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
                 'some.block' => [
-                    'remove' => true
+                    'remove' => true,
                 ],
-                'another.block' => []
-            ]
+                'another.block' => [],
+            ],
         ]);
         $this->blocksGenerator->generate($specs);
         $this->assertInstanceOf(
             ModelInterface::class,
-            $this->blockPool->get('another.block')
+            $this->blockPool->get('another.block'),
         );
         $this->assertFalse($this->blockPool->get('some.block'));
     }
@@ -99,20 +99,20 @@ class BlocksGeneratorTest extends AbstractTestCase
             BlocksGenerator::INSTRUCTION_BLOCKS => [
                 'some.block' => [
                     BlocksGenerator::INSTRUCTION_BLOCKS => [
-                        'some.block.child' => []
-                    ]
-                ]
-            ]
+                        'some.block.child' => [],
+                    ],
+                ],
+            ],
         ]);
         $this->blocksGenerator->generate($specs);
         $child = $this->blockPool->get('some.block.child');
         $this->assertInstanceOf(
             ModelInterface::class,
-            $child
+            $child,
         );
         $this->assertEquals(
             'some.block',
-            $child->getOption('parent')
+            $child->getOption('parent'),
         );
         $this->assertTrue($child->getOption('has_parent'));
     }
@@ -124,9 +124,9 @@ class BlocksGeneratorTest extends AbstractTestCase
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
                 'some.block' => [
-                    'template' => 'path/to/tpl'
-                ]
-            ]
+                    'template' => 'path/to/tpl',
+                ],
+            ],
         ]);
         $this->blocksGenerator->generate($specs);
         $this->assertSame($block, $this->blockPool->get('some.block'));

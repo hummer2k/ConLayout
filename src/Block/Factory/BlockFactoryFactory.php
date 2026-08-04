@@ -18,7 +18,7 @@ class BlockFactoryFactory implements FactoryInterface
         $blockFactory = new BlockFactory(
             $options->getBlockDefaults(),
             $container->get(BlockManager::class),
-            $container
+            $container,
         );
         return $blockFactory;
     }

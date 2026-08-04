@@ -18,7 +18,7 @@ class LayoutMiddlewareFactory implements FactoryInterface
     public function __invoke(
         ContainerInterface $container,
         $requestedName,
-        ?array $options = null
+        ?array $options = null,
     ): LayoutMiddleware {
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
@@ -36,7 +36,7 @@ class LayoutMiddlewareFactory implements FactoryInterface
             $container->get(LayoutManager::class),
             $phpRenderer,
             $moduleOptions,
-            $layoutTemplate
+            $layoutTemplate,
         );
     }
 

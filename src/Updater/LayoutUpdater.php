@@ -149,7 +149,7 @@ final class LayoutUpdater implements
                 function ($result) {
                     return ($result instanceof Config);
                 },
-                $event
+                $event,
             );
 
             if ($results->stopped()) {

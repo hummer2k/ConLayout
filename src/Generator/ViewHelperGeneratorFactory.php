@@ -18,7 +18,7 @@ class ViewHelperGeneratorFactory implements FactoryInterface
         $helperConfig        = $options->getViewHelpers();
         $viewHelperGenerator = new ViewHelperGenerator(
             $viewHelperManager,
-            $helperConfig
+            $helperConfig,
         );
 
         $viewHelperGenerator->setFilterManager($container);

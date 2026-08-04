@@ -31,7 +31,7 @@ class LayoutTest extends AbstractTestCase
         parent::setUp();
         $this->layoutStructure = include __DIR__ . '/_files/layout-structure.php';
         $this->updaterMock = $this->getMockBuilder(
-            LayoutUpdaterInterface::class
+            LayoutUpdaterInterface::class,
         )->getMock();
         $this->updaterMock->method('getLayoutStructure')
             ->willReturn(new Config($this->layoutStructure));
@@ -45,17 +45,17 @@ class LayoutTest extends AbstractTestCase
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
             BlockPoolInterface::class,
-            new BlockPool()
+            new BlockPool(),
         );
 
         $serviceManager->setService(
             LayoutUpdaterInterface::class,
-            new LayoutUpdater()
+            new LayoutUpdater(),
         );
 
         $serviceManager->setService(
             ModuleOptions::class,
-            new ModuleOptions()
+            new ModuleOptions(),
         );
 
         $factory = new LayoutFactory();
@@ -75,7 +75,7 @@ class LayoutTest extends AbstractTestCase
 
         $this->assertEquals([
             'some.parent',
-            'footer'
+            'footer',
         ], $layout->getCaptureTo($viewModel));
     }
 
@@ -88,7 +88,7 @@ class LayoutTest extends AbstractTestCase
 
         $this->assertEquals([
             'some.parent',
-            'content'
+            'content',
         ], $layout->getCaptureTo($viewModel));
     }
 
@@ -96,7 +96,7 @@ class LayoutTest extends AbstractTestCase
     {
         $layout = new Layout(
             $this->updaterMock,
-            $this->blockPool
+            $this->blockPool,
         );
         $layout->attachGenerator('blocks', $this->blocksGenerator);
         $layoutModel = new ViewModel();
@@ -127,19 +127,19 @@ class LayoutTest extends AbstractTestCase
 
         $this->assertSame(
             $parent,
-            $childBlock->getOption('parent_block')
+            $childBlock->getOption('parent_block'),
         );
 
         $child2Block = $this->layout->getBlock('child2');
 
         $this->assertSame(
             $childBlock,
-            $child2Block->getOption('parent_block')
+            $child2Block->getOption('parent_block'),
         );
 
         $this->assertSame(
             $parent,
-            $child2Block->getOption('parent_block')->getOption('parent_block')
+            $child2Block->getOption('parent_block')->getOption('parent_block'),
         );
     }
 }

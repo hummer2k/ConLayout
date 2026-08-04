@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 // @codingStandardsIgnoreFile
+
 namespace ConLayoutTest;
 
 use ConLayout\ConfigProvider;

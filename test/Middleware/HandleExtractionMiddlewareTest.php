@@ -124,7 +124,7 @@ class HandleExtractionMiddlewareTest extends AbstractTestCase
 
         $this->assertStringContainsString(
             HandleExtractionMiddleware::ERROR_HANDLE_ROUTE_NOT_FOUND,
-            implode(' ', $this->getHandleNames())
+            implode(' ', $this->getHandleNames()),
         );
     }
 
@@ -133,7 +133,7 @@ class HandleExtractionMiddlewareTest extends AbstractTestCase
         $middleware = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
-                RequestHandlerInterface $handler
+                RequestHandlerInterface $handler,
             ): ResponseInterface {
                 return new Response();
             }

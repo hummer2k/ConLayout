@@ -48,7 +48,7 @@ class ModuleOptionsTest extends AbstractTestCase
         $this->assertSame('/my/base', $moduleOptions->getBasePath());
 
         $this->assertSame([
-            'class' => 'MyBlock'
+            'class' => 'MyBlock',
         ], $moduleOptions->getBlockDefaults());
     }
 
@@ -58,13 +58,13 @@ class ModuleOptionsTest extends AbstractTestCase
         $layoutUpdateExtensions = [
             'php' => 'php',
             'xml' => false,
-            'yaml'
+            'yaml',
         ];
         $moduleOptions->setLayoutUpdateExtensions($layoutUpdateExtensions);
 
         $this->assertEquals([
             'php' => 'php',
-            'yaml' => 'yaml'
+            'yaml' => 'yaml',
         ], $moduleOptions->getLayoutUpdateExtensions());
     }
 }

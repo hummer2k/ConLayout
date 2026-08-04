@@ -2,6 +2,6 @@
 
 return [
     'blocks' => [
-        'some.block' => []
-    ]
+        'some.block' => [],
+    ],
 ];

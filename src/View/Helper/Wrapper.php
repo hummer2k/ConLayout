@@ -27,7 +27,7 @@ class Wrapper extends AbstractHtmlElement
         return sprintf(
             '<%s%s>',
             $this->tag,
-            $htmlAttribs
+            $htmlAttribs,
         );
     }
 

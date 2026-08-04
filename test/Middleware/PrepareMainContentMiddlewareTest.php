@@ -75,9 +75,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
     protected function getHandler(ResponseInterface $response): RequestHandlerInterface
     {
         return new class ($response) implements RequestHandlerInterface {
-            public function __construct(private ResponseInterface $response)
-            {
-            }
+            public function __construct(private ResponseInterface $response) {}
 
             public function handle(ServerRequestInterface $request): ResponseInterface
             {

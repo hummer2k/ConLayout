@@ -13,7 +13,7 @@ class LayoutFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Layout
     {
         return new Layout(
-            $container->get(LayoutManager::class)
+            $container->get(LayoutManager::class),
         );
     }
 }

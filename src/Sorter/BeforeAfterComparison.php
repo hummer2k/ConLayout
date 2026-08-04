@@ -19,12 +19,12 @@ final class BeforeAfterComparison implements SorterInterface
                 }
                 $configArray[$code]['before'] = array_unique(array_merge(
                     $configArray[$code]['before'],
-                    $configArray[$beforeCode]['before']
+                    $configArray[$beforeCode]['before'],
                 ));
                 $configArray[$beforeCode]['after'] = array_merge(
                     $configArray[$beforeCode]['after'],
                     [$code],
-                    $data['after']
+                    $data['after'],
                 );
                 $configArray[$beforeCode]['after'] = array_unique($configArray[$beforeCode]['after']);
             }
@@ -34,12 +34,12 @@ final class BeforeAfterComparison implements SorterInterface
                 }
                 $configArray[$code]['after'] = array_unique(array_merge(
                     $configArray[$code]['after'],
-                    $configArray[$afterCode]['after']
+                    $configArray[$afterCode]['after'],
                 ));
                 $configArray[$afterCode]['before'] = array_merge(
                     $configArray[$afterCode]['before'],
                     [$code],
-                    $data['before']
+                    $data['before'],
                 );
                 $configArray[$afterCode]['before'] = array_unique($configArray[$afterCode]['before']);
             }

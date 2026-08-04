@@ -35,7 +35,7 @@ final class BlockFactory implements
         'variables'  => [],
         'template'   => '',
         'actions'    => [],
-        'blocks'     => []
+        'blocks'     => [],
     ];
 
     private ?ContainerInterface $container = null;
@@ -48,11 +48,11 @@ final class BlockFactory implements
     public function __construct(
         array $blockDefaults = [],
         ?ContainerInterface $blockManager = null,
-        ?ContainerInterface $container = null
+        ?ContainerInterface $container = null,
     ) {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
-            $blockDefaults
+            $blockDefaults,
         );
         $this->container = $container;
         $this->blockManager = $blockManager;
@@ -69,7 +69,7 @@ final class BlockFactory implements
         } else {
             throw new InvalidBlockException(sprintf(
                 'Block "%s" could not be instantiated. Class does not exist.',
-                $class
+                $class,
             ));
         }
         $block->setOption('block_id', $blockId);
@@ -112,7 +112,7 @@ final class BlockFactory implements
                     throw new BadMethodCallException(sprintf(
                         'Call to undefined block method %s::%s()',
                         get_class($block),
-                        $method
+                        $method,
                     ));
                 }
             }
@@ -133,11 +133,11 @@ final class BlockFactory implements
             $this,
             [
                 'block' => $block,
-                'specs' => $specs
+                'specs' => $specs,
             ],
             function ($result) {
                 return $result instanceof ModelInterface;
-            }
+            },
         );
         if ($results->stopped()) {
             $block = $results->last();

@@ -30,10 +30,10 @@ class BlockFactoryTest extends AbstractTestCase
         $blockSpecs = [
             'options' => [
                 'option1' => 'value_option1',
-                'order' => 10
+                'order' => 10,
             ],
             'variables' => [
-                'var1' => 'value_var1'
+                'var1' => 'value_var1',
             ],
             'template' => 'path/to/template',
             'append' => false,
@@ -42,9 +42,9 @@ class BlockFactoryTest extends AbstractTestCase
                 'my-option' => [
                     'method' => 'setOption',
                     'name'   => 'my-option',
-                    'value'  => 'value_my-option'
-                ]
-            ]
+                    'value'  => 'value_my-option',
+                ],
+            ],
         ];
         $block = $this->factory->createBlock('block1', $blockSpecs);
 
@@ -62,9 +62,9 @@ class BlockFactoryTest extends AbstractTestCase
         $specs = [
             'actions' => [
                 'not-exists' => [
-                    'method' => 'notExists___'
-                ]
-            ]
+                    'method' => 'notExists___',
+                ],
+            ],
         ];
 
         $this->expectException(BadMethodCallException::class);
@@ -74,14 +74,14 @@ class BlockFactoryTest extends AbstractTestCase
     public function testClass(): void
     {
         $specs = [
-            'class' => MyBlock::class
+            'class' => MyBlock::class,
         ];
 
         $block = $this->factory->createBlock('test-block', $specs);
 
         $this->assertEquals(
             'test-block',
-            $block->getOption('block_id')
+            $block->getOption('block_id'),
         );
     }
 
@@ -91,11 +91,11 @@ class BlockFactoryTest extends AbstractTestCase
         $class = MyBlock::class;
         $blockManager->setInvokableClass(
             MyBlock::class,
-            $class
+            $class,
         );
         $blockFactory = new BlockFactory([], $blockManager, new ServiceManager());
         $block = $blockFactory->createBlock('my.block', [
-            'class' => MyBlock::class
+            'class' => MyBlock::class,
         ]);
         $this->assertInstanceOf($class, $block);
     }
@@ -103,7 +103,7 @@ class BlockFactoryTest extends AbstractTestCase
     public function testCreateBlockWithTemplate(): void
     {
         $block = $this->factory->createBlock('block.id', [
-            'class' => TplBlock::class
+            'class' => TplBlock::class,
         ]);
         $this->assertEquals('already/set/template', $block->getTemplate());
     }
@@ -113,7 +113,7 @@ class BlockFactoryTest extends AbstractTestCase
         $renderer = new PhpRenderer();
         $this->sm->setService(PhpRenderer::class, $renderer);
         $block = $this->factory->createBlock('test.block.impl', [
-            'class' => BlockImpl::class
+            'class' => BlockImpl::class,
         ]);
         $this->assertSame($renderer, $block->getView());
     }
@@ -139,8 +139,5 @@ class MyBlock extends ViewModel
     }
 }
 
-class BlockImpl extends AbstractBlock
-{
-
-}
+class BlockImpl extends AbstractBlock {}
 // @codingStandardsIgnoreEnd

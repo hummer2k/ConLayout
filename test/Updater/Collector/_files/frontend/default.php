@@ -3,7 +3,7 @@
 return [
     'blocks' => [
         'some.block' => [
-            'template' => 'tpl/for/frontend'
-        ]
-    ]
+            'template' => 'tpl/for/frontend',
+        ],
+    ],
 ];

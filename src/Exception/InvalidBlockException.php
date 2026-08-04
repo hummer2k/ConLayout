@@ -6,6 +6,4 @@ namespace ConLayout\Exception;
 
 use RuntimeException;
 
-class InvalidBlockException extends RuntimeException implements ExceptionInterface
-{
-}
+class InvalidBlockException extends RuntimeException implements ExceptionInterface {}

@@ -18,9 +18,8 @@ class ToolbarData
         private LayoutManager $layoutManager,
         private ?FilesystemCollector $filesystemCollector = null,
         private ?BlockPoolInterface $blockPool = null,
-        private ?ModuleOptions $moduleOptions = null
-    ) {
-    }
+        private ?ModuleOptions $moduleOptions = null,
+    ) {}
 
     /**
      * @return HandleInterface[]

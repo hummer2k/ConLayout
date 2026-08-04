@@ -43,7 +43,7 @@ class ToolbarDataTest extends TestCase
         $layoutManager = $this->createMock(LayoutManager::class);
         $layoutManager->method('getHandles')->willReturn([
             new Handle('default', -1),
-            new Handle('home', 10)
+            new Handle('home', 10),
         ]);
         $layoutManager->method('getArea')->willReturn('frontend');
 
@@ -61,7 +61,7 @@ class ToolbarDataTest extends TestCase
         $layoutManager = $this->createMock(LayoutManager::class);
         $collector = $this->createMock(FilesystemCollector::class);
         $collector->method('getCollectedFiles')->willReturn([
-            'default' => ['/path/to/default.xml']
+            'default' => ['/path/to/default.xml'],
         ]);
 
         $data = new ToolbarData($layoutManager, $collector);
@@ -87,7 +87,7 @@ class ToolbarDataTest extends TestCase
             'default_area'     => 'backend',
             'debug'            => true,
             'base_path'        => '/base/',
-            'body_class_prefix' => 'page-'
+            'body_class_prefix' => 'page-',
         ]);
 
         $data = new ToolbarData($layoutManager, null, null, $moduleOptions);
@@ -106,7 +106,7 @@ class ToolbarDataTest extends TestCase
         $layoutManager = $this->createMock(LayoutManager::class);
         $layoutManager->method('getLayoutStructure')->willReturn(new Config([
             'blocks'  => ['root' => []],
-            'helpers' => ['headLink' => [], 'headScript' => []]
+            'helpers' => ['headLink' => [], 'headScript' => []],
         ], true));
 
         $data = new ToolbarData($layoutManager);
@@ -115,7 +115,7 @@ class ToolbarDataTest extends TestCase
             'blocks'     => 1,
             'references' => 0,
             'helpers'    => 2,
-            'includes'   => 0
+            'includes'   => 0,
         ], $data->getStructureSummary());
         $this->assertSame(['headLink', 'headScript'], $data->getHelpers());
     }
@@ -183,7 +183,7 @@ class ToolbarDataTest extends TestCase
             'root'     => $root,
             'header'   => $header,
             'orphan'   => new ViewModel(),
-            'orphan-2' => new ViewModel()
+            'orphan-2' => new ViewModel(),
         ]);
 
         $blockPool = $this->createMock(BlockPoolInterface::class);

@@ -7,6 +7,4 @@ namespace ConLayout\View\Helper\Proxy;
 /**
  * @codeCoverageIgnore
  */
-class InlineScriptProxy extends HeadScriptProxy
-{
-}
+class InlineScriptProxy extends HeadScriptProxy {}

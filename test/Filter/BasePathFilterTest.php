@@ -24,7 +24,7 @@ class BasePathFilterTest extends AbstractTestCase
         $basePathHelper->setBasePath('/my/base/');
 
         $this->basePathFilter = new BasePathFilter(
-            $basePathHelper
+            $basePathHelper,
         );
     }
 
@@ -35,20 +35,20 @@ class BasePathFilterTest extends AbstractTestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService('config', [
             'con-layout' => [
-                'base_path' => '/my/base/'
-            ]
+                'base_path' => '/my/base/',
+            ],
         ]);
 
         $instance = $factory($serviceManager, BasePathFilter2::class);
 
         $this->assertInstanceOf(
             BasePathFilter2::class,
-            $instance
+            $instance,
         );
 
         $this->assertInstanceOf(
             FilterInterface::class,
-            $instance
+            $instance,
         );
 
         $this->assertEquals('/my/base/css/styles.css', $instance->filter('/css/styles.css'));

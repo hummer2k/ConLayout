@@ -45,7 +45,7 @@ class Layout implements
 
     public function __construct(
         LayoutUpdaterInterface $updater,
-        BlockPoolInterface $blockPool
+        BlockPoolInterface $blockPool,
     ) {
         $this->updater    = $updater;
         $this->blockPool  = $blockPool;
@@ -80,7 +80,7 @@ class Layout implements
             $this->getEventManager()->trigger(
                 __FUNCTION__ . '.pre',
                 $this,
-                []
+                [],
             );
 
             $this->generate();
@@ -90,7 +90,7 @@ class Layout implements
             $this->getEventManager()->trigger(
                 __FUNCTION__ . '.post',
                 $this,
-                []
+                [],
             );
         }
         return $this;
@@ -101,10 +101,10 @@ class Layout implements
         $layoutStructure = $this->updater->getLayoutStructure();
         foreach ($this->generators as $name => $generator) {
             if (
-                !$this->isGeneratorLoaded($name) &&
-                (
-                    empty($generators) ||
-                    isset($generators[$name])
+                !$this->isGeneratorLoaded($name)
+                && (
+                    empty($generators)
+                    || isset($generators[$name])
                 )
             ) {
                 $generator->generate($layoutStructure);
@@ -129,8 +129,8 @@ class Layout implements
             $blocks = $this->blockPool->get();
             foreach ($blocks as $blockId => $block) {
                 if (
-                    $this->isAllowed($blockId, $block) &&
-                    $blockId !== self::BLOCK_ID_ROOT
+                    $this->isAllowed($blockId, $block)
+                    && $blockId !== self::BLOCK_ID_ROOT
                 ) {
                     [$parent, $captureTo] = $this->getCaptureTo($block);
                     if ($parentBlock = $this->getBlock($parent)) {
@@ -153,8 +153,8 @@ class Layout implements
             $this,
             [
                 'block_id' => $blockId,
-                'block' => $block
-            ]
+                'block' => $block,
+            ],
         );
         if ($result->stopped()) {
             return (bool) $result->last();
@@ -193,7 +193,7 @@ class Layout implements
             $captureTo = explode(self::CAPTURE_TO_DELIMITER, $captureTo);
             return [
                 $parent,
-                end($captureTo)
+                end($captureTo),
             ];
         }
         if (false !== strpos($captureTo, self::CAPTURE_TO_DELIMITER)) {
@@ -201,7 +201,7 @@ class Layout implements
         }
         return [
             self::BLOCK_ID_ROOT,
-            $captureTo
+            $captureTo,
         ];
     }
 

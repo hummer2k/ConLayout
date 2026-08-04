@@ -29,7 +29,7 @@ class BlockPoolTest extends AbstractTestCase
             'block3',
             'block2',
             'block1',
-            'block5'
+            'block5',
         ];
 
         $this->blockPool->add('block1', $block1);
@@ -47,10 +47,10 @@ class BlockPoolTest extends AbstractTestCase
     {
         $block1 = new ViewModel();
         $block2 = new ViewModel([], [
-            'block_id' => 'child1'
+            'block_id' => 'child1',
         ]);
         $block3 = new ViewModel([], [
-            'block_id' => 'child2'
+            'block_id' => 'child2',
         ]);
         $block1->addChild($block2);
         $block1->addChild($block3);
@@ -61,12 +61,12 @@ class BlockPoolTest extends AbstractTestCase
 
         $this->assertSame(
             $block2,
-            $this->blockPool->get('child1')
+            $this->blockPool->get('child1'),
         );
 
         $this->assertSame(
             $block3,
-            $this->blockPool->get('child2')
+            $this->blockPool->get('child2'),
         );
     }
 
@@ -74,10 +74,10 @@ class BlockPoolTest extends AbstractTestCase
     {
         $block1 = new ViewModel();
         $block2 = new ViewModel([], [
-            'block_id' => 'child1'
+            'block_id' => 'child1',
         ]);
         $block3 = new ViewModel([], [
-            'block_id' => 'child2'
+            'block_id' => 'child2',
         ]);
         $block1->addChild($block2);
         $block2->addChild($block3);
@@ -88,12 +88,12 @@ class BlockPoolTest extends AbstractTestCase
 
         $this->assertSame(
             $block2,
-            $this->blockPool->get('child1')
+            $this->blockPool->get('child1'),
         );
 
         $this->assertSame(
             $block3,
-            $this->blockPool->get('child2')
+            $this->blockPool->get('child2'),
         );
     }
 
@@ -111,7 +111,7 @@ class BlockPoolTest extends AbstractTestCase
             1 => 'block-2',
             2 => 'block-4',
             3 => 'block-1',
-            4 => 'block-3'
+            4 => 'block-3',
         ];
 
         $block1 = new ViewModel([], ['order' => 5]);
@@ -166,7 +166,7 @@ class BlockPoolTest extends AbstractTestCase
 
         $this->assertEquals(
             'anonymous.content.1',
-            $child->getOption('block_id')
+            $child->getOption('block_id'),
         );
     }
 }

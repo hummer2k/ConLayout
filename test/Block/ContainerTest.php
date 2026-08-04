@@ -31,11 +31,11 @@ class ContainerTest extends AbstractTestCase
         $container->setView(new PhpRenderer());
         $container->setOptions([
             'html_class' => 'sidebar-primary',
-            'html_id' => 'sidebar'
+            'html_id' => 'sidebar',
         ]);
         $this->assertEquals(
             '<div class="sidebar-primary" id="sidebar">',
-            $container->openTag()
+            $container->openTag(),
         );
     }
 }

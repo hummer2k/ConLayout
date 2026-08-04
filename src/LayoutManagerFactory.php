@@ -17,7 +17,7 @@ class LayoutManagerFactory implements FactoryInterface
         return new LayoutManager(
             $container->get(LayoutInterface::class),
             $container->get(LayoutUpdaterInterface::class),
-            $container->get(BlockPoolInterface::class)
+            $container->get(BlockPoolInterface::class),
         );
     }
 }

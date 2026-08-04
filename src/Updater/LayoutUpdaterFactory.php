@@ -19,7 +19,7 @@ class LayoutUpdaterFactory implements FactoryInterface
             $updater->attachCollector(
                 $name,
                 $container->get($collector['class']),
-                $collector['priority']
+                $collector['priority'],
             );
         }
         return $updater;

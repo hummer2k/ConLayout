@@ -17,7 +17,7 @@ class PhpRendererDelegatorFactory implements DelegatorFactoryInterface
         ContainerInterface $container,
         $name,
         callable $callback,
-        ?array $options = null
+        ?array $options = null,
     ): PhpRenderer {
         $renderer = $callback();
         if (!$renderer instanceof PhpRenderer) {

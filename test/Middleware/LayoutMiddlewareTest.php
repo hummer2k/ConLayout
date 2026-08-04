@@ -46,7 +46,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
             $this->layoutManager,
             $this->renderer,
             new ModuleOptions(),
-            'layout'
+            'layout',
         );
     }
 
@@ -65,7 +65,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
 
         $this->assertSame(
             'layout',
-            $this->layout->getBlock(LayoutInterface::BLOCK_ID_ROOT)->getTemplate()
+            $this->layout->getBlock(LayoutInterface::BLOCK_ID_ROOT)->getTemplate(),
         );
 
         $this->assertInstanceOf(HtmlResponse::class, $result);
@@ -125,7 +125,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
             $this->layoutManager,
             $this->renderer,
             new ModuleOptions(['enabled' => false]),
-            'layout'
+            'layout',
         );
 
         $handler = $this->getHandler(new HtmlResponse('My widget content'));
@@ -153,9 +153,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
     protected function getHandler(ResponseInterface $response): RequestHandlerInterface
     {
         return new class ($response) implements RequestHandlerInterface {
-            public function __construct(private ResponseInterface $response)
-            {
-            }
+            public function __construct(private ResponseInterface $response) {}
 
             public function handle(ServerRequestInterface $request): ResponseInterface
             {

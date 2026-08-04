@@ -17,7 +17,7 @@ class ToolbarMiddlewareFactory implements FactoryInterface
     public function __invoke(
         ContainerInterface $container,
         $requestedName,
-        ?array $options = null
+        ?array $options = null,
     ): ToolbarMiddleware {
         $config = $container->has('config') ? $container->get('config') : [];
 
@@ -26,10 +26,10 @@ class ToolbarMiddlewareFactory implements FactoryInterface
                 $container->get(LayoutManager::class),
                 $container->has(FilesystemCollector::class) ? $container->get(FilesystemCollector::class) : null,
                 $container->has(BlockPoolInterface::class) ? $container->get(BlockPoolInterface::class) : null,
-                $container->has(ModuleOptions::class) ? $container->get(ModuleOptions::class) : null
+                $container->has(ModuleOptions::class) ? $container->get(ModuleOptions::class) : null,
             ),
             $container->get(PhpRenderer::class),
-            (bool) ($config['debug'] ?? false)
+            (bool) ($config['debug'] ?? false),
         );
     }
 }

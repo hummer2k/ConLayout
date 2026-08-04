@@ -36,7 +36,7 @@ final class ViewHelperGenerator implements GeneratorInterface
      */
     public function __construct(
         ContainerInterface $viewHelperManager,
-        array $helperConfig = []
+        array $helperConfig = [],
     ) {
         $this->viewHelperManager = $viewHelperManager;
         $this->helperConfig = $helperConfig;
@@ -99,7 +99,7 @@ final class ViewHelperGenerator implements GeneratorInterface
                     throw new BadMethodCallException(sprintf(
                         'Call to undefined helper method %s::%s()',
                         get_class($viewHelper),
-                        $method
+                        $method,
                     ));
                 }
             }
@@ -114,9 +114,9 @@ final class ViewHelperGenerator implements GeneratorInterface
     private function filterArgs(array $instruction): array
     {
         if (
-            !isset($instruction['filter']) ||
-            !$instruction['filter'] ||
-            null === $this->filterManager
+            !isset($instruction['filter'])
+            || !$instruction['filter']
+            || null === $this->filterManager
         ) {
             return $instruction;
         }

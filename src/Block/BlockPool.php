@@ -48,7 +48,7 @@ final class BlockPool implements BlockPoolInterface
             foreach ($block->getChildren() as $childBlock) {
                 $childBlockId = $this->determineAnonymousBlockId($childBlock);
                 $childBlock->setCaptureTo(
-                    $blockId . LayoutInterface::CAPTURE_TO_DELIMITER . $childBlock->captureTo()
+                    $blockId . LayoutInterface::CAPTURE_TO_DELIMITER . $childBlock->captureTo(),
                 );
                 $this->add($childBlockId, $childBlock);
             }
@@ -116,7 +116,7 @@ final class BlockPool implements BlockPoolInterface
             $blockId = sprintf(
                 self::ANONYMOUS_ID_PATTERN,
                 $block->captureTo(),
-                self::$anonymousSuffix++
+                self::$anonymousSuffix++,
             );
             $block->setOption('block_id', $blockId);
         }

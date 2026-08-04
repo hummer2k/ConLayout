@@ -32,7 +32,7 @@ class LayoutMiddleware implements MiddlewareInterface
         LayoutManager $layoutManager,
         PhpRenderer $renderer,
         ModuleOptions $moduleOptions,
-        string $layoutTemplate = ''
+        string $layoutTemplate = '',
     ) {
         $this->layoutManager = $layoutManager;
         $this->renderer = $renderer;
@@ -54,7 +54,7 @@ class LayoutMiddleware implements MiddlewareInterface
                 return new HtmlResponse(
                     $this->renderer->render($viewModel),
                     $response->getStatusCode(),
-                    $response->getHeaders()
+                    $response->getHeaders(),
                 );
             }
         } elseif (!$this->layoutTemplate || !$this->isHtmlResponse($response)) {
@@ -79,7 +79,7 @@ class LayoutMiddleware implements MiddlewareInterface
         return new HtmlResponse(
             $this->renderTree($root),
             $response->getStatusCode(),
-            $response->getHeaders()
+            $response->getHeaders(),
         );
     }
 

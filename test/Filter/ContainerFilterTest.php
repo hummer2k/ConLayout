@@ -35,8 +35,8 @@ class ContainerFilterTest extends TestCase
         $phpRenderer->setResolver(
             new TemplateMapResolver([
                 'container' => __DIR__ . '/../_files/view/container.phtml',
-                'container-2' => __DIR__ . '/../_files/view/container-2.phtml'
-            ])
+                'container-2' => __DIR__ . '/../_files/view/container-2.phtml',
+            ]),
         );
         /** @var ViewModel $viewModelHelper */
         $viewModelHelper = $phpRenderer->plugin('viewModel');

@@ -25,7 +25,7 @@ class BodyClassMiddlewareTest extends AbstractTestCase
 
         $middleware->process(
             $this->createRequest('my/SOME/route'),
-            $this->getHandler()
+            $this->getHandler(),
         );
 
         $this->assertEquals('my-some-route', (string) $bodyClassHelper);
@@ -38,7 +38,7 @@ class BodyClassMiddlewareTest extends AbstractTestCase
 
         $middleware->process(
             $this->createRequest('home'),
-            $this->getHandler()
+            $this->getHandler(),
         );
 
         $this->assertEquals('layout-home', (string) $bodyClassHelper);
@@ -51,7 +51,7 @@ class BodyClassMiddlewareTest extends AbstractTestCase
 
         $middleware->process(
             new ServerRequest(),
-            $this->getHandler()
+            $this->getHandler(),
         );
 
         $this->assertEquals('', (string) $bodyClassHelper);
@@ -62,7 +62,7 @@ class BodyClassMiddlewareTest extends AbstractTestCase
         $middleware = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
-                RequestHandlerInterface $handler
+                RequestHandlerInterface $handler,
             ): ResponseInterface {
                 return new Response();
             }

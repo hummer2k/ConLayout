@@ -29,9 +29,9 @@ class ContainerFilter implements FilterInterface
         $viewModel = $this->phpRenderer->viewModel()->getCurrent();
         $vars = $this->phpRenderer->vars();
         if (
-            !$viewModel instanceof ModelInterface ||
-            $vars->count() ||
-            $viewModel === $this->currentViewModel
+            !$viewModel instanceof ModelInterface
+            || $vars->count()
+            || $viewModel === $this->currentViewModel
         ) {
             return $value;
         }

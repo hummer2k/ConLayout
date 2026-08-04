@@ -27,7 +27,7 @@ class LayoutManager implements
     public function __construct(
         LayoutInterface $layout,
         LayoutUpdaterInterface $updater,
-        BlockPoolInterface $blockPool
+        BlockPoolInterface $blockPool,
     ) {
         $this->layout = $layout;
         $this->updater = $updater;

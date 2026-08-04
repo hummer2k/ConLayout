@@ -53,17 +53,17 @@ abstract class AbstractTestCase extends TestCase
 
         $this->blocksGenerator = new BlocksGenerator(
             $this->blockFactory,
-            $this->blockPool
+            $this->blockPool,
         );
 
         $this->layout = new Layout(
             $this->layoutUpdater,
-            $this->blockPool
+            $this->blockPool,
         );
 
         $this->layout->attachGenerator(
             BlocksGenerator::NAME,
-            $this->blocksGenerator
+            $this->blocksGenerator,
         );
     }
 
@@ -73,7 +73,7 @@ abstract class AbstractTestCase extends TestCase
             'widget1' => __DIR__ . '/_files/view/widget1.phtml',
             'layout' => __DIR__ . '/_files/view/layout.phtml',
             'widget-content' => __DIR__ . '/_files/view/widget-content.phtml',
-            'widget-content-after' => __DIR__ . '/_files/view/widget-content-after.phtml'
+            'widget-content-after' => __DIR__ . '/_files/view/widget-content-after.phtml',
         ]);
     }
 

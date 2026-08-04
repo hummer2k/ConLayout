@@ -25,5 +25,5 @@ jobs:
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
 
-      - name: Run PHPCS
-        run: ./vendor/bin/phpcs --standard=PSR12 ./src/ ./test/
+      - name: Run PHP-CS-Fixer
+        run: composer cs-check

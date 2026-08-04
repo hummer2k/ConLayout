@@ -15,7 +15,7 @@ class BodyClassMiddlewareFactory implements FactoryInterface
     public function __invoke(
         ContainerInterface $container,
         $requestedName,
-        ?array $options = null
+        ?array $options = null,
     ): BodyClassMiddleware {
         /** @var HelperPluginManager $helperPluginManager */
         $helperPluginManager = $container->get('ViewHelperManager');
@@ -26,7 +26,7 @@ class BodyClassMiddlewareFactory implements FactoryInterface
 
         return new BodyClassMiddleware(
             $bodyClassHelper,
-            $moduleOptions->getBodyClassPrefix()
+            $moduleOptions->getBodyClassPrefix(),
         );
     }
 }

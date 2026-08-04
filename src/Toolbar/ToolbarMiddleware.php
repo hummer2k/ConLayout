@@ -30,7 +30,7 @@ class ToolbarMiddleware implements MiddlewareInterface
         ToolbarData $toolbarData,
         PhpRenderer $renderer,
         bool $enabled = false,
-        string $template = self::DEFAULT_TEMPLATE
+        string $template = self::DEFAULT_TEMPLATE,
     ) {
         $this->toolbarData = $toolbarData;
         $this->renderer = $renderer;

@@ -44,21 +44,21 @@ class ToolbarMiddlewareTest extends TestCase
         $layoutManager->method('getRoot')->willReturn($root);
         $layoutManager->method('getHandles')->willReturn([
             new Handle('default', -1),
-            new Handle('home', 10)
+            new Handle('home', 10),
         ]);
         $layoutManager->method('getArea')->willReturn('frontend');
         $layoutManager->method('getLayoutStructure')->willReturn(new Config([
-            'blocks' => ['root' => [], 'header' => []]
+            'blocks' => ['root' => [], 'header' => []],
         ], true));
         $layoutManager->method('getBlocks')->willReturn([
             'root'   => $root,
             'header' => $header,
-            'orphan' => new ViewModel()
+            'orphan' => new ViewModel(),
         ]);
 
         $filesystemCollector = $this->createMock(FilesystemCollector::class);
         $filesystemCollector->method('getCollectedFiles')->willReturn([
-            'default' => ['/path/to/default.xml']
+            'default' => ['/path/to/default.xml'],
         ]);
 
         $blockPool = $this->createMock(BlockPoolInterface::class);
@@ -68,14 +68,14 @@ class ToolbarMiddlewareTest extends TestCase
             $layoutManager,
             $filesystemCollector,
             $blockPool,
-            new ModuleOptions(['layout_template' => 'base', 'default_area' => 'frontend'])
+            new ModuleOptions(['layout_template' => 'base', 'default_area' => 'frontend']),
         );
 
         $middleware = new ToolbarMiddleware($toolbarData, $this->getRenderer(), true);
 
         $response = $middleware->process(
             new ServerRequest(),
-            $this->getHandler(new HtmlResponse('<html><body><h1>Hi</h1></body></html>'))
+            $this->getHandler(new HtmlResponse('<html><body><h1>Hi</h1></body></html>')),
         );
 
         $body = (string) $response->getBody();
@@ -92,7 +92,7 @@ class ToolbarMiddlewareTest extends TestCase
         $this->assertStringContainsString('Duration', $body);
         $this->assertStringContainsString(
             '<div id="conlayout-toolbar"',
-            substr($body, 0, strpos($body, '</body>'))
+            substr($body, 0, strpos($body, '</body>')),
         );
     }
 
@@ -108,12 +108,12 @@ class ToolbarMiddlewareTest extends TestCase
         $middleware = new ToolbarMiddleware(
             new ToolbarData($layoutManager),
             $this->getRenderer(),
-            true
+            true,
         );
 
         $response = $middleware->process(
             new ServerRequest(),
-            $this->getHandler(new HtmlResponse('<h1>Hi</h1>'))
+            $this->getHandler(new HtmlResponse('<h1>Hi</h1>')),
         );
 
         $body = (string) $response->getBody();
@@ -128,12 +128,12 @@ class ToolbarMiddlewareTest extends TestCase
         $middleware = new ToolbarMiddleware(
             new ToolbarData($layoutManager),
             $this->getRenderer(),
-            false
+            false,
         );
 
         $response = $middleware->process(
             new ServerRequest(),
-            $this->getHandler(new HtmlResponse('<html><body><h1>Hi</h1></body></html>'))
+            $this->getHandler(new HtmlResponse('<html><body><h1>Hi</h1></body></html>')),
         );
 
         $this->assertSame('<html><body><h1>Hi</h1></body></html>', (string) $response->getBody());
@@ -146,12 +146,12 @@ class ToolbarMiddlewareTest extends TestCase
         $middleware = new ToolbarMiddleware(
             new ToolbarData($layoutManager),
             $this->getRenderer(),
-            true
+            true,
         );
 
         $response = $middleware->process(
             new ServerRequest(),
-            $this->getHandler(new JsonResponse(['foo' => 'bar']))
+            $this->getHandler(new JsonResponse(['foo' => 'bar'])),
         );
 
         $this->assertSame('{"foo":"bar"}', (string) $response->getBody());
@@ -165,12 +165,12 @@ class ToolbarMiddlewareTest extends TestCase
         $middleware = new ToolbarMiddleware(
             new ToolbarData($layoutManager),
             $this->getRenderer(),
-            true
+            true,
         );
 
         $response = $middleware->process(
             new ServerRequest(),
-            $this->getHandler(new HtmlResponse('<html><body><h1>Hi</h1></body></html>'))
+            $this->getHandler(new HtmlResponse('<html><body><h1>Hi</h1></body></html>')),
         );
 
         $this->assertSame('<html><body><h1>Hi</h1></body></html>', (string) $response->getBody());
@@ -190,7 +190,7 @@ class ToolbarMiddlewareTest extends TestCase
     {
         $renderer = new PhpRenderer();
         $renderer->setResolver(new TemplateMapResolver([
-            'con-layout::toolbar' => __DIR__ . '/../../view/toolbar.phtml'
+            'con-layout::toolbar' => __DIR__ . '/../../view/toolbar.phtml',
         ]));
         return $renderer;
     }
@@ -198,9 +198,7 @@ class ToolbarMiddlewareTest extends TestCase
     protected function getHandler(ResponseInterface $response): RequestHandlerInterface
     {
         return new class ($response) implements RequestHandlerInterface {
-            public function __construct(private ResponseInterface $response)
-            {
-            }
+            public function __construct(private ResponseInterface $response) {}
 
             public function handle(ServerRequestInterface $request): ResponseInterface
             {

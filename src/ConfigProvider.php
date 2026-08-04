@@ -31,7 +31,7 @@ class ConfigProvider
         $dependencies = include __DIR__ . '/../config/service.config.php';
         $dependencies = array_merge_recursive(
             $dependencies,
-            include __DIR__ . '/../config/filter.config.php'
+            include __DIR__ . '/../config/filter.config.php',
         );
         return $dependencies;
     }
@@ -40,11 +40,11 @@ class ConfigProvider
     {
         return [
             'invokables' => [
-                'container' => Container::class
+                'container' => Container::class,
             ],
             'shared' => [
-                'container' => false
-            ]
+                'container' => false,
+            ],
         ];
     }
 
@@ -59,14 +59,14 @@ class ConfigProvider
         $viewPath = __DIR__ . '/../view';
         return [
             'paths' => [
-                $viewPath
+                $viewPath,
             ],
             'map' => [
                 'con-layout::container'      => $viewPath . '/container.phtml',
                 'con-layout::blocks/wrapper' => $viewPath . '/blocks/wrapper.phtml',
                 'con-layout::content'        => $viewPath . '/blocks/content.phtml',
-                'con-layout::toolbar'        => $viewPath . '/toolbar.phtml'
-            ]
+                'con-layout::toolbar'        => $viewPath . '/toolbar.phtml',
+            ],
         ];
     }
 
@@ -83,7 +83,7 @@ class ConfigProvider
             LayoutMiddleware::class,
             HandleExtractionMiddleware::class,
             BodyClassMiddleware::class,
-            PrepareMainContentMiddleware::class
+            PrepareMainContentMiddleware::class,
         ];
     }
 }

@@ -12,7 +12,7 @@ class ViewModelResponse extends Response
     public function __construct(
         private ModelInterface $viewModel,
         int $status = 200,
-        array $headers = []
+        array $headers = [],
     ) {
         parent::__construct('php://memory', $status, $headers);
     }

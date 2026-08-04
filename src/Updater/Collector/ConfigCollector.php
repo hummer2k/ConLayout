@@ -28,7 +28,7 @@ class ConfigCollector implements CollectorInterface
     {
         $areas = [
             LayoutUpdaterInterface::AREA_GLOBAL,
-            $area
+            $area,
         ];
         $structure = new Config([], true);
         foreach ($areas as $area) {

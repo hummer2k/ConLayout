@@ -26,7 +26,7 @@ class TranslateFilterFactory implements FactoryInterface
                 $plural,
                 $number,
                 $textDomain = 'default',
-                $locale = null
+                $locale = null,
             ): string {
                 return 1 === $number ? (string) $singular : (string) $plural;
             }

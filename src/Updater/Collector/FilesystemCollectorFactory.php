@@ -18,7 +18,7 @@ class FilesystemCollectorFactory implements FactoryInterface
         $extensions = $options->getLayoutUpdateExtensions();
         $collector = new FilesystemCollector(
             $paths,
-            $extensions
+            $extensions,
         );
         return $collector;
     }

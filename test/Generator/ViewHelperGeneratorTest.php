@@ -36,33 +36,33 @@ class ViewHelperGeneratorTest extends AbstractTestCase
                     ],
                     'test'   => [
                         'method' => 'prependStylesheet',
-                        'href' => '/css/test.css'
-                    ]
+                        'href' => '/css/test.css',
+                    ],
                 ],
                 'headTitle' => [
                     'default' => ['value' => 'My Title'],
                     'another' => [
                         'value' => 'Another Title',
-                        'after' => 'default'
+                        'after' => 'default',
                     ],
                     'first' => [
                         'method' => 'prepend',
-                        'value' => 'First'
-                    ]
+                        'value' => 'First',
+                    ],
                 ],
                 'headMeta' => [
                     'charset' => [
                         'method' => 'setCharset',
-                        'charset' => 'utf8'
+                        'charset' => 'utf8',
                     ],
                     'desc' => [
                         'name' => 'description',
-                        'content' => 'My description'
+                        'content' => 'My description',
                     ],
                     'keywords' => [
                         'name' => 'keywords',
-                        'content' => 'keyword1, keyword2, keyword3'
-                    ]
+                        'content' => 'keyword1, keyword2, keyword3',
+                    ],
                 ],
                 'headScript' => [
                     'jquery-ui' => [
@@ -70,17 +70,17 @@ class ViewHelperGeneratorTest extends AbstractTestCase
                     ],
                     'jquery' => [
                         'method' => 'prependFile',
-                        'src' => '/js/jquery.min.js'
+                        'src' => '/js/jquery.min.js',
                     ],
                     'modernizr' => [
                         'method' => 'appendFile',
                         'src' => '/js/modernizr.js',
                         'type' => 'text/javascript',
-                        'attrs' => ['conditional' => 'lt IE 9']
+                        'attrs' => ['conditional' => 'lt IE 9'],
                     ],
-                    'will-be-ignored' => false
-                ]
-            ]
+                    'will-be-ignored' => false,
+                ],
+            ],
         ]);
     }
 
@@ -101,7 +101,7 @@ class ViewHelperGeneratorTest extends AbstractTestCase
 
         $generator = new ViewHelperGenerator(
             $helperPluginManager,
-            $config['view_helpers']
+            $config['view_helpers'],
         );
 
         $generator->setFilterManager($filterManager);

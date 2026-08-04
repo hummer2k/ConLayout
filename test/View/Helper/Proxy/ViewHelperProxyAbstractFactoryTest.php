@@ -17,9 +17,9 @@ class ViewHelperProxyAbstractFactoryTest extends AbstractTestCase
         $moduleOptions = new ModuleOptions([
             'view_helpers' => [
                 'headLink' => [
-                    'proxy' => TestProxy::class
-                ]
-            ]
+                    'proxy' => TestProxy::class,
+                ],
+            ],
         ]);
         $sm = new ServiceManager();
         $sm->setService(ModuleOptions::class, $moduleOptions);
@@ -31,8 +31,5 @@ class ViewHelperProxyAbstractFactoryTest extends AbstractTestCase
 }
 
 // @codingStandardsIgnoreStart
-class TestProxy extends AbstractHelper
-{
-
-}
+class TestProxy extends AbstractHelper {}
 // @codingStandardsIgnoreEnd

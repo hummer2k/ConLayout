@@ -26,28 +26,28 @@ class ConfigCollectorTest extends AbstractTestCase
                     'blocks' => [
                         'root' => [],
                         'global.block' => [
-                            'template' => 'lorem/ipsum'
-                        ]
-                    ]
-                ]
+                            'template' => 'lorem/ipsum',
+                        ],
+                    ],
+                ],
             ],
             'frontend' => [
                 'default' => [
                     'blocks' => [
                         'my.block' => [],
                         'global.block' => [
-                            'template' => 'tpl/for/frontend'
-                        ]
-                    ]
-                ]
+                            'template' => 'tpl/for/frontend',
+                        ],
+                    ],
+                ],
             ],
             'backend' => [
                 'app/index' => [
                     'blocks' => [
-                        'some.block' => []
-                    ]
-                ]
-            ]
+                        'some.block' => [],
+                    ],
+                ],
+            ],
         ];
         $this->collector = new ConfigCollector($config);
     }
@@ -67,7 +67,7 @@ class ConfigCollectorTest extends AbstractTestCase
         $this->assertInstanceOf(Config::class, $globalBlock);
         $this->assertEquals(
             'tpl/for/frontend',
-            $globalBlock->template
+            $globalBlock->template,
         );
     }
 }

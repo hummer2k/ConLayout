@@ -4,3 +4,4 @@
 /test/TestConfig.php
 /vendor/
 /.phpunit.result.cache
+/.php-cs-fixer.cache

@@ -23,7 +23,7 @@ final class BlocksGenerator implements GeneratorInterface
      */
     public function __construct(
         BlockFactoryInterface $blockFactory,
-        BlockPoolInterface $blockPool
+        BlockPoolInterface $blockPool,
     ) {
         $this->blockFactory = $blockFactory;
         $this->blockPool = $blockPool;

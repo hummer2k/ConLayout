@@ -13,14 +13,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class LayoutContextMiddleware implements MiddlewareInterface
 {
-    public function __construct(private LayoutManager $layoutManager)
-    {
-    }
+    public function __construct(private LayoutManager $layoutManager) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return $handler->handle(
-            $request->withAttribute(LayoutContext::class, new LayoutContext($this->layoutManager))
+            $request->withAttribute(LayoutContext::class, new LayoutContext($this->layoutManager)),
         );
     }
 }

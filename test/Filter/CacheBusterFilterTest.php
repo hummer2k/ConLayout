@@ -31,18 +31,18 @@ class CacheBusterFilterTest extends AbstractTestCase
 
         $this->assertInstanceOf(
             CacheBusterFilter::class,
-            $instance
+            $instance,
         );
         $this->assertInstanceOf(
             FilterInterface::class,
-            $instance
+            $instance,
         );
     }
 
     public function testMd5File(): void
     {
         $cacheBuster = new CacheBusterFilter(
-            __DIR__ . '/_files'
+            __DIR__ . '/_files',
         );
 
         $value = $cacheBuster->filter('styles.css', 'styles.css');
@@ -52,7 +52,7 @@ class CacheBusterFilterTest extends AbstractTestCase
     public function testFileDoesNotExist(): void
     {
         $cacheBuster = new CacheBusterFilter(
-            'DOES_NOT_EXIST_____'
+            'DOES_NOT_EXIST_____',
         );
         $value = $cacheBuster->filter('styles.css', 'styles.css');
         $this->assertEquals('styles.css', $value);

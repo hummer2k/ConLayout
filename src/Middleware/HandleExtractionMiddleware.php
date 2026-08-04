@@ -31,7 +31,7 @@ class HandleExtractionMiddleware implements MiddlewareInterface
 
     public function __construct(
         CamelCaseToDash $inflector,
-        string $errorHandleAttribute = Throwable::class
+        string $errorHandleAttribute = Throwable::class,
     ) {
         $this->inflector = $inflector;
         $this->errorHandleAttribute = $errorHandleAttribute;

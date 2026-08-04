@@ -13,7 +13,7 @@ class DebugFilterFactory implements FactoryInterface
     public function __invoke(
         ContainerInterface $container,
         $requestedName,
-        ?array $options = null
+        ?array $options = null,
     ): DebugFilter|ContainerFilter {
         return new $requestedName($container->get(PhpRenderer::class));
     }

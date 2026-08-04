@@ -23,13 +23,13 @@ class LayoutManagerTest extends AbstractTestCase
         parent::setUp();
         $this->blockPool->add(
             'test-block',
-            (new ViewModel())->setTemplate('widget1')
+            (new ViewModel())->setTemplate('widget1'),
         );
 
         $this->layoutManager = new LayoutManager(
             $this->layout,
             $this->layoutUpdater,
-            $this->blockPool
+            $this->blockPool,
         );
     }
 
@@ -38,15 +38,15 @@ class LayoutManagerTest extends AbstractTestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
             LayoutInterface::class,
-            $this->layout
+            $this->layout,
         );
         $serviceManager->setService(
             LayoutUpdaterInterface::class,
-            $this->layoutUpdater
+            $this->layoutUpdater,
         );
         $serviceManager->setService(
             BlockPoolInterface::class,
-            $this->blockPool
+            $this->blockPool,
         );
 
         $factory = new LayoutManagerFactory();
@@ -54,7 +54,7 @@ class LayoutManagerTest extends AbstractTestCase
 
         $this->assertInstanceOf(
             LayoutManager::class,
-            $instance
+            $instance,
         );
     }
 
@@ -78,7 +78,7 @@ class LayoutManagerTest extends AbstractTestCase
 
         $this->assertSame([
             'default',
-            'my-test-handle'
+            'my-test-handle',
         ], $this->layoutUpdater->getHandles());
 
         $this->layoutManager->addHandle(new Handle('test-handle-2', -10));
@@ -86,7 +86,7 @@ class LayoutManagerTest extends AbstractTestCase
         $this->assertSame([
             'test-handle-2',
             'default',
-            'my-test-handle'
+            'my-test-handle',
         ], $this->layoutUpdater->getHandles());
     }
 
@@ -96,13 +96,13 @@ class LayoutManagerTest extends AbstractTestCase
 
         $this->assertSame([
             'default',
-            'my-test-handle'
+            'my-test-handle',
         ], $this->layoutUpdater->getHandles());
 
         $this->layoutManager->removeHandle('my-test-handle');
 
         $this->assertSame([
-            'default'
+            'default',
         ], $this->layoutUpdater->getHandles());
     }
 
@@ -136,7 +136,7 @@ class LayoutManagerTest extends AbstractTestCase
 
         $this->assertSame(
             $root,
-            $this->layout->getBlock(LayoutInterface::BLOCK_ID_ROOT)
+            $this->layout->getBlock(LayoutInterface::BLOCK_ID_ROOT),
         );
     }
 
@@ -161,13 +161,13 @@ class LayoutManagerTest extends AbstractTestCase
         $this->layoutManager->setHandles([
             'my-handle-1' => 5,
             'my-handle-2' => 3,
-            'my-handle-3' => 6
+            'my-handle-3' => 6,
         ]);
 
         $this->assertSame([
             'my-handle-2',
             'my-handle-1',
-            'my-handle-3'
+            'my-handle-3',
         ], $this->layoutUpdater->getHandles());
     }
 
@@ -176,13 +176,13 @@ class LayoutManagerTest extends AbstractTestCase
         $this->layoutManager->setHandles([
             new Handle('my-handle-1', 5),
             new Handle('my-handle-2', 3),
-            new Handle('my-handle-3', 6)
+            new Handle('my-handle-3', 6),
         ]);
 
         $this->assertSame([
             'my-handle-2',
             'my-handle-1',
-            'my-handle-3'
+            'my-handle-3',
         ], $this->layoutUpdater->getHandles());
     }
 }
