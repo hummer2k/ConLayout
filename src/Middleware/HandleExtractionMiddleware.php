@@ -6,7 +6,7 @@ namespace ConLayout\Middleware;
 
 use ConLayout\Handle\Handle;
 use ConLayout\Http\LayoutContext;
-use ConLayout\Inflector\TemplateInflector;
+use Laminas\Filter\Word\CamelCaseToDash;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,16 +19,18 @@ class HandleExtractionMiddleware implements MiddlewareInterface
 {
     public const SEPARATOR = '/';
 
+    public const ROUTE_NAME_SEPARATOR = '.';
+
     public const ERROR_HANDLE_ROUTE_NOT_FOUND = 'error-router-no-match';
 
     public const ERROR_PRIORITY = 666;
 
-    private TemplateInflector $inflector;
+    private CamelCaseToDash $inflector;
 
     private string $errorHandleAttribute;
 
     public function __construct(
-        TemplateInflector $inflector,
+        CamelCaseToDash $inflector,
         string $errorHandleAttribute = Throwable::class
     ) {
         $this->inflector = $inflector;
@@ -61,7 +63,7 @@ class HandleExtractionMiddleware implements MiddlewareInterface
         }
 
         if ($routeResult instanceof RouteResult && $routeResult->isSuccess()) {
-            foreach ($this->getActionHandles($routeResult) as $handle) {
+            foreach ($this->getRouteHandles($routeResult) as $handle) {
                 $context->addHandle($handle);
             }
         }
@@ -71,7 +73,7 @@ class HandleExtractionMiddleware implements MiddlewareInterface
     {
         if ($error instanceof Throwable) {
             $shortName = (new ReflectionClass($error))->getShortName();
-            return 'error-' . $this->inflector->inflectName($shortName);
+            return 'error-' . $this->inflectName($shortName);
         }
         return (string) $error;
     }
@@ -79,27 +81,14 @@ class HandleExtractionMiddleware implements MiddlewareInterface
     /**
      * @return Handle[]
      */
-    private function getActionHandles(RouteResult $routeResult): array
+    private function getRouteHandles(RouteResult $routeResult): array
     {
-        $params = $routeResult->getMatchedParams();
-        $controller = $params['controller'] ?? '';
-        $routeName = (string) $routeResult->getMatchedRouteName();
-
-        if (is_string($controller) && $controller) {
-            $template = $this->inflector->mapController($controller);
-        } else {
-            $template = $this->inflector->inflectName($routeName);
-        }
-
-        $action = $params['action'] ?? null;
-        if (is_string($action) && null !== $action) {
-            $template .= self::SEPARATOR . $this->inflector->inflectName($action);
-        }
+        $template = $this->inflectName((string) $routeResult->getMatchedRouteName());
 
         $priority = 0;
         $actionHandles = [];
         $previousHandle = '';
-        $templateParts = explode(self::SEPARATOR, $template);
+        $templateParts = explode(self::ROUTE_NAME_SEPARATOR, $template);
 
         foreach ($templateParts as $name) {
             $priority += 10;
@@ -108,5 +97,10 @@ class HandleExtractionMiddleware implements MiddlewareInterface
         }
 
         return $actionHandles;
+    }
+
+    private function inflectName(string $name): string
+    {
+        return strtolower((string) $this->inflector->filter($name));
     }
 }

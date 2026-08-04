@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ConLayout\Middleware;
 
-use ConLayout\Inflector\TemplateInflector;
 use ConLayout\Options\ModuleOptions;
-use Psr\Container\ContainerInterface;
+use Laminas\Filter\Word\CamelCaseToDash;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 
 class HandleExtractionMiddlewareFactory implements FactoryInterface
 {
@@ -19,12 +19,8 @@ class HandleExtractionMiddlewareFactory implements FactoryInterface
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
 
-        $inflector = new TemplateInflector();
-        $inflector->setControllerMap($moduleOptions->getControllerMap());
-        $inflector->setPreferRouteMatchController($moduleOptions->isPreferRouteMatchController());
-
         return new HandleExtractionMiddleware(
-            $inflector,
+            new CamelCaseToDash(),
             $moduleOptions->getErrorHandleAttribute()
         );
     }

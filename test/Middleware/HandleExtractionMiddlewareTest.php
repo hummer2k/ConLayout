@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace ConLayoutTest\Middleware;
 
 use ConLayout\Http\LayoutContext;
-use ConLayout\Inflector\TemplateInflector;
 use ConLayout\LayoutManager;
 use ConLayout\Middleware\HandleExtractionMiddleware;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequest;
+use Laminas\Filter\Word\CamelCaseToDash;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
@@ -29,63 +29,12 @@ class HandleExtractionMiddlewareTest extends AbstractTestCase
         parent::setUp();
         $layoutManager = new LayoutManager($this->layout, $this->layoutUpdater, $this->blockPool);
         $this->context = new LayoutContext($layoutManager);
-        $this->middleware = new HandleExtractionMiddleware(new TemplateInflector());
-    }
-
-    public function testApplicationIndexIndex(): void
-    {
-        $request = $this->createRequest([
-            'controller' => 'Application\Controller\Index',
-            'action' => 'index'
-        ]);
-
-        $this->middleware->process($request, $this->getHandler());
-
-        $handles = implode(' ', $this->getHandleNames());
-
-        $expectedHandles = [
-            'application',
-            'application/index',
-            'application/index/index'
-        ];
-
-        foreach ($expectedHandles as $expectedHandle) {
-            $this->assertStringContainsString($expectedHandle, $handles);
-        }
-    }
-
-    public function testApplicationIndexIndexWithControllerMap(): void
-    {
-        $inflector = new TemplateInflector();
-        $inflector->setControllerMap([
-            'Application' => 'app'
-        ]);
-
-        $this->middleware = new HandleExtractionMiddleware($inflector);
-
-        $request = $this->createRequest([
-            'controller' => 'Application\Controller\Index',
-            'action' => 'index'
-        ]);
-
-        $this->middleware->process($request, $this->getHandler());
-
-        $handles = implode(' ', $this->getHandleNames());
-
-        $expectedHandles = [
-            'app',
-            'app/index',
-            'app/index/index'
-        ];
-
-        foreach ($expectedHandles as $expectedHandle) {
-            $this->assertStringContainsString($expectedHandle, $handles);
-        }
+        $this->middleware = new HandleExtractionMiddleware(new CamelCaseToDash());
     }
 
     public function testRouteNameBasedHandles(): void
     {
-        $request = $this->createRequest([], 'blog/post');
+        $request = $this->createRequest([], 'blog.post');
 
         $this->middleware->process($request, $this->getHandler());
 
@@ -95,9 +44,55 @@ class HandleExtractionMiddlewareTest extends AbstractTestCase
         $this->assertStringContainsString('blog/post', $handles);
     }
 
+    public function testPrefixedRouteNameBasedHandles(): void
+    {
+        $request = $this->createRequest([], 'app.home');
+
+        $this->middleware->process($request, $this->getHandler());
+
+        $handles = [];
+        foreach ($this->context->getHandles() as $handle) {
+            $handles[$handle->getName()] = $handle->getPriority();
+        }
+
+        $this->assertSame(10, $handles['app']);
+        $this->assertSame(20, $handles['app/home']);
+    }
+
+    public function testMultiSegmentRouteNameBasedHandles(): void
+    {
+        $request = $this->createRequest([], 'customer.account.dashboard');
+
+        $this->middleware->process($request, $this->getHandler());
+
+        $handles = [];
+        foreach ($this->context->getHandles() as $handle) {
+            $handles[$handle->getName()] = $handle->getPriority();
+        }
+
+        $this->assertSame(10, $handles['customer']);
+        $this->assertSame(20, $handles['customer/account']);
+        $this->assertSame(30, $handles['customer/account/dashboard']);
+    }
+
+    public function testCamelCaseRouteNameBasedHandles(): void
+    {
+        $request = $this->createRequest([], 'app.homePage');
+
+        $this->middleware->process($request, $this->getHandler());
+
+        $handles = [];
+        foreach ($this->context->getHandles() as $handle) {
+            $handles[$handle->getName()] = $handle->getPriority();
+        }
+
+        $this->assertSame(10, $handles['app']);
+        $this->assertSame(20, $handles['app/home-page']);
+    }
+
     public function testInjectErrorHandleFromString(): void
     {
-        $this->middleware = new HandleExtractionMiddleware(new TemplateInflector(), 'error');
+        $this->middleware = new HandleExtractionMiddleware(new CamelCaseToDash(), 'error');
 
         $request = $this->createRequest([], 'test')
             ->withAttribute('error', 'test-error');
@@ -112,7 +107,7 @@ class HandleExtractionMiddlewareTest extends AbstractTestCase
         $request = $this->createRequest([], 'test')
             ->withAttribute(HandleExtractionMiddleware::class, new \RuntimeException('something went wrong'));
 
-        $this->middleware = new HandleExtractionMiddleware(new TemplateInflector(), HandleExtractionMiddleware::class);
+        $this->middleware = new HandleExtractionMiddleware(new CamelCaseToDash(), HandleExtractionMiddleware::class);
 
         $this->middleware->process($request, $this->getHandler());
 

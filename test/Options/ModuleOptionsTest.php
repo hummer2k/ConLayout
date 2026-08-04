@@ -12,8 +12,6 @@ class ModuleOptionsTest extends AbstractTestCase
     public function testDefaults(): void
     {
         $moduleOptions = new ModuleOptions();
-        $this->assertIsArray($moduleOptions->getControllerMap());
-        $this->assertIsBool($moduleOptions->isPreferRouteMatchController());
         $this->assertIsArray($moduleOptions->getViewHelpers());
         $this->assertIsString($moduleOptions->getCacheBusterInternalBaseDir());
         $this->assertIsArray($moduleOptions->getLayoutUpdatePaths());
@@ -52,18 +50,6 @@ class ModuleOptionsTest extends AbstractTestCase
         $this->assertSame([
             'class' => 'MyBlock'
         ], $moduleOptions->getBlockDefaults());
-
-        $controllerMap = [
-            'MappedNs' => true,
-            'ZendTest\MappedNs' => true
-        ];
-        $moduleOptions->setControllerMap($controllerMap);
-        $this->assertEquals(
-            $controllerMap,
-            $moduleOptions->getControllerMap()
-        );
-
-        $this->assertEquals(false, $moduleOptions->isPreferRouteMatchController());
     }
 
     public function testSetLayoutUpdateExtensions(): void

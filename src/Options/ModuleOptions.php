@@ -29,16 +29,6 @@ class ModuleOptions extends AbstractOptions
 
     protected ?string $defaultArea = null;
 
-    /**
-     * Array of controller namespace -> action handle mappings.
-     */
-    protected array $controllerMap = [];
-
-    /**
-     * Flag to force the use of the route match controller param.
-     */
-    protected bool $preferRouteMatchController = false;
-
     protected array $generators = [];
 
     protected array $collectors = [];
@@ -61,42 +51,6 @@ class ModuleOptions extends AbstractOptions
     public function setDebug(bool $debug): static
     {
         $this->debug = $debug;
-        return $this;
-    }
-
-    /**
-     * Retrieve an array of controller namespace -> action handle mappings.
-     */
-    public function getControllerMap(): array
-    {
-        return $this->controllerMap;
-    }
-
-    /**
-     * Set an array of controller namespace -> action handle mappings.
-     */
-    public function setControllerMap(array $controllerMap): static
-    {
-        $this->controllerMap = $controllerMap;
-
-        return $this;
-    }
-
-    /**
-     * Whether to force the use of the route match controller param.
-     */
-    public function isPreferRouteMatchController(): bool
-    {
-        return $this->preferRouteMatchController;
-    }
-
-    /**
-     * Set whether to force the use of the route match controller param.
-     */
-    public function setPreferRouteMatchController(bool $preferRouteMatchController): static
-    {
-        $this->preferRouteMatchController = $preferRouteMatchController;
-
         return $this;
     }
 

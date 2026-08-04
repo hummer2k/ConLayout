@@ -18,8 +18,6 @@ Migration from laminas-mvc to Mezzio. This is a major BC break.
   `HtmlResponse`.
 - `ConLayout\Http\LayoutContext`, a per-request facade carried as request
   attribute.
-- `ConLayout\Inflector\TemplateInflector` with the controller/action handle
-  inflection logic.
 - `layout()` view helper and `ConLayout\LayoutManager` service/facade
   (replacing the `layoutManager()` controller plugin).
 - `PhpRenderer` delegator factory attaching the `ContainerFilter`/`DebugFilter`
@@ -36,7 +34,11 @@ Migration from laminas-mvc to Mezzio. This is a major BC break.
   unchanged.
 - `ModuleOptions`: the `listeners` option was removed (replaced by the
   middleware config); added `enabled`, `layout_template`, `base_path` and
-  `error_handle_attribute`.
+  `error_handle_attribute`. The dead `controller_map` and
+  `prefer_route_match_controller` options were removed.
+- Action handles derive from the dot-separated route name; handle name
+  inflection uses `Laminas\Filter\Word\CamelCaseToDash` instead of the copied
+  `ConLayout\Inflector\TemplateInflector`.
 - `BasePathFilter` reads the base path from `con-layout.base_path`.
 - `TranslateFilterFactory` falls back to a no-op translator when no
   `Laminas\I18n\Translator\TranslatorInterface` is registered.
@@ -45,6 +47,7 @@ Migration from laminas-mvc to Mezzio. This is a major BC break.
 ### Removed
 
 - `ConLayout\Module` and the ModuleManager integration.
+- `ConLayout\Inflector\TemplateInflector`.
 - The four MVC listeners (`ActionHandlesListener`, `BodyClassListener`,
   `LoadLayoutListener`, `PrepareActionViewModelListener`).
 - The `layoutManager()` controller plugin.
