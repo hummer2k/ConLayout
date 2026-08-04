@@ -9,7 +9,8 @@ use ConLayout\Middleware\BodyClassMiddleware;
 use ConLayout\Middleware\HandleExtractionMiddleware;
 use ConLayout\Middleware\LayoutContextMiddleware;
 use ConLayout\Middleware\LayoutMiddleware;
-use ConLayout\Middleware\PrepareActionResultMiddleware;
+use ConLayout\Middleware\PrepareMainContentMiddleware;
+use ConLayout\Toolbar\ToolbarMiddleware;
 
 class ConfigProvider
 {
@@ -63,7 +64,8 @@ class ConfigProvider
             'map' => [
                 'con-layout::container'      => $viewPath . '/container.phtml',
                 'con-layout::blocks/wrapper' => $viewPath . '/blocks/wrapper.phtml',
-                'con-layout::content'        => $viewPath . '/blocks/content.phtml'
+                'con-layout::content'        => $viewPath . '/blocks/content.phtml',
+                'con-layout::toolbar'        => $viewPath . '/toolbar.phtml'
             ]
         ];
     }
@@ -76,11 +78,12 @@ class ConfigProvider
     public function getMiddleware(): array
     {
         return [
+            ToolbarMiddleware::class,
             LayoutContextMiddleware::class,
             LayoutMiddleware::class,
             HandleExtractionMiddleware::class,
             BodyClassMiddleware::class,
-            PrepareActionResultMiddleware::class
+            PrepareMainContentMiddleware::class
         ];
     }
 }

@@ -8,14 +8,14 @@ use ConLayout\Block\BlockPoolInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
-class PrepareActionResultMiddlewareFactory implements FactoryInterface
+class PrepareMainContentMiddlewareFactory implements FactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,
         $requestedName,
         ?array $options = null
-    ): PrepareActionResultMiddleware {
-        return new PrepareActionResultMiddleware(
+    ): PrepareMainContentMiddleware {
+        return new PrepareMainContentMiddleware(
             $container->get(BlockPoolInterface::class)
         );
     }

@@ -22,14 +22,16 @@ use ConLayout\Middleware\LayoutContextMiddleware;
 use ConLayout\Middleware\LayoutContextMiddlewareFactory;
 use ConLayout\Middleware\LayoutMiddleware;
 use ConLayout\Middleware\LayoutMiddlewareFactory;
-use ConLayout\Middleware\PrepareActionResultMiddleware;
-use ConLayout\Middleware\PrepareActionResultMiddlewareFactory;
+use ConLayout\Middleware\PrepareMainContentMiddleware;
+use ConLayout\Middleware\PrepareMainContentMiddlewareFactory;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Options\ModuleOptionsFactory;
 use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\Collector\ConfigCollectorFactory;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\Collector\FilesystemCollectorFactory;
+use ConLayout\Toolbar\ToolbarMiddleware;
+use ConLayout\Toolbar\ToolbarMiddlewareFactory;
 use ConLayout\Updater\LayoutUpdaterFactory;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\PhpRendererDelegatorFactory;
@@ -52,7 +54,8 @@ return [
         LayoutContextMiddleware::class         => LayoutContextMiddlewareFactory::class,
         HandleExtractionMiddleware::class      => HandleExtractionMiddlewareFactory::class,
         BodyClassMiddleware::class             => BodyClassMiddlewareFactory::class,
-        PrepareActionResultMiddleware::class   => PrepareActionResultMiddlewareFactory::class
+        PrepareMainContentMiddleware::class    => PrepareMainContentMiddlewareFactory::class,
+        ToolbarMiddleware::class               => ToolbarMiddlewareFactory::class
     ],
     'aliases' => [
         'Layout'                => LayoutInterface::class,

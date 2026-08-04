@@ -6,7 +6,7 @@ namespace ConLayoutTest\Middleware;
 
 use ConLayout\Http\ViewModelResponse;
 use ConLayout\Layout\LayoutInterface;
-use ConLayout\Middleware\PrepareActionResultMiddleware;
+use ConLayout\Middleware\PrepareMainContentMiddleware;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -16,14 +16,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class PrepareActionResultMiddlewareTest extends AbstractTestCase
+class PrepareMainContentMiddlewareTest extends AbstractTestCase
 {
-    protected PrepareActionResultMiddleware $middleware;
+    protected PrepareMainContentMiddleware $middleware;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->middleware = new PrepareActionResultMiddleware($this->blockPool);
+        $this->middleware = new PrepareMainContentMiddleware($this->blockPool);
     }
 
     public function testWithViewModel(): void
@@ -33,7 +33,7 @@ class PrepareActionResultMiddlewareTest extends AbstractTestCase
 
         $this->middleware->process(new ServerRequest(), $handler);
 
-        $actionResult = $this->blockPool->get(LayoutInterface::BLOCK_ID_ACTION_RESULT);
+        $actionResult = $this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT);
         $this->assertSame($viewModel, $actionResult);
     }
 
@@ -49,7 +49,7 @@ class PrepareActionResultMiddlewareTest extends AbstractTestCase
 
         $this->assertFalse($viewModel->isAppend());
         $this->assertNull($viewModel->getOption('has_parent'));
-        $this->assertFalse($this->blockPool->get(LayoutInterface::BLOCK_ID_ACTION_RESULT));
+        $this->assertFalse($this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
     }
 
     public function testCaptureHtmlResponseBody(): void
@@ -58,7 +58,7 @@ class PrepareActionResultMiddlewareTest extends AbstractTestCase
 
         $this->middleware->process(new ServerRequest(), $handler);
 
-        $actionResult = $this->blockPool->get(LayoutInterface::BLOCK_ID_ACTION_RESULT);
+        $actionResult = $this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT);
         $this->assertInstanceOf(ViewModel::class, $actionResult);
         $this->assertSame('My widget content', $actionResult->getVariable('content'));
     }
@@ -69,7 +69,7 @@ class PrepareActionResultMiddlewareTest extends AbstractTestCase
 
         $this->middleware->process(new ServerRequest(), $handler);
 
-        $this->assertFalse($this->blockPool->get(LayoutInterface::BLOCK_ID_ACTION_RESULT));
+        $this->assertFalse($this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
     }
 
     protected function getHandler(ResponseInterface $response): RequestHandlerInterface

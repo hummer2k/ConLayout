@@ -17,7 +17,7 @@ interface LayoutInterface
     /**
      * block id of view model returned by controller
      */
-    public const BLOCK_ID_ACTION_RESULT = 'action.result';
+    public const BLOCK_ID_MAIN_CONTENT = 'main.content';
 
     /**
      * delimiter block_id::cpature_to

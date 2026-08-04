@@ -72,6 +72,14 @@ final class BlockPool implements BlockPoolInterface
     }
 
     /**
+     * @return array<int, string>
+     */
+    public function getRemovedBlocks(): array
+    {
+        return array_keys($this->removedBlocks);
+    }
+
+    /**
      * @inheritDoc
      */
     public function sort(): static

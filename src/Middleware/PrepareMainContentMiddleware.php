@@ -13,7 +13,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\View\Model\ViewModel;
 
-class PrepareActionResultMiddleware implements MiddlewareInterface
+class PrepareMainContentMiddleware implements MiddlewareInterface
 {
     public const CONTENT_TEMPLATE = 'con-layout::content';
 
@@ -33,7 +33,7 @@ class PrepareActionResultMiddleware implements MiddlewareInterface
             if ($viewModel->terminate()) {
                 $viewModel->setOption('has_parent', null);
             } else {
-                $this->blockPool->add(LayoutInterface::BLOCK_ID_ACTION_RESULT, $viewModel);
+                $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $viewModel);
             }
             return $response;
         }
@@ -42,7 +42,7 @@ class PrepareActionResultMiddleware implements MiddlewareInterface
             $content = new ViewModel();
             $content->setTemplate(self::CONTENT_TEMPLATE);
             $content->setVariable('content', (string) $response->getBody());
-            $this->blockPool->add(LayoutInterface::BLOCK_ID_ACTION_RESULT, $content);
+            $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $content);
         }
 
         return $response;

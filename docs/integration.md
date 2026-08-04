@@ -5,7 +5,7 @@
 Any PSR-15 handler that returns an `HtmlResponse` gets its body captured as
 the `content` region of the layout. For advanced use, return a
 `ConLayout\Http\ViewModelResponse` wrapping a `Laminas\View\Model\ViewModel`;
-it will be registered as the `action.result` block. If the view model is
+it will be registered as the `main.content` block. If the view model is
 marked as terminal (`setTerminal(true)`), the layout is skipped and the view
 model is rendered standalone.
 

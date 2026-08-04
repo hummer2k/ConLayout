@@ -1,0 +1,241 @@
+<?php
+/**
+ * ConLayout debug toolbar template.
+ *
+ * @var \ConLayout\Handle\HandleInterface[] $handles
+ * @var array<string, array<int, string>> $updateFiles
+ * @var string $layoutTemplate
+ * @var string $area
+ * @var array<int, array<string, mixed>> $blocks
+ * @var array{pool: array<int, string>, removed: array<int, string>} $unrendered
+ * @var array<string, int> $structure
+ * @var array<int, string> $helpers
+ * @var array<string, mixed> $options
+ * @var float $duration
+ * @var int $memory
+ */
+$handles ??= [];
+$updateFiles ??= [];
+$blocks ??= [];
+$unrendered ??= ['pool' => [], 'removed' => []];
+$structure ??= ['blocks' => 0, 'references' => 0, 'helpers' => 0, 'includes' => 0];
+$helpers ??= [];
+$options ??= [];
+$layoutTemplate ??= '';
+$area ??= '';
+$duration ??= 0;
+$memory ??= 0;
+$escape = function (mixed $value): string {
+    return $this->escapeHtml((string) $value);
+};
+$formatBytes = function (int $bytes): string {
+    return $bytes >= 1048576
+        ? round($bytes / 1048576, 2) . ' MB'
+        : round($bytes / 1024, 2) . ' KB';
+};
+$countBlocks = function (array $blocks) use (&$countBlocks): int {
+    $count = 0;
+    foreach ($blocks as $block) {
+        $count += 1 + $countBlocks($block['children']);
+    }
+    return $count;
+};
+$formatValue = function (mixed $value) use ($escape): string {
+    if (is_bool($value)) {
+        return $value ? 'yes' : 'no';
+    }
+    if (null === $value) {
+        return '';
+    }
+    return $escape(is_array($value) ? json_encode($value) : $value);
+};
+$renderBlock = function (array $block, $renderBlock) use ($escape): void {
+    ?>
+    <li>
+        <details<?= $block['id'] === 'root' ? ' open' : '' ?>>
+            <summary>
+                <?= $escape($block['id']) ?>
+                <?php if ($block['anonymous']) : ?><span class="cl-badge">anonymous</span><?php endif; ?>
+                <?php if ($block['template']) : ?><span class="cl-muted">(<?= $escape($block['template']) ?>)</span><?php endif; ?>
+            </summary>
+            <table class="cl-details">
+                <?php foreach (['template', 'capture_to', 'order', 'parent', 'before', 'after', 'container', 'wrapper'] as $key) : ?>
+                    <?php if (null !== $block[$key] && '' !== $block[$key]) : ?>
+                        <tr>
+                            <th><?= $escape($key) ?></th>
+                            <td><?= $escape($block[$key]) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <tr>
+                    <th>append</th>
+                    <td><?= $block['append'] ? 'yes' : 'no' ?></td>
+                </tr>
+            </table>
+            <?php if (!empty($block['children'])) : ?>
+                <ul>
+                    <?php foreach ($block['children'] as $child) : ?>
+                        <?php $renderBlock($child, $renderBlock); ?>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </details>
+    </li>
+    <?php
+};
+?>
+<div id="conlayout-toolbar" class="conlayout-toolbar">
+    <style>
+        .conlayout-toolbar{position:fixed;right:0;bottom:0;z-index:2147483000;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.5;color:#fff;text-align:left}
+        .conlayout-toolbar-toggle{position:absolute;right:8px;bottom:8px;padding:6px 12px;background:#009655;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:bold;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+        .conlayout-toolbar-panel{display:none;position:absolute;right:8px;bottom:52px;width:520px;max-width:calc(100vw - 16px);max-height:70vh;overflow:auto;background:#212529;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.5);padding:12px 16px;box-sizing:border-box}
+        .conlayout-toolbar.open .conlayout-toolbar-panel{display:block}
+        .conlayout-toolbar h1{font-size:13px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #495057}
+        .conlayout-toolbar h2{font-size:11px;margin:12px 0 4px;color:#6fcf97;text-transform:uppercase;letter-spacing:.03em}
+        .conlayout-toolbar p{margin:4px 0}
+        .conlayout-toolbar ul{margin:0;padding:0;list-style:none}
+        .conlayout-toolbar li{padding:1px 0;word-break:break-all}
+        .conlayout-toolbar .cl-prio{display:inline-block;min-width:36px;color:#adb5bd}
+        .conlayout-toolbar .cl-muted{color:#adb5bd}
+        .conlayout-toolbar .cl-badge{display:inline-block;margin-left:4px;padding:0 4px;background:#d39e00;color:#212529;border-radius:3px;font-size:10px}
+        .conlayout-toolbar code{background:#343a40;padding:1px 4px;border-radius:3px}
+        .conlayout-toolbar .cl-files{margin:2px 0 6px 20px;color:#adb5bd}
+        .conlayout-toolbar .cl-tree ul{margin-left:14px;border-left:1px solid #495057;padding-left:8px}
+        .conlayout-toolbar .cl-tree summary{cursor:pointer;padding:1px 0}
+        .conlayout-toolbar table.cl-details{border-collapse:collapse;margin:2px 0 4px 14px}
+        .conlayout-toolbar table.cl-details th,.conlayout-toolbar table.cl-details td{border:1px solid #495057;padding:1px 6px;text-align:left;vertical-align:top;word-break:break-all}
+        .conlayout-toolbar table.cl-details th{background:#343a40;color:#adb5bd;font-weight:normal}
+        .conlayout-toolbar .cl-tabs{margin-bottom:8px}
+        .conlayout-toolbar .cl-tabs button{background:#343a40;color:#fff;border:0;border-radius:3px;padding:3px 10px;margin-right:4px;cursor:pointer}
+        .conlayout-toolbar .cl-tabs button.cl-active{background:#009655;color:#fff}
+        .conlayout-toolbar .cl-tab{display:none}
+        .conlayout-toolbar .cl-tab.cl-active{display:block}
+        .conlayout-toolbar table.cl-options{border-collapse:collapse;width:100%}
+        .conlayout-toolbar table.cl-options th,.conlayout-toolbar table.cl-options td{border:1px solid #495057;padding:2px 6px;text-align:left;vertical-align:top;word-break:break-all}
+        .conlayout-toolbar table.cl-options th{background:#343a40;color:#adb5bd;font-weight:normal;width:40%}
+        .conlayout-toolbar .cl-stats{display:flex;gap:12px;flex-wrap:wrap}
+        .conlayout-toolbar .cl-stat{background:#343a40;border-radius:4px;padding:4px 10px;min-width:70px}
+        .conlayout-toolbar .cl-stat b{display:block;font-size:14px;color:#6fcf97}
+    </style>
+    <button type="button" class="conlayout-toolbar-toggle" onclick="document.getElementById('conlayout-toolbar').classList.toggle('open')">
+        ConLayout
+    </button>
+    <div class="conlayout-toolbar-panel">
+        <h1>ConLayout Debug Toolbar</h1>
+        <div class="cl-tabs">
+            <button type="button" class="cl-active" onclick="conlayoutTab(this, 'handles')">Handles</button>
+            <button type="button" onclick="conlayoutTab(this, 'blocks')">Blocks</button>
+            <button type="button" onclick="conlayoutTab(this, 'structure')">Structure</button>
+            <button type="button" onclick="conlayoutTab(this, 'info')">Info</button>
+        </div>
+        <script>
+            function conlayoutTab(button, name) {
+                var panel = document.getElementById('conlayout-toolbar');
+                var tabs = panel.querySelectorAll('.cl-tab');
+                for (var i = 0; i < tabs.length; i++) {
+                    tabs[i].classList.toggle('cl-active', tabs[i].dataset.tab === name);
+                }
+                var buttons = panel.querySelectorAll('.cl-tabs button');
+                for (var j = 0; j < buttons.length; j++) {
+                    buttons[j].classList.toggle('cl-active', buttons[j] === button);
+                }
+            }
+        </script>
+        <div class="cl-tab cl-active" data-tab="handles">
+            <h2>Update Handles</h2>
+            <?php if (empty($handles)) : ?>
+                <p class="cl-muted">No handles.</p>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($handles as $handle) : ?>
+                        <li>
+                            <span class="cl-prio"><?= $escape($handle->getPriority()) ?></span>
+                            <?= $escape($handle->getName()) ?>
+                            <?php $files = $updateFiles[(string) $handle->getName()] ?? []; ?>
+                            <?php if (empty($files)) : ?>
+                                <div class="cl-files">no update files</div>
+                            <?php else : ?>
+                                <?php foreach ($files as $file) : ?>
+                                    <div class="cl-files"><?= $escape($file) ?></div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            <h2>Layout Template</h2>
+            <p><code><?= $escape($layoutTemplate) ?></code></p>
+        </div>
+        <div class="cl-tab" data-tab="blocks">
+            <h2>Rendered Blocks (<?= $countBlocks($blocks) ?>)</h2>
+            <?php if (empty($blocks)) : ?>
+                <p class="cl-muted">No blocks rendered.</p>
+            <?php else : ?>
+                <ul class="cl-tree">
+                    <?php foreach ($blocks as $block) : ?>
+                        <?php $renderBlock($block, $renderBlock); ?>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            <?php if (!empty($unrendered['pool'])) : ?>
+                <h2>In Pool, Not Rendered</h2>
+                <ul>
+                    <?php foreach ($unrendered['pool'] as $blockId) : ?>
+                        <li><?= $escape($blockId) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            <?php if (!empty($unrendered['removed'])) : ?>
+                <h2>Removed Blocks</h2>
+                <ul>
+                    <?php foreach ($unrendered['removed'] as $blockId) : ?>
+                        <li><?= $escape($blockId) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+        <div class="cl-tab" data-tab="structure">
+            <h2>Layout Structure</h2>
+            <div class="cl-stats">
+                <?php foreach (['blocks', 'references', 'helpers', 'includes'] as $key) : ?>
+                    <div class="cl-stat">
+                        <b><?= (int) $structure[$key] ?></b>
+                        <?= $escape($key) ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <h2>Area</h2>
+            <p><code><?= $escape($area) ?></code></p>
+            <h2>Helpers</h2>
+            <?php if (empty($helpers)) : ?>
+                <p class="cl-muted">No helpers used.</p>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($helpers as $helper) : ?>
+                        <li><?= $escape($helper) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+        <div class="cl-tab" data-tab="info">
+            <h2>Request</h2>
+            <table class="cl-options">
+                <tr><th>Duration</th><td><?= $escape($duration) ?> ms</td></tr>
+                <tr><th>Peak Memory</th><td><?= $escape($formatBytes((int) $memory)) ?></td></tr>
+            </table>
+            <h2>Module Options</h2>
+            <?php if (empty($options)) : ?>
+                <p class="cl-muted">No options available.</p>
+            <?php else : ?>
+                <table class="cl-options">
+                    <?php foreach ($options as $key => $value) : ?>
+                        <tr>
+                            <th><?= $escape($key) ?></th>
+                            <td><?= $formatValue($value) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

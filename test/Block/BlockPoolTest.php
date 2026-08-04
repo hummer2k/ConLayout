@@ -144,6 +144,19 @@ class BlockPoolTest extends AbstractTestCase
         $this->assertFalse($this->blockPool->get('some-block'));
     }
 
+    public function testGetRemovedBlocks(): void
+    {
+        $block = new ViewModel();
+        $this->blockPool->add('some-block', $block);
+
+        $this->assertSame([], $this->blockPool->getRemovedBlocks());
+
+        $this->blockPool->remove('some-block');
+        $this->blockPool->remove('never-added');
+
+        $this->assertSame(['some-block', 'never-added'], $this->blockPool->getRemovedBlocks());
+    }
+
     public function testAnonymousBlockId(): void
     {
         $viewModel = new ViewModel();

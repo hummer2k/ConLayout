@@ -17,5 +17,10 @@ interface BlockPoolInterface
 
     public function remove(string $blockId): void;
 
+    /**
+     * @return array<int, string> ids of all blocks that were removed
+     */
+    public function getRemovedBlocks(): array;
+
     public function sort(): static;
 }

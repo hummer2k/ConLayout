@@ -34,7 +34,7 @@ $app->pipe(RouteMiddleware::class);
 
 $app->pipe(\ConLayout\Middleware\HandleExtractionMiddleware::class);
 $app->pipe(\ConLayout\Middleware\BodyClassMiddleware::class);
-$app->pipe(\ConLayout\Middleware\PrepareActionResultMiddleware::class);
+$app->pipe(\ConLayout\Middleware\PrepareMainContentMiddleware::class);
 
 $app->pipe(DispatchMiddleware::class);
 ````

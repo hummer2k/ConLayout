@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+    'debug' => true,
     'con-layout' => [
         'debug' => false,
         'enabled' => true,

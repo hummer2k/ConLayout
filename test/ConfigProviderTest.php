@@ -11,8 +11,9 @@ use ConLayout\Middleware\BodyClassMiddleware;
 use ConLayout\Middleware\HandleExtractionMiddleware;
 use ConLayout\Middleware\LayoutContextMiddleware;
 use ConLayout\Middleware\LayoutMiddleware;
-use ConLayout\Middleware\PrepareActionResultMiddleware;
+use ConLayout\Middleware\PrepareMainContentMiddleware;
 use ConLayout\Options\ModuleOptions;
+use ConLayout\Toolbar\ToolbarMiddleware;
 use ConLayout\View\Helper\Layout;
 use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\PhpRendererDelegatorFactory;
@@ -40,11 +41,12 @@ class ConfigProviderTest extends AbstractTestCase
         $config = (new ConfigProvider())();
 
         $this->assertSame([
+            ToolbarMiddleware::class,
             LayoutContextMiddleware::class,
             LayoutMiddleware::class,
             HandleExtractionMiddleware::class,
             BodyClassMiddleware::class,
-            PrepareActionResultMiddleware::class,
+            PrepareMainContentMiddleware::class,
         ], $config['middleware']);
     }
 

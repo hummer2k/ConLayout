@@ -55,7 +55,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
         $viewModel = new ViewModel();
         $viewModel->setTemplate('widget1');
 
-        $this->blockPool->add(LayoutInterface::BLOCK_ID_ACTION_RESULT, $viewModel);
+        $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $viewModel);
 
         $handler = $this->getHandler(new ViewModelResponse($viewModel));
 
@@ -95,7 +95,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
         $content = new ViewModel();
         $content->setTemplate('widget-content');
 
-        $this->blockPool->add(LayoutInterface::BLOCK_ID_ACTION_RESULT, $content);
+        $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $content);
 
         $handler = $this->getHandler(new HtmlResponse('My widget content'));
 
