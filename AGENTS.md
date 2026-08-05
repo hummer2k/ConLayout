@@ -4,14 +4,14 @@ Mezzio package implementing Magento-style layout blocks/handles. Distributed as 
 
 ## Commands
 
-- `composer install` (vendor is not committed; no `composer.lock`-driven scripts)
+- `composer install` (vendor is not committed; the committed `composer.lock` is pinned to platform PHP 8.3 and is used by CI)
 - `./vendor/bin/phpunit` runs the whole suite. Bootstrap (`test/Bootstrap.php`) boots a plain ServiceManager with the merged `ConLayout\ConfigProvider` + `Mezzio\LaminasView\ConfigProvider` config; `test/TestConfig.php.dist` is a Mezzio-style config fixture. `src/Sorter/` is excluded from the coverage whitelist.
 - `composer cs-check` (php-cs-fixer, dry-run) is the only lint gate; `composer cs-fix` applies fixes. Ruleset is `@PER-CS` (PER Coding Style, `https://www.php-fig.org/per/coding-style/`) configured in `.php-cs-fixer.dist.php`, scoped to `src/` and `test/`. CI also runs `phpunit --coverage-clover ./build/logs/clover.xml`.
 - Run order in CI: phpunit, then php-cs-fixer.
 
 ## Environment
 
-- Project targets PHP `^8.2` (checked on 8.2, 8.3 and 8.4 in CI). `composer install` and `./vendor/bin/phpunit` (PHPUnit 11) run directly on the local PHP 8.4.
+- Project targets PHP `^8.3` (checked on 8.3, 8.4 and 8.5 in CI). `composer install` and `./vendor/bin/phpunit` (PHPUnit 11) run directly on the local PHP 8.4.
 - CI runs on GitHub Actions (`.github/workflows/ci.yml`).
 - Mezzio 3 + `mezzio-laminasviewrenderer` 2 (keeps laminas-view 2.x and laminas-servicemanager 3.x).
 

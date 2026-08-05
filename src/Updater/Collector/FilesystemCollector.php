@@ -64,7 +64,7 @@ class FilesystemCollector implements CollectorInterface
         ];
         $areas = array_unique($areas);
         foreach ($areas as $area) {
-            if (isset($this->paths[$area])) {
+            if (isset($this->paths[$area ?? ''])) {
                 foreach ($this->paths[$area] as $basePath) {
                     $globPaths[] = sprintf(
                         '%s/%s.{%s}',

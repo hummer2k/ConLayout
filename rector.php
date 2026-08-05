@@ -28,7 +28,7 @@ use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
     ->withPaths([__DIR__ . '/src', __DIR__ . '/test'])
-    ->withPhpVersion(PhpVersion::PHP_82)
+    ->withPhpVersion(PhpVersion::PHP_83)
     ->withRules([
         DeclareStrictTypesRector::class,
         AddVoidReturnTypeWhereNoReturnRector::class,

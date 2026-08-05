@@ -3,6 +3,9 @@
     "description": "Mezzio package for handling layouts with blocks and handles similar to magento",
     "license": "MIT",
     "config": {
+        "platform": {
+            "php": "8.3.0"
+        },
         "sort-packages": true
     },
     "keywords": [
@@ -21,7 +24,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "laminas/laminas-config": "^3.10",
         "laminas/laminas-diactoros": "^3.8",
         "laminas/laminas-eventmanager": "^3.14",
