@@ -48,4 +48,18 @@ class FilesystemCollectorTest extends AbstractTestCase
             $block->get('template'),
         );
     }
+
+    public function testSameBasePathForGlobalAndAreaCollectsFileOnce(): void
+    {
+        $path = __DIR__ . '/_files/global';
+        $collector = new FilesystemCollector([
+            LayoutUpdaterInterface::AREA_GLOBAL => [$path],
+            'frontend' => [$path],
+        ]);
+        $collector->collect('default', 'frontend');
+        $this->assertSame(
+            [$path . '/default.php'],
+            $collector->getCollectedFiles()['default'],
+        );
+    }
 }

@@ -75,7 +75,7 @@ class FilesystemCollector implements CollectorInterface
                 }
             }
         }
-        array_unique($globPaths);
+        $globPaths = array_unique($globPaths);
         return $globPaths;
     }
 
