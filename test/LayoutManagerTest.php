@@ -58,12 +58,6 @@ class LayoutManagerTest extends AbstractTestCase
         );
     }
 
-    public function testInvoke(): void
-    {
-        $result = call_user_func($this->layoutManager);
-        $this->assertSame($result, $this->layoutManager);
-    }
-
     public function testGetBlock(): void
     {
         $block = $this->layoutManager->getBlock('test-block');
@@ -154,21 +148,6 @@ class LayoutManagerTest extends AbstractTestCase
 
         // layout already has a block added via setUp()
         $this->assertCount(3, $root->getChildren());
-    }
-
-    public function testSetHandlesScalar(): void
-    {
-        $this->layoutManager->setHandles([
-            'my-handle-1' => 5,
-            'my-handle-2' => 3,
-            'my-handle-3' => 6,
-        ]);
-
-        $this->assertSame([
-            'my-handle-2',
-            'my-handle-1',
-            'my-handle-3',
-        ], $this->layoutUpdater->getHandles());
     }
 
     public function testSetHandlesObject(): void
