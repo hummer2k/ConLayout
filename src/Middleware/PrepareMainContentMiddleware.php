@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\Middleware;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Http\ViewModelResponse;
 use ConLayout\Layout\LayoutInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,9 +17,9 @@ class PrepareMainContentMiddleware implements MiddlewareInterface
 {
     public const CONTENT_TEMPLATE = 'con-layout::content';
 
-    private BlockPoolInterface $blockPool;
+    private BlockRegistryInterface $blockPool;
 
-    public function __construct(BlockPoolInterface $blockPool)
+    public function __construct(BlockRegistryInterface $blockPool)
     {
         $this->blockPool = $blockPool;
     }

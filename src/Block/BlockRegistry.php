@@ -8,7 +8,7 @@ use ConLayout\Layout\LayoutInterface;
 use Laminas\View\Model\ClearableModelInterface;
 use Laminas\View\Model\ModelInterface;
 
-final class BlockPool implements BlockPoolInterface
+final class BlockRegistry implements BlockRegistryInterface
 {
     public const ANONYMOUS_ID_PATTERN = 'anonymous.%s.%s';
 

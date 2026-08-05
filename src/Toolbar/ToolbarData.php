@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\Toolbar;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Handle\HandleInterface;
 use ConLayout\LayoutManager;
 use ConLayout\Options\ModuleOptions;
@@ -17,7 +17,7 @@ class ToolbarData
     public function __construct(
         private LayoutManager $layoutManager,
         private ?FilesystemCollector $filesystemCollector = null,
-        private ?BlockPoolInterface $blockPool = null,
+        private ?BlockRegistryInterface $blockPool = null,
         private ?ModuleOptions $moduleOptions = null,
     ) {}
 
@@ -146,7 +146,7 @@ class ToolbarData
 
         return [
             'pool'    => array_values(array_diff($poolIds, $renderedIds)),
-            'removed' => $this->blockPool instanceof BlockPoolInterface
+            'removed' => $this->blockPool instanceof BlockRegistryInterface
                 ? $this->blockPool->getRemovedBlocks()
                 : [],
         ];

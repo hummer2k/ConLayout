@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\Generator;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use Laminas\Config\Config;
 
@@ -16,14 +16,14 @@ final class BlocksGenerator implements GeneratorInterface
 
     protected BlockFactoryInterface $blockFactory;
 
-    protected BlockPoolInterface $blockPool;
+    protected BlockRegistryInterface $blockPool;
 
     /**
      * BlocksGenerator constructor.
      */
     public function __construct(
         BlockFactoryInterface $blockFactory,
-        BlockPoolInterface $blockPool,
+        BlockRegistryInterface $blockPool,
     ) {
         $this->blockFactory = $blockFactory;
         $this->blockPool = $blockPool;

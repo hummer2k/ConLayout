@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\Middleware;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
@@ -16,7 +16,7 @@ class PrepareMainContentMiddlewareFactory implements FactoryInterface
         ?array $options = null,
     ): PrepareMainContentMiddleware {
         return new PrepareMainContentMiddleware(
-            $container->get(BlockPoolInterface::class),
+            $container->get(BlockRegistryInterface::class),
         );
     }
 }

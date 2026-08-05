@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayoutTest\View\Helper;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\View\Helper\Block;
 use ConLayout\View\Helper\BlockFactory;
 use ConLayoutTest\AbstractTestCase;
@@ -15,7 +15,7 @@ class BlockFactoryTest extends AbstractTestCase
     public function testFactory(): void
     {
         $sm = new ServiceManager();
-        $sm->setService(BlockPoolInterface::class, $this->blockPool);
+        $sm->setService(BlockRegistryInterface::class, $this->blockPool);
 
         $factory = new BlockFactory();
         $helper = $factory($sm, Block::class);

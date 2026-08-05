@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Psr\Container\ContainerInterface;
@@ -17,7 +17,7 @@ class LayoutManagerFactory implements FactoryInterface
         return new LayoutManager(
             $container->get(LayoutInterface::class),
             $container->get(LayoutUpdaterInterface::class),
-            $container->get(BlockPoolInterface::class),
+            $container->get(BlockRegistryInterface::class),
         );
     }
 }

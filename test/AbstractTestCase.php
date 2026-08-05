@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ConLayoutTest;
 
-use ConLayout\Block\BlockPool;
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistry;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
@@ -28,7 +28,7 @@ abstract class AbstractTestCase extends TestCase
 
     protected LayoutInterface $layout;
 
-    protected BlockPoolInterface $blockPool;
+    protected BlockRegistryInterface $blockPool;
 
     protected BlockFactoryInterface $blockFactory;
 
@@ -48,7 +48,7 @@ abstract class AbstractTestCase extends TestCase
         $this->em = $eventManager;
 
 
-        $this->blockPool = new BlockPool();
+        $this->blockPool = new BlockRegistry();
         $this->blockFactory = new BlockFactory([], new BlockManager($this->sm), $this->sm);
 
         $this->blocksGenerator = new BlocksGenerator(

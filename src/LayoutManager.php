@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Handle\Handle;
 use ConLayout\Handle\HandleInterface;
@@ -21,12 +21,12 @@ class LayoutManager implements
 
     protected LayoutUpdaterInterface $updater;
 
-    protected BlockPoolInterface $blockPool;
+    protected BlockRegistryInterface $blockPool;
 
     public function __construct(
         LayoutInterface $layout,
         LayoutUpdaterInterface $updater,
-        BlockPoolInterface $blockPool,
+        BlockRegistryInterface $blockPool,
     ) {
         $this->layout = $layout;
         $this->updater = $updater;

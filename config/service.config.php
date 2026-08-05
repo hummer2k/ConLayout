@@ -1,7 +1,7 @@
 <?php
 
-use ConLayout\Block\BlockPool;
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistry;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Block\Factory\BlockFactoryFactory;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use ConLayout\BlockManager;
@@ -64,7 +64,7 @@ return [
         'ViewHelperManager'     => HelperPluginManager::class
     ],
     'invokables' => [
-        BlockPoolInterface::class => BlockPool::class
+        BlockRegistryInterface::class => BlockRegistry::class
     ],
     'delegators' => [
         PhpRenderer::class => [

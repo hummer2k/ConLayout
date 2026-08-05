@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\Toolbar;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\LayoutManager;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Updater\Collector\FilesystemCollector;
@@ -25,7 +25,7 @@ class ToolbarMiddlewareFactory implements FactoryInterface
             new ToolbarData(
                 $container->get(LayoutManager::class),
                 $container->has(FilesystemCollector::class) ? $container->get(FilesystemCollector::class) : null,
-                $container->has(BlockPoolInterface::class) ? $container->get(BlockPoolInterface::class) : null,
+                $container->has(BlockRegistryInterface::class) ? $container->get(BlockRegistryInterface::class) : null,
                 $container->has(ModuleOptions::class) ? $container->get(ModuleOptions::class) : null,
             ),
             $container->get(PhpRenderer::class),

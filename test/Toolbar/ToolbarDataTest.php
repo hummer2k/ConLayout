@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayoutTest\Toolbar;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Handle\Handle;
 use ConLayout\LayoutManager;
 use ConLayout\Options\ModuleOptions;
@@ -186,7 +186,7 @@ class ToolbarDataTest extends TestCase
             'orphan-2' => new ViewModel(),
         ]);
 
-        $blockPool = $this->createMock(BlockPoolInterface::class);
+        $blockPool = $this->createMock(BlockRegistryInterface::class);
         $blockPool->method('getRemovedBlocks')->willReturn(['removed-block']);
 
         $data = new ToolbarData($layoutManager, null, $blockPool);

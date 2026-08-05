@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace ConLayout\View\Helper;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use Laminas\View\Model\ModelInterface;
 
 class Block
 {
-    private BlockPoolInterface $blockPool;
+    private BlockRegistryInterface $blockPool;
 
-    public function __construct(BlockPoolInterface $blockPool)
+    public function __construct(BlockRegistryInterface $blockPool)
     {
         $this->blockPool = $blockPool;
     }

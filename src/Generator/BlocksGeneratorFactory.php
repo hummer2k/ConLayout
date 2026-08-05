@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\Generator;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -15,7 +15,7 @@ class BlocksGeneratorFactory implements FactoryInterface
     {
         $blocksGenerator = new BlocksGenerator(
             $container->get(BlockFactoryInterface::class),
-            $container->get(BlockPoolInterface::class),
+            $container->get(BlockRegistryInterface::class),
         );
         return $blocksGenerator;
     }

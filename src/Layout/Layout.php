@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\Layout;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\EventManager\EventManagerAwareInterface;
@@ -28,7 +28,7 @@ class Layout implements
     /**
      * blocks registry
      */
-    protected BlockPoolInterface $blockPool;
+    protected BlockRegistryInterface $blockPool;
 
     /**
      *
@@ -45,7 +45,7 @@ class Layout implements
 
     public function __construct(
         LayoutUpdaterInterface $updater,
-        BlockPoolInterface $blockPool,
+        BlockRegistryInterface $blockPool,
     ) {
         $this->updater    = $updater;
         $this->blockPool  = $blockPool;

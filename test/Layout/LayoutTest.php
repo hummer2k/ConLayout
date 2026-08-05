@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ConLayoutTest\Layout;
 
-use ConLayout\Block\BlockPool;
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistry;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Block\Factory\BlockFactory;
 use ConLayout\BlockManager;
 use ConLayout\Layout\Layout;
@@ -44,8 +44,8 @@ class LayoutTest extends AbstractTestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(
-            BlockPoolInterface::class,
-            new BlockPool(),
+            BlockRegistryInterface::class,
+            new BlockRegistry(),
         );
 
         $serviceManager->setService(

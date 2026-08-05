@@ -6,10 +6,7 @@ namespace ConLayout\Block;
 
 use Laminas\View\Model\ModelInterface;
 
-/**
- * @todo rename to BlockRegistryInterface or ViewModelRegistryInterface
- */
-interface BlockPoolInterface
+interface BlockRegistryInterface
 {
     /**
      * @return ModelInterface[]|ModelInterface|false

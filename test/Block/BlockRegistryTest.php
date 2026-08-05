@@ -7,7 +7,7 @@ namespace ConLayoutTest\Block;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Model\ViewModel;
 
-class BlockPoolTest extends AbstractTestCase
+class BlockRegistryTest extends AbstractTestCase
 {
     public function testAddAndGetBlock(): void
     {

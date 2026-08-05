@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayoutTest;
 
-use ConLayout\Block\BlockPoolInterface;
+use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Handle\Handle;
 use ConLayout\Layout\LayoutInterface;
 use ConLayout\LayoutManager;
@@ -45,7 +45,7 @@ class LayoutManagerTest extends AbstractTestCase
             $this->layoutUpdater,
         );
         $serviceManager->setService(
-            BlockPoolInterface::class,
+            BlockRegistryInterface::class,
             $this->blockPool,
         );
 
