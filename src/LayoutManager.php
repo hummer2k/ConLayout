@@ -33,11 +33,6 @@ class LayoutManager implements
         $this->blockPool = $blockPool;
     }
 
-    public function __invoke(): static
-    {
-        return $this;
-    }
-
     /**
      *
      * @return false|ModelInterface
@@ -95,16 +90,7 @@ class LayoutManager implements
 
     public function setHandles(array $handles): static
     {
-        $newHandles = [];
-        foreach ($handles as $handle => $priority) {
-            if (is_string($handle) && !$priority instanceof HandleInterface) {
-                $handle = new Handle($handle, (int) $priority);
-            } elseif ($priority instanceof HandleInterface) {
-                $handle = $priority;
-            }
-            $newHandles[] = $handle;
-        }
-        $this->updater->setHandles($newHandles);
+        $this->updater->setHandles($handles);
         return $this;
     }
 
@@ -113,9 +99,9 @@ class LayoutManager implements
         return $this->updater->getHandles($asObject);
     }
 
-    public function removeHandle(string $handle): static
+    public function removeHandle(string $handleName): static
     {
-        $this->updater->removeHandle($handle);
+        $this->updater->removeHandle($handleName);
         return $this;
     }
 
