@@ -10,6 +10,7 @@ use ConLayout\LayoutManager;
 use ConLayout\Options\ModuleOptions;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\View\Exception\DomainException;
+use Laminas\View\HelperPluginManager;
 use Laminas\View\Model\ModelInterface;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
@@ -26,22 +27,27 @@ class LayoutMiddleware implements MiddlewareInterface
 
     private ModuleOptions $moduleOptions;
 
+    private HelperPluginManager $helperPluginManager;
+
     private string $layoutTemplate;
 
     public function __construct(
         LayoutManager $layoutManager,
         PhpRenderer $renderer,
         ModuleOptions $moduleOptions,
+        HelperPluginManager $helperPluginManager,
         string $layoutTemplate = '',
     ) {
         $this->layoutManager = $layoutManager;
         $this->renderer = $renderer;
         $this->moduleOptions = $moduleOptions;
+        $this->helperPluginManager = $helperPluginManager;
         $this->layoutTemplate = $layoutTemplate;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $this->helperPluginManager->resetState();
         $response = $handler->handle($request);
 
         if (!$this->moduleOptions->isEnabled()) {

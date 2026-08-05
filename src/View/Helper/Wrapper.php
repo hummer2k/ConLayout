@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace ConLayout\View\Helper;
 
-use Laminas\View\Helper\AbstractHtmlElement;
+use Laminas\View\Helper\HtmlAttributes;
 
-class Wrapper extends AbstractHtmlElement
+class Wrapper
 {
     public const DEFAULT_TAG = 'div';
 
     protected string $tag = self::DEFAULT_TAG;
+
+    private HtmlAttributes $htmlAttributes;
+
+    public function __construct(HtmlAttributes $htmlAttributes)
+    {
+        $this->htmlAttributes = $htmlAttributes;
+    }
 
     public function __invoke(?string $tag = null): static
     {
@@ -22,7 +29,7 @@ class Wrapper extends AbstractHtmlElement
     {
         $htmlAttribs = '';
         if (count($attributes)) {
-            $htmlAttribs = $this->htmlAttribs($attributes);
+            $htmlAttribs = (string) ($this->htmlAttributes)($attributes);
         }
         return sprintf(
             '<%s%s>',

@@ -34,6 +34,11 @@ class CacheBusterFilter implements FilterInterface, RawValueAwareInterface
         return $value;
     }
 
+    public function __invoke(mixed $value): mixed
+    {
+        return $this->filter($value);
+    }
+
     public function setRawValue(mixed $value): void
     {
         $this->rawValue = (string) $value;

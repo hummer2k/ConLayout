@@ -18,11 +18,11 @@ class BlockPoolTest extends AbstractTestCase
 
     public function testAddSortBlockWithBeforeAndAfter(): void
     {
-        $block1 = new ViewModel([], ['after' => 'block2']);
-        $block2 = new Viewmodel();
-        $block3 = new ViewModel([], ['before' => 'block2']);
-        $block4 = new ViewModel([], ['before' => 'block3']);
-        $block5 = new ViewModel([], ['after' => 'block1']);
+        $block1 = $this->createBlock(['after' => 'block2']);
+        $block2 = new ViewModel();
+        $block3 = $this->createBlock(['before' => 'block2']);
+        $block4 = $this->createBlock(['before' => 'block3']);
+        $block5 = $this->createBlock(['after' => 'block1']);
 
         $expectedOrder = [
             'block4',
@@ -46,12 +46,8 @@ class BlockPoolTest extends AbstractTestCase
     public function testAddBlockWithChildren(): void
     {
         $block1 = new ViewModel();
-        $block2 = new ViewModel([], [
-            'block_id' => 'child1',
-        ]);
-        $block3 = new ViewModel([], [
-            'block_id' => 'child2',
-        ]);
+        $block2 = $this->createBlock(['block_id' => 'child1']);
+        $block3 = $this->createBlock(['block_id' => 'child2']);
         $block1->addChild($block2);
         $block1->addChild($block3);
 
@@ -73,12 +69,8 @@ class BlockPoolTest extends AbstractTestCase
     public function testAddBlockWithChildChildren(): void
     {
         $block1 = new ViewModel();
-        $block2 = new ViewModel([], [
-            'block_id' => 'child1',
-        ]);
-        $block3 = new ViewModel([], [
-            'block_id' => 'child2',
-        ]);
+        $block2 = $this->createBlock(['block_id' => 'child1']);
+        $block3 = $this->createBlock(['block_id' => 'child2']);
         $block1->addChild($block2);
         $block2->addChild($block3);
 
@@ -114,9 +106,9 @@ class BlockPoolTest extends AbstractTestCase
             4 => 'block-3',
         ];
 
-        $block1 = new ViewModel([], ['order' => 5]);
-        $block2 = new ViewModel([], ['order' => -10]);
-        $block3 = new ViewModel([], ['order' => 10]);
+        $block1 = $this->createBlock(['order' => 5]);
+        $block2 = $this->createBlock(['order' => -10]);
+        $block3 = $this->createBlock(['order' => 10]);
         $block4 = new ViewModel();
 
         $this->blockPool->add('block-1', $block1);
@@ -166,7 +158,16 @@ class BlockPoolTest extends AbstractTestCase
 
         $this->assertEquals(
             'anonymous.content.1',
-            $child->getOption('block_id'),
+            $child->getVariable('block_id'),
         );
+    }
+
+    private function createBlock(array $metadata): ViewModel
+    {
+        $block = new ViewModel();
+        foreach ($metadata as $key => $value) {
+            $block->setVariable($key, $value);
+        }
+        return $block;
     }
 }

@@ -48,7 +48,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
         $this->middleware->process(new ServerRequest(), $handler);
 
         $this->assertFalse($viewModel->isAppend());
-        $this->assertNull($viewModel->getOption('has_parent'));
+        $this->assertNull($viewModel->getVariable('has_parent'));
         $this->assertFalse($this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
     }
 

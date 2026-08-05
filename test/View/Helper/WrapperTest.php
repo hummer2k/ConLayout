@@ -6,8 +6,8 @@ namespace ConLayoutTest\View\Helper;
 
 use ConLayout\View\Helper\Wrapper;
 use ConLayoutTest\AbstractTestCase;
-use Laminas\View\HelperPluginManager;
-use Laminas\View\Renderer\PhpRenderer;
+use Laminas\Escaper\Escaper;
+use Laminas\View\Helper\HtmlAttributes;
 
 class WrapperTest extends AbstractTestCase
 {
@@ -20,10 +20,7 @@ class WrapperTest extends AbstractTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->wrapperHelper = new Wrapper();
-        $view = new PhpRenderer();
-        $view->setHelperPluginManager(new HelperPluginManager($this->sm));
-        $this->wrapperHelper->setView($view);
+        $this->wrapperHelper = new Wrapper(new HtmlAttributes(new Escaper()));
     }
 
     public function testDefaultOpeningTag(): void

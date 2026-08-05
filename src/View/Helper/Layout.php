@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace ConLayout\View\Helper;
 
 use ConLayout\LayoutManager;
-use Laminas\View\Helper\AbstractHelper;
 
-class Layout extends AbstractHelper
+class Layout
 {
     private LayoutManager $layoutManager;
 

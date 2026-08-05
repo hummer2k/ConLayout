@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\View\Helper;
 
-use Laminas\View\Helper\AbstractHelper;
-
-class BodyClass extends AbstractHelper
+class BodyClass
 {
     /**
      * @var string[]

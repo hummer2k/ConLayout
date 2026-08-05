@@ -17,6 +17,8 @@ use Laminas\Config\Config;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequest;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\HelperPluginManager;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplateMapResolver;
@@ -31,11 +33,11 @@ class ToolbarMiddlewareTest extends TestCase
     public function testInjectsToolbarIntoHtmlResponse(): void
     {
         $root = new ViewModel();
-        $root->setOption('block_id', 'root');
+        $root->setVariable('block_id', 'root');
         $root->setTemplate('base');
 
         $header = new ViewModel();
-        $header->setOption('block_id', 'header');
+        $header->setVariable('block_id', 'header');
         $header->setTemplate('layout::header');
         $header->setCaptureTo('header');
         $root->addChild($header);
@@ -99,7 +101,7 @@ class ToolbarMiddlewareTest extends TestCase
     public function testAppendsToolbarWhenNoBodyTag(): void
     {
         $root = new ViewModel();
-        $root->setOption('block_id', 'root');
+        $root->setVariable('block_id', 'root');
         $root->setTemplate('base');
 
         $layoutManager = $this->createMock(LayoutManager::class);
@@ -188,10 +190,13 @@ class ToolbarMiddlewareTest extends TestCase
 
     protected function getRenderer(): PhpRenderer
     {
-        $renderer = new PhpRenderer();
-        $renderer->setResolver(new TemplateMapResolver([
-            'con-layout::toolbar' => __DIR__ . '/../../view/toolbar.phtml',
-        ]));
+        $renderer = new PhpRenderer(
+            new HelperPluginManager(new ServiceManager()),
+            new TemplateMapResolver([
+                'con-layout::toolbar' => __DIR__ . '/../../view/toolbar.phtml',
+            ]),
+            false,
+        );
         return $renderer;
     }
 

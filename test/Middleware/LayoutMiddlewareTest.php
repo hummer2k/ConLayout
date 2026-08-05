@@ -16,6 +16,8 @@ use ConLayoutTest\Bootstrap;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequest;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\HelperPluginManager;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 use Psr\Http\Message\ResponseInterface;
@@ -36,8 +38,11 @@ class LayoutMiddlewareTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->renderer = new PhpRenderer();
-        $this->renderer->setResolver($this->getResolver());
+        $this->renderer = new PhpRenderer(
+            new HelperPluginManager(new ServiceManager()),
+            $this->getResolver(),
+            false,
+        );
 
         $this->layoutManager = new LayoutManager($this->layout, $this->layoutUpdater, $this->blockPool);
         $this->context = new LayoutContext($this->layoutManager);
@@ -46,6 +51,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
             $this->layoutManager,
             $this->renderer,
             new ModuleOptions(),
+            new HelperPluginManager(new ServiceManager()),
             'layout',
         );
     }
@@ -125,6 +131,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
             $this->layoutManager,
             $this->renderer,
             new ModuleOptions(['enabled' => false]),
+            new HelperPluginManager(new ServiceManager()),
             'layout',
         );
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ConLayout\Block\Factory;
 
-use ConLayout\Block\BlockInterface;
 use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Exception\InvalidBlockException;
 use ConLayout\NamedParametersTrait;
@@ -13,7 +12,6 @@ use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\View\Model\ModelInterface;
 use Laminas\View\Model\ViewModel;
-use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerInterface;
 
 final class BlockFactory implements
@@ -38,8 +36,6 @@ final class BlockFactory implements
         'blocks'     => [],
     ];
 
-    private ?ContainerInterface $container = null;
-
     private ?ContainerInterface $blockManager = null;
 
     /**
@@ -48,13 +44,11 @@ final class BlockFactory implements
     public function __construct(
         array $blockDefaults = [],
         ?ContainerInterface $blockManager = null,
-        ?ContainerInterface $container = null,
     ) {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
             $blockDefaults,
         );
-        $this->container = $container;
         $this->blockManager = $blockManager;
     }
 
@@ -72,7 +66,7 @@ final class BlockFactory implements
                 $class,
             ));
         }
-        $block->setOption('block_id', $blockId);
+        $block->setVariable('block_id', $blockId);
 
         return $this->configure($block, $specs);
     }
@@ -98,7 +92,7 @@ final class BlockFactory implements
         $specs = $this->prepareOptions($specs);
 
         foreach ($this->getOption('options', $specs) as $name => $option) {
-            $block->setOption($name, $option);
+            $block->setVariable($name, $option);
         }
         foreach ($this->getOption('variables', $specs) as $name => $variable) {
             $block->setVariable($name, $variable);
@@ -121,12 +115,8 @@ final class BlockFactory implements
             $block->setTemplate($template);
         }
         $block->setCaptureTo($this->getOption('capture_to', $specs));
-        $block->setAppend($this->getOption('append', $specs));
+        $block->setAppend($this->toBool($this->getOption('append', $specs)));
         $block->setVariable('block', $block);
-
-        if ($block instanceof BlockInterface) {
-            $block->setView($this->container->get(PhpRenderer::class));
-        }
 
         $results = $this->getEventManager()->trigger(
             __FUNCTION__ . '.post',
@@ -150,5 +140,10 @@ final class BlockFactory implements
         return isset($specs[$name])
             ? $specs[$name]
             : $this->blockDefaults[$name];
+    }
+
+    private function toBool(mixed $value): bool
+    {
+        return (bool) (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $value);
     }
 }

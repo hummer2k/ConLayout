@@ -58,9 +58,9 @@ final class BlocksGenerator implements GeneratorInterface
                 $block = $this->blockFactory->createBlock($blockId, $specs->toArray());
             }
             if (null !== $parentId) {
-                $block->setOption('has_parent', true);
-                if (!$block->getOption('parent')) {
-                    $block->setOption('parent', $parentId);
+                $block->setVariable('has_parent', true);
+                if (!$block->getVariable('parent')) {
+                    $block->setVariable('parent', $parentId);
                 }
             }
             $this->blockPool->add($blockId, $block);

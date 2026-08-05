@@ -5,21 +5,22 @@ declare(strict_types=1);
 namespace ConLayout\Filter;
 
 use Laminas\Filter\FilterInterface;
-use Laminas\View\Helper\ViewModel;
-use Laminas\View\Model\ModelInterface;
+use Laminas\View\Helper\ViewModel as ViewModelHelper;
 use Laminas\View\Renderer\PhpRenderer;
-use Laminas\View\Variables;
 
 class DebugFilter implements FilterInterface
 {
     private PhpRenderer $phpRenderer;
 
+    private ViewModelHelper $viewModelHelper;
+
     /**
      * DebugFilter constructor.
      */
-    public function __construct(PhpRenderer $phpRenderer)
+    public function __construct(PhpRenderer $phpRenderer, ViewModelHelper $viewModelHelper)
     {
         $this->phpRenderer = $phpRenderer;
+        $this->viewModelHelper = $viewModelHelper;
     }
 
     /**
@@ -27,23 +28,22 @@ class DebugFilter implements FilterInterface
      */
     public function filter($value): mixed
     {
-        /** @var ViewModel $viewModel */
-        $viewModel = $this->phpRenderer->viewModel()->getCurrent();
-
-        if (!$viewModel instanceof ModelInterface) {
+        $viewModel = $this->viewModelHelper->getCurrent();
+        $blockId = $viewModel?->getVariable('block_id');
+        if (!$blockId) {
             return $value;
         }
 
-        /** @var Variables $vars */
-        $vars = $this->phpRenderer->vars();
-        $blockId = $viewModel->getOption('block_id');
-        if ($blockId && !$vars->count()) {
-            $opening = sprintf('<!--[%s]-->', $blockId);
-            $closing = sprintf('<!--[/%s]-->', $blockId);
-            if (0 !== strpos($value, $opening)) {
-                $value = $opening . $value . $closing;
-            }
+        $opening = sprintf('<!--[%s]-->', $blockId);
+        $closing = sprintf('<!--[/%s]-->', $blockId);
+        if (0 !== strpos($value, $opening)) {
+            $value = $opening . $value . $closing;
         }
         return $value;
+    }
+
+    public function __invoke(mixed $value): mixed
+    {
+        return $this->filter($value);
     }
 }

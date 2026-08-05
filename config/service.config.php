@@ -64,8 +64,7 @@ return [
         'ViewHelperManager'     => HelperPluginManager::class
     ],
     'invokables' => [
-        BlockPoolInterface::class => BlockPool::class,
-        PhpRenderer::class        => PhpRenderer::class
+        BlockPoolInterface::class => BlockPool::class
     ],
     'delegators' => [
         PhpRenderer::class => [

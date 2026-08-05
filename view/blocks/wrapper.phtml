@@ -2,5 +2,5 @@
 $wrapper = $this->wrapper($this->wrapperTag);
 ?>
 <?= $wrapper->openTag($this->wrapperAttributes) ?>
-<?= $this->render($this->originalTemplate) ?>
+<?= $this->partial($this->originalTemplate, get_defined_vars()) ?>
 <?= $wrapper->closeTag() ?>

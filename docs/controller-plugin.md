@@ -37,8 +37,8 @@ class IndexHandler implements RequestHandlerInterface
 
         // add a block programatically
         $block = new ViewModel();
-        $block->setOption('parent', 'sidebar');
-        $block->setOption('order', 10);
+        $block->setVariable('parent', 'sidebar');
+        $block->setVariable('order', 10);
 
         $layoutManager->addBlock('my.block', $block);
 

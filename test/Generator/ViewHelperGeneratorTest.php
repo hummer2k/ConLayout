@@ -8,21 +8,16 @@ use ConLayout\Filter\BasePathFilter;
 use ConLayout\Filter\CacheBusterFilter;
 use ConLayout\ConfigProvider;
 use ConLayout\Generator\ViewHelperGenerator;
-use ConLayout\View\Helper\Proxy\HeadLinkProxy;
-use ConLayout\View\Helper\Proxy\HeadMetaProxy;
-use ConLayout\View\Helper\Proxy\HeadScriptProxy;
-use ConLayout\View\Helper\Proxy\HeadTitleProxy;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\Config\Config;
-use Laminas\Escaper\Escaper;
 use Laminas\Filter\FilterPluginManager;
+use Laminas\View\Helper\BasePath as BasePathHelper;
 use Laminas\View\Helper\Doctype;
 use Laminas\View\Helper\HeadLink;
 use Laminas\View\Helper\HeadMeta;
 use Laminas\View\Helper\HeadScript;
 use Laminas\View\Helper\HeadTitle;
 use Laminas\View\HelperPluginManager;
-use Laminas\View\Renderer\PhpRenderer;
 
 class ViewHelperGeneratorTest extends AbstractTestCase
 {
@@ -91,10 +86,7 @@ class ViewHelperGeneratorTest extends AbstractTestCase
 
         $filterManager = new FilterPluginManager($this->sm);
 
-        $basePath = $helperPluginManager->get('basePath');
-        $basePath->setBasePath('/assets');
-
-        $basePathFilter = new BasePathFilter($basePath);
+        $basePathFilter = new BasePathFilter(new BasePathHelper('/assets'));
         $filterManager->setService('basePath', $basePathFilter);
         $cacheBusterFilter = new CacheBusterFilter(__DIR__ . '/_files');
         $filterManager->setService('cacheBuster', $cacheBusterFilter);
@@ -106,29 +98,17 @@ class ViewHelperGeneratorTest extends AbstractTestCase
 
         $generator->setFilterManager($filterManager);
 
-        $renderer = new PhpRenderer();
-        $renderer->setHelperPluginManager($helperPluginManager);
-
         /* @var $headLink HeadLink */
         $headLink = $helperPluginManager->get('headLink');
-        $headLinkProxy = new HeadLinkProxy($headLink);
-        $helperPluginManager->setService(get_class($headLinkProxy), $headLinkProxy);
         /* @var $headScript HeadScript */
         $headScript = $helperPluginManager->get('headScript');
-        $headScriptProxy = new HeadScriptProxy($headScript);
-        $helperPluginManager->setService(get_class($headScriptProxy), $headScriptProxy);
         /* @var $doctype Doctype */
         $doctype = $helperPluginManager->get('doctype');
-        $doctype('HTML5');
+        $doctype();
         /* @var $headTitle HeadTitle */
         $headTitle = $helperPluginManager->get('headTitle');
-        $headTitleProxy = new HeadTitleProxy($headTitle);
-        $helperPluginManager->setService(get_class($headTitleProxy), $headTitleProxy);
         /* @var $headMeta HeadMeta */
         $headMeta = $helperPluginManager->get('headMeta');
-        $headMetaProxy = new HeadMetaProxy($headMeta);
-        $helperPluginManager->setService(get_class($headMetaProxy), $headMetaProxy);
-        $headMeta->setView($renderer);
 
         $generator->generate($this->getLayoutStructure());
 
@@ -148,8 +128,8 @@ class ViewHelperGeneratorTest extends AbstractTestCase
 
         $contains = [
             'charset="utf8"',
-            'name="description" content="My&#x20;description"',
-            'name="keywords" content="keyword1,&#x20;keyword2,&#x20;keyword3"',
+            'content="My&#x20;description" name="description"',
+            'content="keyword1,&#x20;keyword2,&#x20;keyword3" name="keywords"',
         ];
 
         foreach ($contains as $expected) {

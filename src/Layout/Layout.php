@@ -135,7 +135,7 @@ class Layout implements
                     [$parent, $captureTo] = $this->getCaptureTo($block);
                     if ($parentBlock = $this->getBlock($parent)) {
                         $parentBlock->addChild($block, $captureTo);
-                        $block->setOption('parent_block', $parentBlock);
+                        $block->setVariable('parent_block', $parentBlock);
                     }
                 }
             }
@@ -189,7 +189,7 @@ class Layout implements
     protected function getCaptureTo(ModelInterface $block): array
     {
         $captureTo = $block->captureTo();
-        if ($parent = $block->getOption('parent')) {
+        if ($parent = $block->getVariable('parent')) {
             $captureTo = explode(self::CAPTURE_TO_DELIMITER, $captureTo);
             return [
                 $parent,

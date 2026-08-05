@@ -8,6 +8,8 @@ use ConLayout\Filter\ContainerFilter;
 use ConLayout\Filter\DebugFilter;
 use ConLayout\Options\ModuleOptions;
 use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
+use Laminas\View\Helper\ViewModel as ViewModelHelper;
+use Laminas\View\HelperPluginManager;
 use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerInterface;
 
@@ -24,14 +26,17 @@ class PhpRendererDelegatorFactory implements DelegatorFactoryInterface
             return $renderer;
         }
 
-        $filterChain = $renderer->getFilterChain();
-        $filterChain->attach(new ContainerFilter($renderer), 20);
+        $viewModelHelper = $container->get(HelperPluginManager::class)->get(ViewModelHelper::class);
+        $containerFilter = new ContainerFilter($renderer, $viewModelHelper);
 
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);
-        if ($moduleOptions->isDebug()) {
-            $filterChain->attach(new DebugFilter($renderer), 10);
-        }
+        $renderer->setFilter(
+            $moduleOptions->isDebug()
+                ? fn(string $value): string => (new DebugFilter($renderer, $viewModelHelper))
+                    ->filter($containerFilter->filter($value))
+                : fn(string $value): string => $containerFilter->filter($value),
+        );
 
         return $renderer;
     }

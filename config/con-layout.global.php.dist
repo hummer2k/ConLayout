@@ -5,11 +5,6 @@ use ConLayout\Generator\ViewHelperGenerator;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
-use ConLayout\View\Helper\Proxy\HeadLinkProxy;
-use ConLayout\View\Helper\Proxy\HeadMetaProxy;
-use ConLayout\View\Helper\Proxy\HeadScriptProxy;
-use ConLayout\View\Helper\Proxy\HeadTitleProxy;
-use ConLayout\View\Helper\Proxy\InlineScriptProxy;
 use Laminas\View\Model\ViewModel;
 
 return [
@@ -107,8 +102,7 @@ return [
                         'basePath' => 5,
                         'cacheBuster' => 10
                     ]
-                ],
-                'proxy' => HeadLinkProxy::class
+                ]
             ],
             'headScript' => [
                 'method' => 'appendFile',
@@ -118,8 +112,7 @@ return [
                         'basePath' => 5,
                         'cacheBuster' => 10
                     ]
-                ],
-                'proxy' => HeadScriptProxy::class
+                ]
             ],
             'inlineScript' => [
                 'method' => 'appendFile',
@@ -129,17 +122,14 @@ return [
                         'basePath' => 5,
                         'cacheBuster' => 10
                     ]
-                ],
-                'proxy' => InlineScriptProxy::class
+                ]
             ],
             'headTitle' => [
-                'method' => 'append',
-                'proxy' => HeadTitleProxy::class
+                'method' => 'append'
             ],
             'headMeta' => [
                 'method' => 'setName',
-                'debug' => 'modifiers',
-                'proxy' => HeadMetaProxy::class
+                'debug' => 'modifiers'
             ],
             'bodyClass' => [
                 'method' => 'addClass'

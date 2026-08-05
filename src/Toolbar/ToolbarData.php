@@ -169,7 +169,7 @@ class ToolbarData
      */
     private function collect(ModelInterface $model, array &$blocks): void
     {
-        $blockId = $model->getOption('block_id');
+        $blockId = $model->getVariable('block_id');
         if (is_string($blockId) && '' !== $blockId) {
             $blocks[] = $this->getBlockData($blockId, $model);
         }
@@ -182,7 +182,7 @@ class ToolbarData
     {
         $children = [];
         foreach ($model->getChildren() as $child) {
-            $childId = $child->getOption('block_id');
+            $childId = $child->getVariable('block_id');
             if (is_string($childId) && '' !== $childId) {
                 $children[] = $this->getBlockData($childId, $child);
             }
@@ -192,21 +192,21 @@ class ToolbarData
             'id'         => $blockId,
             'template'   => (string) $model->getTemplate(),
             'capture_to' => (string) $model->captureTo(),
-            'order'      => $this->getOption($model, 'order'),
-            'parent'     => $this->getOption($model, 'parent'),
-            'before'     => $this->getOption($model, 'before'),
-            'after'      => $this->getOption($model, 'after'),
-            'container'  => $this->getOption($model, 'container'),
-            'wrapper'    => $this->getOption($model, 'wrapper'),
+            'order'      => $this->readMetadata($model, 'order'),
+            'parent'     => $this->readMetadata($model, 'parent'),
+            'before'     => $this->readMetadata($model, 'before'),
+            'after'      => $this->readMetadata($model, 'after'),
+            'container'  => $this->readMetadata($model, 'container'),
+            'wrapper'    => $this->readMetadata($model, 'wrapper'),
             'append'     => (bool) $model->isAppend(),
             'anonymous'  => str_starts_with($blockId, 'anonymous.'),
             'children'   => $children,
         ];
     }
 
-    private function getOption(ModelInterface $model, string $name): mixed
+    private function readMetadata(ModelInterface $model, string $name): mixed
     {
-        $value = $model->getOption($name);
+        $value = $model->getVariable($name);
         return null === $value || '' === $value ? null : $value;
     }
 

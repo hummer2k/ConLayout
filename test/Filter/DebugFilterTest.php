@@ -6,29 +6,30 @@ namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\DebugFilter;
 use ConLayoutTest\AbstractTestCase;
-use Laminas\View\Helper\ViewModel as ModelHelper;
-use Laminas\View\Model\ViewModel;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\ViewModel as ModelHelper;
 use Laminas\View\HelperPluginManager;
+use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Resolver\AggregateResolver;
 
 class DebugFilterTest extends AbstractTestCase
 {
     public function testMarkupContainsCommentsWithDebugInfo(): void
     {
         $block = new ViewModel();
-        $block->setOption('block_id', 'the.block');
+        $block->setVariable('block_id', 'the.block');
 
         $viewModelHelper = new ModelHelper();
         $viewModelHelper->setCurrent($block);
 
-        $helpers = new HelperPluginManager(new ServiceManager());
-        $helpers->setService('viewModel', $viewModelHelper);
+        $phpRenderer = new PhpRenderer(
+            new HelperPluginManager(new ServiceManager()),
+            new AggregateResolver(),
+            false,
+        );
 
-        $phpRenderer = new PhpRenderer();
-        $phpRenderer->setHelperPluginManager($helpers);
-
-        $filter = new DebugFilter($phpRenderer);
+        $filter = new DebugFilter($phpRenderer, $viewModelHelper);
 
         $html = '<div></div>';
         $filteredHtml = $filter->filter($html);

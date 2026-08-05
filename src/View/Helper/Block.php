@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace ConLayout\View\Helper;
 
 use ConLayout\Block\BlockPoolInterface;
-use ConLayout\Layout\LayoutInterface;
-use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Model\ModelInterface;
-use Laminas\View\Model\ViewModel;
 
-class Block extends AbstractHelper
+class Block
 {
     private BlockPoolInterface $blockPool;
 

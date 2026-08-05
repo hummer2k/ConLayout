@@ -25,19 +25,18 @@
         "laminas/laminas-config": "^3.10",
         "laminas/laminas-diactoros": "^3.8",
         "laminas/laminas-eventmanager": "^3.14",
-        "laminas/laminas-filter": "^2.42",
-        "laminas/laminas-servicemanager": "^3.24",
+        "laminas/laminas-filter": "^3.4",
+        "laminas/laminas-servicemanager": "^4.4",
         "laminas/laminas-stdlib": "^3.20",
-        "laminas/laminas-view": "^2.27",
+        "laminas/laminas-view": "^3.0.1",
         "mezzio/mezzio": "^3.28",
-        "mezzio/mezzio-laminasviewrenderer": "^2.19"
+        "mezzio/mezzio-laminasviewrenderer": "^3.0"
     },
     "suggest": {
         "laminas/laminas-i18n": "Translate filter support"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.95",
-        "laminas/laminas-i18n": "^2.30",
         "phpunit/phpunit": "^11.5",
         "rector/rector": "^2.6"
     },

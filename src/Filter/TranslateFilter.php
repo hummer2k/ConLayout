@@ -20,4 +20,9 @@ class TranslateFilter implements FilterInterface
     {
         return $this->translator->translate((string) $value);
     }
+
+    public function __invoke(mixed $value): mixed
+    {
+        return $this->filter($value);
+    }
 }

@@ -8,6 +8,7 @@ namespace ConLayoutTest;
 
 use ConLayout\ConfigProvider;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\ConfigProvider as ViewConfigProvider;
 use Mezzio\LaminasView\ConfigProvider as LaminasViewConfigProvider;
 
 error_reporting(E_ALL);
@@ -26,7 +27,7 @@ class Bootstrap
     {
         $config = [];
 
-        foreach ([LaminasViewConfigProvider::class, ConfigProvider::class] as $providerClass) {
+        foreach ([ViewConfigProvider::class, LaminasViewConfigProvider::class, ConfigProvider::class] as $providerClass) {
             $provider = new $providerClass();
             $config = static::merge($config, $provider());
         }

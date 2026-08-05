@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ConLayout;
 
-use ConLayout\Block\Container;
 use ConLayout\Middleware\BodyClassMiddleware;
 use ConLayout\Middleware\HandleExtractionMiddleware;
 use ConLayout\Middleware\LayoutContextMiddleware;
@@ -38,14 +37,7 @@ class ConfigProvider
 
     public function getBlockConfig(): array
     {
-        return [
-            'invokables' => [
-                'container' => Container::class,
-            ],
-            'shared' => [
-                'container' => false,
-            ],
-        ];
+        return [];
     }
 
     public function getConLayoutDefaults(): array
@@ -62,7 +54,6 @@ class ConfigProvider
                 $viewPath,
             ],
             'map' => [
-                'con-layout::container'      => $viewPath . '/container.phtml',
                 'con-layout::blocks/wrapper' => $viewPath . '/blocks/wrapper.phtml',
                 'con-layout::content'        => $viewPath . '/blocks/content.phtml',
                 'con-layout::toolbar'        => $viewPath . '/toolbar.phtml',

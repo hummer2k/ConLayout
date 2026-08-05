@@ -91,9 +91,9 @@ return [
          */
         'my.unique.block.id' => [
             /**
-             * Can extend from ConLayout\Block\AbstractBlock
-             * Should implement ConLayout\Block\BlockInterface
-             * optional, defaults to Laminas\View\ViewModel
+             * Can be Laminas\View\Model\ViewModel (default) or any class
+             * implementing Laminas\View\Model\ModelInterface, instantiable
+             * without constructor arguments
              */
             'class' => 'Application\Block\SomeWidget',
             /**
@@ -164,9 +164,9 @@ return [
          -->
         <my.unique.block.id>
             <!--
-             * Can extend from ConLayout\Block\AbstractBlock
-             * Should implement ConLayout\Block\BlockInterface
-             * optional, defaults to Laminas\View\ViewModel
+             * Can be Laminas\View\Model\ViewModel (default) or any class
+             * implementing Laminas\View\Model\ModelInterface, instantiable
+             * without constructor arguments
             -->
             <class>Application\Block\SomeWidget</class>
             <!--
@@ -266,6 +266,36 @@ to an `order` value at sort time:
 The target block must exist in the block pool. The options do not work
 when you reference a block that ConLayout removed.
 
+### Internal block metadata
+
+The `options` key in a layout update defines how a block is inserted and
+rendered. Internally ConLayout stores each option as its own variable on the
+view model. The following variable names are reserved and must not be used
+by block code or templates for their own data:
+
+- `block_id` - the unique block id
+- `parent` - the parent block id
+- `order` - the sort order
+- `before` / `after` - sort order relative to another block
+- `container` - container string or comma-separated container templates
+- `wrapper` - wrapper template
+- `has_parent` / `parent_block` - set during layout generation and injection
+- `tag` and all `html_*` options - inert, stored for consumer block code
+
+This applies to every block, including plain `Laminas\View\Model\ViewModel`
+instances that a controller returns through a `ViewModelResponse`. The
+layout-XML-facing `options:` key is unchanged; only the internal storage on
+the model changed:
+
+````php
+$block->setVariable('order', 10);
+$order = $block->getVariable('order'); // 10, null when not set
+````
+
+Templates see the metadata as regular variables (`$this->order`, `$this->block_id`).
+Treat the reserved names above as reserved: templates and block code must not
+use them for their own variables.
+
 ## 2. `helpers`
 
 Call view helpers. You can add CSS or JavaScript assets. You can also set the
@@ -274,7 +304,6 @@ page title.
 ````php
 <?php
 // - support for named arguments.
-// - __call() methods are implemented by a proxy (ConLayout\View\Helper\Proxy)
 // Examples:
 
 return [

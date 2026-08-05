@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ConLayout;
 
-use ConLayout\Block\BlockInterface;
 use ConLayout\Block\BlockPoolInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Handle\Handle;

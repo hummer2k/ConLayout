@@ -33,4 +33,9 @@ class BasePathFilter implements FilterInterface
         }
         return $value;
     }
+
+    public function __invoke(mixed $value): mixed
+    {
+        return $this->filter($value);
+    }
 }

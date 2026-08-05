@@ -15,11 +15,14 @@ use ConLayout\Middleware\PrepareMainContentMiddleware;
 use ConLayout\Options\ModuleOptions;
 use ConLayout\Toolbar\ToolbarMiddleware;
 use ConLayout\View\Helper\Layout;
-use ConLayout\View\Helper\Proxy\HeadLinkProxy;
 use ConLayout\View\PhpRendererDelegatorFactory;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\ViewModel as ViewModelHelper;
 use Laminas\View\HelperPluginManager;
+use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Resolver\AggregateResolver;
+use Laminas\View\Resolver\TemplateMapResolver;
 
 class ConfigProviderTest extends AbstractTestCase
 {
@@ -63,33 +66,75 @@ class ConfigProviderTest extends AbstractTestCase
         $this->assertInstanceOf(ModuleOptions::class, $sm->get(ModuleOptions::class));
     }
 
-    public function testPhpRendererFilterChain(): void
+    public function testPhpRendererFilterWrapsContainerBlocks(): void
     {
         $sm = Bootstrap::getServiceManager();
 
         $phpRenderer = $sm->get(PhpRenderer::class);
         $this->assertInstanceOf(PhpRenderer::class, $phpRenderer);
-        $this->assertCount(1, $phpRenderer->getFilterChain()->getFilters());
+
+        $block = new ViewModel();
+        $block->setTemplate('con-layout::content');
+        $block->setVariable('block_id', 'test.block');
+        $block->setVariable('container', '<div class="wrapper">%s</div>');
+        $block->setVariable('content', 'My content');
+
+        $sm->get(HelperPluginManager::class)->get(ViewModelHelper::class)->setCurrent($block);
+
+        $this->assertStringContainsString(
+            '<div class="wrapper">My content</div>',
+            $phpRenderer->render($block),
+        );
+
+        $plainBlock = new ViewModel();
+        $plainBlock->setTemplate('con-layout::content');
+        $plainBlock->setVariable('content', 'Plain content');
+        $sm->get(HelperPluginManager::class)->get(ViewModelHelper::class)->setCurrent($plainBlock);
+
+        $this->assertStringNotContainsString(
+            '<div class="wrapper">',
+            $phpRenderer->render($plainBlock),
+        );
     }
 
     public function testPhpRendererDelegatorFactory(): void
     {
-        $renderer = new PhpRenderer();
+        $helpers = new HelperPluginManager(new ServiceManager());
+        $viewModelHelper = $helpers->get(ViewModelHelper::class);
+        $renderer = new PhpRenderer($helpers, new TemplateMapResolver([
+            'con-layout::content' => __DIR__ . '/../view/blocks/content.phtml',
+        ]), false);
 
         $container = new ServiceManager();
         $container->setService(ModuleOptions::class, new ModuleOptions());
+        $container->setService(HelperPluginManager::class, $helpers);
 
         $factory = new PhpRendererDelegatorFactory();
         $result = $factory($container, PhpRenderer::class, fn() => $renderer);
 
         $this->assertSame($renderer, $result);
-        $this->assertCount(1, $result->getFilterChain()->getFilters());
+
+        $block = new ViewModel();
+        $block->setTemplate('con-layout::content');
+        $block->setVariable('content', 'content');
+        $block->setVariable('block_id', 'test.block');
+        $block->setVariable('container', '<div class="wrapper">%s</div>');
+        $viewModelHelper->setCurrent($block);
+        $this->assertSame(
+            '<div class="wrapper">content</div>',
+            $renderer->render($block),
+        );
 
         $debugContainer = new ServiceManager();
         $debugContainer->setService(ModuleOptions::class, new ModuleOptions(['debug' => true]));
+        $debugContainer->setService(HelperPluginManager::class, $helpers);
 
-        $debugResult = $factory($debugContainer, PhpRenderer::class, fn() => new PhpRenderer());
-        $this->assertCount(2, $debugResult->getFilterChain()->getFilters());
+        $debugResult = $factory($debugContainer, PhpRenderer::class, fn() => new PhpRenderer(
+            $helpers,
+            new AggregateResolver(),
+            false,
+        ));
+        $this->assertInstanceOf(PhpRenderer::class, $debugResult);
     }
 
     public function testLayoutViewHelper(): void
@@ -103,16 +148,5 @@ class ConfigProviderTest extends AbstractTestCase
         $helper = $helperPluginManager->get('layout');
         $this->assertInstanceOf(Layout::class, $helper);
         $this->assertInstanceOf(LayoutManager::class, $helper());
-    }
-
-    public function testViewHelperProxy(): void
-    {
-        $sm = Bootstrap::getServiceManager();
-
-        /** @var HelperPluginManager $helperPluginManager */
-        $helperPluginManager = $sm->get('ViewHelperManager');
-
-        $proxy = $helperPluginManager->get(HeadLinkProxy::class);
-        $this->assertInstanceOf(HeadLinkProxy::class, $proxy);
     }
 }

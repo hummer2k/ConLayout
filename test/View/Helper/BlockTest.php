@@ -7,7 +7,6 @@ namespace ConLayoutTest\View\Helper;
 use ConLayout\View\Helper\Block;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\View\Model\ViewModel;
-use Laminas\View\Renderer\PhpRenderer;
 
 class BlockTest extends AbstractTestCase
 {
@@ -21,7 +20,6 @@ class BlockTest extends AbstractTestCase
     {
         parent::setUp();
         $this->blockHelper = new Block($this->blockPool);
-        $this->blockHelper->setView(new PhpRenderer());
     }
 
     public function testInvoke(): void

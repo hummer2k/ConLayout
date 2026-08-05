@@ -19,7 +19,7 @@ final class BlockPool implements BlockPoolInterface
     private static int $anonymousSuffix = 1;
 
     /**
-     * @var ModelInterface[]|BlockInterface[]
+     * @var ModelInterface[]
      */
     private array $blocks = [];
 
@@ -43,7 +43,7 @@ final class BlockPool implements BlockPoolInterface
      */
     public function add(string $blockId, ModelInterface $block): static
     {
-        $block->setOption('block_id', $blockId);
+        $block->setVariable('block_id', $blockId);
         if ($block->hasChildren()) {
             foreach ($block->getChildren() as $childBlock) {
                 $childBlockId = $this->determineAnonymousBlockId($childBlock);
@@ -85,22 +85,22 @@ final class BlockPool implements BlockPoolInterface
     public function sort(): static
     {
         foreach ($this->blocks as $block) {
-            if ($beforeBlockId = $block->getOption('before')) {
+            if ($beforeBlockId = $block->getVariable('before')) {
                 if ($beforeBlock = $this->get($beforeBlockId)) {
-                    $block->setOption('order', $beforeBlock->getOption('order', 0) - 1);
+                    $block->setVariable('order', $beforeBlock->getVariable('order', 0) - 1);
                 }
             }
-            if ($afterBlockId = $block->getOption('after')) {
+            if ($afterBlockId = $block->getVariable('after')) {
                 if ($afterBlock = $this->get($afterBlockId)) {
-                    $block->setOption('order', $afterBlock->getOption('order', 0) + 1);
+                    $block->setVariable('order', $afterBlock->getVariable('order', 0) + 1);
                 }
             }
         }
         uasort($this->blocks, function ($a, $b) {
             /* @var $a ModelInterface */
             /* @var $b ModelInterface */
-            $orderA = $a->getOption('order', 0);
-            $orderB = $b->getOption('order', 0);
+            $orderA = $a->getVariable('order', 0);
+            $orderB = $b->getVariable('order', 0);
             if ($orderA == $orderB) {
                 return 0;
             }
@@ -111,14 +111,14 @@ final class BlockPool implements BlockPoolInterface
 
     private function determineAnonymousBlockId(ModelInterface $block): string
     {
-        $blockId = $block->getOption('block_id');
+        $blockId = $block->getVariable('block_id');
         if (!$blockId) {
             $blockId = sprintf(
                 self::ANONYMOUS_ID_PATTERN,
                 $block->captureTo(),
                 self::$anonymousSuffix++,
             );
-            $block->setOption('block_id', $blockId);
+            $block->setVariable('block_id', $blockId);
         }
         return $blockId;
     }

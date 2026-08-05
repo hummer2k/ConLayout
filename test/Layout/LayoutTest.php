@@ -36,7 +36,7 @@ class LayoutTest extends AbstractTestCase
         $this->updaterMock->method('getLayoutStructure')
             ->willReturn(new Config($this->layoutStructure));
 
-        $this->blockFactory = new BlockFactory([], new BlockManager($this->sm), new ServiceManager());
+        $this->blockFactory = new BlockFactory([], new BlockManager($this->sm));
     }
 
     public function testFactory(): void
@@ -69,7 +69,7 @@ class LayoutTest extends AbstractTestCase
     {
         $viewModel = new ViewModel();
         $viewModel->setCaptureTo('root::footer');
-        $viewModel->setOption('parent', 'some.parent');
+        $viewModel->setVariable('parent', 'some.parent');
 
         $layout = new TestLayout($this->updaterMock, $this->blockPool);
 
@@ -82,7 +82,7 @@ class LayoutTest extends AbstractTestCase
     public function testGetCaptureToDefault(): void
     {
         $viewModel = new ViewModel();
-        $viewModel->setOption('parent', 'some.parent');
+        $viewModel->setVariable('parent', 'some.parent');
 
         $layout = new TestLayout($this->updaterMock, $this->blockPool);
 
@@ -108,14 +108,14 @@ class LayoutTest extends AbstractTestCase
         $this->assertCount(1, $layout->getBlock('widget.1')->getChildren());
     }
 
-    public function testParentBlockIsAddedAsOption(): void
+    public function testParentBlockIsAddedAsMetadata(): void
     {
         $parent = new ViewModel();
         $child  = new ViewModel();
-        $child->setOption('block_id', 'child');
+        $child->setVariable('block_id', 'child');
 
         $child2 = new ViewModel();
-        $child2->setOption('block_id', 'child2');
+        $child2->setVariable('block_id', 'child2');
         $child->addChild($child2);
 
         $parent->addChild($child);
@@ -127,19 +127,19 @@ class LayoutTest extends AbstractTestCase
 
         $this->assertSame(
             $parent,
-            $childBlock->getOption('parent_block'),
+            $childBlock->getVariable('parent_block'),
         );
 
         $child2Block = $this->layout->getBlock('child2');
 
         $this->assertSame(
             $childBlock,
-            $child2Block->getOption('parent_block'),
+            $child2Block->getVariable('parent_block'),
         );
 
         $this->assertSame(
             $parent,
-            $child2Block->getOption('parent_block')->getOption('parent_block'),
+            $child2Block->getVariable('parent_block')->getVariable('parent_block'),
         );
     }
 }

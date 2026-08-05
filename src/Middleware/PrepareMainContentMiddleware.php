@@ -31,7 +31,7 @@ class PrepareMainContentMiddleware implements MiddlewareInterface
         if ($response instanceof ViewModelResponse) {
             $viewModel = $response->getViewModel();
             if ($viewModel->terminate()) {
-                $viewModel->setOption('has_parent', null);
+                $viewModel->setVariable('has_parent', null);
             } else {
                 $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $viewModel);
             }
