@@ -63,7 +63,6 @@ return [
             'capture_to' => 'content',
             'append'     => true,
             'class'      => Laminas\View\Model\ViewModel::class,
-            'options'    => [],
             'variables'  => [],
             'template'   => '',
             'actions'    => [],
@@ -110,7 +109,6 @@ return [
              * template
              */
             'capture_to' => 'footer::content',
-            'parent' => 'footer',
             /**
              * default: true
              */
@@ -118,15 +116,14 @@ return [
             /**
              * set variables for this block that can be accessed with $this->var1,
              * $this->var2 in the template
+             *
+             * insertion metadata like the parent block and the sort order are
+             * regular variables too, see "Sort order" below
              */
             'variables' => [
                 'var1' => 'Hello',
-                'var2' => 'World'
-            ],
-            /**
-             * add options, for example to define the sort order
-             */
-            'options' => [
+                'var2' => 'World',
+                'parent' => 'footer',
                 'order' => -10,
                 // insert this block
                 'before' => 'some.other.block',
@@ -190,21 +187,19 @@ return [
             <!--
              * set variables for this block that can be accessed with $this->var1,
              * $this->var2 in the template
+             *
+             * insertion metadata like the parent block and the sort order are
+             * regular variables too, see "Sort order" below
             -->
             <variables>
                 <var1>Hello</var1>
                 <var2>World</var2>
-            </variables>
-            <!--
-             * add options, for example to define the sort order
-            -->
-            <options>
                 <order>-10</order>
                 <!-- insert this block-->
                 <before>some.other.block</before>
                 <!-- or -->
                 <after>some.other.block</after>
-            </options>
+            </variables>
             <!--
              * wraps a block with another template
              *
@@ -254,24 +249,25 @@ Note: Use XML attributes when possible. This reduces overhead:
 
 ### Sort order
 
-ConLayout renders the blocks in the order of their `order` option. Blocks
-with the same order keep the sequence of their insertion.
+ConLayout renders the blocks in the order of their `order` variable. Blocks
+with the same order keep the sequence of their insertion. Set the variable
+via the `variables` key in the block definition.
 
-You can also use the `before` and `after` options. ConLayout converts them
+You can also use the `before` and `after` variables. ConLayout converts them
 to an `order` value at sort time:
 
 - `before` gives the block the order of the target block minus `1`.
 - `after` gives the block the order of the target block plus `1`.
 
-The target block must exist in the block pool. The options do not work
+The target block must exist in the block pool. The variables do not work
 when you reference a block that ConLayout removed.
 
 ### Internal block metadata
 
-The `options` key in a layout update defines how a block is inserted and
-rendered. Internally ConLayout stores each option as its own variable on the
-view model. The following variable names are reserved and must not be used
-by block code or templates for their own data:
+A layout update defines how a block is inserted and rendered through regular
+variables. Set them with the `variables` key in a layout update or with
+`setVariable()` in your code. The following variable names are reserved and
+must not be used by block code or templates for their own data:
 
 - `block_id` - the unique block id
 - `parent` - the parent block id
@@ -280,12 +276,10 @@ by block code or templates for their own data:
 - `container` - container string or comma-separated container templates
 - `wrapper` - wrapper template
 - `has_parent` / `parent_block` - set during layout generation and injection
-- `tag` and all `html_*` options - inert, stored for consumer block code
+- `tag` and all `html_*` variables - inert, stored for consumer block code
 
 This applies to every block, including plain `Laminas\View\Model\ViewModel`
-instances that a controller returns through a `ViewModelResponse`. The
-layout-XML-facing `options:` key is unchanged; only the internal storage on
-the model changed:
+instances that a controller returns through a `ViewModelResponse`:
 
 ````php
 $block->setVariable('order', 10);

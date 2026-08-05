@@ -82,7 +82,6 @@ return [
             'capture_to' => 'content',
             'append'     => true,
             'class'      => ViewModel::class,
-            'options'    => [],
             'variables'  => [],
             'template'   => '',
             'actions'    => []

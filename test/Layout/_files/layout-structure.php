@@ -9,7 +9,7 @@ return [
         ],
         'widget.1' => [
             'capture_to' => 'sidebarLeft',
-            'options' => [
+            'variables' => [
                 'order' => 10,
             ],
         ],
@@ -40,7 +40,7 @@ return [
             'template' => 'set/via/reference',
         ],
         'widget.2.child.child' => [
-            'options' => [
+            'variables' => [
                 'some_option' => 'set_via_reference',
             ],
         ],

@@ -26,12 +26,10 @@ class BlockFactoryTest extends AbstractTestCase
     public function testCreateBlock(): void
     {
         $blockSpecs = [
-            'options' => [
-                'option1' => 'value_option1',
-                'order' => 10,
-            ],
             'variables' => [
                 'var1' => 'value_var1',
+                'option1' => 'value_option1',
+                'order' => 10,
             ],
             'template' => 'path/to/template',
             'append' => false,

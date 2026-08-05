@@ -29,11 +29,9 @@ final class BlockFactory implements
         'capture_to' => 'content',
         'append'     => true,
         'class'      => ViewModel::class,
-        'options'    => [],
         'variables'  => [],
         'template'   => '',
         'actions'    => [],
-        'blocks'     => [],
     ];
 
     private ?ContainerInterface $blockManager = null;
@@ -71,29 +69,11 @@ final class BlockFactory implements
         return $this->configure($block, $specs);
     }
 
-    private function prepareOptions(array $specs): array
-    {
-        foreach ($specs as $key => $value) {
-            if (
-                !isset($this->blockDefaults[$key])
-                && !isset($specs['options'][$key])
-            ) {
-                $specs['options'][$key] = $value;
-            }
-        }
-        return $specs;
-    }
-
     /**
      * @inheritDoc
      */
     public function configure(ModelInterface $block, array $specs): ModelInterface
     {
-        $specs = $this->prepareOptions($specs);
-
-        foreach ($this->getOption('options', $specs) as $name => $option) {
-            $block->setVariable($name, $option);
-        }
         foreach ($this->getOption('variables', $specs) as $name => $variable) {
             $block->setVariable($name, $variable);
         }

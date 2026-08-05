@@ -46,6 +46,8 @@ Migration from laminas-mvc to Mezzio. This is a major BC break.
 
 ### Removed
 
+- The `options` key in block definitions and `block_defaults`. laminas-view 3
+  dropped `ViewModel` options; set block variables via `variables` instead.
 - `ConLayout\Module` and the ModuleManager integration.
 - `ConLayout\Inflector\TemplateInflector`.
 - The four MVC listeners (`ActionHandlesListener`, `BodyClassListener`,
