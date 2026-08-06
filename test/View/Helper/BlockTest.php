@@ -29,7 +29,7 @@ class BlockTest extends AbstractTestCase
 
         $this->assertSame(
             $block,
-            call_user_func_array($this->blockHelper, ['test.block']),
+            ($this->blockHelper)('test.block'),
         );
     }
 }

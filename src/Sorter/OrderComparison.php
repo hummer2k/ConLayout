@@ -11,14 +11,7 @@ class OrderComparison implements SorterInterface
      */
     public function sort(array $data): array
     {
-        uasort($data, function ($a, $b) {
-            $orderA = isset($a['order']) ? $a['order'] : 1;
-            $orderB = isset($b['order']) ? $b['order'] : 1;
-            if ($orderA == $orderB) {
-                return 0;
-            }
-            return $orderA > $orderB ? 1 : -1;
-        });
+        uasort($data, fn($a, $b) => ($a['order'] ?? 1) <=> ($b['order'] ?? 1));
         return $data;
     }
 }

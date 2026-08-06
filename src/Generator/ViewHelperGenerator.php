@@ -88,7 +88,7 @@ final class ViewHelperGenerator implements GeneratorInterface
                 } else {
                     throw new BadMethodCallException(sprintf(
                         'Call to undefined helper method %s::%s()',
-                        get_class($viewHelper),
+                        $viewHelper::class,
                         $method,
                     ));
                 }

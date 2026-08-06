@@ -146,9 +146,7 @@ final class LayoutUpdater implements
             $event->setTarget($this);
 
             $results = $this->getEventManager()->triggerEventUntil(
-                function ($result) {
-                    return ($result instanceof Config);
-                },
+                fn($result) => $result instanceof Config,
                 $event,
             );
 

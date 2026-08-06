@@ -17,7 +17,7 @@ trait NamedParametersTrait
 
     protected function invokeArgs(object $instance, string $method, array $args = []): mixed
     {
-        $class = get_class($instance);
+        $class = $instance::class;
         if (isset(self::$reflectionCache[$class][$method])) {
             $reflection = self::$reflectionCache[$class][$method];
         } else {

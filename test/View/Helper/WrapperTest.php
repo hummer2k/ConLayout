@@ -25,7 +25,7 @@ class WrapperTest extends AbstractTestCase
 
     public function testDefaultOpeningTag(): void
     {
-        call_user_func($this->wrapperHelper);
+        ($this->wrapperHelper)();
         $this->assertEquals(
             '<' . Wrapper::DEFAULT_TAG . '>',
             $this->wrapperHelper->openTag(),
@@ -35,7 +35,7 @@ class WrapperTest extends AbstractTestCase
     public function testOpenTagHasAttributes(): void
     {
         $tag = 'aside';
-        call_user_func($this->wrapperHelper, $tag);
+        ($this->wrapperHelper)($tag);
         $this->assertEquals(
             '<' . $tag . ' class="col-xs-12" id="my-wrapper">',
             $this->wrapperHelper->openTag(['class' => 'col-xs-12', 'id' => 'my-wrapper']),
@@ -44,7 +44,7 @@ class WrapperTest extends AbstractTestCase
 
     public function testClosingTag(): void
     {
-        call_user_func($this->wrapperHelper);
+        ($this->wrapperHelper)();
         $this->assertEquals('</div>', $this->wrapperHelper->closeTag());
     }
 }

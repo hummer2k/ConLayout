@@ -32,7 +32,7 @@ readonly class ContainerFilter implements FilterInterface
             return $value;
         }
         $container = trim($container);
-        if (false !== strpos($container, '<')) {
+        if (str_contains($container, '<')) {
             $value = sprintf($container, $value);
         } else {
             $values = (array) $viewModel->getVariables();

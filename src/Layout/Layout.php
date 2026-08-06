@@ -200,7 +200,7 @@ class Layout implements
     }
 
     /**
-     * @return <ModelInterface>
+     * @return ModelInterface[]
      */
     public function getBlocks(): array
     {

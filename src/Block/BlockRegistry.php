@@ -87,16 +87,7 @@ final class BlockRegistry implements BlockRegistryInterface
         $sortedBlocks = [];
         foreach ($this->groupByParent() as $group) {
             $this->resolveBeforeAfter($group);
-            uasort($group, function ($a, $b) {
-                /* @var $a ModelInterface */
-                /* @var $b ModelInterface */
-                $orderA = $a->getVariable('order', 0);
-                $orderB = $b->getVariable('order', 0);
-                if ($orderA == $orderB) {
-                    return 0;
-                }
-                return ($orderA < $orderB) ? -1 : 1;
-            });
+            uasort($group, fn($a, $b) => $a->getVariable('order', 0) <=> $b->getVariable('order', 0));
             foreach ($group as $blockId => $block) {
                 $sortedBlocks[$blockId] = $block;
             }
@@ -122,7 +113,7 @@ final class BlockRegistry implements BlockRegistryInterface
         if ($parent = $block->getVariable('parent')) {
             return $parent;
         }
-        if (false !== strpos($block->captureTo(), LayoutInterface::CAPTURE_TO_DELIMITER)) {
+        if (str_contains($block->captureTo(), LayoutInterface::CAPTURE_TO_DELIMITER)) {
             [$parent] = explode(LayoutInterface::CAPTURE_TO_DELIMITER, $block->captureTo());
             return $parent;
         }

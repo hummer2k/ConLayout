@@ -79,7 +79,7 @@ final class BlockFactory implements
                 } else {
                     throw new BadMethodCallException(sprintf(
                         'Call to undefined block method %s::%s()',
-                        get_class($block),
+                        $block::class,
                         $method,
                     ));
                 }
@@ -99,9 +99,7 @@ final class BlockFactory implements
                 'block' => $block,
                 'specs' => $specs,
             ],
-            function ($result) {
-                return $result instanceof ModelInterface;
-            },
+            fn($result) => $result instanceof ModelInterface,
         );
         if ($results->stopped()) {
             $block = $results->last();

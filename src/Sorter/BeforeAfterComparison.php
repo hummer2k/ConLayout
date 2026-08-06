@@ -44,7 +44,7 @@ final class BeforeAfterComparison implements SorterInterface
                 $configArray[$afterCode]['before'] = array_unique($configArray[$afterCode]['before']);
             }
         }
-        uasort($configArray, [$this, 'compare']);
+        uasort($configArray, $this->compare(...));
         return $configArray;
     }
 
