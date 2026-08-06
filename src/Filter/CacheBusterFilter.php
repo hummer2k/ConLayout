@@ -8,18 +8,9 @@ use Laminas\Filter\FilterInterface;
 
 class CacheBusterFilter implements FilterInterface, RawValueAwareInterface
 {
-    protected string $internalBasePath;
-
-    /**
-     *
-     * @var string|null
-     */
     protected ?string $rawValue = null;
 
-    public function __construct(string $internalBasePath = './public')
-    {
-        $this->internalBasePath = $internalBasePath;
-    }
+    public function __construct(private readonly string $internalBasePath = './public') {}
 
     /**
      *

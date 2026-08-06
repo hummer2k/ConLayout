@@ -14,20 +14,10 @@ final class BlocksGenerator implements GeneratorInterface
     public const INSTRUCTION_BLOCKS    = 'blocks';
     public const INSTRUCTION_REFERENCE = 'reference';
 
-    protected BlockFactoryInterface $blockFactory;
-
-    protected BlockRegistryInterface $blockPool;
-
-    /**
-     * BlocksGenerator constructor.
-     */
     public function __construct(
-        BlockFactoryInterface $blockFactory,
-        BlockRegistryInterface $blockPool,
-    ) {
-        $this->blockFactory = $blockFactory;
-        $this->blockPool = $blockPool;
-    }
+        private readonly BlockFactoryInterface $blockFactory,
+        private readonly BlockRegistryInterface $blockPool,
+    ) {}
 
     /**
      * @inheritDoc

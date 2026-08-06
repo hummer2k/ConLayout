@@ -15,7 +15,7 @@ class LayoutContext
      */
     private array $handles = [];
 
-    public function __construct(private LayoutManager $layoutManager)
+    public function __construct(private readonly LayoutManager $layoutManager)
     {
         $this->addHandle(new Handle('default', -1));
     }

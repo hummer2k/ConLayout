@@ -6,21 +6,10 @@ namespace ConLayout\Handle;
 
 final class Handle implements HandleInterface
 {
-    /**
-     * handle name
-     */
-    protected string $name;
-
-    /**
-     * handle's priority
-     */
-    protected int $priority;
-
-    public function __construct(string $name, int $priority)
-    {
-        $this->name     = $name;
-        $this->priority = $priority;
-    }
+    public function __construct(
+        private readonly string $name,
+        private readonly int $priority,
+    ) {}
 
     /**
      * {@inheritdoc}

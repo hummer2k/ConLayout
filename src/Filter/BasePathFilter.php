@@ -9,16 +9,7 @@ use Laminas\View\Helper\BasePath as BasePathHelper;
 
 class BasePathFilter implements FilterInterface
 {
-    /**
-     *
-     * @var BasePathHelper $basePathHelper
-     */
-    protected BasePathHelper $basePathHelper;
-
-    public function __construct(BasePathHelper $basePathHelper)
-    {
-        $this->basePathHelper = $basePathHelper;
-    }
+    public function __construct(private readonly BasePathHelper $basePathHelper) {}
 
     /**
      *

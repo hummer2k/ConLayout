@@ -25,15 +25,12 @@ class HandleExtractionMiddleware implements MiddlewareInterface
 
     public const ERROR_PRIORITY = 666;
 
-    private CamelCaseToDash $inflector;
-
-    private string $errorHandleAttribute;
+    private readonly string $errorHandleAttribute;
 
     public function __construct(
-        CamelCaseToDash $inflector,
+        private readonly CamelCaseToDash $inflector,
         string $errorHandleAttribute = Throwable::class,
     ) {
-        $this->inflector = $inflector;
         $this->errorHandleAttribute = $errorHandleAttribute;
     }
 

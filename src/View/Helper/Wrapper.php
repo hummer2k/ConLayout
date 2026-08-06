@@ -12,12 +12,7 @@ class Wrapper
 
     protected string $tag = self::DEFAULT_TAG;
 
-    private HtmlAttributes $htmlAttributes;
-
-    public function __construct(HtmlAttributes $htmlAttributes)
-    {
-        $this->htmlAttributes = $htmlAttributes;
-    }
+    public function __construct(private readonly HtmlAttributes $htmlAttributes) {}
 
     public function __invoke(?string $tag = null): static
     {

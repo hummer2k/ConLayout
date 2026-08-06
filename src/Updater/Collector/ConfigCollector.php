@@ -11,15 +11,7 @@ class ConfigCollector implements CollectorInterface
 {
     public const NAME = 'config';
 
-    private array $config;
-
-    /**
-     * ConfigCollector constructor.
-     */
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private readonly array $config) {}
 
     /**
      * @inheritDoc

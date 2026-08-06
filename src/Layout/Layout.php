@@ -18,22 +18,8 @@ class Layout implements
 {
     use EventManagerAwareTrait;
 
-    /**
-     * flag if blocks have already been injected
-     */
     protected bool $blocksInjected = false;
 
-    protected LayoutUpdaterInterface $updater;
-
-    /**
-     * blocks registry
-     */
-    protected BlockRegistryInterface $blockPool;
-
-    /**
-     *
-     * @var GeneratorInterface[]|PriorityList
-     */
     protected PriorityList $generators;
 
     protected array $loadedGenerators = [];
@@ -44,11 +30,9 @@ class Layout implements
     protected bool $isLoaded = false;
 
     public function __construct(
-        LayoutUpdaterInterface $updater,
-        BlockRegistryInterface $blockPool,
+        private readonly LayoutUpdaterInterface $updater,
+        private readonly BlockRegistryInterface $blockRegistry,
     ) {
-        $this->updater    = $updater;
-        $this->blockPool  = $blockPool;
         $this->generators = new PriorityList();
     }
 
@@ -65,7 +49,7 @@ class Layout implements
      */
     public function setRoot(ModelInterface $root): static
     {
-        $this->blockPool->add(self::BLOCK_ID_ROOT, $root);
+        $this->blockRegistry->add(self::BLOCK_ID_ROOT, $root);
         return $this;
     }
 
@@ -125,8 +109,8 @@ class Layout implements
     public function injectBlocks(): void
     {
         if (false === $this->blocksInjected) {
-            $this->blockPool->sort();
-            $blocks = $this->blockPool->get();
+            $this->blockRegistry->sort();
+            $blocks = $this->blockRegistry->get();
             foreach ($blocks as $blockId => $block) {
                 if (
                     $this->isAllowed($blockId, $block)
@@ -169,7 +153,7 @@ class Layout implements
      */
     public function addBlock(string $blockId, ModelInterface $block): static
     {
-        $this->blockPool->add($blockId, $block);
+        $this->blockRegistry->add($blockId, $block);
         return $this;
     }
 
@@ -178,7 +162,7 @@ class Layout implements
      */
     public function removeBlock(string $blockId): static
     {
-        $this->blockPool->remove($blockId);
+        $this->blockRegistry->remove($blockId);
         return $this;
     }
 
@@ -196,7 +180,7 @@ class Layout implements
                 end($captureTo),
             ];
         }
-        if (false !== strpos($captureTo, self::CAPTURE_TO_DELIMITER)) {
+        if (str_contains($captureTo, self::CAPTURE_TO_DELIMITER)) {
             return explode(self::CAPTURE_TO_DELIMITER, $captureTo);
         }
         return [
@@ -212,21 +196,15 @@ class Layout implements
      */
     public function getBlock(string $blockId): ModelInterface|false
     {
-        return $this->blockPool->get($blockId);
+        return $this->blockRegistry->get($blockId);
     }
 
     /**
-     * retrieve generated blocks
-     * format:
-     * [
-     *     'block_id' => ModelInterface
-     * ]
-     *
-     * @return ModelInterface[]
+     * @return <ModelInterface>
      */
     public function getBlocks(): array
     {
-        return $this->blockPool->get();
+        return $this->blockRegistry->get();
     }
 
     /**

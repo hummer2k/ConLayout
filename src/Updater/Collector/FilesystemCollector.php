@@ -14,22 +14,12 @@ class FilesystemCollector implements CollectorInterface
 {
     public const NAME = 'filesystem';
 
-    private array $paths = [];
-
-    /**
-     * list of file extensions to search for e.g. ['php', 'xml']
-     */
-    private array $extensions = [];
-
     private array $collectedFiles = [];
 
     public function __construct(
-        array $paths = [],
-        array $extensions = ['php', 'xml'],
-    ) {
-        $this->paths = $paths;
-        $this->extensions = $extensions;
-    }
+        private readonly array $paths = [],
+        private readonly array $extensions = ['php', 'xml'],
+    ) {}
 
     /**
      * @inheritDoc

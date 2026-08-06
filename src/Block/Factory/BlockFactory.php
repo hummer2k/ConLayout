@@ -34,20 +34,14 @@ final class BlockFactory implements
         'actions'    => [],
     ];
 
-    private ?ContainerInterface $blockManager = null;
-
-    /**
-     * BlockFactory constructor.
-     */
     public function __construct(
         array $blockDefaults = [],
-        ?ContainerInterface $blockManager = null,
+        private readonly ?ContainerInterface $blockManager = null,
     ) {
         $this->blockDefaults = ArrayUtils::merge(
             $this->blockDefaults,
             $blockDefaults,
         );
-        $this->blockManager = $blockManager;
     }
 
     public function createBlock(string $blockId, array $specs): ModelInterface

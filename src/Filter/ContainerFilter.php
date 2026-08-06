@@ -11,18 +11,13 @@ use Laminas\View\Renderer\PhpRenderer;
 
 class ContainerFilter implements FilterInterface
 {
-    private PhpRenderer $phpRenderer;
-
-    private ViewModelHelper $viewModelHelper;
-
     /**
      * ContainerFilter constructor.
      */
-    public function __construct(PhpRenderer $phpRenderer, ViewModelHelper $viewModelHelper)
-    {
-        $this->phpRenderer = $phpRenderer;
-        $this->viewModelHelper = $viewModelHelper;
-    }
+    public function __construct(
+        private readonly PhpRenderer $phpRenderer,
+        private readonly ViewModelHelper $viewModelHelper,
+    ) {}
 
     public function filter($value): mixed
     {

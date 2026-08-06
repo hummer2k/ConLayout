@@ -15,10 +15,10 @@ use Laminas\View\Model\ModelInterface;
 class ToolbarData
 {
     public function __construct(
-        private LayoutManager $layoutManager,
-        private ?FilesystemCollector $filesystemCollector = null,
-        private ?BlockRegistryInterface $blockPool = null,
-        private ?ModuleOptions $moduleOptions = null,
+        private readonly LayoutManager $layoutManager,
+        private readonly ?FilesystemCollector $filesystemCollector = null,
+        private readonly ?BlockRegistryInterface $blockPool = null,
+        private readonly ?ModuleOptions $moduleOptions = null,
     ) {}
 
     /**

@@ -23,24 +23,14 @@ final class ViewHelperGenerator implements GeneratorInterface
 
     private bool $debug = false;
 
-    private ContainerInterface $viewHelperManager;
-
     private ?ContainerInterface $filterManager = null;
-
-    private array $helperConfig = [];
 
     private ?SorterInterface $sorter = null;
 
-    /**
-     * ViewHelperGenerator constructor.
-     */
     public function __construct(
-        ContainerInterface $viewHelperManager,
-        array $helperConfig = [],
-    ) {
-        $this->viewHelperManager = $viewHelperManager;
-        $this->helperConfig = $helperConfig;
-    }
+        private readonly ContainerInterface $viewHelperManager,
+        private readonly array $helperConfig = [],
+    ) {}
 
     public function getFilterManager(): ?ContainerInterface
     {

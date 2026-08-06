@@ -17,12 +17,7 @@ class PrepareMainContentMiddleware implements MiddlewareInterface
 {
     public const CONTENT_TEMPLATE = 'con-layout::content';
 
-    private BlockRegistryInterface $blockPool;
-
-    public function __construct(BlockRegistryInterface $blockPool)
-    {
-        $this->blockPool = $blockPool;
-    }
+    public function __construct(private readonly BlockRegistryInterface $blockPool) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

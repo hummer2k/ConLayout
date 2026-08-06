@@ -8,12 +8,7 @@ use ConLayout\LayoutManager;
 
 class Layout
 {
-    private LayoutManager $layoutManager;
-
-    public function __construct(LayoutManager $layoutManager)
-    {
-        $this->layoutManager = $layoutManager;
-    }
+    public function __construct(private readonly LayoutManager $layoutManager) {}
 
     public function __invoke(): LayoutManager
     {

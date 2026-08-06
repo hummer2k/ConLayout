@@ -18,25 +18,12 @@ class ToolbarMiddleware implements MiddlewareInterface
 {
     public const DEFAULT_TEMPLATE = 'con-layout::toolbar';
 
-    private ToolbarData $toolbarData;
-
-    private PhpRenderer $renderer;
-
-    private bool $enabled;
-
-    private string $template;
-
     public function __construct(
-        ToolbarData $toolbarData,
-        PhpRenderer $renderer,
-        bool $enabled = false,
-        string $template = self::DEFAULT_TEMPLATE,
-    ) {
-        $this->toolbarData = $toolbarData;
-        $this->renderer = $renderer;
-        $this->enabled = $enabled;
-        $this->template = $template;
-    }
+        private readonly ToolbarData $toolbarData,
+        private readonly PhpRenderer $renderer,
+        private readonly bool $enabled = false,
+        private readonly string $template = self::DEFAULT_TEMPLATE,
+    ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

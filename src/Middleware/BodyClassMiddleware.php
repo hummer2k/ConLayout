@@ -13,15 +13,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class BodyClassMiddleware implements MiddlewareInterface
 {
-    private BodyClass $bodyClassHelper;
-
-    private string $prefix;
-
-    public function __construct(BodyClass $bodyClassHelper, string $prefix = '')
-    {
-        $this->bodyClassHelper = $bodyClassHelper;
-        $this->prefix = $prefix;
-    }
+    public function __construct(
+        private readonly BodyClass $bodyClassHelper,
+        private readonly string $prefix = '',
+    ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

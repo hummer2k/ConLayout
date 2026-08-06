@@ -10,7 +10,7 @@ use Laminas\View\Model\ModelInterface;
 class ViewModelResponse extends Response
 {
     public function __construct(
-        private ModelInterface $viewModel,
+        private readonly ModelInterface $viewModel,
         int $status = 200,
         array $headers = [],
     ) {

@@ -9,12 +9,7 @@ use Laminas\View\Model\ModelInterface;
 
 class Block
 {
-    private BlockRegistryInterface $blockPool;
-
-    public function __construct(BlockRegistryInterface $blockPool)
-    {
-        $this->blockPool = $blockPool;
-    }
+    public function __construct(private readonly BlockRegistryInterface $blockPool) {}
 
     /**
      *

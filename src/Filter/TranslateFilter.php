@@ -9,12 +9,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
 
 class TranslateFilter implements FilterInterface
 {
-    protected \Laminas\I18n\Translator\TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     public function filter($value): string
     {

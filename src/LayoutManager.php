@@ -17,21 +17,11 @@ class LayoutManager implements
     LayoutInterface,
     LayoutUpdaterInterface
 {
-    protected LayoutInterface $layout;
-
-    protected LayoutUpdaterInterface $updater;
-
-    protected BlockRegistryInterface $blockPool;
-
     public function __construct(
-        LayoutInterface $layout,
-        LayoutUpdaterInterface $updater,
-        BlockRegistryInterface $blockPool,
-    ) {
-        $this->layout = $layout;
-        $this->updater = $updater;
-        $this->blockPool = $blockPool;
-    }
+        private readonly LayoutInterface $layout,
+        private readonly LayoutUpdaterInterface $updater,
+        private readonly BlockRegistryInterface $blockPool,
+    ) {}
 
     /**
      *
