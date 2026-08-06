@@ -486,3 +486,101 @@ return [
     ]
 ];
 ````
+
+## 5. Typed elements
+
+Instead of arbitrary element names you can use typed elements with an `id`
+attribute. ConLayout normalizes them into the same structure as the legacy
+syntax, so both dialects merge identically across handles.
+
+### `block`
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <block id="header" order="1" template="app::layout/header" />
+    <block id="footer" template="app::layout/footer" />
+</page>
+````
+
+The `id` attribute becomes the block id, all other attributes become the block
+definition. Blocks can be nested: a nested `<block>` becomes a child block and
+gets its `parent` variable set automatically:
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <block id="root" template="base">
+        <block id="header" template="app::layout/header">
+            <block id="main.nav" template="app::layout/navigation" />
+        </block>
+        <block id="main.content" />
+    </block>
+</page>
+````
+
+The insertion metadata `order`, `parent`, `before` and `after` are moved into
+the block `variables` automatically. All other child elements (`<variables>`,
+`<actions>`, legacy nested `<blocks>`) are preserved.
+
+### `view_helper`
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <view_helper name="headScript" id="main" src="/js/main.js" depends="jquery" />
+    <view_helper name="headScript" id="jquery" src="/js/jquery.js" />
+</page>
+````
+
+The `name` attribute selects the view helper, the `id` attribute is the
+instruction id. All other attributes become the instruction arguments.
+
+### `reference`
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <reference id="main.content" append="true" />
+</page>
+````
+
+Equivalent to the legacy container form. The legacy syntax and the typed
+elements can be mixed in one file; the legacy `reference` container and the
+typed `reference` element can be mixed as well.
+
+### Merging across handles
+
+`default.xml`:
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <block id="header" order="1" template="app::layout/header" />
+</page>
+````
+
+`app/checkout.xml` (higher handle priority):
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <block id="header" template="app::layout/header-minimal" />
+</page>
+````
+
+Result:
+
+````php
+[
+    'blocks' => [
+        'header' => [
+            'template'  => 'app::layout/header-minimal',
+            'variables' => ['order' => '1'],
+        ],
+    ],
+]
+````
+
+Note: a missing `id` on a typed `block` or `view_helper` throws an
+`InvalidArgumentException` with a descriptive message.

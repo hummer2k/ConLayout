@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <block id="header" order="1" template="tpl/header" />
+    <block id="footer" template="tpl/footer" />
+</page>

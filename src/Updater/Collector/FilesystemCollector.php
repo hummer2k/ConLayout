@@ -19,6 +19,7 @@ class FilesystemCollector implements CollectorInterface
     public function __construct(
         private readonly array $paths = [],
         private readonly array $extensions = ['php', 'xml'],
+        private readonly ?XmlPreprocessor $xmlPreprocessor = null,
     ) {}
 
     /**
@@ -38,6 +39,9 @@ class FilesystemCollector implements CollectorInterface
             }
             foreach ($configFiles as $configFile) {
                 $config = ConfigFactory::fromFile($configFile, true);
+                if (null !== $this->xmlPreprocessor && str_ends_with($configFile, '.xml')) {
+                    $config = $this->xmlPreprocessor->process($config);
+                }
                 $tempStructure->merge($config);
                 $this->collectedFiles[$handle][] = $configFile;
             }

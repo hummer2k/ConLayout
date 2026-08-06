@@ -6,6 +6,8 @@ namespace ConLayoutTest\Updater;
 
 use ConLayout\Handle\Handle;
 use ConLayout\Updater\Collector\CollectorInterface;
+use ConLayout\Updater\Collector\FilesystemCollector;
+use ConLayout\Updater\Collector\XmlPreprocessor;
 use ConLayout\Updater\Event\UpdateEvent;
 use ConLayout\Updater\LayoutUpdater;
 use ConLayout\Updater\LayoutUpdaterInterface;
@@ -198,5 +200,30 @@ class LayoutUpdaterTest extends AbstractTestCase
             $includedBlock->get('template'),
         );
         $this->assertFalse($block->remove);
+    }
+
+    public function testTypedBlocksMergeAcrossHandles(): void
+    {
+        $updater = new LayoutUpdater();
+        $updater->setEventManager($this->em);
+        $collector = new FilesystemCollector(
+            [
+                LayoutUpdaterInterface::AREA_GLOBAL => [
+                    __DIR__ . '/Collector/_files/typed/global',
+                ],
+            ],
+            ['xml'],
+            new XmlPreprocessor(),
+        );
+        $updater->attachCollector('filesystem', $collector);
+        $updater->addHandle(new Handle('app/checkout', 10));
+
+        $header = $updater->getLayoutStructure()->blocks->get('header');
+        $this->assertInstanceOf(Config::class, $header);
+        $this->assertSame('tpl/header-minimal', $header->get('template'));
+        $this->assertSame(
+            ['order' => '1'],
+            $header->variables->toArray(),
+        );
     }
 }

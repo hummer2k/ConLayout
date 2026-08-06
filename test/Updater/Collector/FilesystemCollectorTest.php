@@ -6,6 +6,7 @@ namespace ConLayoutTest\Updater\Collector;
 
 use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Collector\FilesystemCollector;
+use ConLayout\Updater\Collector\XmlPreprocessor;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayoutTest\AbstractTestCase;
 use Laminas\Config\Config;
@@ -61,5 +62,26 @@ class FilesystemCollectorTest extends AbstractTestCase
             [$path . '/default.php'],
             $collector->getCollectedFiles()['default'],
         );
+    }
+
+    public function testTypedXmlIsNormalized(): void
+    {
+        $collector = new FilesystemCollector(
+            [
+                LayoutUpdaterInterface::AREA_GLOBAL => [
+                    __DIR__ . '/_files/typed/global',
+                ],
+            ],
+            ['xml'],
+            new XmlPreprocessor(),
+        );
+        $result = $collector->collect('default');
+        $this->assertInstanceOf(Config::class, $result);
+        $this->assertSame('tpl/header', $result->blocks->get('header')->get('template'));
+        $this->assertSame(
+            ['order' => '1'],
+            $result->blocks->get('header')->variables->toArray(),
+        );
+        $this->assertSame('tpl/footer', $result->blocks->get('footer')->get('template'));
     }
 }

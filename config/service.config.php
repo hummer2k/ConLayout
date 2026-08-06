@@ -30,11 +30,13 @@ use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\Collector\ConfigCollectorFactory;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\Collector\FilesystemCollectorFactory;
+use ConLayout\Updater\Collector\XmlPreprocessor;
 use ConLayout\Toolbar\ToolbarMiddleware;
 use ConLayout\Toolbar\ToolbarMiddlewareFactory;
 use ConLayout\Updater\LayoutUpdaterFactory;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use ConLayout\View\PhpRendererDelegatorFactory;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\View\HelperPluginManager;
 use Laminas\View\Renderer\PhpRenderer;
 
@@ -42,6 +44,7 @@ return [
     'factories' => [
         FilesystemCollector::class             => FilesystemCollectorFactory::class,
         ConfigCollector::class                 => ConfigCollectorFactory::class,
+        XmlPreprocessor::class                 => InvokableFactory::class,
         BlockManager::class                    => BlockManagerFactory::class,
         BlockFactoryInterface::class           => BlockFactoryFactory::class,
         LayoutInterface::class                 => LayoutFactory::class,

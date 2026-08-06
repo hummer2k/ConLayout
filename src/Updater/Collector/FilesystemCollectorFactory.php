@@ -19,6 +19,7 @@ class FilesystemCollectorFactory implements FactoryInterface
         $collector = new FilesystemCollector(
             $paths,
             $extensions,
+            $container->get(XmlPreprocessor::class),
         );
         return $collector;
     }
