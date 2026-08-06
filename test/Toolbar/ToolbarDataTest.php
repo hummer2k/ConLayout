@@ -120,6 +120,26 @@ class ToolbarDataTest extends TestCase
         $this->assertSame(['headLink', 'headScript'], $data->getHelpers());
     }
 
+    public function testGetStructureSummaryCountsNestedBlocks(): void
+    {
+        $layoutManager = $this->createMock(LayoutManager::class);
+        $layoutManager->method('getLayoutStructure')->willReturn(new Config([
+            'blocks' => [
+                'root' => [
+                    'blocks' => [
+                        'header'      => ['template' => 'layout::header'],
+                        'main.content' => ['append' => true],
+                        'footer'      => ['template' => 'layout::footer'],
+                    ],
+                ],
+            ],
+        ], true));
+
+        $data = new ToolbarData($layoutManager);
+
+        $this->assertSame(4, $data->getStructureSummary()['blocks']);
+    }
+
     public function testGetBlocksWithDetails(): void
     {
         $root = $this->getRoot();

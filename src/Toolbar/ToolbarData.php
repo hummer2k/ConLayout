@@ -92,7 +92,7 @@ readonly class ToolbarData
     {
         $structure = $this->layoutManager->getLayoutStructure();
         return [
-            'blocks'     => $this->countInstructions($structure, 'blocks'),
+            'blocks'     => $this->countBlocks($structure->get('blocks')),
             'references' => $this->countInstructions($structure, 'reference'),
             'helpers'    => $this->countInstructions($structure, 'helpers'),
             'includes'   => $this->countInstructions($structure, 'include'),
@@ -208,6 +208,19 @@ readonly class ToolbarData
     {
         $value = $model->getVariable($name);
         return null === $value || '' === $value ? null : $value;
+    }
+
+    private function countBlocks(mixed $blocks): int
+    {
+        if (!$blocks instanceof Config) {
+            return 0;
+        }
+        $count = 0;
+        foreach ($blocks as $specs) {
+            $count++;
+            $count += $this->countBlocks($specs->get('blocks'));
+        }
+        return $count;
     }
 
     private function countInstructions(Config $structure, string $instruction): int
