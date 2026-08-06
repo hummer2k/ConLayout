@@ -27,7 +27,7 @@ class HandleExtractionMiddlewareTest extends AbstractTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $layoutManager = new LayoutManager($this->layout, $this->layoutUpdater, $this->blockPool);
+        $layoutManager = new LayoutManager($this->layout, $this->layoutUpdater, $this->blockRegistry);
         $this->context = new LayoutContext($layoutManager);
         $this->middleware = new HandleExtractionMiddleware(new CamelCaseToDash());
     }

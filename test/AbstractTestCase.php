@@ -28,7 +28,7 @@ abstract class AbstractTestCase extends TestCase
 
     protected LayoutInterface $layout;
 
-    protected BlockRegistryInterface $blockPool;
+    protected BlockRegistryInterface $blockRegistry;
 
     protected BlockFactoryInterface $blockFactory;
 
@@ -48,17 +48,17 @@ abstract class AbstractTestCase extends TestCase
         $this->em = $eventManager;
 
 
-        $this->blockPool = new BlockRegistry();
+        $this->blockRegistry = new BlockRegistry();
         $this->blockFactory = new BlockFactory([], new BlockManager($this->sm), $this->sm);
 
         $this->blocksGenerator = new BlocksGenerator(
             $this->blockFactory,
-            $this->blockPool,
+            $this->blockRegistry,
         );
 
         $this->layout = new Layout(
             $this->layoutUpdater,
-            $this->blockPool,
+            $this->blockRegistry,
         );
 
         $this->layout->attachGenerator(

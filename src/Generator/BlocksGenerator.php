@@ -16,7 +16,7 @@ final readonly class BlocksGenerator implements GeneratorInterface
 
     public function __construct(
         private BlockFactoryInterface $blockFactory,
-        private BlockRegistryInterface $blockPool,
+        private BlockRegistryInterface $blockRegistry,
     ) {}
 
     /**
@@ -42,7 +42,7 @@ final readonly class BlocksGenerator implements GeneratorInterface
             if ($children = $specs->get(self::INSTRUCTION_BLOCKS)) {
                 $this->generateBlocks($children, $references, $blockId);
             }
-            if ($block = $this->blockPool->get($blockId)) {
+            if ($block = $this->blockRegistry->get($blockId)) {
                 $this->blockFactory->configure($block, $specs->toArray());
             } else {
                 $block = $this->blockFactory->createBlock($blockId, $specs->toArray());
@@ -53,7 +53,7 @@ final readonly class BlocksGenerator implements GeneratorInterface
                     $block->setVariable('parent', $parentId);
                 }
             }
-            $this->blockPool->add($blockId, $block);
+            $this->blockRegistry->add($blockId, $block);
         }
     }
 

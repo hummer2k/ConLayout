@@ -44,7 +44,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
             false,
         );
 
-        $this->layoutManager = new LayoutManager($this->layout, $this->layoutUpdater, $this->blockPool);
+        $this->layoutManager = new LayoutManager($this->layout, $this->layoutUpdater, $this->blockRegistry);
         $this->context = new LayoutContext($this->layoutManager);
 
         $this->middleware = new LayoutMiddleware(
@@ -61,7 +61,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
         $viewModel = new ViewModel();
         $viewModel->setTemplate('widget1');
 
-        $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $viewModel);
+        $this->blockRegistry->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $viewModel);
 
         $handler = $this->getHandler(new ViewModelResponse($viewModel));
 
@@ -101,7 +101,7 @@ class LayoutMiddlewareTest extends AbstractTestCase
         $content = new ViewModel();
         $content->setTemplate('widget-content');
 
-        $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $content);
+        $this->blockRegistry->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $content);
 
         $handler = $this->getHandler(new HtmlResponse('My widget content'));
 

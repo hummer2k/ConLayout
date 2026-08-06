@@ -17,7 +17,7 @@ readonly class PrepareMainContentMiddleware implements MiddlewareInterface
 {
     public const CONTENT_TEMPLATE = 'con-layout::content';
 
-    public function __construct(private BlockRegistryInterface $blockPool) {}
+    public function __construct(private BlockRegistryInterface $blockRegistry) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -28,7 +28,7 @@ readonly class PrepareMainContentMiddleware implements MiddlewareInterface
             if ($viewModel->terminate()) {
                 $viewModel->setVariable('has_parent', null);
             } else {
-                $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $viewModel);
+                $this->blockRegistry->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $viewModel);
             }
             return $response;
         }
@@ -37,7 +37,7 @@ readonly class PrepareMainContentMiddleware implements MiddlewareInterface
             $content = new ViewModel();
             $content->setTemplate(self::CONTENT_TEMPLATE);
             $content->setVariable('content', (string) $response->getBody());
-            $this->blockPool->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $content);
+            $this->blockRegistry->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $content);
         }
 
         return $response;

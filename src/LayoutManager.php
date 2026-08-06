@@ -20,7 +20,7 @@ readonly class LayoutManager implements
     public function __construct(
         private LayoutInterface $layout,
         private LayoutUpdaterInterface $updater,
-        private BlockRegistryInterface $blockPool,
+        private BlockRegistryInterface $blockRegistry,
     ) {}
 
     /**
@@ -29,18 +29,18 @@ readonly class LayoutManager implements
      */
     public function getBlock(string $blockId): ModelInterface|false
     {
-        return $this->blockPool->get($blockId);
+        return $this->blockRegistry->get($blockId);
     }
 
     public function addBlock(string $blockId, ModelInterface $block): static
     {
-        $this->blockPool->add($blockId, $block);
+        $this->blockRegistry->add($blockId, $block);
         return $this;
     }
 
     public function removeBlock(string $blockId): static
     {
-        $this->blockPool->remove($blockId);
+        $this->blockRegistry->remove($blockId);
         return $this;
     }
 
@@ -101,7 +101,7 @@ readonly class LayoutManager implements
      */
     public function getBlocks(): array
     {
-        return $this->blockPool->get();
+        return $this->blockRegistry->get();
     }
 
     public function load(): static

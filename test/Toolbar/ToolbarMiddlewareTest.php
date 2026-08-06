@@ -63,13 +63,13 @@ class ToolbarMiddlewareTest extends TestCase
             'default' => ['/path/to/default.xml'],
         ]);
 
-        $blockPool = $this->createMock(BlockRegistryInterface::class);
-        $blockPool->method('getRemovedBlocks')->willReturn(['removed-block']);
+        $blockRegistry = $this->createMock(BlockRegistryInterface::class);
+        $blockRegistry->method('getRemovedBlocks')->willReturn(['removed-block']);
 
         $toolbarData = new ToolbarData(
             $layoutManager,
             $filesystemCollector,
-            $blockPool,
+            $blockRegistry,
             new ModuleOptions(['layout_template' => 'base', 'default_area' => 'frontend']),
         );
 

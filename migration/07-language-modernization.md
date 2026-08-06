@@ -73,7 +73,7 @@
 
 ### `src/Generator/BlocksGenerator.php`
 
-- Class becomes `readonly class BlocksGenerator implements GeneratorInterface` with promoted `private BlockFactoryInterface $blockFactory` / `private BlockRegistryInterface $blockPool`.
+- Class becomes `readonly class BlocksGenerator implements GeneratorInterface` with promoted `private BlockFactoryInterface $blockFactory` / `private BlockRegistryInterface $blockRegistry`.
 
 ### `src/Generator/ViewHelperGenerator.php`
 
@@ -116,7 +116,7 @@
 
 ### `src/Middleware/PrepareMainContentMiddleware.php`
 
-- Class becomes `readonly class PrepareMainContentMiddleware implements MiddlewareInterface` with promoted `private BlockRegistryInterface $blockPool`.
+- Class becomes `readonly class PrepareMainContentMiddleware implements MiddlewareInterface` with promoted `private BlockRegistryInterface $blockRegistry`.
 
 ### `src/Middleware/BodyClassMiddleware.php`
 
@@ -139,7 +139,7 @@
 
 ### `src/View/Helper/Block.php`
 
-- Class becomes `readonly class Block` with promoted `private BlockRegistryInterface $blockPool`.
+- Class becomes `readonly class Block` with promoted `private BlockRegistryInterface $blockRegistry`.
 
 ### `src/View/Helper/Layout.php`
 

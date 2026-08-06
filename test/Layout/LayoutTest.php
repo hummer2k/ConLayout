@@ -71,7 +71,7 @@ class LayoutTest extends AbstractTestCase
         $viewModel->setCaptureTo('root::footer');
         $viewModel->setVariable('parent', 'some.parent');
 
-        $layout = new TestLayout($this->updaterMock, $this->blockPool);
+        $layout = new TestLayout($this->updaterMock, $this->blockRegistry);
 
         $this->assertEquals([
             'some.parent',
@@ -84,7 +84,7 @@ class LayoutTest extends AbstractTestCase
         $viewModel = new ViewModel();
         $viewModel->setVariable('parent', 'some.parent');
 
-        $layout = new TestLayout($this->updaterMock, $this->blockPool);
+        $layout = new TestLayout($this->updaterMock, $this->blockRegistry);
 
         $this->assertEquals([
             'some.parent',
@@ -96,7 +96,7 @@ class LayoutTest extends AbstractTestCase
     {
         $layout = new Layout(
             $this->updaterMock,
-            $this->blockPool,
+            $this->blockRegistry,
         );
         $layout->attachGenerator('blocks', $this->blocksGenerator);
         $layoutModel = new ViewModel();

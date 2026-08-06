@@ -186,10 +186,10 @@ class ToolbarDataTest extends TestCase
             'orphan-2' => new ViewModel(),
         ]);
 
-        $blockPool = $this->createMock(BlockRegistryInterface::class);
-        $blockPool->method('getRemovedBlocks')->willReturn(['removed-block']);
+        $blockRegistry = $this->createMock(BlockRegistryInterface::class);
+        $blockRegistry->method('getRemovedBlocks')->willReturn(['removed-block']);
 
-        $data = new ToolbarData($layoutManager, null, $blockPool);
+        $data = new ToolbarData($layoutManager, null, $blockRegistry);
 
         $unrendered = $data->getUnrenderedBlocks();
         $this->assertSame(['orphan', 'orphan-2'], $unrendered['pool']);

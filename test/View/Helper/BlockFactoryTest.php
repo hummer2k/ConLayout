@@ -15,7 +15,7 @@ class BlockFactoryTest extends AbstractTestCase
     public function testFactory(): void
     {
         $sm = new ServiceManager();
-        $sm->setService(BlockRegistryInterface::class, $this->blockPool);
+        $sm->setService(BlockRegistryInterface::class, $this->blockRegistry);
 
         $factory = new BlockFactory();
         $helper = $factory($sm, Block::class);

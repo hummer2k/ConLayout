@@ -19,13 +19,13 @@ class BlockTest extends AbstractTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->blockHelper = new Block($this->blockPool);
+        $this->blockHelper = new Block($this->blockRegistry);
     }
 
     public function testInvoke(): void
     {
         $block = new ViewModel();
-        $this->blockPool->add('test.block', $block);
+        $this->blockRegistry->add('test.block', $block);
 
         $this->assertSame(
             $block,

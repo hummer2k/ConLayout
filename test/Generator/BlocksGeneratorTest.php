@@ -22,7 +22,7 @@ class BlocksGeneratorTest extends AbstractTestCase
             ],
         ]);
         $this->blocksGenerator->generate($specs);
-        $block = $this->blockPool->get('some.block');
+        $block = $this->blockRegistry->get('some.block');
         $this->assertInstanceOf(
             ModelInterface::class,
             $block,
@@ -48,7 +48,7 @@ class BlocksGeneratorTest extends AbstractTestCase
             ],
         ]);
         $this->blocksGenerator->generate($specs);
-        $block = $this->blockPool->get('some.block');
+        $block = $this->blockRegistry->get('some.block');
         $this->assertEquals('set/by/reference', $block->getTemplate());
     }
 
@@ -71,7 +71,7 @@ class BlocksGeneratorTest extends AbstractTestCase
         $this->blocksGenerator->generate($specs);
         $this->assertEquals(
             'test/tpl',
-            $this->blockPool->get('some.child')->getTemplate(),
+            $this->blockRegistry->get('some.child')->getTemplate(),
         );
     }
 
@@ -88,9 +88,9 @@ class BlocksGeneratorTest extends AbstractTestCase
         $this->blocksGenerator->generate($specs);
         $this->assertInstanceOf(
             ModelInterface::class,
-            $this->blockPool->get('another.block'),
+            $this->blockRegistry->get('another.block'),
         );
-        $this->assertFalse($this->blockPool->get('some.block'));
+        $this->assertFalse($this->blockRegistry->get('some.block'));
     }
 
     public function testCreateChildren(): void
@@ -105,7 +105,7 @@ class BlocksGeneratorTest extends AbstractTestCase
             ],
         ]);
         $this->blocksGenerator->generate($specs);
-        $child = $this->blockPool->get('some.block.child');
+        $child = $this->blockRegistry->get('some.block.child');
         $this->assertInstanceOf(
             ModelInterface::class,
             $child,
@@ -120,7 +120,7 @@ class BlocksGeneratorTest extends AbstractTestCase
     public function testConfigureBlockIfAlreadyInPool(): void
     {
         $block = new ViewModel();
-        $this->blockPool->add('some.block', $block);
+        $this->blockRegistry->add('some.block', $block);
         $specs = new Config([
             BlocksGenerator::INSTRUCTION_BLOCKS => [
                 'some.block' => [
@@ -129,6 +129,6 @@ class BlocksGeneratorTest extends AbstractTestCase
             ],
         ]);
         $this->blocksGenerator->generate($specs);
-        $this->assertSame($block, $this->blockPool->get('some.block'));
+        $this->assertSame($block, $this->blockRegistry->get('some.block'));
     }
 }

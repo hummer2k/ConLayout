@@ -9,7 +9,7 @@ use Laminas\View\Model\ModelInterface;
 
 readonly class Block
 {
-    public function __construct(private BlockRegistryInterface $blockPool) {}
+    public function __construct(private BlockRegistryInterface $blockRegistry) {}
 
     /**
      *
@@ -17,6 +17,6 @@ readonly class Block
      */
     public function __invoke(?string $blockId): ModelInterface|false
     {
-        return $this->blockPool->get($blockId);
+        return $this->blockRegistry->get($blockId);
     }
 }

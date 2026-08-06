@@ -12,8 +12,8 @@ class BlockRegistryTest extends AbstractTestCase
     public function testAddAndGetBlock(): void
     {
         $block = new ViewModel();
-        $this->blockPool->add('my-block', $block);
-        $this->assertSame($block, $this->blockPool->get('my-block'));
+        $this->blockRegistry->add('my-block', $block);
+        $this->assertSame($block, $this->blockRegistry->get('my-block'));
     }
 
     public function testAddSortBlockWithBeforeAndAfter(): void
@@ -32,15 +32,15 @@ class BlockRegistryTest extends AbstractTestCase
             'block5',
         ];
 
-        $this->blockPool->add('block1', $block1);
-        $this->blockPool->add('block2', $block2);
-        $this->blockPool->add('block3', $block3);
-        $this->blockPool->add('block4', $block4);
-        $this->blockPool->add('block5', $block5);
+        $this->blockRegistry->add('block1', $block1);
+        $this->blockRegistry->add('block2', $block2);
+        $this->blockRegistry->add('block3', $block3);
+        $this->blockRegistry->add('block4', $block4);
+        $this->blockRegistry->add('block5', $block5);
 
-        $this->blockPool->sort();
+        $this->blockRegistry->sort();
 
-        $this->assertSame($expectedOrder, array_keys($this->blockPool->get()));
+        $this->assertSame($expectedOrder, array_keys($this->blockRegistry->get()));
     }
 
     public function testAddBlockWithChildren(): void
@@ -51,18 +51,18 @@ class BlockRegistryTest extends AbstractTestCase
         $block1->addChild($block2);
         $block1->addChild($block3);
 
-        $this->blockPool->add('my-block', $block1);
+        $this->blockRegistry->add('my-block', $block1);
 
-        $this->assertCount(3, $this->blockPool->get());
+        $this->assertCount(3, $this->blockRegistry->get());
 
         $this->assertSame(
             $block2,
-            $this->blockPool->get('child1'),
+            $this->blockRegistry->get('child1'),
         );
 
         $this->assertSame(
             $block3,
-            $this->blockPool->get('child2'),
+            $this->blockRegistry->get('child2'),
         );
     }
 
@@ -74,24 +74,24 @@ class BlockRegistryTest extends AbstractTestCase
         $block1->addChild($block2);
         $block2->addChild($block3);
 
-        $this->blockPool->add('my-block', $block1);
+        $this->blockRegistry->add('my-block', $block1);
 
-        $this->assertCount(3, $this->blockPool->get());
+        $this->assertCount(3, $this->blockRegistry->get());
 
         $this->assertSame(
             $block2,
-            $this->blockPool->get('child1'),
+            $this->blockRegistry->get('child1'),
         );
 
         $this->assertSame(
             $block3,
-            $this->blockPool->get('child2'),
+            $this->blockRegistry->get('child2'),
         );
     }
 
     public function testGetBlocks(): void
     {
-        $blocks = $this->blockPool->get();
+        $blocks = $this->blockRegistry->get();
 
         $this->assertIsArray($blocks);
     }
@@ -111,15 +111,15 @@ class BlockRegistryTest extends AbstractTestCase
         $block3 = $this->createBlock(['order' => 10]);
         $block4 = new ViewModel();
 
-        $this->blockPool->add('block-1', $block1);
-        $this->blockPool->add('block-2', $block2);
-        $this->blockPool->add('block-3', $block3);
-        $this->blockPool->add('block-4', $block4);
+        $this->blockRegistry->add('block-1', $block1);
+        $this->blockRegistry->add('block-2', $block2);
+        $this->blockRegistry->add('block-3', $block3);
+        $this->blockRegistry->add('block-4', $block4);
 
-        $this->blockPool->sort();
+        $this->blockRegistry->sort();
 
         $i = 1;
-        foreach (array_keys($this->blockPool->get()) as $blockId) {
+        foreach (array_keys($this->blockRegistry->get()) as $blockId) {
             $this->assertEquals($expectedOrder[$i], $blockId);
             $i++;
         }
@@ -134,16 +134,16 @@ class BlockRegistryTest extends AbstractTestCase
         $block4 = $this->createBlock(['order' => -10]);
         $block4->setCaptureTo('my.parent::child');
 
-        $this->blockPool->add('block1', $block1);
-        $this->blockPool->add('block2', $block2);
-        $this->blockPool->add('my.parent.child1', $block3);
-        $this->blockPool->add('my.parent.child2', $block4);
+        $this->blockRegistry->add('block1', $block1);
+        $this->blockRegistry->add('block2', $block2);
+        $this->blockRegistry->add('my.parent.child1', $block3);
+        $this->blockRegistry->add('my.parent.child2', $block4);
 
-        $this->blockPool->sort();
+        $this->blockRegistry->sort();
 
         $this->assertSame(
             ['block2', 'block1', 'my.parent.child2', 'my.parent.child1'],
-            array_keys($this->blockPool->get()),
+            array_keys($this->blockRegistry->get()),
         );
     }
 
@@ -155,15 +155,15 @@ class BlockRegistryTest extends AbstractTestCase
         $block3 = $this->createBlock(['order' => 5]);
         $block3->setCaptureTo('my.parent::child');
 
-        $this->blockPool->add('block1', $block1);
-        $this->blockPool->add('my.parent.child1', $block2);
-        $this->blockPool->add('my.parent.child2', $block3);
+        $this->blockRegistry->add('block1', $block1);
+        $this->blockRegistry->add('my.parent.child1', $block2);
+        $this->blockRegistry->add('my.parent.child2', $block3);
 
-        $this->blockPool->sort();
+        $this->blockRegistry->sort();
 
         $this->assertSame(
             ['block1', 'my.parent.child1', 'my.parent.child2'],
-            array_keys($this->blockPool->get()),
+            array_keys($this->blockRegistry->get()),
         );
     }
 
@@ -176,40 +176,40 @@ class BlockRegistryTest extends AbstractTestCase
         $block3 = $this->createBlock(['before' => 'my.parent.child2']);
         $block3->setCaptureTo('my.parent::child');
 
-        $this->blockPool->add('my.parent.child1', $block1);
-        $this->blockPool->add('my.parent.child2', $block2);
-        $this->blockPool->add('my.parent.child3', $block3);
+        $this->blockRegistry->add('my.parent.child1', $block1);
+        $this->blockRegistry->add('my.parent.child2', $block2);
+        $this->blockRegistry->add('my.parent.child3', $block3);
 
-        $this->blockPool->sort();
+        $this->blockRegistry->sort();
 
         $this->assertSame(
             ['my.parent.child3', 'my.parent.child2', 'my.parent.child1'],
-            array_keys($this->blockPool->get()),
+            array_keys($this->blockRegistry->get()),
         );
     }
 
     public function testRemoveAddedBlock(): void
     {
         $block = new ViewModel();
-        $this->blockPool->add('some-block', $block);
-        $this->assertSame($block, $this->blockPool->get('some-block'));
+        $this->blockRegistry->add('some-block', $block);
+        $this->assertSame($block, $this->blockRegistry->get('some-block'));
 
-        $this->blockPool->remove('some-block');
+        $this->blockRegistry->remove('some-block');
 
-        $this->assertFalse($this->blockPool->get('some-block'));
+        $this->assertFalse($this->blockRegistry->get('some-block'));
     }
 
     public function testGetRemovedBlocks(): void
     {
         $block = new ViewModel();
-        $this->blockPool->add('some-block', $block);
+        $this->blockRegistry->add('some-block', $block);
 
-        $this->assertSame([], $this->blockPool->getRemovedBlocks());
+        $this->assertSame([], $this->blockRegistry->getRemovedBlocks());
 
-        $this->blockPool->remove('some-block');
-        $this->blockPool->remove('never-added');
+        $this->blockRegistry->remove('some-block');
+        $this->blockRegistry->remove('never-added');
 
-        $this->assertSame(['some-block', 'never-added'], $this->blockPool->getRemovedBlocks());
+        $this->assertSame(['some-block', 'never-added'], $this->blockRegistry->getRemovedBlocks());
     }
 
     public function testAnonymousBlockId(): void
@@ -217,7 +217,7 @@ class BlockRegistryTest extends AbstractTestCase
         $viewModel = new ViewModel();
         $child = new ViewModel();
         $viewModel->addChild($child);
-        $this->blockPool->add('test.block', $viewModel);
+        $this->blockRegistry->add('test.block', $viewModel);
 
         $this->assertEquals(
             'anonymous.content.1',

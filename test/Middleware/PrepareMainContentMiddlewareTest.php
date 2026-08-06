@@ -23,7 +23,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->middleware = new PrepareMainContentMiddleware($this->blockPool);
+        $this->middleware = new PrepareMainContentMiddleware($this->blockRegistry);
     }
 
     public function testWithViewModel(): void
@@ -33,7 +33,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
 
         $this->middleware->process(new ServerRequest(), $handler);
 
-        $actionResult = $this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT);
+        $actionResult = $this->blockRegistry->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT);
         $this->assertSame($viewModel, $actionResult);
     }
 
@@ -49,7 +49,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
 
         $this->assertFalse($viewModel->isAppend());
         $this->assertNull($viewModel->getVariable('has_parent'));
-        $this->assertFalse($this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
+        $this->assertFalse($this->blockRegistry->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
     }
 
     public function testCaptureHtmlResponseBody(): void
@@ -58,7 +58,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
 
         $this->middleware->process(new ServerRequest(), $handler);
 
-        $actionResult = $this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT);
+        $actionResult = $this->blockRegistry->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT);
         $this->assertInstanceOf(ViewModel::class, $actionResult);
         $this->assertSame('My widget content', $actionResult->getVariable('content'));
     }
@@ -69,7 +69,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
 
         $this->middleware->process(new ServerRequest(), $handler);
 
-        $this->assertFalse($this->blockPool->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
+        $this->assertFalse($this->blockRegistry->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
     }
 
     protected function getHandler(ResponseInterface $response): RequestHandlerInterface

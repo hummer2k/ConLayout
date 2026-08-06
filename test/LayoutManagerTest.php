@@ -21,7 +21,7 @@ class LayoutManagerTest extends AbstractTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->blockPool->add(
+        $this->blockRegistry->add(
             'test-block',
             (new ViewModel())->setTemplate('widget1'),
         );
@@ -29,7 +29,7 @@ class LayoutManagerTest extends AbstractTestCase
         $this->layoutManager = new LayoutManager(
             $this->layout,
             $this->layoutUpdater,
-            $this->blockPool,
+            $this->blockRegistry,
         );
     }
 
@@ -46,7 +46,7 @@ class LayoutManagerTest extends AbstractTestCase
         );
         $serviceManager->setService(
             BlockRegistryInterface::class,
-            $this->blockPool,
+            $this->blockRegistry,
         );
 
         $factory = new LayoutManagerFactory();

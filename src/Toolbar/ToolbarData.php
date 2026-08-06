@@ -17,7 +17,7 @@ readonly class ToolbarData
     public function __construct(
         private LayoutManager $layoutManager,
         private ?FilesystemCollector $filesystemCollector = null,
-        private ?BlockRegistryInterface $blockPool = null,
+        private ?BlockRegistryInterface $blockRegistry = null,
         private ?ModuleOptions $moduleOptions = null,
     ) {}
 
@@ -146,8 +146,8 @@ readonly class ToolbarData
 
         return [
             'pool'    => array_values(array_diff($poolIds, $renderedIds)),
-            'removed' => $this->blockPool instanceof BlockRegistryInterface
-                ? $this->blockPool->getRemovedBlocks()
+            'removed' => $this->blockRegistry instanceof BlockRegistryInterface
+                ? $this->blockRegistry->getRemovedBlocks()
                 : [],
         ];
     }
