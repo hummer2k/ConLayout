@@ -84,29 +84,68 @@ final class BlockRegistry implements BlockRegistryInterface
      */
     public function sort(): static
     {
-        foreach ($this->blocks as $block) {
+        $sortedBlocks = [];
+        foreach ($this->groupByParent() as $group) {
+            $this->resolveBeforeAfter($group);
+            uasort($group, function ($a, $b) {
+                /* @var $a ModelInterface */
+                /* @var $b ModelInterface */
+                $orderA = $a->getVariable('order', 0);
+                $orderB = $b->getVariable('order', 0);
+                if ($orderA == $orderB) {
+                    return 0;
+                }
+                return ($orderA < $orderB) ? -1 : 1;
+            });
+            foreach ($group as $blockId => $block) {
+                $sortedBlocks[$blockId] = $block;
+            }
+        }
+        $this->blocks = $sortedBlocks;
+        return $this;
+    }
+
+    /**
+     * @return array<string, array<string, ModelInterface>>
+     */
+    private function groupByParent(): array
+    {
+        $groups = [];
+        foreach ($this->blocks as $blockId => $block) {
+            $groups[$this->getParentId($block)][$blockId] = $block;
+        }
+        return $groups;
+    }
+
+    private function getParentId(ModelInterface $block): string
+    {
+        if ($parent = $block->getVariable('parent')) {
+            return $parent;
+        }
+        if (false !== strpos($block->captureTo(), LayoutInterface::CAPTURE_TO_DELIMITER)) {
+            [$parent] = explode(LayoutInterface::CAPTURE_TO_DELIMITER, $block->captureTo());
+            return $parent;
+        }
+        return LayoutInterface::BLOCK_ID_ROOT;
+    }
+
+    /**
+     * @param array<string, ModelInterface> $blocks
+     */
+    private function resolveBeforeAfter(array $blocks): void
+    {
+        foreach ($blocks as $blockId => $block) {
             if ($beforeBlockId = $block->getVariable('before')) {
-                if ($beforeBlock = $this->get($beforeBlockId)) {
-                    $block->setVariable('order', $beforeBlock->getVariable('order', 0) - 1);
+                if (isset($blocks[$beforeBlockId])) {
+                    $block->setVariable('order', $blocks[$beforeBlockId]->getVariable('order', 0) - 1);
                 }
             }
             if ($afterBlockId = $block->getVariable('after')) {
-                if ($afterBlock = $this->get($afterBlockId)) {
-                    $block->setVariable('order', $afterBlock->getVariable('order', 0) + 1);
+                if (isset($blocks[$afterBlockId])) {
+                    $block->setVariable('order', $blocks[$afterBlockId]->getVariable('order', 0) + 1);
                 }
             }
         }
-        uasort($this->blocks, function ($a, $b) {
-            /* @var $a ModelInterface */
-            /* @var $b ModelInterface */
-            $orderA = $a->getVariable('order', 0);
-            $orderB = $b->getVariable('order', 0);
-            if ($orderA == $orderB) {
-                return 0;
-            }
-            return ($orderA < $orderB) ? -1 : 1;
-        });
-        return $this;
     }
 
     private function determineAnonymousBlockId(ModelInterface $block): string

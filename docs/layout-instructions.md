@@ -253,14 +253,19 @@ ConLayout renders the blocks in the order of their `order` variable. Blocks
 with the same order keep the sequence of their insertion. Set the variable
 via the `variables` key in the block definition.
 
+The sort order only counts inside the parent block. ConLayout compares the
+`order` values of sibling blocks with the same parent. The order values of
+blocks in different parents do not influence each other.
+
 You can also use the `before` and `after` variables. ConLayout converts them
 to an `order` value at sort time:
 
 - `before` gives the block the order of the target block minus `1`.
 - `after` gives the block the order of the target block plus `1`.
 
-The target block must exist in the block pool. The variables do not work
-when you reference a block that ConLayout removed.
+The target block must exist in the block pool and in the same parent. The
+variables do not work when you reference a block that ConLayout removed or a
+block in a different parent.
 
 ### Internal block metadata
 

@@ -125,6 +125,69 @@ class BlockRegistryTest extends AbstractTestCase
         }
     }
 
+    public function testSortBlocksOnlyWithinTheirParents(): void
+    {
+        $block1 = $this->createBlock(['order' => 2]);
+        $block2 = $this->createBlock(['order' => 1]);
+        $block3 = $this->createBlock(['order' => 10]);
+        $block3->setCaptureTo('my.parent::child');
+        $block4 = $this->createBlock(['order' => -10]);
+        $block4->setCaptureTo('my.parent::child');
+
+        $this->blockPool->add('block1', $block1);
+        $this->blockPool->add('block2', $block2);
+        $this->blockPool->add('my.parent.child1', $block3);
+        $this->blockPool->add('my.parent.child2', $block4);
+
+        $this->blockPool->sort();
+
+        $this->assertSame(
+            ['block2', 'block1', 'my.parent.child2', 'my.parent.child1'],
+            array_keys($this->blockPool->get()),
+        );
+    }
+
+    public function testBeforeAndAfterAreIgnoredAcrossParents(): void
+    {
+        $block1 = $this->createBlock(['order' => 10]);
+        $block2 = $this->createBlock(['before' => 'block1']);
+        $block2->setCaptureTo('my.parent::child');
+        $block3 = $this->createBlock(['order' => 5]);
+        $block3->setCaptureTo('my.parent::child');
+
+        $this->blockPool->add('block1', $block1);
+        $this->blockPool->add('my.parent.child1', $block2);
+        $this->blockPool->add('my.parent.child2', $block3);
+
+        $this->blockPool->sort();
+
+        $this->assertSame(
+            ['block1', 'my.parent.child1', 'my.parent.child2'],
+            array_keys($this->blockPool->get()),
+        );
+    }
+
+    public function testBeforeAndAfterWithinSameParent(): void
+    {
+        $block1 = $this->createBlock(['after' => 'my.parent.child2']);
+        $block1->setCaptureTo('my.parent::child');
+        $block2 = new ViewModel();
+        $block2->setCaptureTo('my.parent::child');
+        $block3 = $this->createBlock(['before' => 'my.parent.child2']);
+        $block3->setCaptureTo('my.parent::child');
+
+        $this->blockPool->add('my.parent.child1', $block1);
+        $this->blockPool->add('my.parent.child2', $block2);
+        $this->blockPool->add('my.parent.child3', $block3);
+
+        $this->blockPool->sort();
+
+        $this->assertSame(
+            ['my.parent.child3', 'my.parent.child2', 'my.parent.child1'],
+            array_keys($this->blockPool->get()),
+        );
+    }
+
     public function testRemoveAddedBlock(): void
     {
         $block = new ViewModel();
