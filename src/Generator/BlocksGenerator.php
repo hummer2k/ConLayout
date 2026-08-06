@@ -8,15 +8,15 @@ use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Block\Factory\BlockFactoryInterface;
 use Laminas\Config\Config;
 
-final class BlocksGenerator implements GeneratorInterface
+final readonly class BlocksGenerator implements GeneratorInterface
 {
     public const NAME                  = 'blocks';
     public const INSTRUCTION_BLOCKS    = 'blocks';
     public const INSTRUCTION_REFERENCE = 'reference';
 
     public function __construct(
-        private readonly BlockFactoryInterface $blockFactory,
-        private readonly BlockRegistryInterface $blockPool,
+        private BlockFactoryInterface $blockFactory,
+        private BlockRegistryInterface $blockPool,
     ) {}
 
     /**

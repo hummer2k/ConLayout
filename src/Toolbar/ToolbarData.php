@@ -12,13 +12,13 @@ use ConLayout\Updater\Collector\FilesystemCollector;
 use Laminas\Config\Config;
 use Laminas\View\Model\ModelInterface;
 
-class ToolbarData
+readonly class ToolbarData
 {
     public function __construct(
-        private readonly LayoutManager $layoutManager,
-        private readonly ?FilesystemCollector $filesystemCollector = null,
-        private readonly ?BlockRegistryInterface $blockPool = null,
-        private readonly ?ModuleOptions $moduleOptions = null,
+        private LayoutManager $layoutManager,
+        private ?FilesystemCollector $filesystemCollector = null,
+        private ?BlockRegistryInterface $blockPool = null,
+        private ?ModuleOptions $moduleOptions = null,
     ) {}
 
     /**

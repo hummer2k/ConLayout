@@ -7,9 +7,9 @@ namespace ConLayout\View\Helper;
 use ConLayout\Block\BlockRegistryInterface;
 use Laminas\View\Model\ModelInterface;
 
-class Block
+readonly class Block
 {
-    public function __construct(private readonly BlockRegistryInterface $blockPool) {}
+    public function __construct(private BlockRegistryInterface $blockPool) {}
 
     /**
      *

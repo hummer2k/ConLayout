@@ -7,9 +7,9 @@ namespace ConLayout\Filter;
 use Laminas\Filter\FilterInterface;
 use Laminas\View\Helper\BasePath as BasePathHelper;
 
-class BasePathFilter implements FilterInterface
+readonly class BasePathFilter implements FilterInterface
 {
-    public function __construct(private readonly BasePathHelper $basePathHelper) {}
+    public function __construct(private BasePathHelper $basePathHelper) {}
 
     /**
      *
@@ -20,7 +20,7 @@ class BasePathFilter implements FilterInterface
     {
         $urlHost = parse_url($value, PHP_URL_HOST);
         if (empty($urlHost)) {
-            return call_user_func($this->basePathHelper, $value);
+            return ($this->basePathHelper)($value);
         }
         return $value;
     }

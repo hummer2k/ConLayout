@@ -13,14 +13,14 @@ use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Config\Config;
 use Laminas\View\Model\ModelInterface;
 
-class LayoutManager implements
+readonly class LayoutManager implements
     LayoutInterface,
     LayoutUpdaterInterface
 {
     public function __construct(
-        private readonly LayoutInterface $layout,
-        private readonly LayoutUpdaterInterface $updater,
-        private readonly BlockRegistryInterface $blockPool,
+        private LayoutInterface $layout,
+        private LayoutUpdaterInterface $updater,
+        private BlockRegistryInterface $blockPool,
     ) {}
 
     /**

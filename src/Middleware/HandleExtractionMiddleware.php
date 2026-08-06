@@ -15,7 +15,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use ReflectionClass;
 use Throwable;
 
-class HandleExtractionMiddleware implements MiddlewareInterface
+readonly class HandleExtractionMiddleware implements MiddlewareInterface
 {
     public const SEPARATOR = '/';
 
@@ -25,10 +25,10 @@ class HandleExtractionMiddleware implements MiddlewareInterface
 
     public const ERROR_PRIORITY = 666;
 
-    private readonly string $errorHandleAttribute;
+    private string $errorHandleAttribute;
 
     public function __construct(
-        private readonly CamelCaseToDash $inflector,
+        private CamelCaseToDash $inflector,
         string $errorHandleAttribute = Throwable::class,
     ) {
         $this->errorHandleAttribute = $errorHandleAttribute;

@@ -11,11 +11,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class BodyClassMiddleware implements MiddlewareInterface
+readonly class BodyClassMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private readonly BodyClass $bodyClassHelper,
-        private readonly string $prefix = '',
+        private BodyClass $bodyClassHelper,
+        private string $prefix = '',
     ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

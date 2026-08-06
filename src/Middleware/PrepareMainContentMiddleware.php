@@ -13,11 +13,11 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\View\Model\ViewModel;
 
-class PrepareMainContentMiddleware implements MiddlewareInterface
+readonly class PrepareMainContentMiddleware implements MiddlewareInterface
 {
     public const CONTENT_TEMPLATE = 'con-layout::content';
 
-    public function __construct(private readonly BlockRegistryInterface $blockPool) {}
+    public function __construct(private BlockRegistryInterface $blockPool) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

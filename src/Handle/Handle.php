@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace ConLayout\Handle;
 
-final class Handle implements HandleInterface
+final readonly class Handle implements HandleInterface
 {
     public function __construct(
-        private readonly string $name,
-        private readonly int $priority,
+        private string $name,
+        private int $priority,
     ) {}
 
     /**

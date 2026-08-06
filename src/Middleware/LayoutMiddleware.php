@@ -19,15 +19,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class LayoutMiddleware implements MiddlewareInterface
+readonly class LayoutMiddleware implements MiddlewareInterface
 {
-    private readonly string $layoutTemplate;
+    private string $layoutTemplate;
 
     public function __construct(
-        private readonly LayoutManager $layoutManager,
-        private readonly PhpRenderer $renderer,
-        private readonly ModuleOptions $moduleOptions,
-        private readonly HelperPluginManager $helperPluginManager,
+        private LayoutManager $layoutManager,
+        private PhpRenderer $renderer,
+        private ModuleOptions $moduleOptions,
+        private HelperPluginManager $helperPluginManager,
         string $layoutTemplate = '',
     ) {
         $this->layoutTemplate = $layoutTemplate;

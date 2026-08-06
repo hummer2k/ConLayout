@@ -7,11 +7,11 @@ namespace ConLayout\Updater\Collector;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Config\Config;
 
-class ConfigCollector implements CollectorInterface
+readonly class ConfigCollector implements CollectorInterface
 {
     public const NAME = 'config';
 
-    public function __construct(private readonly array $config) {}
+    public function __construct(private array $config) {}
 
     /**
      * @inheritDoc

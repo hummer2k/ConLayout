@@ -8,14 +8,11 @@ use Laminas\Filter\FilterInterface;
 use Laminas\View\Helper\ViewModel as ViewModelHelper;
 use Laminas\View\Renderer\PhpRenderer;
 
-class DebugFilter implements FilterInterface
+readonly class DebugFilter implements FilterInterface
 {
-    /**
-     * DebugFilter constructor.
-     */
     public function __construct(
-        private readonly PhpRenderer $phpRenderer,
-        private readonly ViewModelHelper $viewModelHelper,
+        private PhpRenderer $phpRenderer,
+        private ViewModelHelper $viewModelHelper,
     ) {}
 
     /**
@@ -31,7 +28,7 @@ class DebugFilter implements FilterInterface
 
         $opening = sprintf('<!--[%s]-->', $blockId);
         $closing = sprintf('<!--[/%s]-->', $blockId);
-        if (0 !== strpos($value, $opening)) {
+        if (!str_starts_with($value, $opening)) {
             $value = $opening . $value . $closing;
         }
         return $value;

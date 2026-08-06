@@ -6,9 +6,9 @@ namespace ConLayout\View\Helper;
 
 use ConLayout\LayoutManager;
 
-class Layout
+readonly class Layout
 {
-    public function __construct(private readonly LayoutManager $layoutManager) {}
+    public function __construct(private LayoutManager $layoutManager) {}
 
     public function __invoke(): LayoutManager
     {

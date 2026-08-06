@@ -7,9 +7,9 @@ namespace ConLayout\Filter;
 use Laminas\Filter\FilterInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 
-class TranslateFilter implements FilterInterface
+readonly class TranslateFilter implements FilterInterface
 {
-    public function __construct(private readonly TranslatorInterface $translator) {}
+    public function __construct(private TranslatorInterface $translator) {}
 
     public function filter($value): string
     {

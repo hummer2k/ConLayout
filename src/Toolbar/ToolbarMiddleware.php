@@ -14,15 +14,15 @@ use Psr\Http\Server\RequestHandlerInterface;
 use function microtime;
 use function memory_get_peak_usage;
 
-class ToolbarMiddleware implements MiddlewareInterface
+readonly class ToolbarMiddleware implements MiddlewareInterface
 {
     public const DEFAULT_TEMPLATE = 'con-layout::toolbar';
 
     public function __construct(
-        private readonly ToolbarData $toolbarData,
-        private readonly PhpRenderer $renderer,
-        private readonly bool $enabled = false,
-        private readonly string $template = self::DEFAULT_TEMPLATE,
+        private ToolbarData $toolbarData,
+        private PhpRenderer $renderer,
+        private bool $enabled = false,
+        private string $template = self::DEFAULT_TEMPLATE,
     ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
