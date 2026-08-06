@@ -584,3 +584,28 @@ Result:
 
 Note: a missing `id` on a typed `block` or `view_helper` throws an
 `InvalidArgumentException` with a descriptive message.
+
+## 6. XSD validation
+
+The typed dialect is validated by the XML Schema `xsd/layout.xsd` in the
+package root. The schema declares no target namespace and defines the root
+elements `page` and `layout` with the elements `block`, `view_helper`,
+`reference` and `include`. The known block attributes are typed
+(`template`, `capture_to`, `parent`, `before`, `after`, `class` as strings,
+`append`, `remove` as booleans, `order` as integer). All other attributes
+pass through, because `view_helper` arguments are dynamic attribute names.
+
+Validate a layout update file with `xmllint`:
+
+````sh
+xmllint --noout --schema vendor/hummer2k/conlayout/xsd/layout.xsd \
+    src/App/view/layout/default.xml
+````
+
+In PhpStorm, map the schema in Settings, Languages & Frameworks, Schemas
+and DTDs: add a schema file entry with `layout.xsd`, no target namespace,
+and the scope of your layout directories.
+
+The schema intentionally rejects the legacy containers `<blocks>` and
+`<helpers>`. Files still using them fail validation until they are migrated
+to the typed elements (see section 5).
