@@ -9,6 +9,9 @@ use Laminas\View\Helper\ViewModel as ViewModelHelper;
 use Laminas\View\Model\ModelInterface;
 use Laminas\View\Renderer\PhpRenderer;
 
+/**
+ * @template-implements FilterInterface<mixed>
+ */
 readonly class ContainerFilter implements FilterInterface
 {
     public function __construct(
@@ -16,7 +19,7 @@ readonly class ContainerFilter implements FilterInterface
         private ViewModelHelper $viewModelHelper,
     ) {}
 
-    public function filter($value): mixed
+    public function filter(mixed $value): mixed
     {
         $viewModel = $this->viewModelHelper->getCurrent();
         if (!$viewModel instanceof ModelInterface) {
@@ -35,7 +38,7 @@ readonly class ContainerFilter implements FilterInterface
         if (str_contains($container, '<')) {
             $value = sprintf($container, $value);
         } else {
-            $values = (array) $viewModel->getVariables();
+            $values = $viewModel->getVariables();
             unset(
                 $values['blockId'],
                 $values['container'],
@@ -50,8 +53,12 @@ readonly class ContainerFilter implements FilterInterface
             );
             $templates = explode(',', $container);
             foreach ($templates as $template) {
+                $templateName = trim($template);
+                if ('' === $templateName) {
+                    continue;
+                }
                 $values['content'] = $value;
-                $value = $this->phpRenderer->render(trim($template), $values);
+                $value = $this->phpRenderer->render($templateName, $values);
             }
         }
 

@@ -7,6 +7,7 @@ namespace ConLayout\Block\Factory;
 use ConLayout\Exception\BadMethodCallException;
 use ConLayout\Exception\InvalidBlockException;
 use ConLayout\NamedParametersTrait;
+use Laminas\EventManager\EventManager;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\Stdlib\ArrayUtils;
@@ -42,13 +43,14 @@ final class BlockFactory implements
             $this->blockDefaults,
             $blockDefaults,
         );
+        $this->setEventManager(new EventManager());
     }
 
     public function createBlock(string $blockId, array $specs): ModelInterface
     {
         /* @var $block ModelInterface */
         $class = $this->getOption('class', $specs);
-        if ($this->blockManager->has($class)) {
+        if (null !== $this->blockManager && $this->blockManager->has($class)) {
             $block = $this->blockManager->get($class);
         } elseif (class_exists($class)) {
             $block = new $class();
@@ -92,14 +94,14 @@ final class BlockFactory implements
         $block->setAppend($this->toBool($this->getOption('append', $specs)));
         $block->setVariable('block', $block);
 
-        $results = $this->getEventManager()->trigger(
+        $results = $this->getEventManager()->triggerUntil(
+            fn(mixed $result): bool => $result instanceof ModelInterface,
             __FUNCTION__ . '.post',
             $this,
             [
                 'block' => $block,
                 'specs' => $specs,
             ],
-            fn($result) => $result instanceof ModelInterface,
         );
         if ($results->stopped()) {
             $block = $results->last();

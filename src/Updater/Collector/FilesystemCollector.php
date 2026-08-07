@@ -12,7 +12,7 @@ use Laminas\Stdlib\Glob;
 
 class FilesystemCollector implements CollectorInterface
 {
-    public const NAME = 'filesystem';
+    public const string NAME = 'filesystem';
 
     private array $collectedFiles = [];
 
@@ -39,6 +39,9 @@ class FilesystemCollector implements CollectorInterface
             }
             foreach ($configFiles as $configFile) {
                 $config = ConfigFactory::fromFile($configFile, true);
+                if (!$config instanceof Config) {
+                    $config = new Config($config, true);
+                }
                 if (null !== $this->xmlPreprocessor && str_ends_with($configFile, '.xml')) {
                     $config = $this->xmlPreprocessor->process($config);
                 }
@@ -52,14 +55,13 @@ class FilesystemCollector implements CollectorInterface
     private function getGlobPaths(string $handle, ?string $area = null): array
     {
         $globPaths = [];
-        $areas = [
+        $areas = array_unique([
             LayoutUpdaterInterface::AREA_GLOBAL,
             $area,
-        ];
-        $areas = array_unique($areas);
-        foreach ($areas as $area) {
-            if (isset($this->paths[$area ?? ''])) {
-                foreach ($this->paths[$area] as $basePath) {
+        ]);
+        foreach ($areas as $areaName) {
+            if (null !== $areaName && isset($this->paths[$areaName])) {
+                foreach ($this->paths[$areaName] as $basePath) {
                     $globPaths[] = sprintf(
                         '%s/%s.{%s}',
                         $basePath,
@@ -69,8 +71,7 @@ class FilesystemCollector implements CollectorInterface
                 }
             }
         }
-        $globPaths = array_unique($globPaths);
-        return $globPaths;
+        return array_unique($globPaths);
     }
 
     public function getCollectedFiles(): array

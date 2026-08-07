@@ -14,12 +14,13 @@ class DebugFilterFactory implements FactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,
-        $requestedName,
+        string $requestedName,
         ?array $options = null,
     ): DebugFilter|ContainerFilter {
-        return new $requestedName(
-            $container->get(PhpRenderer::class),
-            $container->get(HelperPluginManager::class)->get(ViewModelHelper::class),
-        );
+        $phpRenderer = $container->get(PhpRenderer::class);
+        $viewModelHelper = $container->get(HelperPluginManager::class)->get(ViewModelHelper::class);
+        return DebugFilter::class === $requestedName
+            ? new DebugFilter($viewModelHelper)
+            : new ContainerFilter($phpRenderer, $viewModelHelper);
     }
 }

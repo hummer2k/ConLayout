@@ -32,13 +32,13 @@ readonly class ToolbarData
     public function hasLayout(): bool
     {
         $root = $this->layoutManager->getRoot();
-        return $root instanceof ModelInterface && '' !== (string) $root->getTemplate();
+        return $root instanceof ModelInterface && '' !== $root->getTemplate();
     }
 
     public function getLayoutTemplate(): string
     {
         $root = $this->layoutManager->getRoot();
-        return $root instanceof ModelInterface ? (string) $root->getTemplate() : '';
+        return $root instanceof ModelInterface ? $root->getTemplate() : '';
     }
 
     public function getArea(): string
@@ -190,20 +190,23 @@ readonly class ToolbarData
 
         return [
             'id'         => $blockId,
-            'template'   => (string) $model->getTemplate(),
-            'captureTo' => (string) $model->captureTo(),
+            'template'   => $model->getTemplate(),
+            'captureTo' => $model->captureTo(),
             'order'      => $this->readMetadata($model, 'order'),
             'parentId'   => $this->readMetadata($model, 'parentId'),
             'before'     => $this->readMetadata($model, 'before'),
             'after'      => $this->readMetadata($model, 'after'),
             'container'  => $this->readMetadata($model, 'container'),
             'wrapper'    => $this->readMetadata($model, 'wrapper'),
-            'append'     => (bool) $model->isAppend(),
+            'append'     => $model->isAppend(),
             'anonymous'  => str_starts_with($blockId, 'anonymous.'),
             'children'   => $children,
         ];
     }
 
+    /**
+     * @param non-empty-string $name
+     */
     private function readMetadata(ModelInterface $model, string $name): mixed
     {
         $value = $model->getVariable($name);

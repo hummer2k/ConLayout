@@ -9,7 +9,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class BlockManagerFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): BlockManager
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): BlockManager
     {
         $config = $container->has('config') ? $container->get('config') : [];
         return new BlockManager($container, $config['blocks'] ?? []);

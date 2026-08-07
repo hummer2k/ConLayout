@@ -15,7 +15,7 @@ use Laminas\View\Model\ViewModel;
 
 readonly class PrepareMainContentMiddleware implements MiddlewareInterface
 {
-    public const CONTENT_TEMPLATE = 'con-layout::content';
+    public const string CONTENT_TEMPLATE = 'con-layout::content';
 
     public function __construct(private BlockRegistryInterface $blockRegistry) {}
 

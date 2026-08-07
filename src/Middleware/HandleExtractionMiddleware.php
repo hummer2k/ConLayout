@@ -17,13 +17,13 @@ use Throwable;
 
 readonly class HandleExtractionMiddleware implements MiddlewareInterface
 {
-    public const SEPARATOR = '/';
+    public const string SEPARATOR = '/';
 
-    public const ROUTE_NAME_SEPARATOR = '.';
+    public const string ROUTE_NAME_SEPARATOR = '.';
 
-    public const ERROR_HANDLE_ROUTE_NOT_FOUND = 'error-router-no-match';
+    public const string ERROR_HANDLE_ROUTE_NOT_FOUND = 'error-router-no-match';
 
-    public const ERROR_PRIORITY = 666;
+    public const int ERROR_PRIORITY = 666;
 
     private string $errorHandleAttribute;
 
@@ -98,6 +98,7 @@ readonly class HandleExtractionMiddleware implements MiddlewareInterface
 
     private function inflectName(string $name): string
     {
-        return strtolower((string) $this->inflector->filter($name));
+        $inflected = $this->inflector->filter($name);
+        return strtolower(is_array($inflected) ? '' : $inflected);
     }
 }

@@ -9,9 +9,9 @@ final class BeforeAfterComparison implements SorterInterface
     /**
      * @inheritDoc
      */
-    public function sort(array $arrayToSort): array
+    public function sort(array $data): array
     {
-        $configArray = $this->prepare($arrayToSort);
+        $configArray = $this->prepare($data);
         foreach ($configArray as $code => $data) {
             foreach ($data['before'] as $beforeCode) {
                 if (!isset($configArray[$beforeCode])) {

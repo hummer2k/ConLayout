@@ -87,9 +87,6 @@ readonly class LayoutMiddleware implements MiddlewareInterface
             }
 
             $capture = $child->captureTo();
-            if ('' === $capture) {
-                continue;
-            }
 
             $result = $this->renderTree($child, $root);
 

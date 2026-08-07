@@ -9,7 +9,7 @@ use Laminas\Config\Config;
 
 readonly class ConfigCollector implements CollectorInterface
 {
-    public const NAME = 'config';
+    public const string NAME = 'config';
 
     public function __construct(private array $config) {}
 

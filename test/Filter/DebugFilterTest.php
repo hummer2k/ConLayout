@@ -6,12 +6,8 @@ namespace ConLayoutTest\Filter;
 
 use ConLayout\Filter\DebugFilter;
 use ConLayoutTest\AbstractTestCase;
-use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Helper\ViewModel as ModelHelper;
-use Laminas\View\HelperPluginManager;
 use Laminas\View\Model\ViewModel;
-use Laminas\View\Renderer\PhpRenderer;
-use Laminas\View\Resolver\AggregateResolver;
 
 class DebugFilterTest extends AbstractTestCase
 {
@@ -23,13 +19,7 @@ class DebugFilterTest extends AbstractTestCase
         $viewModelHelper = new ModelHelper();
         $viewModelHelper->setCurrent($block);
 
-        $phpRenderer = new PhpRenderer(
-            new HelperPluginManager(new ServiceManager()),
-            new AggregateResolver(),
-            false,
-        );
-
-        $filter = new DebugFilter($phpRenderer, $viewModelHelper);
+        $filter = new DebugFilter($viewModelHelper);
 
         $html = '<div></div>';
         $filteredHtml = $filter->filter($html);

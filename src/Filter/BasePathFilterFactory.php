@@ -10,7 +10,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class BasePathFilterFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): BasePathFilter
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): BasePathFilter
     {
         $config = $container->has('config') ? $container->get('config') : [];
         $basePath = (string) ($config['con-layout']['base_path'] ?? '');

@@ -8,10 +8,14 @@ use Laminas\View\Model\ModelInterface;
 
 interface BlockRegistryInterface
 {
+    public function get(string $blockId): ModelInterface|false;
+
     /**
-     * @return ModelInterface[]|ModelInterface|false
+     * retrieve all blocks
+     *
+     * @return array<array-key, ModelInterface>
      */
-    public function get(?string $blockId = null): array|ModelInterface|false;
+    public function getAll(): array;
 
     public function add(string $blockId, ModelInterface $block): static;
 

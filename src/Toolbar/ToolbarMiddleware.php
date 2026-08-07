@@ -16,8 +16,11 @@ use function memory_get_peak_usage;
 
 readonly class ToolbarMiddleware implements MiddlewareInterface
 {
-    public const DEFAULT_TEMPLATE = 'con-layout::toolbar';
+    public const string DEFAULT_TEMPLATE = 'con-layout::toolbar';
 
+    /**
+     * @param non-empty-string $template
+     */
     public function __construct(
         private ToolbarData $toolbarData,
         private PhpRenderer $renderer,

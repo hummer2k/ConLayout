@@ -6,23 +6,22 @@ namespace ConLayout\Filter;
 
 use Laminas\Filter\FilterInterface;
 use Laminas\View\Helper\ViewModel as ViewModelHelper;
-use Laminas\View\Renderer\PhpRenderer;
 
+/**
+ * @template-implements FilterInterface<mixed>
+ */
 readonly class DebugFilter implements FilterInterface
 {
-    public function __construct(
-        private PhpRenderer $phpRenderer,
-        private ViewModelHelper $viewModelHelper,
-    ) {}
+    public function __construct(private ViewModelHelper $viewModelHelper) {}
 
     /**
      * @inheritDoc
      */
-    public function filter($value): mixed
+    public function filter(mixed $value): mixed
     {
         $viewModel = $this->viewModelHelper->getCurrent();
         $blockId = $viewModel?->getVariable('blockId');
-        if (!$blockId) {
+        if (null === $blockId || '' === $blockId) {
             return $value;
         }
 

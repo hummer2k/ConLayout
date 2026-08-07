@@ -11,7 +11,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class BlocksGeneratorFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): BlocksGenerator
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): BlocksGenerator
     {
         $blocksGenerator = new BlocksGenerator(
             $container->get(BlockFactoryInterface::class),

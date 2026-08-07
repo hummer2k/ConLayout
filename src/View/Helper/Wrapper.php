@@ -8,7 +8,7 @@ use Laminas\View\Helper\HtmlAttributes;
 
 class Wrapper
 {
-    public const DEFAULT_TAG = 'div';
+    public const string DEFAULT_TAG = 'div';
 
     protected string $tag = self::DEFAULT_TAG;
 
@@ -16,10 +16,14 @@ class Wrapper
 
     public function __invoke(?string $tag = null): static
     {
-        $this->tag = $tag ?: static::DEFAULT_TAG;
+        $this->tag = null !== $tag ? $tag : static::DEFAULT_TAG;
         return $this;
     }
 
+    /**
+     *
+     * @param array<string, array<array-key, mixed>|null|scalar> $attributes
+     */
     public function openTag(array $attributes = []): string
     {
         $htmlAttribs = '';

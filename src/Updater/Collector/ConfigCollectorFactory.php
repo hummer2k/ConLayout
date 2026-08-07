@@ -9,7 +9,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ConfigCollectorFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): ConfigCollector
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): ConfigCollector
     {
         $config = $container->get('config');
         $configStructure = isset($config['layout_updates'])

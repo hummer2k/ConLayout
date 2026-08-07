@@ -73,7 +73,7 @@ final class ViewHelperGenerator implements GeneratorInterface
                 if ($this->isRemoved($instruction)) {
                     continue;
                 }
-                $mergedInstruction = ArrayUtils::merge($config, (array) $instruction);
+                $mergedInstruction = ArrayUtils::merge($config, $instruction);
                 if ($this->isDebug() && isset($mergedInstruction['debug'])) {
                     $mergedInstruction[$mergedInstruction['debug']]['data-layout-id'] = $id;
                 }
@@ -140,7 +140,7 @@ final class ViewHelperGenerator implements GeneratorInterface
         if (!isset($item['remove'])) {
             return false;
         }
-        return (bool) filter_var($item['remove'], FILTER_VALIDATE_BOOLEAN);
+        return filter_var($item['remove'], FILTER_VALIDATE_BOOLEAN);
     }
 
     public function getSorter(): SorterInterface

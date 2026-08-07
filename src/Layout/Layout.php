@@ -7,6 +7,7 @@ namespace ConLayout\Layout;
 use ConLayout\Block\BlockRegistryInterface;
 use ConLayout\Generator\GeneratorInterface;
 use ConLayout\Updater\LayoutUpdaterInterface;
+use Laminas\EventManager\EventManager;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\Stdlib\PriorityList;
@@ -34,6 +35,7 @@ class Layout implements
         private readonly BlockRegistryInterface $blockRegistry,
     ) {
         $this->generators = new PriorityList();
+        $this->setEventManager(new EventManager());
     }
 
     /**
@@ -56,7 +58,7 @@ class Layout implements
     /**
      * inject blocks into the root view model
      *
-     * @return LayoutInterface
+     * @return static
      */
     public function load(): static
     {
@@ -85,7 +87,9 @@ class Layout implements
         $layoutStructure = $this->updater->getLayoutStructure();
         foreach ($this->generators as $name => $generator) {
             if (
-                !$this->isGeneratorLoaded($name)
+                $generator instanceof GeneratorInterface
+                && is_string($name)
+                && !$this->isGeneratorLoaded($name)
                 && (
                     empty($generators)
                     || isset($generators[$name])
@@ -110,7 +114,7 @@ class Layout implements
     {
         if (false === $this->blocksInjected) {
             $this->blockRegistry->sort();
-            $blocks = $this->blockRegistry->get();
+            $blocks = $this->blockRegistry->getAll();
             foreach ($blocks as $blockId => $block) {
                 if (
                     $this->isAllowed($blockId, $block)
@@ -149,7 +153,7 @@ class Layout implements
     /**
      * adds a block to the registry
      *
-     * @return  LayoutInterface
+     * @return static
      */
     public function addBlock(string $blockId, ModelInterface $block): static
     {
@@ -204,7 +208,7 @@ class Layout implements
      */
     public function getBlocks(): array
     {
-        return $this->blockRegistry->get();
+        return $this->blockRegistry->getAll();
     }
 
     /**

@@ -33,6 +33,9 @@ final readonly class BlocksGenerator implements GeneratorInterface
     private function generateBlocks(Config $blocks, ?Config $references = null, ?string $parentId = null): void
     {
         foreach ($blocks as $blockId => $specs) {
+            if (!is_string($blockId)) {
+                continue;
+            }
             if (null !== $references && $blockReference = $references->get($blockId)) {
                 $specs->merge($blockReference);
             }
@@ -60,7 +63,7 @@ final readonly class BlocksGenerator implements GeneratorInterface
     private function isRemoved(Config $specs): bool
     {
         if ($remove = $specs->get('remove')) {
-            return (bool) (filter_var($remove, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false);
+            return filter_var($remove, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false;
         }
         return false;
     }

@@ -10,7 +10,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ViewHelperGeneratorFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): ViewHelperGenerator
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): ViewHelperGenerator
     {
         /** @var ModuleOptions $options */
         $options             = $container->get(ModuleOptions::class);

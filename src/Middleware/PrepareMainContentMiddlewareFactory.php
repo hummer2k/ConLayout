@@ -12,7 +12,7 @@ class PrepareMainContentMiddlewareFactory implements FactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,
-        $requestedName,
+        string $requestedName,
         ?array $options = null,
     ): PrepareMainContentMiddleware {
         return new PrepareMainContentMiddleware(

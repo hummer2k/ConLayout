@@ -8,6 +8,9 @@ use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Stdlib\AbstractOptions;
 use Throwable;
 
+/**
+ * @template-extends AbstractOptions<mixed>
+ */
 class ModuleOptions extends AbstractOptions
 {
     protected bool $debug = false;
@@ -58,7 +61,7 @@ class ModuleOptions extends AbstractOptions
 
     public function getDefaultArea(): string
     {
-        if (!$this->defaultArea) {
+        if (null === $this->defaultArea) {
             $this->defaultArea = LayoutUpdaterInterface::AREA_DEFAULT;
         }
         return $this->defaultArea;

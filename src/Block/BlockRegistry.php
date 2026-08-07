@@ -28,14 +28,19 @@ final class BlockRegistry implements BlockRegistryInterface
     /**
      * @inheritDoc
      */
-    public function get(?string $blockId = null): array|ModelInterface|false
+    public function get(string $blockId): ModelInterface|false
     {
-        if (null === $blockId) {
-            return $this->blocks;
-        }
         return isset($this->blocks[$blockId])
             ? $this->blocks[$blockId]
             : false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAll(): array
+    {
+        return $this->blocks;
     }
 
     /**
@@ -125,7 +130,7 @@ final class BlockRegistry implements BlockRegistryInterface
      */
     private function resolveBeforeAfter(array $blocks): void
     {
-        foreach ($blocks as $blockId => $block) {
+        foreach ($blocks as $block) {
             if ($beforeBlockId = $block->getVariable('before')) {
                 if (isset($blocks[$beforeBlockId])) {
                     $block->setVariable('order', $blocks[$beforeBlockId]->getVariable('order', 0) - 1);

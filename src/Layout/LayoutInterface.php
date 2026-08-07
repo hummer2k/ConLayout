@@ -12,17 +12,17 @@ interface LayoutInterface
     /**
      * block id of root view model
      */
-    public const BLOCK_ID_ROOT = 'root';
+    public const string BLOCK_ID_ROOT = 'root';
 
     /**
      * block id of view model returned by controller
      */
-    public const BLOCK_ID_MAIN_CONTENT = 'main.content';
+    public const string BLOCK_ID_MAIN_CONTENT = 'main.content';
 
     /**
      * delimiter blockId::captureTo
      */
-    public const CAPTURE_TO_DELIMITER = '::';
+    public const string CAPTURE_TO_DELIMITER = '::';
 
     /**
      * retrieve single block by block id
@@ -30,6 +30,13 @@ interface LayoutInterface
      * @return false|ModelInterface
      */
     public function getBlock(string $blockId): ModelInterface|false;
+
+    /**
+     * retrieve the root view model
+     *
+     * @return false|ModelInterface
+     */
+    public function getRoot(): ModelInterface|false;
 
     /**
      * retrieve all blocks
@@ -40,12 +47,12 @@ interface LayoutInterface
 
     /**
      * add a single block
-     */
+          */
     public function addBlock(string $blockId, ModelInterface $block): static;
 
     /**
      * removes a single block
-     */
+          */
     public function removeBlock(string $blockId): static;
 
     /**
@@ -60,18 +67,18 @@ interface LayoutInterface
 
     /**
      * load the layout
-     */
+          */
     public function load(): static;
 
     /**
      * set root view model/layout
-     */
+          */
     public function setRoot(ModelInterface $root): static;
 
     public function attachGenerator(string $name, GeneratorInterface $generator, int $priority = 1): static;
 
     /**
      * removes a generator
-     */
+          */
     public function detachGenerator(string $name): static;
 }

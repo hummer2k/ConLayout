@@ -35,9 +35,6 @@
         "mezzio/mezzio": "^3.28",
         "mezzio/mezzio-laminasviewrenderer": "^3.0"
     },
-    "suggest": {
-        "laminas/laminas-i18n": "Translate filter support"
-    },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.95",
         "phpunit/phpunit": "^11.5",
@@ -56,6 +53,7 @@
     },
     "scripts": {
         "cs-check": "php-cs-fixer fix --dry-run --diff",
-        "cs-fix": "php-cs-fixer fix"
+        "cs-fix": "php-cs-fixer fix",
+        "psalm": "psalm"
     }
 }

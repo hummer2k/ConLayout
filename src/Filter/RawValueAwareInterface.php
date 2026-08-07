@@ -7,7 +7,7 @@ namespace ConLayout\Filter;
 interface RawValueAwareInterface
 {
     /**
-     * @var mixed $value raw value
+     * @param mixed $value raw value
      */
     public function setRawValue(mixed $value): void;
 }

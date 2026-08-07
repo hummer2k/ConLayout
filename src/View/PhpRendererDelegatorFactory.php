@@ -17,7 +17,7 @@ class PhpRendererDelegatorFactory implements DelegatorFactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,
-        $name,
+        string $name,
         callable $callback,
         ?array $options = null,
     ): PhpRenderer {
@@ -33,7 +33,7 @@ class PhpRendererDelegatorFactory implements DelegatorFactoryInterface
         $moduleOptions = $container->get(ModuleOptions::class);
         $renderer->setFilter(
             $moduleOptions->isDebug()
-                ? fn(string $value): string => (new DebugFilter($renderer, $viewModelHelper))
+                ? fn(string $value): string => (new DebugFilter($viewModelHelper))
                     ->filter($containerFilter->filter($value))
                 : fn(string $value): string => $containerFilter->filter($value),
         );

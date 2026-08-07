@@ -84,6 +84,9 @@ readonly class LayoutManager implements
         return $this;
     }
 
+    /**
+     * @return ($asObject is true ? array<int, HandleInterface> : array<int, string>)
+     */
     public function getHandles(bool $asObject = false): array
     {
         return $this->updater->getHandles($asObject);
@@ -101,7 +104,7 @@ readonly class LayoutManager implements
      */
     public function getBlocks(): array
     {
-        return $this->blockRegistry->get();
+        return $this->blockRegistry->getAll();
     }
 
     public function load(): static
@@ -138,7 +141,7 @@ readonly class LayoutManager implements
     /**
      * @inheritDoc
      */
-    public function attachGenerator($name, GeneratorInterface $generator, $priority = 1): static
+    public function attachGenerator(string $name, GeneratorInterface $generator, int $priority = 1): static
     {
         $this->layout->attachGenerator($name, $generator, $priority);
         return $this;
@@ -147,7 +150,7 @@ readonly class LayoutManager implements
     /**
      * @inheritDoc
      */
-    public function detachGenerator($name): static
+    public function detachGenerator(string $name): static
     {
         $this->layout->detachGenerator($name);
         return $this;

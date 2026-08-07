@@ -14,12 +14,12 @@ class BodyClassMiddlewareFactory implements FactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,
-        $requestedName,
+        string $requestedName,
         ?array $options = null,
     ): BodyClassMiddleware {
         /** @var HelperPluginManager $helperPluginManager */
         $helperPluginManager = $container->get('ViewHelperManager');
-        $bodyClassHelper = $helperPluginManager->get('bodyClass');
+        $bodyClassHelper = $helperPluginManager->get(BodyClass::class);
 
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $container->get(ModuleOptions::class);

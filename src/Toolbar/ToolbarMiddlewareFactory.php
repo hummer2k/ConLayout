@@ -16,7 +16,7 @@ class ToolbarMiddlewareFactory implements FactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,
-        $requestedName,
+        string $requestedName,
         ?array $options = null,
     ): ToolbarMiddleware {
         $config = $container->has('config') ? $container->get('config') : [];

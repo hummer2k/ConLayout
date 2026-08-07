@@ -9,10 +9,14 @@ use ConLayout\Handle\HandleInterface;
 use ConLayout\Updater\Collector\CollectorInterface;
 use ConLayout\Updater\Event\UpdateEvent;
 use Laminas\Config\Config;
+use Laminas\EventManager\EventManager;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\Stdlib\PriorityList;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 final class LayoutUpdater implements
     EventManagerAwareInterface,
     LayoutUpdaterInterface
@@ -26,7 +30,7 @@ final class LayoutUpdater implements
     private ?Config $layoutStructure = null;
 
     /**
-     * @var PriorityList|CollectorInterface[]
+     * @var PriorityList
      */
     private PriorityList $collectors;
 
@@ -45,11 +49,14 @@ final class LayoutUpdater implements
 
     /**
      * AbstractUpdater constructor.
+     *
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     public function __construct()
     {
         $this->addHandle(new Handle('default', -1));
         $this->collectors = new PriorityList();
+        $this->setEventManager(new EventManager());
     }
 
     /**
@@ -88,6 +95,8 @@ final class LayoutUpdater implements
 
     /**
      * {@inheritdoc}
+     *
+     * @return ($asObject is true ? array<int, HandleInterface> : array<int, string>)
      */
     public function getHandles(bool $asObject = false): array
     {
@@ -146,14 +155,14 @@ final class LayoutUpdater implements
             $event->setTarget($this);
 
             $results = $this->getEventManager()->triggerEventUntil(
-                fn($result) => $result instanceof Config,
+                fn(mixed $result): bool => $result instanceof Config,
                 $event,
             );
 
             if ($results->stopped()) {
                 $this->layoutStructure = $results->last();
             } else {
-                $this->fetchUpdates();
+                $this->fetchUpdates($this->layoutStructure);
                 $event->setName(UpdateEvent::EVENT_COLLECT_POST);
                 $this->getEventManager()->triggerEvent($event);
             }
@@ -163,24 +172,24 @@ final class LayoutUpdater implements
         return $this->layoutStructure;
     }
 
-    private function fetchUpdates(): void
+    private function fetchUpdates(Config $layoutStructure): void
     {
         $handles = $this->getHandles();
         foreach ($handles as $handle) {
-            $this->fetchHandle($handle);
+            $this->fetchHandle($handle, $layoutStructure);
         }
     }
 
-    private function fetchHandle(string $handle): void
+    private function fetchHandle(string $handle, Config $layoutStructure): void
     {
         foreach ($this->collectors->getIterator() as $collector) {
             $tempStructure = $collector->collect($handle, $this->getArea());
             if ($includes = $tempStructure->get(self::INSTRUCTION_INCLUDE)) {
                 foreach ($includes as $include) {
-                    $this->fetchHandle($include);
+                    $this->fetchHandle($include, $layoutStructure);
                 }
             }
-            $this->layoutStructure->merge($tempStructure);
+            $layoutStructure->merge($tempStructure);
         }
     }
 }

@@ -12,7 +12,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class LayoutFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Layout
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): Layout
     {
         $layout = new Layout(
             $container->get(LayoutUpdaterInterface::class),

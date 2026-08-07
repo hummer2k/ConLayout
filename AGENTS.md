@@ -8,7 +8,7 @@ Mezzio package implementing Magento-style layout blocks/handles. Distributed as 
 - `./vendor/bin/phpunit` runs the whole suite. Bootstrap (`test/Bootstrap.php`) boots a plain ServiceManager with the merged `ConLayout\ConfigProvider` + `Mezzio\LaminasView\ConfigProvider` config; `test/TestConfig.php.dist` is a Mezzio-style config fixture. `src/Sorter/` is excluded from the coverage whitelist.
 - `composer cs-check` (php-cs-fixer, dry-run) is the only lint gate; `composer cs-fix` applies fixes. Ruleset is `@PER-CS` (PER Coding Style, `https://www.php-fig.org/per/coding-style/`) configured in `.php-cs-fixer.dist.php`, scoped to `src/` and `test/`. CI also runs `phpunit --coverage-clover ./build/logs/clover.xml`.
 - `./vendor/bin/psalm` (vimeo/psalm 6.x, error level 1) runs static analysis; config is `psalm.xml`, scoped to `src/`.
-- Run order in CI: phpunit, then php-cs-fixer.
+- Run order in CI: phpunit, then php-cs-fixer, then psalm.
 
 ## Environment
 

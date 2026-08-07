@@ -27,3 +27,6 @@ jobs:
 
       - name: Run PHP-CS-Fixer
         run: composer cs-check
+
+      - name: Run Psalm
+        run: composer psalm

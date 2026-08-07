@@ -24,7 +24,7 @@ readonly class BodyClassMiddleware implements MiddlewareInterface
         if ($routeResult instanceof RouteResult && $routeResult->isSuccess()) {
             $routeName = (string) $routeResult->getMatchedRouteName();
             $className = $this->prefix . preg_replace('#[^a-z0-9-]+#i', '-', $routeName);
-            ($this->bodyClassHelper)(strtolower((string) $className));
+            ($this->bodyClassHelper)(strtolower($className));
         }
         return $handler->handle($request);
     }

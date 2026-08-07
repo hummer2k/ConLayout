@@ -10,7 +10,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class LayoutUpdaterFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): LayoutUpdater
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): LayoutUpdater
     {
         $updater = new LayoutUpdater();
         /** @var ModuleOptions $moduleOptions */

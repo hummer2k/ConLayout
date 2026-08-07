@@ -40,7 +40,7 @@ class BlockRegistryTest extends AbstractTestCase
 
         $this->blockRegistry->sort();
 
-        $this->assertSame($expectedOrder, array_keys($this->blockRegistry->get()));
+        $this->assertSame($expectedOrder, array_keys($this->blockRegistry->getAll()));
     }
 
     public function testAddBlockWithChildren(): void
@@ -53,7 +53,7 @@ class BlockRegistryTest extends AbstractTestCase
 
         $this->blockRegistry->add('my-block', $block1);
 
-        $this->assertCount(3, $this->blockRegistry->get());
+        $this->assertCount(3, $this->blockRegistry->getAll());
 
         $this->assertSame(
             $block2,
@@ -76,7 +76,7 @@ class BlockRegistryTest extends AbstractTestCase
 
         $this->blockRegistry->add('my-block', $block1);
 
-        $this->assertCount(3, $this->blockRegistry->get());
+        $this->assertCount(3, $this->blockRegistry->getAll());
 
         $this->assertSame(
             $block2,
@@ -91,7 +91,7 @@ class BlockRegistryTest extends AbstractTestCase
 
     public function testGetBlocks(): void
     {
-        $blocks = $this->blockRegistry->get();
+        $blocks = $this->blockRegistry->getAll();
 
         $this->assertIsArray($blocks);
     }
@@ -119,7 +119,7 @@ class BlockRegistryTest extends AbstractTestCase
         $this->blockRegistry->sort();
 
         $i = 1;
-        foreach (array_keys($this->blockRegistry->get()) as $blockId) {
+        foreach (array_keys($this->blockRegistry->getAll()) as $blockId) {
             $this->assertEquals($expectedOrder[$i], $blockId);
             $i++;
         }
@@ -143,7 +143,7 @@ class BlockRegistryTest extends AbstractTestCase
 
         $this->assertSame(
             ['block2', 'block1', 'my.parent.child2', 'my.parent.child1'],
-            array_keys($this->blockRegistry->get()),
+            array_keys($this->blockRegistry->getAll()),
         );
     }
 
@@ -163,7 +163,7 @@ class BlockRegistryTest extends AbstractTestCase
 
         $this->assertSame(
             ['block1', 'my.parent.child1', 'my.parent.child2'],
-            array_keys($this->blockRegistry->get()),
+            array_keys($this->blockRegistry->getAll()),
         );
     }
 
@@ -184,7 +184,7 @@ class BlockRegistryTest extends AbstractTestCase
 
         $this->assertSame(
             ['my.parent.child3', 'my.parent.child2', 'my.parent.child1'],
-            array_keys($this->blockRegistry->get()),
+            array_keys($this->blockRegistry->getAll()),
         );
     }
 
