@@ -27,14 +27,14 @@ interface LayoutInterface
     /**
      * retrieve single block by block id
      *
-     * @return false|ModelInterface
+     * @return ?ModelInterface
      */
     public function getBlock(string $blockId): ?ModelInterface;
 
     /**
      * retrieve the root view model
      *
-     * @return false|ModelInterface
+     * @return ?ModelInterface
      */
     public function getRoot(): ?ModelInterface;
 

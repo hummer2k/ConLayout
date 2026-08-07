@@ -170,7 +170,7 @@ class Layout implements
     /**
      * retrieve single block by its id
      *
-     * @return  false|ModelInterface
+     * @return ?ModelInterface
      */
     public function getBlock(string $blockId): ?ModelInterface
     {
