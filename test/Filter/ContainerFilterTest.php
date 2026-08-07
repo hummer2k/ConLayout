@@ -49,7 +49,7 @@ class ContainerFilterTest extends TestCase
 
     public function testContentIsWrappedWithString(): void
     {
-        $this->currentViewModel->setVariable('block_id', 'the.block');
+        $this->currentViewModel->setVariable('blockId', 'the.block');
         $this->currentViewModel->setVariable('container', '<div class="wrapper">%s</div>');
         $value = '<span class="my-content">lorem ipsum</span>';
 
@@ -61,7 +61,7 @@ class ContainerFilterTest extends TestCase
 
     public function testContentIsWrappedWithTemplate(): void
     {
-        $this->currentViewModel->setVariable('block_id', 'the.block');
+        $this->currentViewModel->setVariable('blockId', 'the.block');
         $this->currentViewModel->setVariable('container', 'container');
         $value = '<div class="header"><img src="logo.png"></div>';
 
@@ -73,7 +73,7 @@ class ContainerFilterTest extends TestCase
 
     public function testContentIsWrappedWithMultipleTemplates(): void
     {
-        $this->currentViewModel->setVariable('block_id', 'the.block');
+        $this->currentViewModel->setVariable('blockId', 'the.block');
         $this->currentViewModel->setVariable('container', 'container-2,container');
         $value = '<span>Lorem Ipsum</span>';
 

@@ -48,9 +48,9 @@ final readonly class BlocksGenerator implements GeneratorInterface
                 $block = $this->blockFactory->createBlock($blockId, $specs->toArray());
             }
             if (null !== $parentId) {
-                $block->setVariable('has_parent', true);
-                if (!$block->getVariable('parent')) {
-                    $block->setVariable('parent', $parentId);
+                $block->setVariable('hasParent', true);
+                if (!$block->getVariable('parentId')) {
+                    $block->setVariable('parentId', $parentId);
                 }
             }
             $this->blockRegistry->add($blockId, $block);

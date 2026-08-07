@@ -112,9 +112,9 @@ class BlocksGeneratorTest extends AbstractTestCase
         );
         $this->assertEquals(
             'some.block',
-            $child->getVariable('parent'),
+            $child->getVariable('parentId'),
         );
-        $this->assertTrue($child->getVariable('has_parent'));
+        $this->assertTrue($child->getVariable('hasParent'));
     }
 
     public function testConfigureBlockIfAlreadyInPool(): void

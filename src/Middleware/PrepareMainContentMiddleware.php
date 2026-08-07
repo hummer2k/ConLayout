@@ -26,7 +26,7 @@ readonly class PrepareMainContentMiddleware implements MiddlewareInterface
         if ($response instanceof ViewModelResponse) {
             $viewModel = $response->getViewModel();
             if ($viewModel->terminate()) {
-                $viewModel->setVariable('has_parent', null);
+                $viewModel->setVariable('hasParent', null);
             } else {
                 $this->blockRegistry->add(LayoutInterface::BLOCK_ID_MAIN_CONTENT, $viewModel);
             }

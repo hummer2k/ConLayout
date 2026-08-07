@@ -75,7 +75,7 @@ class ConfigProviderTest extends AbstractTestCase
 
         $block = new ViewModel();
         $block->setTemplate('con-layout::content');
-        $block->setVariable('block_id', 'test.block');
+        $block->setVariable('blockId', 'test.block');
         $block->setVariable('container', '<div class="wrapper">%s</div>');
         $block->setVariable('content', 'My content');
 
@@ -117,7 +117,7 @@ class ConfigProviderTest extends AbstractTestCase
         $block = new ViewModel();
         $block->setTemplate('con-layout::content');
         $block->setVariable('content', 'content');
-        $block->setVariable('block_id', 'test.block');
+        $block->setVariable('blockId', 'test.block');
         $block->setVariable('container', '<div class="wrapper">%s</div>');
         $viewModelHelper->setCurrent($block);
         $this->assertSame(

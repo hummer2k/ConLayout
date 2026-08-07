@@ -43,7 +43,7 @@ final class BlockRegistry implements BlockRegistryInterface
      */
     public function add(string $blockId, ModelInterface $block): static
     {
-        $block->setVariable('block_id', $blockId);
+        $block->setVariable('blockId', $blockId);
         if ($block->hasChildren()) {
             foreach ($block->getChildren() as $childBlock) {
                 $childBlockId = $this->determineAnonymousBlockId($childBlock);
@@ -110,8 +110,8 @@ final class BlockRegistry implements BlockRegistryInterface
 
     private function getParentId(ModelInterface $block): string
     {
-        if ($parent = $block->getVariable('parent')) {
-            return $parent;
+        if ($parentId = $block->getVariable('parentId')) {
+            return $parentId;
         }
         if (str_contains($block->captureTo(), LayoutInterface::CAPTURE_TO_DELIMITER)) {
             [$parent] = explode(LayoutInterface::CAPTURE_TO_DELIMITER, $block->captureTo());
@@ -141,14 +141,14 @@ final class BlockRegistry implements BlockRegistryInterface
 
     private function determineAnonymousBlockId(ModelInterface $block): string
     {
-        $blockId = $block->getVariable('block_id');
+        $blockId = $block->getVariable('blockId');
         if (!$blockId) {
             $blockId = sprintf(
                 self::ANONYMOUS_ID_PATTERN,
                 $block->captureTo(),
                 self::$anonymousSuffix++,
             );
-            $block->setVariable('block_id', $blockId);
+            $block->setVariable('blockId', $blockId);
         }
         return $blockId;
     }

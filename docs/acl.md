@@ -19,7 +19,7 @@ class AclBlockListener
 
     public function isAllowed(EventInterface $e): bool
     {
-        $resource = $e->getParam('block_id');
+        $resource = $e->getParam('blockId');
         $e->stopPropagation();
         return $this->acl->isAllowed('user', $resource);
     }
@@ -70,7 +70,7 @@ The event name is `isAllowed`. ConLayout triggers it on the event manager
 of the `Layout` instance during `injectBlocks()`. The event has these
 parameters:
 
-- `block_id`: The id of the block.
+- `blockId`: The id of the block.
 - `block`: The view model instance of the block.
 
 ConLayout allows the block when no listener stops the propagation. To deny

@@ -33,11 +33,11 @@ class ToolbarMiddlewareTest extends TestCase
     public function testInjectsToolbarIntoHtmlResponse(): void
     {
         $root = new ViewModel();
-        $root->setVariable('block_id', 'root');
+        $root->setVariable('blockId', 'root');
         $root->setTemplate('base');
 
         $header = new ViewModel();
-        $header->setVariable('block_id', 'header');
+        $header->setVariable('blockId', 'header');
         $header->setTemplate('layout::header');
         $header->setCaptureTo('header');
         $root->addChild($header);
@@ -101,7 +101,7 @@ class ToolbarMiddlewareTest extends TestCase
     public function testAppendsToolbarWhenNoBodyTag(): void
     {
         $root = new ViewModel();
-        $root->setVariable('block_id', 'root');
+        $root->setVariable('blockId', 'root');
         $root->setTemplate('base');
 
         $layoutManager = $this->createMock(LayoutManager::class);

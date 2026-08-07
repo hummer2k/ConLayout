@@ -69,7 +69,7 @@ class LayoutTest extends AbstractTestCase
     {
         $viewModel = new ViewModel();
         $viewModel->setCaptureTo('root::footer');
-        $viewModel->setVariable('parent', 'some.parent');
+        $viewModel->setVariable('parentId', 'some.parent');
 
         $layout = new TestLayout($this->updaterMock, $this->blockRegistry);
 
@@ -82,7 +82,7 @@ class LayoutTest extends AbstractTestCase
     public function testGetCaptureToDefault(): void
     {
         $viewModel = new ViewModel();
-        $viewModel->setVariable('parent', 'some.parent');
+        $viewModel->setVariable('parentId', 'some.parent');
 
         $layout = new TestLayout($this->updaterMock, $this->blockRegistry);
 
@@ -112,10 +112,10 @@ class LayoutTest extends AbstractTestCase
     {
         $parent = new ViewModel();
         $child  = new ViewModel();
-        $child->setVariable('block_id', 'child');
+        $child->setVariable('blockId', 'child');
 
         $child2 = new ViewModel();
-        $child2->setVariable('block_id', 'child2');
+        $child2->setVariable('blockId', 'child2');
         $child->addChild($child2);
 
         $parent->addChild($child);
@@ -127,19 +127,19 @@ class LayoutTest extends AbstractTestCase
 
         $this->assertSame(
             $parent,
-            $childBlock->getVariable('parent_block'),
+            $childBlock->getVariable('parent'),
         );
 
         $child2Block = $this->layout->getBlock('child2');
 
         $this->assertSame(
             $childBlock,
-            $child2Block->getVariable('parent_block'),
+            $child2Block->getVariable('parent'),
         );
 
         $this->assertSame(
             $parent,
-            $child2Block->getVariable('parent_block')->getVariable('parent_block'),
+            $child2Block->getVariable('parent')->getVariable('parent'),
         );
     }
 }

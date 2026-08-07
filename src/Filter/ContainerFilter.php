@@ -23,7 +23,7 @@ readonly class ContainerFilter implements FilterInterface
             return $value;
         }
 
-        if ($viewModel->getVariable('block_id') === null) {
+        if ($viewModel->getVariable('blockId') === null) {
             return $value;
         }
 
@@ -37,15 +37,15 @@ readonly class ContainerFilter implements FilterInterface
         } else {
             $values = (array) $viewModel->getVariables();
             unset(
-                $values['block_id'],
+                $values['blockId'],
                 $values['container'],
                 $values['wrapper'],
                 $values['parent'],
+                $values['parentId'],
                 $values['order'],
                 $values['before'],
                 $values['after'],
-                $values['has_parent'],
-                $values['parent_block'],
+                $values['hasParent'],
                 $values['tag'],
             );
             $templates = explode(',', $container);

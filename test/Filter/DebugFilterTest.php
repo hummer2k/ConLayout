@@ -18,7 +18,7 @@ class DebugFilterTest extends AbstractTestCase
     public function testMarkupContainsCommentsWithDebugInfo(): void
     {
         $block = new ViewModel();
-        $block->setVariable('block_id', 'the.block');
+        $block->setVariable('blockId', 'the.block');
 
         $viewModelHelper = new ModelHelper();
         $viewModelHelper->setCurrent($block);

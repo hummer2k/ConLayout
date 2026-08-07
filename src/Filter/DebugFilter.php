@@ -21,7 +21,7 @@ readonly class DebugFilter implements FilterInterface
     public function filter($value): mixed
     {
         $viewModel = $this->viewModelHelper->getCurrent();
-        $blockId = $viewModel?->getVariable('block_id');
+        $blockId = $viewModel?->getVariable('blockId');
         if (!$blockId) {
             return $value;
         }

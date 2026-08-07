@@ -46,8 +46,8 @@ class BlockRegistryTest extends AbstractTestCase
     public function testAddBlockWithChildren(): void
     {
         $block1 = new ViewModel();
-        $block2 = $this->createBlock(['block_id' => 'child1']);
-        $block3 = $this->createBlock(['block_id' => 'child2']);
+        $block2 = $this->createBlock(['blockId' => 'child1']);
+        $block3 = $this->createBlock(['blockId' => 'child2']);
         $block1->addChild($block2);
         $block1->addChild($block3);
 
@@ -69,8 +69,8 @@ class BlockRegistryTest extends AbstractTestCase
     public function testAddBlockWithChildChildren(): void
     {
         $block1 = new ViewModel();
-        $block2 = $this->createBlock(['block_id' => 'child1']);
-        $block3 = $this->createBlock(['block_id' => 'child2']);
+        $block2 = $this->createBlock(['blockId' => 'child1']);
+        $block3 = $this->createBlock(['blockId' => 'child2']);
         $block1->addChild($block2);
         $block2->addChild($block3);
 
@@ -221,7 +221,7 @@ class BlockRegistryTest extends AbstractTestCase
 
         $this->assertEquals(
             'anonymous.content.1',
-            $child->getVariable('block_id'),
+            $child->getVariable('blockId'),
         );
     }
 
