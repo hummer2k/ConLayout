@@ -30,9 +30,7 @@ final class BlockRegistry implements BlockRegistryInterface
      */
     public function get(string $blockId): ModelInterface|false
     {
-        return isset($this->blocks[$blockId])
-            ? $this->blocks[$blockId]
-            : false;
+        return $this->blocks[$blockId] ?? false;
     }
 
     /**

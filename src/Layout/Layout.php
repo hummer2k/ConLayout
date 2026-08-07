@@ -19,15 +19,14 @@ class Layout implements
 {
     use EventManagerAwareTrait;
 
+    protected mixed $eventIdentifier = null;
+
     protected bool $blocksInjected = false;
 
     protected PriorityList $generators;
 
     protected array $loadedGenerators = [];
 
-    /**
-     * flag if layout has been loaded
-     */
     protected bool $isLoaded = false;
 
     public function __construct(
@@ -38,28 +37,17 @@ class Layout implements
         $this->setEventManager(new EventManager());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoot(): ModelInterface|false
     {
         return $this->getBlock(self::BLOCK_ID_ROOT);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setRoot(ModelInterface $root): static
     {
         $this->blockRegistry->add(self::BLOCK_ID_ROOT, $root);
         return $this;
     }
 
-    /**
-     * inject blocks into the root view model
-     *
-     * @return static
-     */
     public function load(): static
     {
         if (false === $this->isLoaded) {
@@ -107,9 +95,6 @@ class Layout implements
         return isset($this->loadedGenerators[$name]);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function injectBlocks(): void
     {
         if (false === $this->blocksInjected) {
@@ -131,9 +116,6 @@ class Layout implements
         }
     }
 
-    /**
-     * Determines whether a block should be allowed given certain parameters
-     */
     private function isAllowed(string $blockId, ModelInterface $block): bool
     {
         $result = $this->getEventManager()->trigger(
@@ -150,20 +132,12 @@ class Layout implements
         return true;
     }
 
-    /**
-     * adds a block to the registry
-     *
-     * @return static
-     */
     public function addBlock(string $blockId, ModelInterface $block): static
     {
         $this->blockRegistry->add($blockId, $block);
         return $this;
     }
 
-    /**
-     * removes a single block from block registry
-     */
     public function removeBlock(string $blockId): static
     {
         $this->blockRegistry->remove($blockId);

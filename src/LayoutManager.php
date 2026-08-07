@@ -23,10 +23,6 @@ readonly class LayoutManager implements
         private BlockRegistryInterface $blockRegistry,
     ) {}
 
-    /**
-     *
-     * @return false|ModelInterface
-     */
     public function getBlock(string $blockId): ModelInterface|false
     {
         return $this->blockRegistry->get($blockId);
@@ -44,35 +40,23 @@ readonly class LayoutManager implements
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getLayoutStructure(): Config
     {
         return $this->updater->getLayoutStructure();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addHandle(HandleInterface $handle): static
     {
         $this->updater->addHandle($handle);
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setArea(string $area): static
     {
         $this->updater->setArea($area);
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getArea(): string
     {
         return $this->updater->getArea();
@@ -84,9 +68,6 @@ readonly class LayoutManager implements
         return $this;
     }
 
-    /**
-     * @return ($asObject is true ? array<int, HandleInterface> : array<int, string>)
-     */
     public function getHandles(bool $asObject = false): array
     {
         return $this->updater->getHandles($asObject);
@@ -98,10 +79,6 @@ readonly class LayoutManager implements
         return $this;
     }
 
-    /**
-     *
-     * @return ModelInterface[]
-     */
     public function getBlocks(): array
     {
         return $this->blockRegistry->getAll();
@@ -113,52 +90,34 @@ readonly class LayoutManager implements
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoot(): ModelInterface|false
     {
         return $this->layout->getRoot();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setRoot(ModelInterface $root): static
     {
         $this->layout->setRoot($root);
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function injectBlocks(): void
     {
         $this->layout->injectBlocks();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function attachGenerator(string $name, GeneratorInterface $generator, int $priority = 1): static
     {
         $this->layout->attachGenerator($name, $generator, $priority);
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function detachGenerator(string $name): static
     {
         $this->layout->detachGenerator($name);
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function generate(array $generators = []): static
     {
         $this->layout->generate($generators);

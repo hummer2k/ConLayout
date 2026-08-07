@@ -52,7 +52,7 @@ readonly class ToolbarMiddleware implements MiddlewareInterface
             'structure'      => $this->toolbarData->getStructureSummary(),
             'helpers'        => $this->toolbarData->getHelpers(),
             'options'        => $this->toolbarData->getModuleOptions(),
-            'duration'       => round($duration * 1000, 2),
+            'duration'       => round($duration * 1000.0, 2),
             'memory'         => memory_get_peak_usage(true),
         ]);
 

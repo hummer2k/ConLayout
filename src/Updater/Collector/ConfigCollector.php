@@ -13,9 +13,6 @@ readonly class ConfigCollector implements CollectorInterface
 
     public function __construct(private array $config) {}
 
-    /**
-     * @inheritDoc
-     */
     public function collect(string $handle, ?string $area = null): Config
     {
         $areas = [
@@ -24,6 +21,9 @@ readonly class ConfigCollector implements CollectorInterface
         ];
         $structure = new Config([], true);
         foreach ($areas as $area) {
+            if (null === $area) {
+                continue;
+            }
             $config = isset($this->config[$area][$handle])
                 ? (array) $this->config[$area][$handle]
                 : [];

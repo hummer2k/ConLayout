@@ -22,6 +22,8 @@ final class BlockFactory implements
     use EventManagerAwareTrait;
     use NamedParametersTrait;
 
+    protected mixed $eventIdentifier = null;
+
     /**
      *
      * @var array
@@ -111,9 +113,7 @@ final class BlockFactory implements
 
     private function getOption(string $name, array $specs): mixed
     {
-        return isset($specs[$name])
-            ? $specs[$name]
-            : $this->blockDefaults[$name];
+        return $specs[$name] ?? $this->blockDefaults[$name];
     }
 
     private function toBool(mixed $value): bool

@@ -28,11 +28,10 @@ class ConfigProvider
     public function getDependencies(): array
     {
         $dependencies = include __DIR__ . '/../config/service.config.php';
-        $dependencies = array_merge_recursive(
+        return array_merge_recursive(
             $dependencies,
             include __DIR__ . '/../config/filter.config.php',
         );
-        return $dependencies;
     }
 
     public function getBlockConfig(): array

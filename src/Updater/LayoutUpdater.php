@@ -23,6 +23,8 @@ final class LayoutUpdater implements
 {
     use EventManagerAwareTrait;
 
+    protected mixed $eventIdentifier = null;
+
     /**
      *
      * @var Config|null

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ConLayout\Updater\Event;
 
+use ArrayAccess;
 use ConLayout\Updater\LayoutUpdaterInterface;
 use Laminas\Config\Config;
 use Laminas\EventManager\Event;
