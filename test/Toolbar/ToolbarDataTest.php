@@ -29,7 +29,7 @@ class ToolbarDataTest extends TestCase
     public function testNoLayoutWithoutRoot(): void
     {
         $layoutManager = $this->createMock(LayoutManager::class);
-        $layoutManager->method('getRoot')->willReturn(false);
+        $layoutManager->method('getRoot')->willReturn(null);
 
         $data = new ToolbarData($layoutManager);
 

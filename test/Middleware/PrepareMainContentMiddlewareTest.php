@@ -49,7 +49,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
 
         $this->assertFalse($viewModel->isAppend());
         $this->assertNull($viewModel->getVariable('hasParent'));
-        $this->assertFalse($this->blockRegistry->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
+        $this->assertNull($this->blockRegistry->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
     }
 
     public function testCaptureHtmlResponseBody(): void
@@ -69,7 +69,7 @@ class PrepareMainContentMiddlewareTest extends AbstractTestCase
 
         $this->middleware->process(new ServerRequest(), $handler);
 
-        $this->assertFalse($this->blockRegistry->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
+        $this->assertNull($this->blockRegistry->get(LayoutInterface::BLOCK_ID_MAIN_CONTENT));
     }
 
     protected function getHandler(ResponseInterface $response): RequestHandlerInterface

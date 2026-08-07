@@ -90,7 +90,7 @@ class BlocksGeneratorTest extends AbstractTestCase
             ModelInterface::class,
             $this->blockRegistry->get('another.block'),
         );
-        $this->assertFalse($this->blockRegistry->get('some.block'));
+        $this->assertNull($this->blockRegistry->get('some.block'));
     }
 
     public function testCreateChildren(): void

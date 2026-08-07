@@ -162,7 +162,7 @@ class ToolbarMiddlewareTest extends TestCase
     public function testSkipsWhenNoLayoutRendered(): void
     {
         $layoutManager = $this->createMock(LayoutManager::class);
-        $layoutManager->method('getRoot')->willReturn(false);
+        $layoutManager->method('getRoot')->willReturn(null);
 
         $middleware = new ToolbarMiddleware(
             new ToolbarData($layoutManager),

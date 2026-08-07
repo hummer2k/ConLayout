@@ -28,9 +28,9 @@ final class BlockRegistry implements BlockRegistryInterface
     /**
      * @inheritDoc
      */
-    public function get(string $blockId): ModelInterface|false
+    public function get(string $blockId): ?ModelInterface
     {
-        return $this->blocks[$blockId] ?? false;
+        return $this->blocks[$blockId] ?? null;
     }
 
     /**

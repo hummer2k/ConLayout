@@ -11,8 +11,8 @@ readonly class Block
 {
     public function __construct(private BlockRegistryInterface $blockRegistry) {}
 
-    public function __invoke(?string $blockId): ModelInterface|false
+    public function __invoke(?string $blockId): ?ModelInterface
     {
-        return null !== $blockId ? $this->blockRegistry->get($blockId) : false;
+        return null !== $blockId ? $this->blockRegistry->get($blockId) : null;
     }
 }

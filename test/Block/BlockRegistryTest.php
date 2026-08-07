@@ -196,7 +196,7 @@ class BlockRegistryTest extends AbstractTestCase
 
         $this->blockRegistry->remove('some-block');
 
-        $this->assertFalse($this->blockRegistry->get('some-block'));
+        $this->assertNull($this->blockRegistry->get('some-block'));
     }
 
     public function testGetRemovedBlocks(): void

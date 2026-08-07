@@ -23,7 +23,7 @@ readonly class LayoutManager implements
         private BlockRegistryInterface $blockRegistry,
     ) {}
 
-    public function getBlock(string $blockId): ModelInterface|false
+    public function getBlock(string $blockId): ?ModelInterface
     {
         return $this->blockRegistry->get($blockId);
     }
@@ -90,7 +90,7 @@ readonly class LayoutManager implements
         return $this;
     }
 
-    public function getRoot(): ModelInterface|false
+    public function getRoot(): ?ModelInterface
     {
         return $this->layout->getRoot();
     }

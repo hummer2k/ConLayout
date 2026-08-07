@@ -8,7 +8,7 @@ use Laminas\View\Model\ModelInterface;
 
 interface BlockRegistryInterface
 {
-    public function get(string $blockId): ModelInterface|false;
+    public function get(string $blockId): ?ModelInterface;
 
     /**
      * retrieve all blocks

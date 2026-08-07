@@ -63,7 +63,7 @@ class LayoutManagerTest extends AbstractTestCase
         $block = $this->layoutManager->getBlock('test-block');
         $this->assertInstanceOf(ModelInterface::class, $block);
 
-        $this->assertFalse($this->layoutManager->getBlock('___NOT_EXISTS___'));
+        $this->assertNull($this->layoutManager->getBlock('___NOT_EXISTS___'));
     }
 
     public function testAddHandle(): void
@@ -105,7 +105,7 @@ class LayoutManagerTest extends AbstractTestCase
         $testBlock = $this->layoutManager->getBlock('test-block');
         $this->assertInstanceOf(ModelInterface::class, $testBlock);
         $this->layoutManager->removeBlock('test-block');
-        $this->assertFalse($this->layoutManager->getBlock('test-block'));
+        $this->assertNull($this->layoutManager->getBlock('test-block'));
     }
 
     public function testAddBlock(): void

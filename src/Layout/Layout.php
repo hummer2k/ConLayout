@@ -37,7 +37,7 @@ class Layout implements
         $this->setEventManager(new EventManager());
     }
 
-    public function getRoot(): ModelInterface|false
+    public function getRoot(): ?ModelInterface
     {
         return $this->getBlock(self::BLOCK_ID_ROOT);
     }
@@ -172,7 +172,7 @@ class Layout implements
      *
      * @return  false|ModelInterface
      */
-    public function getBlock(string $blockId): ModelInterface|false
+    public function getBlock(string $blockId): ?ModelInterface
     {
         return $this->blockRegistry->get($blockId);
     }
