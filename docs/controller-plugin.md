@@ -8,7 +8,7 @@ instead. You can get the facade with:
 - the `layout()` view helper,
 - the `ConLayout\LayoutManager` service.
 
-````php
+```php
 <?php
 namespace App\Handler;
 
@@ -45,11 +45,11 @@ class IndexHandler implements RequestHandlerInterface
         // ...
     }
 }
-````
+```
 
 In view scripts, use the `layout()` view helper to get the facade:
 
-````php
+```php
 <?php
 /* @var $layoutManager \ConLayout\LayoutManager */
 $layoutManager = $this->layout();

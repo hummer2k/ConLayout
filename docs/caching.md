@@ -6,7 +6,7 @@ Listen to the `UpdateEvent::EVENT_COLLECT` and `UpdateEvent::EVENT_COLLECT_POST`
 
 ### Example with Laminas\Cache:
 
-````php
+```php
 <?php
 
 namespace App\Listener;
@@ -63,12 +63,12 @@ class LayoutStructureCacheListener extends AbstractListenerAggregate
         $this->cache->setItem($cacheKey, $layoutStructure);
     }
 }
-````
+```
 
 Attach the listener to the event manager of the layout updater. Use a
 delegator factory for the `ConLayout\Updater\LayoutUpdaterInterface` service:
 
-````php
+```php
 <?php
 namespace App\Factory;
 
@@ -111,4 +111,4 @@ you must clear the affected cache items yourself.
 
 The cache key must contain all values that select the structure. The
 example above uses the handles and the area. Do not use the same cache key
-for different areas.`
+for different areas.

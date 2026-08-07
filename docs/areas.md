@@ -40,7 +40,7 @@ return [
 You can determine the area with a small middleware. The middleware uses the
 matched route name:
 
-````php
+```php
 <?php
 
 namespace App\Middleware;
