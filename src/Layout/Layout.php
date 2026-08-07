@@ -119,7 +119,7 @@ class Layout implements
                     [$parent, $captureTo] = $this->getCaptureTo($block);
                     if ($parentBlock = $this->getBlock($parent)) {
                         $parentBlock->addChild($block, $captureTo);
-                        $block->setVariable('parent_block', $parentBlock);
+                        $block->setVariable('parent', $parentBlock);
                     }
                 }
             }
@@ -136,7 +136,7 @@ class Layout implements
             __FUNCTION__,
             $this,
             [
-                'block_id' => $blockId,
+                'blockId' => $blockId,
                 'block' => $block,
             ],
         );
@@ -167,13 +167,13 @@ class Layout implements
     }
 
     /**
-     * retrieve parent and capture_to as array, e.g.: [ 'layout', 'content' ]
-     * so we are able to list() block_id and capture_to values
+     * retrieve parent and captureTo as array, e.g.: [ 'layout', 'content' ]
+     * so we are able to list() blockId and captureTo values
      */
     protected function getCaptureTo(ModelInterface $block): array
     {
         $captureTo = $block->captureTo();
-        if ($parent = $block->getVariable('parent')) {
+        if ($parent = $block->getVariable('parentId')) {
             $captureTo = explode(self::CAPTURE_TO_DELIMITER, $captureTo);
             return [
                 $parent,

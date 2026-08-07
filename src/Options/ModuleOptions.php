@@ -33,6 +33,8 @@ class ModuleOptions extends AbstractOptions
 
     protected array $collectors = [];
 
+    protected array $xmlPreprocessor = [];
+
     protected string $bodyClassPrefix = '';
 
     protected bool $enabled = true;
@@ -167,6 +169,17 @@ class ModuleOptions extends AbstractOptions
     public function getBodyClassPrefix(): string
     {
         return $this->bodyClassPrefix;
+    }
+
+    public function getXmlPreprocessor(): array
+    {
+        return $this->xmlPreprocessor;
+    }
+
+    public function setXmlPreprocessor(array $xmlPreprocessor): static
+    {
+        $this->xmlPreprocessor = $xmlPreprocessor;
+        return $this;
     }
 
     public function setBodyClassPrefix(string $bodyClassPrefix): void

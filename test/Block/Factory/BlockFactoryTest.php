@@ -33,7 +33,7 @@ class BlockFactoryTest extends AbstractTestCase
             ],
             'template' => 'path/to/template',
             'append' => false,
-            'capture_to' => 'sidebarLeft',
+            'captureTo' => 'sidebarLeft',
             'actions' => [
                 'my-option' => [
                     'method' => 'setVariable',
@@ -75,7 +75,7 @@ class BlockFactoryTest extends AbstractTestCase
 
         $block = $this->factory->createBlock('test-block', $specs);
 
-        $this->assertEquals('test-block', $block->getVariable('block_id'));
+        $this->assertEquals('test-block', $block->getVariable('blockId'));
     }
 
     public function testBlockFromBlockManager(): void

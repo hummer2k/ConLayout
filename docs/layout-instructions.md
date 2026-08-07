@@ -1,11 +1,8 @@
 # Layout instructions
 
-There are four layout instructions:
-
-1. [`blocks`](#1-blocks)
-2. [`helpers`](#2-helpers)
-3. [`include`](#3-include)
-4. [`reference`](#4-reference)
+Layout updates are XML files. Each file uses typed elements inside a `page`
+or `layout` root element. The XML Schema `xsd/layout.xsd` validates the
+dialect, see [XSD validation](#xsd-validation).
 
 ## How ConLayout finds the layout updates
 
@@ -43,11 +40,10 @@ You can add and remove handles in your code. Use `addHandle()` and
 
 The layout update files are merged in the order of the handle priorities.
 A file of a later handle can override a file of an earlier handle. Use the
-`reference` instruction to change a block that an earlier file defined.
+`reference` element to change a block that an earlier file defined.
 
-The files of an `include` instruction are merged before the file that
-contains the instruction. So the including file can override the included
-files.
+The files of an `include` element are merged before the file that contains
+the element. So the including file can override the included files.
 
 ConLayout reads the `layout_updates` config before it reads the files from
 `layout_update_paths`. So the files can override the config.
@@ -60,7 +56,7 @@ The `block_defaults` option defines the default values for all blocks:
 return [
     'con-layout' => [
         'block_defaults' => [
-            'capture_to' => 'content',
+            'captureTo' => 'content',
             'append'     => true,
             'class'      => Laminas\View\Model\ViewModel::class,
             'variables'  => [],
@@ -73,185 +69,93 @@ return [
 
 You can override the defaults for a single block in the block definition.
 
-
-## 1. `blocks`
+## `block`
 
 Add blocks to the layout:
 
-````php
-<?php
-// layout update file e.g. default.php
-return [
-    'blocks' => [
-        /**
-         * unique block id
-         * can be referenced within the layout model by
-         * ConLayout\Layout\Layout::getBlock('my.unique.block.id');
-         */
-        'my.unique.block.id' => [
-            /**
-             * Can be Laminas\View\Model\ViewModel (default) or any class
-             * implementing Laminas\View\Model\ModelInterface, instantiable
-             * without constructor arguments
-             */
-            'class' => 'Application\Block\SomeWidget',
-            /**
-             * template only optional when already declared in block class
-             */
-            'template' => 'path/to/template',
-            /**
-             * where should this block be displayed?
-             * syntax: <block-id>::<capture_to>
-             * if no "::"-delimiter found it will be added as a child of root
-             *
-             * In this case the block will be added as a child of the block with
-             * id 'footer' and captured to the 'content' variable in the footer 
-             * template
-             */
-            'capture_to' => 'footer::content',
-            /**
-             * default: true
-             */
-            'append' => true,
-            /**
-             * set variables for this block that can be accessed with $this->var1,
-             * $this->var2 in the template
-             *
-             * insertion metadata like the parent block and the sort order are
-             * regular variables too, see "Sort order" below
-             */
-            'variables' => [
-                'var1' => 'Hello',
-                'var2' => 'World',
-                'parent' => 'footer',
-                'order' => -10,
-                // insert this block
-                'before' => 'some.other.block',
-                // or
-                'after' => 'some.other.block'
-            ],
-            /**
-             * remove this block
-             */
-            'remove' => true,
-            /**
-             * perform some actions on the block class/method calls
-             */
-            'actions'   => [
-                'my-action' => [
-                    'method' => 'someMethod',
-                    'param1' => 'Value param1',
-                    'param3' => 'Value param3',
-                    'param2' => 'Value param2'
-                ]
-            ]
-        ]
-    ]
-];
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <block id="header" template="app::layout/header" />
+    <block id="footer" template="app::layout/footer" />
+</page>
 ````
+
+The `id` attribute is required and becomes the block id. All other
+attributes become the block definition:
+
+- `class` - the block view model class. Can be
+  `Laminas\View\Model\ViewModel` (default) or any class implementing
+  `Laminas\View\Model\ModelInterface`, instantiable without constructor
+  arguments.
+- `template` - the template name; optional when already declared in the
+  block class.
+- `captureTo` - where should this block be displayed? Syntax:
+  `<block-id>::<captureTo>`. If no `::` delimiter is found, the block is
+  added as a child of `root`. For example, `captureTo="footer::content"`
+  adds the block as a child of the block with id `footer` and captures it
+  to the `content` variable in the footer template.
+- `append` - default `true`.
+- `remove` - remove a block that an earlier file defined.
+- `order`, `parentId`, `before`, `after` - insertion metadata. ConLayout
+  moves them into the block `variables` automatically, see
+  [Sort order](#sort-order).
+- any other attribute passes through as a block variable.
+
+### Children
+
+Blocks can be nested: a nested `<block>` becomes a child block and gets its
+`parentId` variable set automatically:
 
 ````xml
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <blocks>
-        <!--
-         * unique block id
-         * can be referenced within the layout model by
-         * ConLayout\Layout\Layout::getBlock('my.unique.block.id');
-         -->
-        <my.unique.block.id>
-            <!--
-             * Can be Laminas\View\Model\ViewModel (default) or any class
-             * implementing Laminas\View\Model\ModelInterface, instantiable
-             * without constructor arguments
-            -->
-            <class>Application\Block\SomeWidget</class>
-            <!--
-             * template only optional when already declared in block class
-            -->
-            <template>path/to/template</template>
-            <!--
-             * where should this block be displayed?
-             * syntax: <block-id>::<capture_to>
-             * if no "::"-delimiter found it will be added as a child of root
-             *
-             * In this case the block will be added as a child of the block with
-             * id 'footer' and captured to the 'content' variable in the footer 
-             * template
-            -->
-            <capture_to>footer::content</capture_to>
-            <!--
-             * default: true
-            -->
-            <append>0</append>
-            <!--
-             * set variables for this block that can be accessed with $this->var1,
-             * $this->var2 in the template
-             *
-             * insertion metadata like the parent block and the sort order are
-             * regular variables too, see "Sort order" below
-            -->
-            <variables>
-                <var1>Hello</var1>
-                <var2>World</var2>
-                <order>-10</order>
-                <!-- insert this block-->
-                <before>some.other.block</before>
-                <!-- or -->
-                <after>some.other.block</after>
-            </variables>
-            <!--
-             * wraps a block with another template
-             *
-             * if false, wrapper will be disabled: 'wrapper' => false,
-             *
-             * defaults: tag: 'div', 'template: 'blocks/wrapper'
-            -->          
-            <wrapper>
-                <template>blocks/wrapper</template>
-                <class>col-xs-12</class>
-                <tag>div</tag>
-            </wrapper>
-            <!--
-             * remove this block
-            -->
-            <remove>1</remove>
-            <!--
-             * perform some actions on the block class/method calls
-            -->
-            <actions>
-                <my-action>
-                    <method>someMethod</method>
-                    <param1>Value param1</param1>
-                    <param3>Value param3</param3>
-                    <param2>Value param2</param2>
-                </my-action>
-            </actions>
-       </my.unique.block.id>
-    </blocks>
+    <block id="root" template="base">
+        <block id="header" template="app::layout/header">
+            <block id="main.nav" template="app::layout/navigation" />
+        </block>
+        <block id="main.content" />
+    </block>
 </page>
 ````
 
-Note: Use XML attributes when possible. This reduces overhead:
+- `<variables>` - set variables for this block that can be accessed with
+  `$this->var1`, `$this->var2` in the template. Insertion metadata like the
+  parent block and the sort order are regular variables too, see
+  [Sort order](#sort-order) below.
 
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <blocks>
-        <my.unique.block.id class="Application\Block\SomeWidget" template="path/to/template">
-            <actions>
-                <my-action method="someMethod" param1="Value param1" param3="Value param3" param2="Value param2" />
-            </actions>
-        </my.unique.block.id>
-    </blocks>
-</page>
-````
+  ````xml
+  <variables>
+      <var1>Hello</var1>
+      <var2>World</var2>
+  </variables>
+  ````
+
+- `<actions>` - perform some actions on the block class/method calls:
+
+  ````xml
+  <actions>
+      <my-action method="someMethod" param1="Value param1" param3="Value param3" param2="Value param2" />
+  </actions>
+  ````
+
+- `<wrapper>` - wraps a block with another template. Use `wrapper="false"`
+  to disable the wrapper. Defaults: `tag` `div`, `template`
+  `blocks/wrapper`.
+
+  ````xml
+  <wrapper>
+      <template>blocks/wrapper</template>
+      <class>col-xs-12</class>
+      <tag>div</tag>
+  </wrapper>
+  ````
 
 ### Sort order
 
 ConLayout renders the blocks in the order of their `order` variable. Blocks
 with the same order keep the sequence of their insertion. Set the variable
-via the `variables` key in the block definition.
+via the `order` attribute or the `variables` child element.
 
 The sort order only counts inside the parent block. ConLayout compares the
 `order` values of sibling blocks with the same parent. The order values of
@@ -274,13 +178,13 @@ variables. Set them with the `variables` key in a layout update or with
 `setVariable()` in your code. The following variable names are reserved and
 must not be used by block code or templates for their own data:
 
-- `block_id` - the unique block id
-- `parent` - the parent block id
+- `blockId` - the unique block id
+- `parentId` - the parent block id
 - `order` - the sort order
 - `before` / `after` - sort order relative to another block
 - `container` - container string or comma-separated container templates
 - `wrapper` - wrapper template
-- `has_parent` / `parent_block` - set during layout generation and injection
+- `hasParent` / `parent` - set during layout generation and injection
 - `tag` and all `html_*` variables - inert, stored for consumer block code
 
 This applies to every block, including plain `Laminas\View\Model\ViewModel`
@@ -291,107 +195,60 @@ $block->setVariable('order', 10);
 $order = $block->getVariable('order'); // 10, null when not set
 ````
 
-Templates see the metadata as regular variables (`$this->order`, `$this->block_id`).
+Templates see the metadata as regular variables (`$this->order`, `$this->blockId`).
 Treat the reserved names above as reserved: templates and block code must not
 use them for their own variables.
 
-## 2. `helpers`
+## `css`, `js`, `title`
 
-Call view helpers. You can add CSS or JavaScript assets. You can also set the
-page title.
-
-````php
-<?php
-// - support for named arguments.
-// Examples:
-
-return [
-    'helpers' => [
-        'headScript' => [
-            'jquery' => ['src' => '/js/jquery.js']
-        ]
-    ]
-];
-// result: $headScript->appendFile('/js/jquery.js');
-
-return [
-    'helpers' => [
-        'headScript' => [
-            'main' => [
-                'src' => '/js/main.js', // src = argument name of method signature
-                'after' => 'jquery'   // append after jquery
-                'attrs' => [            // attrs = argument name of method signature
-                    'conditional' => 'lt IE 9'
-                ]
-            ]
-        ]
-    ]
-];
-// result: $headScript->appendFile('/js/main.js', 'text/javascript', ['conditional' => 'lt IE 9']);
-
-````
-
-Or use XML:
-
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
-<layout>
-    <helpers>
-        <headScript>
-            <main src="/js/main.js" depends="jquery" /> <!-- will be placed after jquery -->
-            <jquery src="/js/jquery.js" />
-        </headScript>
-    </helpers>
-</layout>
-
-````
-
-## 3. `include`
-
-Include another handle.
-
-````php
-<?php
-// layout update file application/index/index.php
-return [
-    'blocks' => [
-        'header' => [
-            // ...
-        ],
-        'footer' => [
-            // ...
-        ],
-        'widget1' => [
-            // ...
-        ],
-    ]
-];
-````
+Sugar elements for the most common view helpers. They normalize into the
+`helpers` instruction structure, so sorting (`before`, `after`, `depends`),
+`remove="true"` and the debug `data-layout-id` work exactly the same.
 
 ````xml
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <blocks>
-        <header />
-        <footer />
-        <widget1 />
-    </blocks>
+    <css id="all.css" src="/css/all.css" />
+    <js id="main.js" src="/js/main.js" depends="jquery.js" />
+    <js id="inline.js" src="/js/inline.js" inline="true" />
+    <title id="products" append="true">Products</title>
 </page>
 ````
 
-To use the same layout structure in `product/index/view` as in
-`application/index/index`:
+- `<css>` maps to the `headLink` helper; `src` is passed as `href`, an
+  explicit `href` attribute passes through untouched.
+- `<js>` maps to the `headScript` helper; with `inline="true"` it maps to
+  `inlineScript` instead.
+- `<title>` maps to the `headTitle` helper. The element content becomes the
+  title; at most one of `append`, `set` (overrides) or `prepend` selects the
+  helper method, and without any of them the title is appended:
 
-
-````php
-<?php
-// layout update file product/index/view.php
-return [
-    'include' => [
-        'application/index/index'
-    ]
-];
+````xml
+<title id="default">TEST</title>
+<title id="site" set="true">My Shop</title>
+<title id="home" prepend="true">Home</title>
 ````
+
+All three require the `id` attribute like `block`.
+
+## `reference`
+
+Use `reference` to change the properties of a block:
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <reference id="main.content" append="true" />
+</page>
+````
+
+The `id` attribute is required and selects the block. The insertion metadata
+`order`, `parentId`, `before` and `after` are moved into the block
+`variables` automatically, like for `block`.
+
+## `include`
+
+Include another handle:
 
 ````xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -400,44 +257,17 @@ return [
 </page>
 ````
 
-Tip: Define a virtual handle for reuse:
+The included handle is merged before the file that contains the element. So
+the including file can override the included files.
 
-````php
-<?php
-// virtual handle file default/widgets.php
-return [
-    'blocks' => [
-        'widget.forecast' => [
-            'template' => 'widgets/forecast',
-            'parent' => 'sidebar'
-        ],
-        'widget.calendar' => [
-            'template' => 'widgets/calendar',
-            'parent' => 'sidebar'
-        ]
-    ]
-];
-````
+Tip: define a virtual handle for reuse:
 
 ````xml
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <blocks>
-        <widget.forecast template="widgets/forecast" parent="sidebar" />
-        <widget.calendar template="widgets/calendar" parent="sidebar" />
-    </blocks>
+    <block id="widget.forecast" template="widgets/forecast" parentId="sidebar" />
+    <block id="widget.calendar" template="widgets/calendar" parentId="sidebar" />
 </page>
-````
-
-````php
-<?php
-// layout update file application/index/index.php
-return [
-    // ...
-    'include' => [
-        'default/widgets'
-    ]
-]
 ````
 
 ````xml
@@ -447,109 +277,7 @@ return [
 </page>
 ````
 
-## 4. `reference`
-
-Use `reference` to change the properties of a block.
-
-````php
-<?php
-// default.php
-return [
-    'blocks' => [
-        'root' => [
-            'blocks' => [
-                'sidebar' => [
-                    'class' => 'container',
-                    'blocks' => [
-                        'widget.to.change' => [
-                            'template' => 'my/widget'
-                        ]                        
-                    ]
-                ]
-            ]
-        ]
-    ]
-];
-
-````
-
-Change the template of the widget without writing the nested structure again:
-
-````php
-<?php
-// application/index/index.php
-return [
-    'reference' => [
-        'widget.to.change' => [
-            'template' => 'widgets/new-template'
-        ]
-    ]
-];
-````
-
-## 5. Typed elements
-
-Instead of arbitrary element names you can use typed elements with an `id`
-attribute. ConLayout normalizes them into the same structure as the legacy
-syntax, so both dialects merge identically across handles.
-
-### `block`
-
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <block id="header" order="1" template="app::layout/header" />
-    <block id="footer" template="app::layout/footer" />
-</page>
-````
-
-The `id` attribute becomes the block id, all other attributes become the block
-definition. Blocks can be nested: a nested `<block>` becomes a child block and
-gets its `parent` variable set automatically:
-
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <block id="root" template="base">
-        <block id="header" template="app::layout/header">
-            <block id="main.nav" template="app::layout/navigation" />
-        </block>
-        <block id="main.content" />
-    </block>
-</page>
-````
-
-The insertion metadata `order`, `parent`, `before` and `after` are moved into
-the block `variables` automatically. All other child elements (`<variables>`,
-`<actions>`, legacy nested `<blocks>`) are preserved.
-
-### `view_helper`
-
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <view_helper name="headScript" id="main" src="/js/main.js" depends="jquery" />
-    <view_helper name="headScript" id="jquery" src="/js/jquery.js" />
-</page>
-````
-
-The `name` attribute selects the view helper, the `id` attribute is the
-instruction id. All other attributes become the instruction arguments.
-
-### `reference`
-
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <reference id="main.content" append="true" />
-</page>
-````
-
-Equivalent to the legacy container form. The legacy syntax and the typed
-elements can be mixed in one file; the legacy `reference` container and the
-typed `reference` element can be mixed as well.
-
-### Merging across handles
+## Merging across handles
 
 `default.xml`:
 
@@ -582,18 +310,76 @@ Result:
 ]
 ````
 
-Note: a missing `id` on a typed `block` or `view_helper` throws an
+Note: a missing `id` on a typed element throws an
 `InvalidArgumentException` with a descriptive message.
 
-## 6. XSD validation
+## Custom elements
+
+Each typed element is normalized by a class implementing
+`ConLayout\Updater\Collector\Element\ElementInterface`, collected by the
+`XmlPreprocessor`:
+
+- `name()` returns the XML element name,
+- `instruction()` returns the instruction key the element is merged into
+  (`blocks`, `helpers` or `reference`),
+- `normalize($spec)` returns the fragment to merge, keyed like the
+  instruction structure.
+
+To add a custom element, implement the interface (optionally extending
+`AbstractElement` for the shared attribute validation and list handling) and
+register it in the `con-layout.xml_preprocessor.elements` config:
+
+````php
+use ConLayout\Updater\Collector\Element\AbstractElement;
+use ConLayout\Generator\ViewHelperGenerator;
+
+class MetaElement extends AbstractElement
+{
+    public const NAME = 'meta';
+
+    public function name(): string
+    {
+        return self::NAME;
+    }
+
+    public function instruction(): string
+    {
+        return ViewHelperGenerator::INSTRUCTION;
+    }
+
+    public function normalize(array $spec): array
+    {
+        $id = $this->requireString($spec, self::ATTRIBUTE_ID, self::NAME);
+        unset($spec[self::ATTRIBUTE_ID]);
+        return ['headMeta' => [$id => $spec]];
+    }
+}
+````
+
+````php
+// config/con-layout.global.php
+'xml_preprocessor' => [
+    'elements' => [
+        'meta' => MetaElement::class,
+        // built-in elements omitted for brevity
+    ],
+],
+````
+
+The element class must be registered as a service in the dependency
+container. Every element in the list is applied by the preprocessor in
+config order.
+
+## XSD validation
 
 The typed dialect is validated by the XML Schema `xsd/layout.xsd` in the
 package root. The schema declares no target namespace and defines the root
-elements `page` and `layout` with the elements `block`, `view_helper`,
+elements `page` and `layout` with the elements `block`, `css`, `js`, `title`,
 `reference` and `include`. The known block attributes are typed
-(`template`, `capture_to`, `parent`, `before`, `after`, `class` as strings,
+(`template`, `captureTo`, `parentId`, `before`, `after`, `class` as strings,
 `append`, `remove` as booleans, `order` as integer). All other attributes
-pass through, because `view_helper` arguments are dynamic attribute names.
+pass through, because helper instruction arguments are dynamic attribute
+names.
 
 Validate a layout update file with `xmllint`:
 
@@ -607,5 +393,5 @@ and DTDs: add a schema file entry with `layout.xsd`, no target namespace,
 and the scope of your layout directories.
 
 The schema intentionally rejects the legacy containers `<blocks>` and
-`<helpers>`. Files still using them fail validation until they are migrated
-to the typed elements (see section 5).
+`<helpers>` as well as the container form of `reference`. Layout update
+files must use the typed elements.

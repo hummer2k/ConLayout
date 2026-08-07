@@ -4,122 +4,68 @@ declare(strict_types=1);
 
 namespace ConLayout\Updater\Collector;
 
-use ConLayout\Exception\InvalidArgumentException;
-use ConLayout\Generator\BlocksGenerator;
-use ConLayout\Generator\ViewHelperGenerator;
+use ConLayout\Updater\Collector\Element\BlockElement;
+use ConLayout\Updater\Collector\Element\CssElement;
+use ConLayout\Updater\Collector\Element\ElementInterface;
+use ConLayout\Updater\Collector\Element\JsElement;
+use ConLayout\Updater\Collector\Element\ReferenceElement;
+use ConLayout\Updater\Collector\Element\TitleElement;
 use Laminas\Config\Config;
 
 /**
  * Normalizes the typed XML layout dialect into the keyed structure the legacy
  * syntax produces, so both dialects merge identically per handle.
+ *
+ * Each typed element is handled by a class implementing ElementInterface;
+ * new elements can be added via the "con-layout.xml_preprocessor.elements"
+ * config without touching this class.
  */
 final class XmlPreprocessor
 {
-    public const ELEMENT_BLOCK       = 'block';
-    public const ELEMENT_VIEW_HELPER = 'view_helper';
-    public const ATTRIBUTE_ID        = 'id';
-    public const ATTRIBUTE_NAME      = 'name';
-
     /**
-     * block variables holding insertion metadata, read by the BlockRegistry
+     * @param iterable<ElementInterface> $elements
      */
-    private const BLOCK_METADATA = [
-        'order',
-        'parent',
-        'before',
-        'after',
-    ];
+    public function __construct(
+        private readonly iterable $elements = [
+            new BlockElement(),
+            new CssElement(),
+            new JsElement(),
+            new TitleElement(),
+            new ReferenceElement(),
+        ],
+    ) {}
 
     public function process(Config $config): Config
     {
         $data = $config->toArray();
 
-        if (array_key_exists(self::ELEMENT_BLOCK, $data)) {
-            $data[BlocksGenerator::INSTRUCTION_BLOCKS] = $this->mergeBlocks(
-                (array) ($data[BlocksGenerator::INSTRUCTION_BLOCKS] ?? []),
-                $data[self::ELEMENT_BLOCK],
-            );
-        }
-        unset($data[self::ELEMENT_BLOCK]);
-
-        if (array_key_exists(self::ELEMENT_VIEW_HELPER, $data)) {
-            $helpers = new Config((array) ($data[ViewHelperGenerator::INSTRUCTION] ?? []), true);
-            foreach ($this->normalizeList($data[self::ELEMENT_VIEW_HELPER]) as $spec) {
-                $name = $this->requireString($spec, self::ATTRIBUTE_NAME, self::ELEMENT_VIEW_HELPER);
-                $id = $this->requireString($spec, self::ATTRIBUTE_ID, self::ELEMENT_VIEW_HELPER);
-                unset($spec[self::ATTRIBUTE_NAME], $spec[self::ATTRIBUTE_ID]);
-                $helpers->merge(new Config([$name => [$id => $spec]], true));
+        foreach ($this->elements as $element) {
+            if (array_key_exists($element->name(), $data)) {
+                $data = $this->apply($element, $data);
             }
-            $data[ViewHelperGenerator::INSTRUCTION] = $helpers->toArray();
-        }
-        unset($data[self::ELEMENT_VIEW_HELPER]);
-
-        if (array_key_exists(BlocksGenerator::INSTRUCTION_REFERENCE, $data)) {
-            $references = new Config([], true);
-            foreach ($this->normalizeList($data[BlocksGenerator::INSTRUCTION_REFERENCE]) as $entry) {
-                if ($this->isTypedBlock($entry)) {
-                    $references->merge(new Config([
-                        $entry[self::ATTRIBUTE_ID] => $this->normalizeBlock($entry),
-                    ], true));
-                } else {
-                    $references->merge(new Config((array) $entry, true));
-                }
-            }
-            $data[BlocksGenerator::INSTRUCTION_REFERENCE] = $references->toArray();
         }
 
         return new Config($data, true);
     }
 
     /**
+     * @param array<string, mixed> $data
      * @return array<string, mixed>
      */
-    private function mergeBlocks(array $legacy, mixed $typed): array
+    private function apply(ElementInterface $element, array $data): array
     {
-        $blocks = new Config($legacy, true);
-        foreach ($this->normalizeList($typed) as $spec) {
-            $blockId = $this->requireString($spec, self::ATTRIBUTE_ID, self::ELEMENT_BLOCK);
-            $blocks->merge(new Config([$blockId => $this->normalizeBlock($spec)], true));
+        $name = $element->name();
+        $instruction = $element->instruction();
+        $seed = $instruction === $name
+            ? []
+            : (array) ($data[$instruction] ?? []);
+        $target = new Config($seed, true);
+        foreach ($this->normalizeList($data[$name]) as $spec) {
+            $target->merge(new Config($element->normalize($spec), true));
         }
-        return $blocks->toArray();
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function normalizeBlock(array $spec): array
-    {
-        $blockId = $this->requireString($spec, self::ATTRIBUTE_ID, self::ELEMENT_BLOCK);
-        unset($spec[self::ATTRIBUTE_ID]);
-
-        $nested = $spec[self::ELEMENT_BLOCK] ?? null;
-        unset($spec[self::ELEMENT_BLOCK]);
-        $legacyChildren = $spec[BlocksGenerator::INSTRUCTION_BLOCKS] ?? null;
-        unset($spec[BlocksGenerator::INSTRUCTION_BLOCKS]);
-
-        $variables = $spec['variables'] ?? [];
-        if (!is_array($variables)) {
-            $variables = [];
-        }
-        unset($spec['variables']);
-        foreach (self::BLOCK_METADATA as $metadata) {
-            if (array_key_exists($metadata, $spec)) {
-                $variables[$metadata] = $spec[$metadata];
-                unset($spec[$metadata]);
-            }
-        }
-        if ([] !== $variables) {
-            $spec['variables'] = $variables;
-        }
-
-        if (null !== $nested || null !== $legacyChildren) {
-            $spec[BlocksGenerator::INSTRUCTION_BLOCKS] = $this->mergeBlocks(
-                (array) ($legacyChildren ?? []),
-                $nested,
-            );
-        }
-
-        return $spec;
+        unset($data[$name]);
+        $data[$instruction] = $target->toArray();
+        return $data;
     }
 
     /**
@@ -134,22 +80,5 @@ final class XmlPreprocessor
             return array_values($entries);
         }
         return [$entries];
-    }
-
-    private function isTypedBlock(array $entry): bool
-    {
-        return isset($entry[self::ATTRIBUTE_ID]) && is_string($entry[self::ATTRIBUTE_ID]);
-    }
-
-    private function requireString(array $spec, string $attribute, string $element): string
-    {
-        if (!isset($spec[$attribute]) || !is_string($spec[$attribute]) || '' === $spec[$attribute]) {
-            throw new InvalidArgumentException(sprintf(
-                'Layout XML: <%s> requires a non-empty "%s" attribute.',
-                $element,
-                $attribute,
-            ));
-        }
-        return $spec[$attribute];
     }
 }

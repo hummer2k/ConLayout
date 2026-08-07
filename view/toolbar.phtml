@@ -59,7 +59,7 @@ $renderBlock = function (array $block, $renderBlock) use ($escape): void {
                 <?php if ($block['template']) : ?><span class="cl-muted">(<?= $escape($block['template']) ?>)</span><?php endif; ?>
             </summary>
             <table class="cl-details">
-                <?php foreach (['template', 'capture_to', 'order', 'parent', 'before', 'after', 'container', 'wrapper'] as $key) : ?>
+                <?php foreach (['template', 'captureTo', 'order', 'parentId', 'before', 'after', 'container', 'wrapper'] as $key) : ?>
                     <?php if (null !== $block[$key] && '' !== $block[$key]) : ?>
                         <tr>
                             <th><?= $escape($key) ?></th>

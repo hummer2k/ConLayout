@@ -28,9 +28,15 @@ use ConLayout\Options\ModuleOptions;
 use ConLayout\Options\ModuleOptionsFactory;
 use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\Collector\ConfigCollectorFactory;
+use ConLayout\Updater\Collector\Element\BlockElement;
+use ConLayout\Updater\Collector\Element\CssElement;
+use ConLayout\Updater\Collector\Element\JsElement;
+use ConLayout\Updater\Collector\Element\ReferenceElement;
+use ConLayout\Updater\Collector\Element\TitleElement;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\Collector\FilesystemCollectorFactory;
 use ConLayout\Updater\Collector\XmlPreprocessor;
+use ConLayout\Updater\Collector\XmlPreprocessorFactory;
 use ConLayout\Toolbar\ToolbarMiddleware;
 use ConLayout\Toolbar\ToolbarMiddlewareFactory;
 use ConLayout\Updater\LayoutUpdaterFactory;
@@ -44,7 +50,12 @@ return [
     'factories' => [
         FilesystemCollector::class             => FilesystemCollectorFactory::class,
         ConfigCollector::class                 => ConfigCollectorFactory::class,
-        XmlPreprocessor::class                 => InvokableFactory::class,
+        XmlPreprocessor::class                 => XmlPreprocessorFactory::class,
+        BlockElement::class                    => InvokableFactory::class,
+        CssElement::class                      => InvokableFactory::class,
+        JsElement::class                       => InvokableFactory::class,
+        TitleElement::class                    => InvokableFactory::class,
+        ReferenceElement::class                => InvokableFactory::class,
         BlockManager::class                    => BlockManagerFactory::class,
         BlockFactoryInterface::class           => BlockFactoryFactory::class,
         LayoutInterface::class                 => LayoutFactory::class,

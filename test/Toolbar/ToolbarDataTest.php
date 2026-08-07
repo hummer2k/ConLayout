@@ -145,9 +145,9 @@ class ToolbarDataTest extends TestCase
         $root = $this->getRoot();
 
         $header = new ViewModel();
-        $header->setVariable('block_id', 'header');
+        $header->setVariable('blockId', 'header');
         $header->setVariable('order', 10);
-        $header->setVariable('parent', 'root');
+        $header->setVariable('parentId', 'root');
         $header->setVariable('container', '<div class="wrap">%s</div>');
         $header->setTemplate('layout::header');
         $header->setCaptureTo('header');
@@ -167,9 +167,9 @@ class ToolbarDataTest extends TestCase
 
         $headerData = $rootData['children'][0];
         $this->assertSame('header', $headerData['id']);
-        $this->assertSame('header', $headerData['capture_to']);
+        $this->assertSame('header', $headerData['captureTo']);
         $this->assertSame(10, $headerData['order']);
-        $this->assertSame('root', $headerData['parent']);
+        $this->assertSame('root', $headerData['parentId']);
         $this->assertSame('<div class="wrap">%s</div>', $headerData['container']);
         $this->assertFalse($headerData['append']);
         $this->assertSame([], $headerData['children']);
@@ -178,11 +178,11 @@ class ToolbarDataTest extends TestCase
     public function testGetBlocksMarksAnonymous(): void
     {
         $root = new ViewModel();
-        $root->setVariable('block_id', 'root');
+        $root->setVariable('blockId', 'root');
         $root->setTemplate('base');
 
         $anonymous = new ViewModel();
-        $anonymous->setVariable('block_id', 'anonymous.content.1');
+        $anonymous->setVariable('blockId', 'anonymous.content.1');
         $root->addChild($anonymous);
 
         $data = new ToolbarData($this->getLayoutManager($root));
@@ -194,7 +194,7 @@ class ToolbarDataTest extends TestCase
     {
         $root = $this->getRoot();
         $header = new ViewModel();
-        $header->setVariable('block_id', 'header');
+        $header->setVariable('blockId', 'header');
         $root->addChild($header);
 
         $layoutManager = $this->createMock(LayoutManager::class);
@@ -219,7 +219,7 @@ class ToolbarDataTest extends TestCase
     protected function getRoot(): ViewModel
     {
         $root = new ViewModel();
-        $root->setVariable('block_id', 'root');
+        $root->setVariable('blockId', 'root');
         $root->setTemplate('base');
         return $root;
     }

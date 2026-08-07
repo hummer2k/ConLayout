@@ -7,7 +7,9 @@
     <xs:complexType name="layoutUpdateType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element name="block" type="blockType" />
-            <xs:element name="view_helper" type="viewHelperType" />
+            <xs:element name="css" type="cssType" />
+            <xs:element name="js" type="jsType" />
+            <xs:element name="title" type="titleType" />
             <xs:element name="reference" type="blockType" />
             <xs:element name="include" type="includeType" />
         </xs:choice>
@@ -25,8 +27,8 @@
         </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required" />
         <xs:attribute name="template" type="xs:string" />
-        <xs:attribute name="capture_to" type="xs:string" />
-        <xs:attribute name="parent" type="xs:string" />
+        <xs:attribute name="captureTo" type="xs:string" />
+        <xs:attribute name="parentId" type="xs:string" />
         <xs:attribute name="before" type="xs:string" />
         <xs:attribute name="after" type="xs:string" />
         <xs:attribute name="class" type="xs:string" />
@@ -36,12 +38,33 @@
         <xs:anyAttribute processContents="lax" />
     </xs:complexType>
 
-    <xs:complexType name="viewHelperType">
-        <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:complexType name="cssType">
         <xs:attribute name="id" type="xs:string" use="required" />
+        <xs:attribute name="src" type="xs:string" />
         <xs:attribute name="href" type="xs:string" />
         <xs:attribute name="remove" type="xs:boolean" />
         <xs:anyAttribute processContents="lax" />
+    </xs:complexType>
+
+    <xs:complexType name="jsType">
+        <xs:attribute name="id" type="xs:string" use="required" />
+        <xs:attribute name="src" type="xs:string" />
+        <xs:attribute name="inline" type="xs:boolean" />
+        <xs:attribute name="remove" type="xs:boolean" />
+        <xs:anyAttribute processContents="lax" />
+    </xs:complexType>
+
+    <xs:complexType name="titleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="id" type="xs:string" use="required" />
+                <xs:attribute name="append" type="xs:boolean" />
+                <xs:attribute name="set" type="xs:boolean" />
+                <xs:attribute name="prepend" type="xs:boolean" />
+                <xs:attribute name="remove" type="xs:boolean" />
+                <xs:anyAttribute processContents="lax" />
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="variablesType">

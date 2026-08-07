@@ -12,8 +12,8 @@ ConLayout state of the current request in four tabs:
 
 **Blocks**
 
-- The rendered blocks as a nesting tree (block id, template, `capture_to`,
-  `order`, `parent`, `before`/`after`, `container`, `wrapper`, `append`).
+- The rendered blocks as a nesting tree (block id, template, `captureTo`,
+  `order`, `parentId`, `before`/`after`, `container`, `wrapper`, `append`).
   The toolbar marks anonymous blocks.
 - Blocks that are registered in the pool but not part of the rendered tree.
 - Blocks that were removed.

@@ -26,7 +26,7 @@ final class BlockFactory implements
      * @var array
      */
     private array $blockDefaults = [
-        'capture_to' => 'content',
+        'captureTo' => 'content',
         'append'     => true,
         'class'      => ViewModel::class,
         'variables'  => [],
@@ -58,7 +58,7 @@ final class BlockFactory implements
                 $class,
             ));
         }
-        $block->setVariable('block_id', $blockId);
+        $block->setVariable('blockId', $blockId);
 
         return $this->configure($block, $specs);
     }
@@ -88,7 +88,7 @@ final class BlockFactory implements
         if ($template = $this->getOption('template', $specs)) {
             $block->setTemplate($template);
         }
-        $block->setCaptureTo($this->getOption('capture_to', $specs));
+        $block->setCaptureTo($this->getOption('captureTo', $specs));
         $block->setAppend($this->toBool($this->getOption('append', $specs)));
         $block->setVariable('block', $block);
 

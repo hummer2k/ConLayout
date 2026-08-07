@@ -107,13 +107,13 @@ class XmlPreprocessorTest extends TestCase
                     'template' => 't',
                     'variables' => [
                         'order' => '1',
-                        'parent' => 'root',
+                        'parentId' => 'root',
                     ],
                 ],
             ],
         ], $this->process(<<<XML
         <page>
-            <block id="header" order="1" parent="root" template="t" />
+            <block id="header" order="1" parentId="root" template="t" />
         </page>
         XML));
     }
@@ -172,20 +172,152 @@ class XmlPreprocessorTest extends TestCase
         XML));
     }
 
-    public function testTypedViewHelperIsMappedIntoHelpers(): void
+    public function testUntypedViewHelperElementIsLeftUntouched(): void
+    {
+        $this->assertSame([
+            'view_helper' => [
+                'name' => 'headScript',
+                'id' => 'main',
+                'src' => '/js/main.js',
+            ],
+        ], $this->process(<<<XML
+        <page>
+            <view_helper name="headScript" id="main" src="/js/main.js" />
+        </page>
+        XML));
+    }
+
+    public function testTypedCssIsMappedIntoHeadLinkHelpers(): void
     {
         $this->assertSame([
             'helpers' => [
-                'headScript' => [
-                    'main' => [
-                        'src' => '/js/main.js',
-                        'depends' => 'jquery',
+                'headLink' => [
+                    'all.css' => [
+                        'href' => '/css/all.css',
+                    ],
+                    'bootstrap.css' => [
+                        'depends' => 'all.css',
+                        'href' => '/css/bootstrap.css',
                     ],
                 ],
             ],
         ], $this->process(<<<XML
         <page>
-            <view_helper name="headScript" id="main" src="/js/main.js" depends="jquery" />
+            <css id="all.css" src="/css/all.css" />
+            <css id="bootstrap.css" src="/css/bootstrap.css" depends="all.css" />
+        </page>
+        XML));
+    }
+
+    public function testTypedCssHrefPassesThroughUntouched(): void
+    {
+        $this->assertSame([
+            'helpers' => [
+                'headLink' => [
+                    'all.css' => [
+                        'href' => 'https://example.org/all.css',
+                    ],
+                ],
+            ],
+        ], $this->process(<<<XML
+        <page>
+            <css id="all.css" href="https://example.org/all.css" />
+        </page>
+        XML));
+    }
+
+    public function testTypedJsIsMappedIntoHeadScriptHelpers(): void
+    {
+        $this->assertSame([
+            'helpers' => [
+                'headScript' => [
+                    'main.js' => [
+                        'src' => '/js/main.js',
+                        'depends' => 'jquery.js',
+                    ],
+                ],
+            ],
+        ], $this->process(<<<XML
+        <page>
+            <js id="main.js" src="/js/main.js" depends="jquery.js" />
+        </page>
+        XML));
+    }
+
+    public function testTypedJsWithInlineIsMappedIntoInlineScriptHelpers(): void
+    {
+        $this->assertSame([
+            'helpers' => [
+                'inlineScript' => [
+                    'main.js' => [
+                        'src' => '/js/main.js',
+                    ],
+                ],
+            ],
+        ], $this->process(<<<XML
+        <page>
+            <js id="main.js" src="/js/main.js" inline="true" />
+        </page>
+        XML));
+    }
+
+    public function testTypedTitleContentIsMappedIntoHeadTitleHelpers(): void
+    {
+        $this->assertSame([
+            'helpers' => [
+                'headTitle' => [
+                    'default' => [
+                        'value' => 'TEST',
+                        'method' => 'append',
+                    ],
+                ],
+            ],
+        ], $this->process(<<<XML
+        <page>
+            <title id="default">TEST</title>
+        </page>
+        XML));
+    }
+
+    public function testTypedTitleContentIsTrimmed(): void
+    {
+        $this->assertSame([
+            'helpers' => [
+                'headTitle' => [
+                    'default' => [
+                        'value' => 'TEST',
+                        'method' => 'append',
+                    ],
+                ],
+            ],
+        ], $this->process(<<<XML
+        <page>
+            <title id="default">
+                TEST
+            </title>
+        </page>
+        XML));
+    }
+
+    public function testTypedTitleSetAndPrependUseElementContent(): void
+    {
+        $this->assertSame([
+            'helpers' => [
+                'headTitle' => [
+                    'site' => [
+                        'value' => 'My Shop',
+                        'method' => 'set',
+                    ],
+                    'home' => [
+                        'value' => 'Home',
+                        'method' => 'prepend',
+                    ],
+                ],
+            ],
+        ], $this->process(<<<XML
+        <page>
+            <title id="site" set="true">My Shop</title>
+            <title id="home" prepend="true">Home</title>
         </page>
         XML));
     }
@@ -230,7 +362,7 @@ class XmlPreprocessorTest extends TestCase
                     'blocks' => [
                         'header' => [
                             'template' => 'layout::header',
-                            'capture_to' => 'header',
+                            'captureTo' => 'header',
                         ],
                     ],
                     'template' => 'base',
@@ -241,7 +373,7 @@ class XmlPreprocessorTest extends TestCase
             <blocks>
                 <root template="base">
                     <blocks>
-                        <header template="layout::header" capture_to="header" />
+                        <header template="layout::header" captureTo="header" />
                     </blocks>
                 </root>
             </blocks>
@@ -259,12 +391,42 @@ class XmlPreprocessorTest extends TestCase
         XML);
     }
 
-    public function testViewHelperWithoutNameThrows(): void
+    public function testCssWithoutIdThrows(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->process(<<<XML
         <page>
-            <view_helper id="main" src="/js/main.js" />
+            <css src="/css/all.css" />
+        </page>
+        XML);
+    }
+
+    public function testJsWithoutIdThrows(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->process(<<<XML
+        <page>
+            <js src="/js/main.js" />
+        </page>
+        XML);
+    }
+
+    public function testTitleWithoutContentThrows(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->process(<<<XML
+        <page>
+            <title id="products" />
+        </page>
+        XML);
+    }
+
+    public function testTitleWithMultiplePlacementsThrows(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->process(<<<XML
+        <page>
+            <title id="products" set="true" prepend="true">Products</title>
         </page>
         XML);
     }

@@ -8,16 +8,16 @@ return [
             'template' => 'new/layout',
         ],
         'widget.1' => [
-            'capture_to' => 'sidebarLeft',
+            'captureTo' => 'sidebarLeft',
             'variables' => [
                 'order' => 10,
             ],
         ],
         'breadcrumbs' => [
-            'capture_to' => 'content',
+            'captureTo' => 'content',
         ],
         'widget.1.child' => [
-            'capture_to' => 'widget.1::childHtml',
+            'captureTo' => 'widget.1::childHtml',
         ],
         'some.removed.block' => [
             'remove' => true,
@@ -25,7 +25,7 @@ return [
         'parent1' => [
             'blocks' => [
                 'widget.2.child' => [
-                    'capture_to' => 'childHtml',
+                    'captureTo' => 'childHtml',
                     'blocks' => [
                         'widget.2.child.child' => [
                             'template' => 'child/child',

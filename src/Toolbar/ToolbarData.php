@@ -169,7 +169,7 @@ readonly class ToolbarData
      */
     private function collect(ModelInterface $model, array &$blocks): void
     {
-        $blockId = $model->getVariable('block_id');
+        $blockId = $model->getVariable('blockId');
         if (is_string($blockId) && '' !== $blockId) {
             $blocks[] = $this->getBlockData($blockId, $model);
         }
@@ -182,7 +182,7 @@ readonly class ToolbarData
     {
         $children = [];
         foreach ($model->getChildren() as $child) {
-            $childId = $child->getVariable('block_id');
+            $childId = $child->getVariable('blockId');
             if (is_string($childId) && '' !== $childId) {
                 $children[] = $this->getBlockData($childId, $child);
             }
@@ -191,9 +191,9 @@ readonly class ToolbarData
         return [
             'id'         => $blockId,
             'template'   => (string) $model->getTemplate(),
-            'capture_to' => (string) $model->captureTo(),
+            'captureTo' => (string) $model->captureTo(),
             'order'      => $this->readMetadata($model, 'order'),
-            'parent'     => $this->readMetadata($model, 'parent'),
+            'parentId'   => $this->readMetadata($model, 'parentId'),
             'before'     => $this->readMetadata($model, 'before'),
             'after'      => $this->readMetadata($model, 'after'),
             'container'  => $this->readMetadata($model, 'container'),

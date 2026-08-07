@@ -20,7 +20,7 @@ interface LayoutInterface
     public const BLOCK_ID_MAIN_CONTENT = 'main.content';
 
     /**
-     * delimiter block_id::cpature_to
+     * delimiter blockId::captureTo
      */
     public const CAPTURE_TO_DELIMITER = '::';
 

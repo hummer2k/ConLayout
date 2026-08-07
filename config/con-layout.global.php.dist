@@ -2,6 +2,11 @@
 
 use ConLayout\Generator\BlocksGenerator;
 use ConLayout\Generator\ViewHelperGenerator;
+use ConLayout\Updater\Collector\Element\BlockElement;
+use ConLayout\Updater\Collector\Element\CssElement;
+use ConLayout\Updater\Collector\Element\JsElement;
+use ConLayout\Updater\Collector\Element\ReferenceElement;
+use ConLayout\Updater\Collector\Element\TitleElement;
 use ConLayout\Updater\Collector\FilesystemCollector;
 use ConLayout\Updater\Collector\ConfigCollector;
 use ConLayout\Updater\LayoutUpdaterInterface;
@@ -79,7 +84,7 @@ return [
          * block defaults
          */
         'block_defaults' => [
-            'capture_to' => 'content',
+            'captureTo' => 'content',
             'append'     => true,
             'class'      => ViewModel::class,
             'variables'  => [],
@@ -152,6 +157,21 @@ return [
             FilesystemCollector::NAME => [
                 'class' => FilesystemCollector::class,
                 'priority' => 10
+            ]
+        ],
+        /**
+         * typed XML elements handled by the XmlPreprocessor
+         *
+         * each entry maps an element name to a service implementing
+         * ConLayout\Updater\Collector\Element\ElementInterface
+         */
+        'xml_preprocessor' => [
+            'elements' => [
+                BlockElement::NAME => BlockElement::class,
+                CssElement::NAME => CssElement::class,
+                JsElement::NAME => JsElement::class,
+                TitleElement::NAME => TitleElement::class,
+                ReferenceElement::NAME => ReferenceElement::class,
             ]
         ],
         'body_class_prefix' => ''
